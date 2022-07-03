@@ -1,7 +1,14 @@
+ClassName : class names
+
+_constructor: class private constructors parameters
+
+
 snake_case : Local variables
 
-PascalCase : Global variable
+Pascal_Case : Global variable
+
 
 _fucntion_name: Private functions
 
 _Function_Name : Public Function
+
