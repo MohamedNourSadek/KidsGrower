@@ -10,30 +10,37 @@ public class MovementSystem
 
     [Header("Movement Parameters")]
     [SerializeField] float _acceleration;
-    [SerializeField] float _MaxSpeed = 4;
+    [SerializeField] float _maxSpeed;
+    [SerializeField] float _rotationSpeed;
+
     [Header("Jump Parameters Parameters")]
     [SerializeField] float _jumpForce;
     [SerializeField] float _onGroundThreshold;
 
 
     PlayerSystem _myPlayer;
+    Quaternion _finalAngle;
     bool _onGround = true;
+
 
     public void Initialize(PlayerSystem _player)
     {
         _myPlayer = _player;
     }
-    public void PreformMove(Vector2 _movementDirection)
+    public void PreformMove(Vector2 _movementInput)
     {
-        if(_myPlayer._playerBody.velocity.magnitude <= _MaxSpeed)
+        if(_myPlayer._playerBody.velocity.magnitude <= _maxSpeed)
         {
             Vector3 direction = (_myPlayer.transform.position - _myPlayer.GetCameraPosition());
             Vector3 _forwardAxis = new Vector3(direction.x, 0f, direction.z);
             Vector3 _rightAxis = Vector3.Cross(_forwardAxis, Vector3.up);
 
-            _myPlayer._playerBody.AddForce( 1 * _acceleration * _movementDirection.y * _forwardAxis.normalized );
-            _myPlayer._playerBody.AddForce(-1 * _acceleration * _movementDirection.x * _rightAxis.normalized );
+            _myPlayer._playerBody.AddForce( 1 * _acceleration * _movementInput.y * _forwardAxis.normalized );
+            _myPlayer._playerBody.AddForce(-1 * _acceleration * _movementInput.x * _rightAxis.normalized );
         }
+
+        
+        _finalAngle = Quaternion.Euler(0f, AdditionalMath.AngleFromY(_movementInput), 0f);
     }
     public void PreformJump()
     {
@@ -43,12 +50,17 @@ public class MovementSystem
         }
 
     }
-
-
-
     public void Update()
     {
+        RotatePlayer();
         _onGround = DetectGround();
+    }
+
+
+
+    void RotatePlayer()
+    {
+        _myPlayer.transform.rotation = Quaternion.Lerp(_myPlayer.transform.rotation, _finalAngle, Time.fixedDeltaTime * _rotationSpeed);
     }
     bool DetectGround()
     {

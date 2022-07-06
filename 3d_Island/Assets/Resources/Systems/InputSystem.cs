@@ -22,7 +22,6 @@ public class InputSystem
     public void Update()
     {
         MovementInput();
-        RotateInput();
     }
 
 
@@ -30,15 +29,6 @@ public class InputSystem
     void JumpInput(InputAction.CallbackContext context)
     {
         _myPlayer.JumpInput();
-    }
-    void RotateInput()
-    {
-        _xyRotateAxis = _inputActions.Player.Rotate.ReadValue<float>();
-
-        if (_xyRotateAxis != 0)
-        {
-            _myPlayer.RotateInput(_xyRotateAxis);
-        }
     }
     void MovementInput()
     {

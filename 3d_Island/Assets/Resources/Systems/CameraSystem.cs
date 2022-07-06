@@ -21,30 +21,25 @@ public class CameraSystem
     {
         return _controlledCamera.transform.position;
     }
+    public Quaternion GetCameraRotation()
+    {
+        return _controlledCamera.transform.rotation;
+    }
 
 
-    public void MoveCamera(Vector3 _newPlayerPosition)
+    public void TraslateCamera(Vector3 _newPlayerPosition)
     {
         Vector3 _direction = (_myPlayer.transform.position - _controlledCamera.transform.position).normalized;
         Vector3 _xzDirection = new Vector3(_direction.x, 0f, _direction.z);
 
-        Vector3 _finalPosition = _newPlayerPosition - (_myPlayer.transform.forward * _distanceFromPlayer) +
+        Vector3 _finalPosition = _newPlayerPosition - (_controlledCamera.transform.forward * _distanceFromPlayer) +
                                                 (Vector3.up * _cameraHeight);
-
 
         _controlledCamera.transform.position = Vector3.Lerp(_controlledCamera.transform.position, _finalPosition, Time.fixedDeltaTime/_delay);
 
     }
-
-    public void RotatePerform(float _delta)
-    {
-
-    }
-
     public void Update()
     {
-
-        Debug.Log("Moving");
-        MoveCamera(_myPlayer.transform.position);
+        TraslateCamera(_myPlayer.transform.position);
     }
 }

@@ -16,7 +16,8 @@ public class PlayerSystem : MonoBehaviour
         _movementSystem.Initialize(this);
         _myCamera.Initialize(this);
     }
-    private void Update()
+
+    private void FixedUpdate()
     {
         _inputSystem.Update();
         _myCamera.Update();
@@ -27,16 +28,16 @@ public class PlayerSystem : MonoBehaviour
     {
         return _myCamera.GetCameraPosition();
     }
-    public void MoveInput(Vector2 _direction)
+    public Quaternion GetCameraAngle()
     {
-        _movementSystem.PreformMove(_direction);
+        return _myCamera.GetCameraRotation();
+    }
+    public void MoveInput(Vector2 _movementInput)
+    {
+        _movementSystem.PreformMove(_movementInput);
     }
     public void JumpInput()
     {
         _movementSystem.PreformJump();
-    }
-    public void RotateInput(float _deltaSlide)
-    {
-        _myCamera.RotatePerform(_deltaSlide);
     }
 }
