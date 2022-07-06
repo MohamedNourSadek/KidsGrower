@@ -8,23 +8,25 @@ public class PlayerSystem : MonoBehaviour
     [SerializeField] MovementSystem _movementSystem;
     [SerializeField] CameraSystem _myCamera;
 
-    InputSystem _inputSystem;
-    CameraSystem _cameraSystem;
+    InputSystem _inputSystem = new InputSystem();
 
     private void Awake()
     {
-        _inputSystem = new InputSystem(this);
-        _movementSystem._myPlayer = this;
-        _myCamera._myPlayer = this;
+        _inputSystem.Initialize(this);
+        _movementSystem.Initialize(this);
+        _myCamera.Initialize(this);
     }
-
     private void Update()
     {
         _inputSystem.Update();
+        _myCamera.Update();
         _movementSystem.Update();
     }
 
-
+    public Vector3 GetCameraPosition()
+    {
+        return _myCamera.GetCameraPosition();
+    }
     public void MoveInput(Vector2 _direction)
     {
         _movementSystem.PreformMove(_direction);
@@ -32,5 +34,9 @@ public class PlayerSystem : MonoBehaviour
     public void JumpInput()
     {
         _movementSystem.PreformJump();
+    }
+    public void RotateInput(float _deltaSlide)
+    {
+        _myCamera.RotatePerform(_deltaSlide);
     }
 }
