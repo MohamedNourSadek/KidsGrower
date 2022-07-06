@@ -30,8 +30,8 @@ public class CameraSystem
     public void TraslateCamera(Vector3 _newPlayerPosition)
     {
         Vector3 _direction = (_myPlayer.transform.position - _controlledCamera.transform.position).normalized;
-        Vector3 _xzDirection = new Vector3(_direction.x, 0f, _direction.z);
 
+        Vector3 _xzDirection = new Vector3(_direction.x, 0f, _direction.z);
         Vector3 _finalPosition = _newPlayerPosition - (_controlledCamera.transform.forward * _distanceFromPlayer) +
                                                 (Vector3.up * _cameraHeight);
 
