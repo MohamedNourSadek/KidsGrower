@@ -1,14 +1,10 @@
 ClassName : class names
 
-_constructor: class private constructors parameters
+_variableName = private variables
+variableName : Global variable
+
+FunctionName: Public and private functions
 
 
-snake_case : Local variables
 
-Pascal_Case : Global variable
-
-
-_fucntion_name: Private functions
-
-_Function_Name : Public Function
 
