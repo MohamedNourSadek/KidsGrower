@@ -17,20 +17,28 @@ public class InputSystem
         _inputActions = new PlayerInputActions();
         _inputActions.Enable();
         _inputActions.Player.Jump.performed += JumpInput;
+        _inputActions.Player.Pick.performed += PickInput;
+        _inputActions.Player.Throw.performed += ThrowInput;
     }
-
     public void Update()
     {
         MovementInput();
         RotateInput();
     }
 
-
-    
+    void PickInput(InputAction.CallbackContext obj)
+    {
+        _myPlayer.PickInput();
+    }
     void JumpInput(InputAction.CallbackContext context)
     {
         _myPlayer.JumpInput();
     }
+    void ThrowInput(InputAction.CallbackContext obj)
+    {
+        _myPlayer.ThrowInput();
+    }
+
     void MovementInput()
     {
         _xyAxis = _inputActions.Player.Move.ReadValue<Vector2>();

@@ -29,13 +29,13 @@ public class MovementSystem
     }
     public void PreformMove(Vector2 _movementInput)
     {
-        if(_myPlayer._playerBody.velocity.magnitude <= _maxSpeed)
+        if(_myPlayer.GetBody().velocity.magnitude <= _maxSpeed)
         {
             Vector3 _forwardAxis = new Vector3(_myPlayer.GetCameraTransform().forward.x, 0f, _myPlayer.GetCameraTransform().forward.z);
             Vector3 _rightAxis = Vector3.Cross(_forwardAxis, Vector3.up);
 
-            _myPlayer._playerBody.AddForce( 1 * _acceleration * _movementInput.y * _forwardAxis.normalized );
-            _myPlayer._playerBody.AddForce(-1 * _acceleration * _movementInput.x * _rightAxis.normalized );
+            _myPlayer.GetBody().AddForce( 1 * _acceleration * _movementInput.y * _forwardAxis.normalized );
+            _myPlayer.GetBody().AddForce(-1 * _acceleration * _movementInput.x * _rightAxis.normalized );
         }
 
         _finalAngle = Quaternion.Euler(0f, _myPlayer.GetCameraTransform().rotation.eulerAngles.y +  AdditionalMath.AngleFromY(_movementInput), 0f);
@@ -44,7 +44,7 @@ public class MovementSystem
     {
         if(_onGround)
         {
-            _myPlayer._playerBody.AddForce(Vector2.up * _jumpForce);
+            _myPlayer.GetBody().AddForce(Vector2.up * _jumpForce);
         }
 
     }
