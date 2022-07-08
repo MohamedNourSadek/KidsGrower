@@ -12,8 +12,6 @@ public class PlayerSystem : MonoBehaviour
 
     private void Awake()
     {
-        Cursor.visible = false;
-
         _inputSystem.Initialize(this);
         _movementSystem.Initialize(this);
         _myCamera.Initialize(this);
