@@ -43,7 +43,7 @@ public class AdditionalMath
             return false;
     }
 
-
+      
     //Used for Remaping different ranges
     public static float RemapRange(float Value, Vector2 InitialRange, Vector2 FinalRange)
     {

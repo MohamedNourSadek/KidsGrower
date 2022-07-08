@@ -12,6 +12,8 @@ public class PlayerSystem : MonoBehaviour
 
     private void Awake()
     {
+        Cursor.visible = false;
+
         _inputSystem.Initialize(this);
         _movementSystem.Initialize(this);
         _myCamera.Initialize(this);
@@ -24,13 +26,10 @@ public class PlayerSystem : MonoBehaviour
         _movementSystem.Update();
     }
 
-    public Vector3 GetCameraPosition()
+    
+    public Transform GetCameraTransform()
     {
-        return _myCamera.GetCameraPosition();
-    }
-    public Quaternion GetCameraAngle()
-    {
-        return _myCamera.GetCameraRotation();
+        return _myCamera.GetCameraTransform();
     }
     public void MoveInput(Vector2 _movementInput)
     {
@@ -39,5 +38,9 @@ public class PlayerSystem : MonoBehaviour
     public void JumpInput()
     {
         _movementSystem.PreformJump();
+    }
+    public void RotateInput(float _deltaRotation)
+    {
+        _myCamera.RotateCamera(_deltaRotation);
     }
 }

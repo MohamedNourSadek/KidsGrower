@@ -160,7 +160,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""id"": ""4eb629ad-0f73-4e79-bf29-3529b7a252a5"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
-                    ""processors"": ""Scale(factor=15)"",
+                    ""processors"": ""Scale(factor=-5)"",
                     ""groups"": """",
                     ""action"": ""Rotate"",
                     ""isComposite"": true,
@@ -169,7 +169,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""8bf29afe-d446-4cfe-9598-3bcea4a437b1"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""path"": ""<Gamepad>/rightStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -180,7 +180,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""positive"",
                     ""id"": ""170b5bf8-5fd9-4416-8ffc-817e85851936"",
-                    ""path"": ""<Gamepad>/leftStick/right"",
+                    ""path"": ""<Gamepad>/rightStick/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
