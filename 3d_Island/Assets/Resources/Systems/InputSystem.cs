@@ -19,12 +19,14 @@ public class InputSystem
         _inputActions.Player.Jump.performed += JumpInput;
         _inputActions.Player.Pick.performed += PickInput;
         _inputActions.Player.Throw.performed += ThrowInput;
+        _inputActions.Player.Plant.performed += PlantInput;
     }
     public void Update()
     {
         MovementInput();
         RotateInput();
     }
+
 
     void PickInput(InputAction.CallbackContext obj)
     {
@@ -37,6 +39,10 @@ public class InputSystem
     void ThrowInput(InputAction.CallbackContext obj)
     {
         _myPlayer.ThrowInput();
+    }
+    void PlantInput(InputAction.CallbackContext obj)
+    {
+        _myPlayer.PlantInput();
     }
 
     void MovementInput()

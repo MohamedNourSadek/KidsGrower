@@ -7,6 +7,7 @@ using UnityEngine;
 public class MovementSystem
 {
     [SerializeField] LayerMask _groundLayer;
+    [SerializeField] UIController _uIController;
 
     [Header("Movement Parameters")]
     [SerializeField] float _acceleration;
@@ -22,6 +23,18 @@ public class MovementSystem
     Quaternion _finalAngle;
     bool _onGround = true;
 
+
+    public void Update()
+    {
+        RotatePlayer();
+        _onGround = DetectGround();
+
+        UpdateUi();
+    }
+    public void UpdateUi()
+    {
+        _uIController.JumpButton_Enable(_onGround);
+    }
 
     public void Initialize(PlayerSystem _player)
     {
@@ -48,11 +61,7 @@ public class MovementSystem
         }
 
     }
-    public void Update()
-    {
-        RotatePlayer();
-        _onGround = DetectGround();
-    }
+
 
 
 

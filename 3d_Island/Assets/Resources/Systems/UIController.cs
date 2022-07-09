@@ -14,28 +14,38 @@ public class UIController : MonoBehaviour
 
 
     [Header("UI Objects")]
-    [SerializeField] Image _pickButtonImage;
+    [SerializeField] Image _pickDropButtonImage;
     [SerializeField] Image _throwButtonImage;
-    [SerializeField] Text _pickButtonText;
+    [SerializeField] Image _plantButtonImage;
+    [SerializeField] Image _jumpButtonImage;
+    [SerializeField] Text _pickDropButtonImage_Text;
 
-    public void PickButton_Enable(bool _state)
+    public void PickDropButton_Enable(bool _state)
     {
-        if (_state)
-            _pickButtonImage.color = new Color(_pickButtonImage.color.r, _pickButtonImage.color.g, _pickButtonImage.color.b, 1f);
-        else
-            _pickButtonImage.color = new Color(_pickButtonImage.color.r, _pickButtonImage.color.g, _pickButtonImage.color.b, 0.3f);
+        ChangeAlpha(_pickDropButtonImage, _state);
     }
-    public void PickButton_SwitchMode(PickMode _mode)
-    {
-        _pickButtonText.text = _mode.ToString();
-    }
-
     public void ThrowButton_Enable(bool _state)
     {
-        if (_state)
-            _throwButtonImage.color = new Color(_throwButtonImage.color.r, _throwButtonImage.color.g, _throwButtonImage.color.b, _buttonOnAlpha);
-        else
-            _throwButtonImage.color = new Color(_throwButtonImage.color.r, _throwButtonImage.color.g, _throwButtonImage.color.b, _buttonOffAlpha);
+        ChangeAlpha(_throwButtonImage, _state);
+    }
+    public void PlantButton_Enable(bool _state)
+    {
+        ChangeAlpha(_plantButtonImage, _state);
+    }
+    public void JumpButton_Enable(bool _state)
+    {
+        ChangeAlpha(_jumpButtonImage, _state);
     }
 
+    public void PickDropButton_SwitchMode(PickMode _mode)
+    {
+        _pickDropButtonImage_Text.text = _mode.ToString();
+    }
+
+
+
+    void ChangeAlpha(Image _myImage, bool _state)
+    {
+        _myImage.color =  new Color(_myImage.color.r, _myImage.color.g, _myImage.color.b, _state ? _buttonOnAlpha : _buttonOffAlpha);
+    }
 }

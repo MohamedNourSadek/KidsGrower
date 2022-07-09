@@ -7,16 +7,27 @@ public delegate void notify();
 
 public class Pickable : MonoBehaviour
 {
-    [Header("Objects References")]
-    [SerializeField] GameObject _indicatorObject;
-    [SerializeField] Rigidbody _myBody;
-     
-    bool isPicked = false;
+    public static List<Pickable> _allPickables = new List<Pickable>();
 
+    
+    [Header("Objects References")]
+    [SerializeField] protected GameObject _indicatorObject;
+    [SerializeField] protected Rigidbody _myBody;
+     
+    protected bool _isPicked = false;
+
+    void Awake()
+    {
+        _allPickables.Add(this);
+    }
+    void OnDestroy()
+    {
+        _allPickables.Remove(this);
+    }
 
     public bool IsPicked()
     {
-        return isPicked;
+        return _isPicked;
     }
     public virtual void PickablilityIndicator(bool _status)
     {
@@ -33,18 +44,17 @@ public class Pickable : MonoBehaviour
     {
         PickablilityIndicator(false);
 
-        isPicked = true;
+        _isPicked = true;
         _myBody.isKinematic = true;
 
         this.transform.position = handPosition.transform.position;
         this.transform.parent = handPosition;
     }
-
     public virtual void Drop()
     {
         PickablilityIndicator(true);
 
-        isPicked = false;
+        _isPicked = false;
         _myBody.isKinematic = false;
 
         this.transform.parent = null;
