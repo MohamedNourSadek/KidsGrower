@@ -12,7 +12,6 @@ public class Egg : Pickable
     public override void Pick(Transform handPosition)
     {
         base.Pick(handPosition);
-
         CancelPlant();
     }
     public void Plant(Vector3 _plantLocation)
@@ -24,6 +23,8 @@ public class Egg : Pickable
 
         StartCoroutine(Laying());
     }
+
+
     IEnumerator Laying()
     {
         while ((_plantedSince < _hatchTime) && !_isPicked)

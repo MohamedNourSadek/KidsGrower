@@ -16,7 +16,7 @@ public class Pickable : MonoBehaviour
      
     protected bool _isPicked = false;
 
-    void Awake()
+    public virtual void Awake()
     {
         _allPickables.Add(this);
     }
@@ -24,6 +24,7 @@ public class Pickable : MonoBehaviour
     {
         _allPickables.Remove(this);
     }
+
 
     public bool IsPicked()
     {
@@ -46,6 +47,7 @@ public class Pickable : MonoBehaviour
 
         _isPicked = true;
         _myBody.isKinematic = true;
+        _myBody.velocity = Vector3.zero;
 
         this.transform.position = handPosition.transform.position;
         this.transform.parent = handPosition;

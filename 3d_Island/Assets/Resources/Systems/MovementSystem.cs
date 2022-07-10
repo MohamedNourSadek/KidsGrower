@@ -7,72 +7,75 @@ using UnityEngine;
 public class MovementSystem
 {
     [SerializeField] LayerMask _groundLayer;
-    [SerializeField] UIController _uIController;
+
 
     [Header("Movement Parameters")]
-    [SerializeField] float _acceleration;
-    [SerializeField] float _maxSpeed;
-    [SerializeField] float _rotationSpeed;
+    [SerializeField] float _acceleration = 1250;
+    [SerializeField] float _maxSpeed = 3;
+    [SerializeField] float _rotationSpeed = 6;
 
     [Header("Jump Parameters Parameters")]
-    [SerializeField] float _jumpForce;
-    [SerializeField] float _onGroundThreshold;
+    [SerializeField] float _jumpForce = 13000;
+    [SerializeField] float _onGroundThreshold = 1.3f;
 
+    
+    Rigidbody _body;
+    Transform _lookDirection;
 
-    PlayerSystem _myPlayer;
     Quaternion _finalAngle;
     bool _onGround = true;
 
 
+    //Interface to the controller
+    public void Initialize(Rigidbody _body, Transform _lookdireciton)
+    {
+        this._body = _body;
+        _lookDirection = _lookdireciton;
+    }
     public void Update()
     {
         RotatePlayer();
         _onGround = DetectGround();
-
-        UpdateUi();
-    }
-    public void UpdateUi()
-    {
-        _uIController.JumpButton_Enable(_onGround);
     }
 
-    public void Initialize(PlayerSystem _player)
-    {
-        _myPlayer = _player;
-    }
+
+    //Interface to the controller
     public void PreformMove(Vector2 _movementInput)
     {
-        if(_myPlayer.GetBody().velocity.magnitude <= _maxSpeed)
+        if(_body.velocity.magnitude <= _maxSpeed)
         {
-            Vector3 _forwardAxis = new Vector3(_myPlayer.GetCameraTransform().forward.x, 0f, _myPlayer.GetCameraTransform().forward.z);
+            Vector3 _forwardAxis = new Vector3(_lookDirection.forward.x, 0f, _lookDirection.forward.z);
             Vector3 _rightAxis = Vector3.Cross(_forwardAxis, Vector3.up);
 
-            _myPlayer.GetBody().AddForce( 1 * _acceleration * _movementInput.y * _forwardAxis.normalized );
-            _myPlayer.GetBody().AddForce(-1 * _acceleration * _movementInput.x * _rightAxis.normalized );
+            _body.AddForce( 1 * _acceleration * _movementInput.y * _forwardAxis.normalized );
+            _body.AddForce(-1 * _acceleration * _movementInput.x * _rightAxis.normalized );
         }
 
-        _finalAngle = Quaternion.Euler(0f, _myPlayer.GetCameraTransform().rotation.eulerAngles.y +  AdditionalMath.AngleFromY(_movementInput), 0f);
+        _finalAngle = Quaternion.Euler(0f, _lookDirection.rotation.eulerAngles.y +  AdditionalMath.AngleFromY(_movementInput), 0f);
     }
     public void PreformJump()
     {
         if(_onGround)
         {
-            _myPlayer.GetBody().AddForce(Vector2.up * _jumpForce);
+            _body.AddForce(Vector2.up * _jumpForce);
         }
 
     }
-
-
-
+    public bool IsOnGroud()
+    {
+        return _onGround;
+    }
 
     void RotatePlayer()
     {
-        _myPlayer.transform.rotation = Quaternion.Lerp(_myPlayer.transform.rotation, _finalAngle, Time.fixedDeltaTime * _rotationSpeed);
+        _body.transform.rotation = Quaternion.Lerp(_body.transform.rotation, _finalAngle, Time.fixedDeltaTime * _rotationSpeed);
     }
     bool DetectGround()
     {
         RaycastHit _ray;
-        Physics.Raycast(_myPlayer.transform.position + Vector3.up, Vector2.down, out _ray, _onGroundThreshold, _groundLayer);
+        Physics.Raycast(_body.transform.position + Vector3.up, Vector2.down, out _ray, _onGroundThreshold, _groundLayer);
         return (_ray.point.magnitude > 0);
     }
+
+
 }
