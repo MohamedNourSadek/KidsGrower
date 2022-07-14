@@ -249,7 +249,7 @@ MonoBehaviour:
     _groundLayer:
       serializedVersion: 2
       m_Bits: 64
-    _acceleration: 100
+    _acceleration: 500
     _maxSpeed: 3
     _rotationSpeed: 6
     _jumpForce: 13000

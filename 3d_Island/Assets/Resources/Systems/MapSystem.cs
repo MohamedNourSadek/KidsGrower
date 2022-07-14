@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MapSystem : MonoBehaviour
 {
@@ -13,4 +14,7 @@ public class MapSystem : MonoBehaviour
     {
         ExplorationPoints = _explorationPoints;
     }
+
+
+   
 }
