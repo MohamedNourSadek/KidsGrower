@@ -30,6 +30,8 @@ public class HandSystem
     {
         DetectInteractability();
     }
+
+
     void DetectInteractability()
     {
         //Remove Destroyed objects.
@@ -101,6 +103,7 @@ public class HandSystem
 
         }
     }
+
     public void PickObject()
     {
         _objectInHand = nearPickables[0];

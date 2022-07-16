@@ -6,8 +6,8 @@ using UnityEngine;
 [System.Serializable] 
 public class MovementSystem
 {
-    [SerializeField] LayerMask _groundLayer;
 
+    [SerializeField] GroundDetector _groundDetector;
 
     [Header("Movement Parameters")]
     [SerializeField] float _acceleration = 1250;
@@ -16,8 +16,7 @@ public class MovementSystem
 
     [Header("Jump Parameters Parameters")]
     [SerializeField] float _jumpForce = 13000;
-    [SerializeField] float _onGroundThreshold = 1.3f;
-
+      
     
     Rigidbody _body;
     Transform _lookDirection;
@@ -35,7 +34,7 @@ public class MovementSystem
     public void Update()
     {
         RotatePlayer();
-        _onGround = DetectGround();
+        _onGround = _groundDetector.IsOnGroud(_body.transform.position);
     }
 
 
@@ -61,7 +60,7 @@ public class MovementSystem
         }
 
     }
-    public bool IsOnGroud()
+    public bool IsOnGround()
     {
         return _onGround;
     }
@@ -70,12 +69,5 @@ public class MovementSystem
     {
         _body.transform.rotation = Quaternion.Lerp(_body.transform.rotation, _finalAngle, Time.fixedDeltaTime * _rotationSpeed);
     }
-    bool DetectGround()
-    {
-        RaycastHit _ray;
-        Physics.Raycast(_body.transform.position + Vector3.up, Vector2.down, out _ray, _onGroundThreshold, _groundLayer);
-        return (_ray.point.magnitude > 0);
-    }
-
 
 }

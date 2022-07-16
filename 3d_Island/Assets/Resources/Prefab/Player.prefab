@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6949429004428104455}
   m_Layer: 3
   m_Name: Hand
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -136,14 +136,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerBody: {fileID: 6949429005409692763}
   _movementSystem:
-    _groundLayer:
-      serializedVersion: 2
-      m_Bits: 64
+    _groundDetector:
+      _groundLayer:
+        serializedVersion: 2
+        m_Bits: 64
+      _onGroundThreshold: 1.3
     _acceleration: 1250
     _maxSpeed: 3
     _rotationSpeed: 6
     _jumpForce: 13000
-    _onGroundThreshold: 1.3
   _myCamera:
     _controlledCamera: {fileID: 0}
     _distanceFromObject: 5
@@ -158,6 +159,7 @@ MonoBehaviour:
     _minDistanceToPick: 1
     _throwForce: 100
     _plantDistance: 1
+    _gotSomething: 0
     _canPick: 0
     _canDrop: 0
     _canThrow: 0
@@ -245,15 +247,30 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: -8330647501056133860, guid: 1f9f9a718cb1fc74fbc1a86ddceeb115,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: -6462187816223702749, guid: 1f9f9a718cb1fc74fbc1a86ddceeb115,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -6462187816223702749, guid: 1f9f9a718cb1fc74fbc1a86ddceeb115,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: -6453244840847699967, guid: 1f9f9a718cb1fc74fbc1a86ddceeb115,
         type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -6453244840847699967, guid: 1f9f9a718cb1fc74fbc1a86ddceeb115,
         type: 3}
-      propertyPath: m_Layer
-      value: 3
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: -4092844578741883967, guid: 1f9f9a718cb1fc74fbc1a86ddceeb115,
         type: 3}
@@ -265,6 +282,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: -3219618205381904463, guid: 1f9f9a718cb1fc74fbc1a86ddceeb115,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1f9f9a718cb1fc74fbc1a86ddceeb115,
         type: 3}
       propertyPath: m_Name
@@ -274,6 +296,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1f9f9a718cb1fc74fbc1a86ddceeb115,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 8155043477772894284, guid: 1f9f9a718cb1fc74fbc1a86ddceeb115,
         type: 3}

@@ -53,7 +53,7 @@ public class PlayerSystem : MonoBehaviour
         else
             _uiController.PlantButton_Enable(false);
 
-        _uiController.JumpButton_Enable(_movementSystem.IsOnGroud());
+        _uiController.JumpButton_Enable(_movementSystem.IsOnGround());
     }
 
     ///(Movement-Input) Interface
