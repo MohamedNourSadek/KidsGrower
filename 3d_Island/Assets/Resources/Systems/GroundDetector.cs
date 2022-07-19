@@ -8,14 +8,21 @@ public class GroundDetector
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] float _onGroundThreshold = 1.3f;
 
-    public bool IsOnGroud(Vector3 _position)
+    public bool IsOnGroud(Rigidbody _body)
     {
-        return DetectGround(_position);
+        return DetectGround(_body);
     }
-    bool DetectGround(Vector3 _position)
+    bool DetectGround(Rigidbody _body)
     {
-        RaycastHit _ray;
-        Physics.Raycast(_position + Vector3.up, Vector2.down, out _ray, _onGroundThreshold, _groundLayer);
-        return (_ray.point.magnitude > 0);
+        if (_body.isKinematic == false)
+        {
+            RaycastHit _ray;
+            Physics.Raycast(_body.transform.position + Vector3.up, Vector2.down, out _ray, _onGroundThreshold, _groundLayer);
+            return (_ray.point.magnitude > 0);
+        }
+        else
+        {
+            return false;
+        }
     }
 }

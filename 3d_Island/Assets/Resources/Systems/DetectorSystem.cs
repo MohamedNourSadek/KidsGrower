@@ -3,22 +3,150 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+public enum BallDetectionStatus { None, InRange, VeryNear };
+public enum TreeDetectionStatus { None, InRange, VeryNear };
+public enum PlayerDetectionStatus { None, InRange, VeryNear };
+public enum NpcDetectionStatus { None, InRange, VeryNear };
+public enum EggDetectionStatus { None, InRange, VeryNear };
+
+
+public delegate void notify(GameObject obj);
+public delegate void notifyBall(Ball ball);
+public delegate void notifyNPC(NPC npc);
+public delegate void notifyTree(TreeSystem tree);
+
 [System.Serializable]
 public class DetectorSystem : MonoBehaviour
 {
-    [SerializeField] float _interactabilityRange = 1f;
+
+    public float _nearObjectDistance = 1f;
+
+    public BallDetectionStatus _ballDetectionStatus = BallDetectionStatus.None;
+    public TreeDetectionStatus _treeDetectionStatus = TreeDetectionStatus.None;
+    public PlayerDetectionStatus _playerDetectionStatus = PlayerDetectionStatus.None;
+    public NpcDetectionStatus _npcDetectionStatus = NpcDetectionStatus.None;
+    public EggDetectionStatus _eggDetectionStatus = EggDetectionStatus.None;
+
+    public event notify OnObjectEnter;
+    public event notify OnObjectExit;
+
+
+    public event notifyBall OnBallNear;
+    public event notifyTree OnTreeNear;
+    public event notifyNPC OnNpcNear;
 
     //Private data
-    public DetectorData _detectorData;
+    readonly DetectorData _detectorData = new();
 
 
-    //Interface for outside use
+    public void Initialize(float nearObjectDistance)
+    {
+        _nearObjectDistance = nearObjectDistance;
+    }
+    public void Update()
+    {
+        //Safty for destroyed Objects
+        int destroyedIndex = -1;
+        for(int i = 0; i < _detectorData.eggs.Count; i++)
+        {
+            if (_detectorData.eggs[i] == null)
+                destroyedIndex = i;
+        }
+        if (destroyedIndex != -1)   
+            _detectorData.eggs.RemoveAt(destroyedIndex);
+
+        destroyedIndex = -1;
+        for (int i = 0; i < _detectorData.npcs.Count; i++)
+        {
+            if (_detectorData.npcs[i] == null)
+                destroyedIndex = i;
+        }
+        if (destroyedIndex != -1)
+            _detectorData.npcs.RemoveAt(destroyedIndex);
+
+        //Update status
+        if (BallInRange(_nearObjectDistance))
+        {
+            //To invoke the event once.
+            OnBallNear?.Invoke(BallInRange(_nearObjectDistance));
+            _ballDetectionStatus = BallDetectionStatus.VeryNear;
+        }
+        else if (BallInRange())
+        {
+
+            _ballDetectionStatus = BallDetectionStatus.InRange;
+        }
+        else
+        {
+            _ballDetectionStatus = BallDetectionStatus.None;
+        }
+
+        if (TreeInRange(_nearObjectDistance))
+        {
+            OnTreeNear?.Invoke(TreeInRange(_nearObjectDistance));
+
+            _treeDetectionStatus = TreeDetectionStatus.VeryNear;
+        }
+        else if (TreeInRange())
+        {
+            _treeDetectionStatus = TreeDetectionStatus.InRange;
+        }
+        else
+        {
+            _treeDetectionStatus = TreeDetectionStatus.None;
+        }
+
+        if (PlayerInRange(_nearObjectDistance))
+        {
+            _playerDetectionStatus = PlayerDetectionStatus.VeryNear;
+        }
+        else if (PlayerInRange())
+        {
+            _playerDetectionStatus = PlayerDetectionStatus.InRange;
+        }
+        else
+        {
+            _playerDetectionStatus = PlayerDetectionStatus.None;
+        }
+
+        if (NpcInRange(_nearObjectDistance))
+        {
+            OnNpcNear?.Invoke(NpcInRange(_nearObjectDistance));
+
+            _npcDetectionStatus = NpcDetectionStatus.VeryNear;
+        }
+        else if (NpcInRange())
+        {
+            _npcDetectionStatus = NpcDetectionStatus.InRange;
+        }
+        else
+        {
+            _npcDetectionStatus = NpcDetectionStatus.None;
+        }
+
+        if (EggInRange(_nearObjectDistance))
+        {
+            _eggDetectionStatus = EggDetectionStatus.VeryNear;
+        }
+        else if (EggInRange())
+        {
+            _eggDetectionStatus = EggDetectionStatus.InRange;
+        }
+        else
+        {
+            _eggDetectionStatus = EggDetectionStatus.None;
+        }
+    }
+
+
+
+    //Interfaces for outside use
     public DetectorData GetDetectedData()
     {
         return _detectorData;
     }
 
-    public PlayerSystem PlayerInRange(bool _onlyVeryNear)
+    public PlayerSystem PlayerInRange()
     {
         PlayerSystem player = null;
 
@@ -35,20 +163,23 @@ public class DetectorSystem : MonoBehaviour
                     player = _player;
         }
 
-        if(player != null && _onlyVeryNear && IsNear(player.gameObject))
+        return player;
+    }
+    public PlayerSystem PlayerInRange(float _range)
+    {
+        PlayerSystem player = PlayerInRange();
+
+        if (player != null && IsNear(player.gameObject, _range))
         {
             return player;
         }
-        else if(player != null && !_onlyVeryNear)
-        {
-            return player;
-        }
-        else 
+        else
         {
             return null;
         }
     }
-    public NPC NpcInRange(bool _onlyVeryNear)
+
+    public NPC NpcInRange()
     {
         NPC npc = null;
 
@@ -65,11 +196,13 @@ public class DetectorSystem : MonoBehaviour
                     npc = _npc;
         }
 
-        if (npc != null && (_onlyVeryNear == true) && IsNear(npc.gameObject))
-        {
-            return npc;
-        }
-        else if (npc != null && (_onlyVeryNear == false))
+        return npc;
+    }
+    public NPC NpcInRange(float _range)
+    {
+        NPC npc = NpcInRange();
+
+        if (npc != null && IsNear(npc.gameObject, _range))
         {
             return npc;
         }
@@ -78,7 +211,8 @@ public class DetectorSystem : MonoBehaviour
             return null;
         }
     }
-    public Ball BallInRange(bool _onlyVeryNear)
+
+    public Ball BallInRange()
     {
         Ball ball = null;
 
@@ -95,11 +229,13 @@ public class DetectorSystem : MonoBehaviour
                     ball = _ball;
         }
 
-        if (ball != null && (_onlyVeryNear == true) && IsNear(ball.gameObject))
-        {
-            return ball;
-        }
-        else if (ball != null && (_onlyVeryNear == false))
+        return ball;
+    }
+    public Ball BallInRange(float _range)
+    {
+        Ball ball = BallInRange();
+
+        if (ball != null && IsNear(ball.gameObject, _range))
         {
             return ball;
         }
@@ -108,7 +244,8 @@ public class DetectorSystem : MonoBehaviour
             return null;
         }
     }
-    public TreeSystem TreeInRange(bool _onlyVeryNear)
+
+    public TreeSystem TreeInRange()
     {
         TreeSystem tree = null;
 
@@ -125,11 +262,13 @@ public class DetectorSystem : MonoBehaviour
                     tree = _tree;
         }
 
-        if (tree != null && (_onlyVeryNear == true) && IsNear(tree.gameObject))
-        {
-            return tree;
-        }
-        else if (tree != null && (_onlyVeryNear == false))
+        return tree;
+    }
+    public TreeSystem TreeInRange(float _range)
+    {
+        TreeSystem tree = TreeInRange();
+
+        if (tree != null && IsNear(tree.gameObject, _range))
         {
             return tree;
         }
@@ -140,78 +279,132 @@ public class DetectorSystem : MonoBehaviour
     }
 
 
+    public Egg EggInRange()
+    {
+        Egg egg = null;
+
+        if (_detectorData.eggs.Count == 1)
+        {
+            egg = _detectorData.eggs[0];
+        }
+        else if (_detectorData.eggs.Count > 1)
+        {
+            egg = _detectorData.eggs[0];
+
+            foreach (Egg _egg in _detectorData.eggs)
+                if (Distance(_egg.gameObject) < Distance(egg.gameObject))
+                    egg = _egg;
+        }
+
+        return egg;
+    }
+    public Egg EggInRange(float _range)
+    {
+        Egg egg = EggInRange();
+
+        if (egg != null && IsNear(egg.gameObject, _range))
+        {
+            return egg;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+
+
     //Help functions
-    float Distance(GameObject _object)
+    public float Distance(GameObject _object)
     {
         return (_object.transform.position - this.transform.position).magnitude;
     }
-    bool IsNear(GameObject _object)
+    bool IsNear(GameObject _object, float _range)
     {
-        return Distance(_object) <= _interactabilityRange;
+        return Distance(_object) <= _range;
     }
 
 
     //Detection functions
     private void OnTriggerEnter(Collider collider)
     {
-        if(collider.tag == "Player")
+        OnObjectEnter?.Invoke(collider.gameObject);
+
+        if (collider.CompareTag("Player"))
         {
             PlayerSystem _player = collider.GetComponentInParent<PlayerSystem>();
 
             if (_detectorData.players.Contains(_player) == false)
                 _detectorData.players.Add(_player);
         }
-        else if (collider.tag == "NPC")
+        else if (collider.CompareTag("NPC"))
         {
             NPC _npc = collider.GetComponentInParent<NPC>();
 
             if (_detectorData.npcs.Contains(_npc) == false)
                 _detectorData.npcs.Add(_npc);
         }
-        else if (collider.tag == "Ball")
+        else if (collider.CompareTag("Ball"))
         {
             Ball _ball = collider.GetComponentInParent<Ball>();
 
             if (_detectorData.balls.Contains(_ball) == false)
                 _detectorData.balls.Add(_ball);
         }
-        else if (collider.tag == "Tree")
+        else if (collider.CompareTag("Tree"))
         {
             TreeSystem _tree = collider.GetComponentInParent<TreeSystem>();
 
             if (_detectorData.trees.Contains(_tree) == false)
                 _detectorData.trees.Add(_tree);
         }
+        else if (collider.CompareTag("Egg"))
+        {
+            Egg _egg = collider.GetComponentInParent<Egg>();
+
+            if (_detectorData.eggs.Contains(_egg) == false)
+                _detectorData.eggs.Add(_egg);
+        }
     }
     private void OnTriggerExit(Collider collider)
     {
-        if (collider.tag == "Player")
+        OnObjectExit?.Invoke(collider.gameObject);
+
+        if (collider.CompareTag("Player"))
         {
             PlayerSystem _player = collider.GetComponentInParent<PlayerSystem>();
 
             if (_detectorData.players.Contains(_player) == true)
                 _detectorData.players.Remove(_player);
         }
-        else if (collider.tag == "NPC")
+        else if (collider.CompareTag("NPC"))
         {
             NPC _npc = collider.GetComponentInParent<NPC>();
 
             if (_detectorData.npcs.Contains(_npc) == true)
                 _detectorData.npcs.Remove(_npc);
         }
-        else if (collider.tag == "Ball")
+        else if (collider.CompareTag("Ball"))
         {
             Ball _ball = collider.GetComponentInParent<Ball>();
 
             if (_detectorData.balls.Contains(_ball) == true)
                 _detectorData.balls.Remove(_ball);
         }
-        else if (collider.tag == "Tree")
+        else if (collider.CompareTag("Tree"))
         {
             TreeSystem _tree = collider.GetComponentInParent<TreeSystem>();
 
             if (_detectorData.trees.Contains(_tree) == true)
                 _detectorData.trees.Remove(_tree);
+        }
+        else if (collider.CompareTag("Egg"))
+        {
+            Egg _egg = collider.GetComponentInParent<Egg>();
+
+            if (_detectorData.eggs.Contains(_egg) == true)
+                _detectorData.eggs.Remove(_egg);
         }
     }
 }
@@ -221,8 +414,9 @@ public class DetectorSystem : MonoBehaviour
 [System.Serializable]
 public class  DetectorData
 {
-    [SerializeField] public List<PlayerSystem> players = new List<PlayerSystem>();
-    [SerializeField] public List<NPC> npcs = new List<NPC>();
-    [SerializeField] public List<Ball> balls = new List<Ball>();
-    [SerializeField] public List<TreeSystem> trees = new List<TreeSystem>();
+    [SerializeField] public List<PlayerSystem> players = new();
+    [SerializeField] public List<NPC> npcs = new();
+    [SerializeField] public List<Ball> balls = new();
+    [SerializeField] public List<TreeSystem> trees = new();
+    [SerializeField] public List<Egg> eggs = new();
 }

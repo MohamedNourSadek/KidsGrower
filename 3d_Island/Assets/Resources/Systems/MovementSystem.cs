@@ -34,7 +34,7 @@ public class MovementSystem
     public void Update()
     {
         RotatePlayer();
-        _onGround = _groundDetector.IsOnGroud(_body.transform.position);
+        _onGround = _groundDetector.IsOnGroud(_body);
     }
 
 

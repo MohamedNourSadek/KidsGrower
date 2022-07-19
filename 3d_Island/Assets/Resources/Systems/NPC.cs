@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
+public enum MovementStatus {Moving, Idel, Exploring, Watching};
+
 public class NPC : Pickable
 {
     [SerializeField] HandSystem _handSystem;
@@ -15,10 +18,25 @@ public class NPC : Pickable
     [SerializeField] float _grownMassMultiplier = 1.35f;
 
     [Header("AI Parameters")]
+    [SerializeField] MovementStatus _movementStatus = MovementStatus.Idel;
     [SerializeField] float _stoppingDistance = 1f;
     [SerializeField] float _decisionsDelay = 0.5f;
     [SerializeField] float _punchableDistance = 1.5f;
     [SerializeField] float _punchForce = 120f;
+    [SerializeField] float _nearObjectDistance = 1f;
+    [SerializeField] float _explorationAmplitude = 10f;
+    [SerializeField] float _bordemTime = 30f;
+    [SerializeField] [Range(0, 1)] float _playerLove = 0.1f;
+    [SerializeField] [Range(0, 1)] float _npcLove = 0.1f;
+    [SerializeField] [Range(0, 1)] float _ballLove = 0.1f;
+    [SerializeField] [Range(0, 1)] float _treeLove = 0.1f;
+    [SerializeField] [Range(0, 1)] float _droppingBall = 0.1f;
+    [SerializeField] [Range(0, 1)] float _throwBallOnNPC = 0.1f;
+    [SerializeField] [Range(0, 1)] float _throwBallOnPlayer = 0.1f;
+    [SerializeField] [Range(0, 1)] float _punchNpcLove = 0.1f;
+    [SerializeField] [Range(0, 1)] float _pickBallLove = 0.1f;
+
+
 
     [Header("References")]
     [SerializeField] GameObject _model;
@@ -26,63 +44,45 @@ public class NPC : Pickable
     [SerializeField] Material _grownMaterial;
 
 
-    public enum BallStatus {noBall, ballDetected, ballPicked, ballPickable};
-    public enum NPCStatus {noNPC, NPCDetected};
-    public enum MovementStatus { moving, idel };
-    public MovementStatus _movementStats = MovementStatus.idel;
-    public BallStatus _ballStatus = BallStatus.noBall;
-    public NPCStatus _npcStatus = NPCStatus.NPCDetected;
-
-
-
+    //Private data
     NavMeshAgent _myAgent;
-
-    List<Pickable> _pickablesByMeDetected = new List<Pickable>();
-    NPC _nearNPCs;
-    Vector3 _destination = new Vector3();
-
     float _bornSince = 0f;
-    bool _isBaby = true;
 
-
-    public override void Awake()
+    
+    //Main Functions
+    void Awake()
     {
-        base.Awake();
-
         _myAgent = GetComponent<NavMeshAgent>();
-        _handSystem.Initialize(_pickablesByMeDetected);
+        _detector.Initialize(_nearObjectDistance);
+        _handSystem.Initialize(_detector);
+
+        _detector.OnObjectEnter += OnObjectEnter;
+        _detector.OnObjectExit += OnObjectExit;
+        _detector.OnBallNear += OnBallNear;
+        _detector.OnTreeNear += OnTreeNear;
+        _detector.OnNpcNear += OnNpcNear;
 
         StartCoroutine(GrowingUp());
-        StartCoroutine(AiInteractionDecision());
-        StartCoroutine(AiMovementDecision());
+        StartCoroutine(AiContinous());
+        StartCoroutine(AiDescrete());
     }
     public override void Pick(Transform handPosition)
     {
         base.Pick(handPosition);
-
         _myAgent.enabled = false;
     }
     public void Update()
     {
         _handSystem.Update();
-
-        //Reactivate AI if the player were thrown.
-        if (_groundDetector.IsOnGroud(_myBody.transform.position))
+        _detector.Update();
+        
+        //Reactivate AI only if the npc were thrown and touched the ground.
+        if (_groundDetector.IsOnGroud(_myBody))
             _myAgent.enabled = true;
-
-        if (_detector.TreeInRange(false))
-        {
-            Debug.Log(this.name + " Detected Ball In Range");
-        }
-
-        if (_detector.TreeInRange(true))
-        {
-            Debug.Log(this.name + " Detected Ball very near");
-
-        }
     }
 
 
+    //Growing Up
     IEnumerator GrowingUp()
     {
         while ((_bornSince < _growingUpTime))
@@ -96,8 +96,6 @@ public class NPC : Pickable
     }
     void GrowUp()
     {
-        _isBaby = false;
-
         _myBody.mass = _grownMassMultiplier * _myBody.mass;
         _model.transform.localScale = _grownBodyMultiplier * _model.transform.localScale;
 
@@ -106,79 +104,203 @@ public class NPC : Pickable
     }
 
 
-    //NPC AI Decision Makers
-    IEnumerator AiInteractionDecision()
+    //AI private variables
+    public float _timeSinceLastAction = 0;
+    Vector3 _deltaExploration = Vector3.zero;
+    Vector3 _destination = new();
+    public Transform _dynamicDestination;
+
+
+    //AI Decision Making
+    IEnumerator AiDescrete()
     {
-        while(true)
+        while (true)
         {
-            if (_handSystem._canPick)
-                _ballStatus = BallStatus.ballPickable;
-            else if (!_handSystem._gotSomething &&  _pickablesByMeDetected.Count > 0)
-                _ballStatus = BallStatus.ballDetected;
-
-            if (_nearNPCs == null)
-                _npcStatus = NPCStatus.noNPC;
-            else
-                _npcStatus = NPCStatus.NPCDetected;
-
-
-            if (_ballStatus == BallStatus.ballPickable)
+            if(_movementStatus == MovementStatus.Idel)
             {
-                _handSystem.PickObject();
-                _ballStatus = BallStatus.ballPicked;
+                ChooseRandomExplorationPoint();
             }
-            else if ((_ballStatus == BallStatus.ballPicked) && (_npcStatus == NPCStatus.NPCDetected))
+            if(_timeSinceLastAction >= _bordemTime)
             {
-                var _direction = (_nearNPCs.transform.position - this.transform.position).normalized;
-                _handSystem.ThrowObject(_direction);
-                _ballStatus = BallStatus.noBall;
+                _movementStatus = MovementStatus.Idel;
+            }
+
+            //Player is near and i got a throwable object.
+            if(_detector._playerDetectionStatus == PlayerDetectionStatus.InRange && _handSystem._gotSomething)
+            {
+                ThinkAboutThrowing(_detector.PlayerInRange().gameObject, _throwBallOnPlayer);
+            }
+
+            //NPC is near and i got a throwable object.
+            if (_detector._npcDetectionStatus == NpcDetectionStatus.InRange && _handSystem._gotSomething)
+            {
+                ThinkAboutThrowing(_detector.NpcInRange().gameObject, _throwBallOnNPC);
+            }
+
+            //No One is near
+            if (_handSystem._gotSomething)
+            {
+                ThinkaboutDroppingTheBall();
             }
 
             yield return new WaitForSecondsRealtime(_decisionsDelay);
         }
-
     }
-    IEnumerator AiMovementDecision()
+    void OnObjectEnter(GameObject obj)
+    {
+        if (obj.CompareTag("Player"))
+            ThinkAboutFollowingObject(obj, _playerLove);
+
+        if (obj.CompareTag("NPC"))
+            ThinkAboutFollowingObject(obj, _npcLove);
+
+        if (obj.CompareTag("Ball"))
+            ThinkAboutFollowingObject(obj, _ballLove);
+
+        if (obj.CompareTag("Tree"))
+            ThinkAboutFollowingObject(obj, _treeLove);
+    }
+    void OnObjectExit(GameObject obj)
+    {
+        //If the object i am following got out of range
+        if(_dynamicDestination == obj.transform)
+        {
+            _movementStatus = MovementStatus.Idel;
+        }
+    }
+    void OnTreeNear(TreeSystem tree)
+    {
+        if(_movementStatus == MovementStatus.Watching)
+            ThinkAboutShakingTree(tree);
+    }
+    void OnNpcNear(NPC npc)
+    {
+        if (_movementStatus == MovementStatus.Watching)
+            ThinkAboutPunchingAnNpc(_detector.NpcInRange()._myBody);
+    }
+    void OnBallNear(Ball ball)
+    {
+        if (_movementStatus == MovementStatus.Watching)
+            ThinkAboutPickingBall();
+    }
+    IEnumerator AiContinous()
     {
         while(true)
         {
-            if (_movementStats == MovementStatus.idel)
+            if ((_movementStatus == MovementStatus.Moving))
             {
-                ChooseRandomExplorationPoint();
+                MoveTo(_dynamicDestination);
             }
-            else if ((_movementStats == MovementStatus.moving) && !(_ballStatus == BallStatus.ballPickable))
+            else if(_movementStatus == MovementStatus.Exploring)
             {
-                MoveTo(_destination);
+                ExplorePoint(_destination);
             }
 
+
+            _timeSinceLastAction += Time.fixedDeltaTime;
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
     }
 
 
-    void ChooseRandomExplorationPoint()
+    //Algorithms
+    void ThinkAboutShakingTree(TreeSystem tree)
     {
-        if(!(MapSystem.ExplorationPoints.Count == 0))
-        {
-            var _randomLocation = Random.Range(0, MapSystem.ExplorationPoints.Count);
+        float _randomChance = Random.Range(0f, 1f);
 
-            _destination = MapSystem.ExplorationPoints[_randomLocation].transform.position;
-            _movementStats = MovementStatus.moving;
+        if ((_randomChance < _treeLove) && (_randomChance > 0))
+        {
+            tree.Shake();
+            _movementStatus = MovementStatus.Idel;
         }
     }
-    void MoveTo(Vector3 Position)
+    void ThinkAboutPickingBall()
     {
-        _myAgent.destination = Position;
+        if (_dynamicDestination.CompareTag("Ball"))
+        {
+            _handSystem.PickObject();
+            _movementStatus = MovementStatus.Idel;
+        }
+    }
+    void ThinkAboutPunchingAnNpc(Rigidbody body)
+    {
+        float _randomChance = Random.Range(0f, 1f);
 
-        float distance = (this.transform.position - Position).magnitude;
+        if ((_randomChance < _punchNpcLove) && (_randomChance > 0))
+        {
+            Vector3 direction = (body.transform.position - this.transform.position).normalized;
+            body.AddForce(direction * _punchForce, ForceMode.Impulse);
+
+            _movementStatus = MovementStatus.Idel;
+        }
+    }
+    void ThinkAboutThrowing(GameObject target, float chance)
+    {
+        float _randomChance = Random.Range(0f, 1f);
+
+        if ((_randomChance < chance) && (_randomChance > 0))
+        {
+            _handSystem.ThrowObject((target.transform.position));
+        }
+    }
+    void ThinkaboutDroppingTheBall()
+    {
+        float _randomChance = Random.Range(0f, 1f);
+
+        if ((_randomChance < _droppingBall) && (_randomChance > 0))
+        {
+            _handSystem.DropObject();
+        }
+    }
+    void ThinkAboutFollowingObject(GameObject obj, float chance)
+    {
+        float _randomChance = Random.Range(0f, 1f);
+
+        if((_randomChance < chance) && (_randomChance > 0))
+        {
+            _timeSinceLastAction = 0;
+            _dynamicDestination = obj.transform;
+            _movementStatus = MovementStatus.Moving;
+        }
+    }
+    void ChooseRandomExplorationPoint()
+    {
+        if (!(MapSystem.ExplorationPoints.Count == 0))
+        {
+            _timeSinceLastAction = 0;
+            _deltaExploration = Vector3.zero;
+            var _randomLocation = Random.Range(0, MapSystem.ExplorationPoints.Count);
+            _destination = MapSystem.ExplorationPoints[_randomLocation].transform.position;
+            _movementStatus = MovementStatus.Exploring;
+        }
+    }
+    void MoveTo(Transform followed)
+    {
+        _myAgent.destination = followed.position;
+
+        float distance = (this.transform.position - _myAgent.destination).magnitude;
 
         if (distance <= _stoppingDistance)
         {
-            _movementStats = MovementStatus.idel;
+            _movementStatus = MovementStatus.Watching;
         }
     }
+    void ExplorePoint(Vector3 position)
+    {
+        _myAgent.destination = position + _deltaExploration;
 
-   
+        float distance = (this.transform.position - _myAgent.destination).magnitude;
 
+        if (distance <= _stoppingDistance)
+        {
+            float x = Random.Range(0f, _explorationAmplitude);
+            float z = Random.Range(0f, _explorationAmplitude);
+
+            _deltaExploration = new Vector3(x, 0, z);
+        }
+    }
 }
+
+
+
 

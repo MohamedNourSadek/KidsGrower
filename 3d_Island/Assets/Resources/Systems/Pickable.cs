@@ -3,29 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public delegate void notify();
-
 public class Pickable : MonoBehaviour
 {
-    public static List<Pickable> _allPickables = new List<Pickable>();
-
-    
     [Header("Objects References")]
     [SerializeField] protected GameObject _indicatorObject;
     [SerializeField] protected Rigidbody _myBody;
      
     protected bool _isPicked = false;
 
-    public virtual void Awake()
+    public float GetSpeed()
     {
-        _allPickables.Add(this);
+        return _myBody.velocity.magnitude;
     }
-    void OnDestroy()
-    {
-        _allPickables.Remove(this);
-    }
-
-
     public bool IsPicked()
     {
         return _isPicked;
@@ -43,8 +32,6 @@ public class Pickable : MonoBehaviour
     }
     public virtual void Pick(Transform handPosition)
     {
-        PickablilityIndicator(false);
-
         _isPicked = true;
         _myBody.isKinematic = true;
         _myBody.velocity = Vector3.zero;
@@ -54,8 +41,6 @@ public class Pickable : MonoBehaviour
     }
     public virtual void Drop()
     {
-        PickablilityIndicator(true);
-
         _isPicked = false;
         _myBody.isKinematic = false;
 

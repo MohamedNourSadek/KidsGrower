@@ -10,8 +10,8 @@ public class PlayerSystem : MonoBehaviour
     [SerializeField] CameraSystem _myCamera;
     [SerializeField] HandSystem _handSystem;
     [SerializeField] UIController _uiController;
-
-    InputSystem _inputSystem = new InputSystem();
+    [SerializeField] DetectorSystem _detector;
+    readonly InputSystem _inputSystem = new();
 
     //Initialization and refreshable functions
     void Awake()
@@ -19,7 +19,7 @@ public class PlayerSystem : MonoBehaviour
         _inputSystem.Initialize(this);
         _movementSystem.Initialize(_playerBody, _myCamera.GetCameraTransform());
         _myCamera.Initialize(this.gameObject);
-        _handSystem.Initialize(Pickable._allPickables);
+        _handSystem.Initialize(_detector);
     }
 
     void FixedUpdate()
@@ -27,8 +27,9 @@ public class PlayerSystem : MonoBehaviour
         _inputSystem.Update();
         _myCamera.Update();
         _movementSystem.Update();
-
+        _detector.Update();
         _handSystem.Update();
+
         UpdateUi();
     }
     void UpdateUi()
@@ -83,7 +84,7 @@ public class PlayerSystem : MonoBehaviour
     public void ThrowInput()
     {
         if(_handSystem._canThrow)
-            _handSystem.ThrowObject(transform.forward);
+            _handSystem.ThrowObject(this.transform.position + (this.transform.forward));
     }
     public void PlantInput()
     {
