@@ -14,17 +14,22 @@ public class MovementSystem
     [SerializeField] float _maxSpeed = 3;
     [SerializeField] float _rotationSpeed = 6;
 
-    [Header("Jump Parameters Parameters")]
+    [Header("Jump Parameters")]
     [SerializeField] float _jumpForce = 13000;
-      
-    
+
+    [Header("Dash parameters")]
+    [SerializeField] float _dashRechargeTime = 1f;
+    [SerializeField] float _dashForce = 13000;
+
+
     Rigidbody _body;
     Transform _lookDirection;
 
     Quaternion _finalAngle;
     bool _onGround = true;
-
-
+    float _timeSinceLastDash = 0f;
+    bool _dashedMidAir = false;
+    
     //Interface to the controller
     public void Initialize(Rigidbody _body, Transform _lookdireciton)
     {
@@ -34,11 +39,14 @@ public class MovementSystem
     public void Update()
     {
         RotatePlayer();
+
         _onGround = _groundDetector.IsOnGroud(_body);
+
+        if (_onGround)
+            _dashedMidAir = false;
+
+        _timeSinceLastDash += Time.fixedDeltaTime;
     }
-
-
-    //Interface to the controller
     public void PreformMove(Vector2 _movementInput)
     {
         if(_body.velocity.magnitude <= _maxSpeed)
@@ -60,6 +68,26 @@ public class MovementSystem
         }
 
     }
+    public void PerformDash()
+    {
+        bool _canDash = false;
+
+        if(IsDashable())
+        {
+            _timeSinceLastDash = 0f;
+            _dashedMidAir = true;
+            _canDash = true;
+        }
+
+        if(_canDash)
+            _body.AddForce(_body.transform.forward * _dashForce);
+    }
+
+    public bool IsDashable()
+    {
+        return (_onGround && _timeSinceLastDash >= _dashRechargeTime) ||
+               (!_onGround && !_dashedMidAir);
+    }
     public bool IsOnGround()
     {
         return _onGround;
@@ -69,5 +97,4 @@ public class MovementSystem
     {
         _body.transform.rotation = Quaternion.Lerp(_body.transform.rotation, _finalAngle, Time.fixedDeltaTime * _rotationSpeed);
     }
-
 }

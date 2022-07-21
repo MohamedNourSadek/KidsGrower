@@ -21,7 +21,6 @@ public class PlayerSystem : MonoBehaviour
         _myCamera.Initialize(this.gameObject);
         _handSystem.Initialize(_detector);
     }
-
     void FixedUpdate()
     {
         _inputSystem.Update();
@@ -36,10 +35,21 @@ public class PlayerSystem : MonoBehaviour
     {
         if (_handSystem._canDrop)
             _uiController.PickDropButton_SwitchMode(PickMode.Drop);
+        else if (_handSystem._canPick)
+            _uiController.PickDropButton_SwitchMode(PickMode.Pick);
+        else if (_handSystem._detector._treeDetectionStatus == TreeDetectionStatus.VeryNear)
+            _uiController.PickDropButton_SwitchMode(PickMode.Shake);
         else
             _uiController.PickDropButton_SwitchMode(PickMode.Pick);
 
-        if (_handSystem._canPick || _handSystem._canDrop)
+
+        bool _canShake = (!_handSystem._canPick
+                       && !_handSystem._canDrop
+                       && (_handSystem._detector._treeDetectionStatus == TreeDetectionStatus.VeryNear));
+
+
+
+        if (_handSystem._canPick || _handSystem._canDrop || _canShake)
             _uiController.PickDropButton_Enable(true);
         else
             _uiController.PickDropButton_Enable(false);
@@ -54,7 +64,10 @@ public class PlayerSystem : MonoBehaviour
         else
             _uiController.PlantButton_Enable(false);
 
+
         _uiController.JumpButton_Enable(_movementSystem.IsOnGround());
+        _uiController.DashButton_Enable(_movementSystem.IsDashable());
+
     }
 
     ///(Movement-Input) Interface
@@ -80,6 +93,10 @@ public class PlayerSystem : MonoBehaviour
         {
             _handSystem.DropObject();
         }
+        else if(_handSystem._detector._treeDetectionStatus == TreeDetectionStatus.VeryNear)
+        {
+            _handSystem._detector.TreeInRange().Shake();
+        }
     }
     public void ThrowInput()
     {
@@ -91,4 +108,9 @@ public class PlayerSystem : MonoBehaviour
         if(_handSystem._canPlant)
             _handSystem.PlantObject();
     }
+    public void DashInput()
+    {
+        _movementSystem.PerformDash();
+    }
+
 }

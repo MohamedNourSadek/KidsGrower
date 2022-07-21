@@ -80,6 +80,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""a99dd26a-0e4a-465b-a387-4a8b43f3d118"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -280,6 +289,28 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c19c0425-49a7-4bab-b9c3-dca715bb2de9"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9f60e17e-234b-47b6-af08-cb9a25e86cee"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Game pad"",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -317,6 +348,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Pick = m_Player.FindAction("Pick", throwIfNotFound: true);
         m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
         m_Player_Plant = m_Player.FindAction("Plant", throwIfNotFound: true);
+        m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -382,6 +414,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Pick;
     private readonly InputAction m_Player_Throw;
     private readonly InputAction m_Player_Plant;
+    private readonly InputAction m_Player_Dash;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -392,6 +425,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Pick => m_Wrapper.m_Player_Pick;
         public InputAction @Throw => m_Wrapper.m_Player_Throw;
         public InputAction @Plant => m_Wrapper.m_Player_Plant;
+        public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -419,6 +453,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Plant.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPlant;
                 @Plant.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPlant;
                 @Plant.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPlant;
+                @Dash.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDash;
+                @Dash.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDash;
+                @Dash.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDash;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -441,6 +478,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Plant.started += instance.OnPlant;
                 @Plant.performed += instance.OnPlant;
                 @Plant.canceled += instance.OnPlant;
+                @Dash.started += instance.OnDash;
+                @Dash.performed += instance.OnDash;
+                @Dash.canceled += instance.OnDash;
             }
         }
     }
@@ -471,5 +511,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnPick(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);
         void OnPlant(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public enum PickMode { Pick, Drop};
+public enum PickMode { Pick, Drop, Shake};
 
 public class UIController : MonoBehaviour
 {
@@ -18,6 +18,7 @@ public class UIController : MonoBehaviour
     [SerializeField] Image _throwButtonImage;
     [SerializeField] Image _plantButtonImage;
     [SerializeField] Image _jumpButtonImage;
+    [SerializeField] Image _dashButtonImage;
     [SerializeField] Text _pickDropButtonImage_Text;
 
     public void PickDropButton_Enable(bool _state)
@@ -36,7 +37,11 @@ public class UIController : MonoBehaviour
     {
         ChangeAlpha(_jumpButtonImage, _state);
     }
+    public void DashButton_Enable(bool _state)
+    {
+        ChangeAlpha(_dashButtonImage, _state);
 
+    }
     public void PickDropButton_SwitchMode(PickMode _mode)
     {
         _pickDropButtonImage_Text.text = _mode.ToString();
