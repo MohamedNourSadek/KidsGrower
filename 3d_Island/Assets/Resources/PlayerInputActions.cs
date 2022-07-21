@@ -89,6 +89,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pet"",
+                    ""type"": ""Button"",
+                    ""id"": ""131ad336-1ef5-461a-866b-2c239d30efb5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -311,6 +320,28 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9bde5278-861a-432e-afa8-02c4715986cd"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Pet"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a43ddfdb-17b0-4b1f-9156-8b3ba1650425"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Game pad"",
+                    ""action"": ""Pet"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -349,6 +380,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
         m_Player_Plant = m_Player.FindAction("Plant", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
+        m_Player_Pet = m_Player.FindAction("Pet", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -415,6 +447,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Throw;
     private readonly InputAction m_Player_Plant;
     private readonly InputAction m_Player_Dash;
+    private readonly InputAction m_Player_Pet;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -426,6 +459,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Throw => m_Wrapper.m_Player_Throw;
         public InputAction @Plant => m_Wrapper.m_Player_Plant;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
+        public InputAction @Pet => m_Wrapper.m_Player_Pet;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -456,6 +490,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Dash.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDash;
                 @Dash.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDash;
                 @Dash.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDash;
+                @Pet.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPet;
+                @Pet.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPet;
+                @Pet.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPet;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -481,6 +518,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Dash.started += instance.OnDash;
                 @Dash.performed += instance.OnDash;
                 @Dash.canceled += instance.OnDash;
+                @Pet.started += instance.OnPet;
+                @Pet.performed += instance.OnPet;
+                @Pet.canceled += instance.OnPet;
             }
         }
     }
@@ -512,5 +552,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnThrow(InputAction.CallbackContext context);
         void OnPlant(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+        void OnPet(InputAction.CallbackContext context);
     }
 }

@@ -11,6 +11,11 @@ public class Pickable : MonoBehaviour
      
     protected bool _isPicked = false;
 
+
+    public Rigidbody GetBody()
+    {
+        return _myBody;
+    }
     public float GetSpeed()
     {
         return _myBody.velocity.magnitude;
@@ -39,6 +44,8 @@ public class Pickable : MonoBehaviour
         this.transform.position = handPosition.transform.position;
         this.transform.parent = handPosition;
     }
+
+
     public virtual void Drop()
     {
         _isPicked = false;

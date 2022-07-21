@@ -21,6 +21,7 @@ public class InputSystem
         _inputActions.Player.Throw.performed += ThrowInput;
         _inputActions.Player.Plant.performed += PlantInput;
         _inputActions.Player.Dash.performed += DashInput;
+        _inputActions.Player.Pet.performed += PetInput;
     }
     public void Update()
     {
@@ -48,6 +49,10 @@ public class InputSystem
     void DashInput(InputAction.CallbackContext obj)
     {
         _myPlayer.DashInput();
+    }
+    void PetInput(InputAction.CallbackContext obj)
+    {
+        _myPlayer.PetInput();
     }
 
 

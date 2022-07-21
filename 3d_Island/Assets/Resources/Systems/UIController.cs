@@ -19,6 +19,7 @@ public class UIController : MonoBehaviour
     [SerializeField] Image _plantButtonImage;
     [SerializeField] Image _jumpButtonImage;
     [SerializeField] Image _dashButtonImage;
+    [SerializeField] Image _petButtonImage;
     [SerializeField] Text _pickDropButtonImage_Text;
 
     public void PickDropButton_Enable(bool _state)
@@ -41,6 +42,10 @@ public class UIController : MonoBehaviour
     {
         ChangeAlpha(_dashButtonImage, _state);
 
+    }
+    public void PetButton_Enable(bool _state)
+    {
+        ChangeAlpha(_petButtonImage, _state);
     }
     public void PickDropButton_SwitchMode(PickMode _mode)
     {

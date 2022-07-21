@@ -158,17 +158,18 @@ MonoBehaviour:
     _cameraTilt: -0.5
   _handSystem:
     _myHand: {fileID: 6949429004428104456}
-    _whoCanIPick: 0000000002000000
+    _whoCanIPick: 000000000200000001000000
     _highLightPickable: 1
     _throwForce: 100
     _plantDistance: 1
     _pickSpeedThrushold: 5
-    _detector: {fileID: 0}
+    _detector: {fileID: 2931690313484480716}
     _gotSomething: 0
     _canPick: 0
     _canDrop: 0
     _canThrow: 0
     _canPlant: 0
+    _canPet: 0
     _toPick: []
     _objectInHand: {fileID: 0}
   _uiController: {fileID: 0}

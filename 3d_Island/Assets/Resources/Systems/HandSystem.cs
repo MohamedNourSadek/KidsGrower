@@ -15,6 +15,7 @@ public class HandSystem
     [SerializeField] float _throwForce = 20f;
     [SerializeField] float _plantDistance = 1f;
     [SerializeField] float _pickSpeedThrushold = 2f;
+    [SerializeField] float _petTime = 1f;
 
     public DetectorSystem _detector;
     public bool _gotSomething;
@@ -22,17 +23,19 @@ public class HandSystem
     public bool _canDrop;
     public bool _canThrow;
     public bool _canPlant;
+    public bool _canPet;
 
     //Private Data
     public List<Pickable> _toPick = new();
     public Pickable _objectInHand = new();
     float _nearObjectDistance;
+    IHandController _myController;
 
-
-    public void Initialize(DetectorSystem detector)
+    public void Initialize(DetectorSystem detector, IHandController _controller)
     {
         _detector = detector;
         _nearObjectDistance = _detector._nearObjectDistance;
+        _myController = _controller;
     }
     public void Update()
     { 
@@ -183,6 +186,9 @@ public class HandSystem
         {
 
         }
+
+
+        _canPet = (_detector._npcDetectionStatus == NpcDetectionStatus.VeryNear) && (_objectInHand == null);
     }
 
     public void PickObject()
@@ -211,6 +217,47 @@ public class HandSystem
             }
         }
     }
+    public void PetObject()
+    {
+        if ((_toPick.Count > 0))
+        {
+            if ((_toPick[0].GetSpeed() <= _pickSpeedThrushold))
+            {
+                _objectInHand = _toPick[0];
+                _myController.GetBody().isKinematic = true;
+                ((NPC)_objectInHand).StartPetting();
+
+                _canPick = false;
+                _canDrop = true;
+                _canThrow = true;
+                _gotSomething = true;
+
+                _myController.startCoroutine(PetObjectRoutine());
+            }
+        }
+    }
+
+    IEnumerator PetObjectRoutine()
+    {
+        float _time = _petTime;
+
+        while(_time >= 0)
+        {
+            _time -= Time.fixedDeltaTime;
+
+
+            Debug.Log("Animation " + _time );
+
+
+
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+
+        ((NPC)_objectInHand).EndPetting();
+        _myController.GetBody().isKinematic = false;
+        DropObject();
+    }
+
     public void DropObject()
     {
         _canDrop = false;
@@ -253,4 +300,12 @@ public class HandSystem
 
         return false;
     }
+}
+
+
+public interface IHandController
+{
+    public Rigidbody GetBody();
+
+    public void startCoroutine(IEnumerator routine);
 }

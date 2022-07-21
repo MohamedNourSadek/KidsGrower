@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public enum MovementStatus {Moving, Idel, Exploring, Watching};
 
-public class NPC : Pickable
+public class NPC : Pickable, IHandController
 {
     [SerializeField] HandSystem _handSystem;
     [SerializeField] DetectorSystem _detector;
@@ -47,14 +47,14 @@ public class NPC : Pickable
     //Private data
     NavMeshAgent _myAgent;
     float _bornSince = 0f;
-
+    bool _petting = false;
     
     //Main Functions
     void Awake()
     {
         _myAgent = GetComponent<NavMeshAgent>();
         _detector.Initialize(_nearObjectDistance);
-        _handSystem.Initialize(_detector);
+        _handSystem.Initialize(_detector, this);
 
         _detector.OnObjectEnter += OnObjectEnter;
         _detector.OnObjectExit += OnObjectExit;
@@ -75,10 +75,33 @@ public class NPC : Pickable
     {
         _handSystem.Update();
         _detector.Update();
-        
-        //Reactivate AI only if the npc were thrown and touched the ground.
-        if (_groundDetector.IsOnGroud(_myBody))
+
+        //Reactivate AI only if the npc were thrown and touched the ground and not being bet
+        if (_groundDetector.IsOnGroud(_myBody) && !_petting)
             _myAgent.enabled = true;
+        else if(_petting)
+            _myAgent.enabled = false;
+
+    }
+    public Rigidbody GetBody()
+    {
+        return _myBody;
+    }
+    public void startCoroutine(IEnumerator routine)
+    {
+        StartCoroutine(routine);
+    }
+    public void StartPetting()
+    {
+        _myBody.isKinematic = true;
+        _myBody.velocity = Vector3.zero;
+        _petting = true;
+    }
+
+    public void EndPetting()
+    {
+        _myBody.isKinematic = false;
+        _petting = false;
     }
 
 

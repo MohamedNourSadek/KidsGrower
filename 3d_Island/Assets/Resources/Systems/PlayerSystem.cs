@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSystem : MonoBehaviour
+public class PlayerSystem : MonoBehaviour, IHandController
 {
     //Editor Fields
     [SerializeField] Rigidbody _playerBody;
@@ -19,7 +19,7 @@ public class PlayerSystem : MonoBehaviour
         _inputSystem.Initialize(this);
         _movementSystem.Initialize(_playerBody, _myCamera.GetCameraTransform());
         _myCamera.Initialize(this.gameObject);
-        _handSystem.Initialize(_detector);
+        _handSystem.Initialize(_detector, this);
     }
     void FixedUpdate()
     {
@@ -67,8 +67,19 @@ public class PlayerSystem : MonoBehaviour
 
         _uiController.JumpButton_Enable(_movementSystem.IsOnGround());
         _uiController.DashButton_Enable(_movementSystem.IsDashable());
-
+        _uiController.PetButton_Enable(_handSystem._canPet);
     }
+
+    //Hand Interface implementations
+    public Rigidbody GetBody()
+    {
+        return _playerBody;
+    }
+    public void startCoroutine(IEnumerator routine)
+    {
+        StartCoroutine(routine);
+    }
+
 
     ///(Movement-Input) Interface
     public void MoveInput(Vector2 _movementInput)
@@ -112,5 +123,13 @@ public class PlayerSystem : MonoBehaviour
     {
         _movementSystem.PerformDash();
     }
+    public void PetInput()
+    {
+        if(_handSystem._canPet)
+        {
+            _handSystem.PetObject();
+        }
+    }
+
 
 }

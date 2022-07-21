@@ -222,6 +222,7 @@ GameObject:
   - component: {fileID: 9093430107948229129}
   - component: {fileID: 9093430107948229128}
   - component: {fileID: 5323626491861248105}
+  - component: {fileID: 7600835593679035380}
   m_Layer: 7
   m_Name: NPC
   m_TagString: NPC
@@ -285,12 +286,13 @@ MonoBehaviour:
     _throwForce: 120
     _plantDistance: 1
     _pickSpeedThrushold: 2
+    _detector: {fileID: 0}
     _gotSomething: 0
     _canPick: 0
     _canDrop: 0
     _canThrow: 0
     _canPlant: 0
-    debug: 0
+    _canPet: 0
     _toPick: []
     _objectInHand: {fileID: 0}
   _detector: {fileID: 2330463048917170657}
@@ -350,6 +352,19 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!135 &7600835593679035380
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9093430107948232182}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.44
+  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!1001 &7532648442956303567
 PrefabInstance:
   m_ObjectHideFlags: 0
