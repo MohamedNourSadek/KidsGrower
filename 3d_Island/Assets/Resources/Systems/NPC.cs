@@ -246,7 +246,7 @@ public class NPC : Pickable, IHandController
     {
         _myBody.isKinematic = true;
         _myAgent.enabled = false;
-        StartCoroutine(UIController.uIController.RepeatMessage("Sleeping", (this.transform.position + (1f * Vector3.up)), _sleepTime, 15));
+        UIController.uIController.RepeatMessage("Sleeping", (this.transform.position + (1f * Vector3.up)), _sleepTime, 15);
     }
     void WakeUp()
     {

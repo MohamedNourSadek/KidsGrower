@@ -5,7 +5,7 @@ using UnityEngine;
 public class Egg : Pickable
 {
     [SerializeField] NPC _babyNpcPrefab;
-    [SerializeField] float _hatchTime = 30;
+    [SerializeField] public float _hatchTime = 30;
 
     float _plantedSince = 0f;
 

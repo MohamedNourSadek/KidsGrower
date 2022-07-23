@@ -14,6 +14,7 @@ public class UIController : MonoBehaviour
     [Header("References")]
     [SerializeField] GameObject _3dCanvas;
     [SerializeField] GameObject _3dHighlightPrefab;
+    [SerializeField] GameObject _progressBarPrefab;
 
     [Header("Ui parameters")]
     [SerializeField] float _buttonOnAlpha = 1f;
@@ -63,10 +64,33 @@ public class UIController : MonoBehaviour
     {
         _pickDropButtonImage_Text.text = _mode.ToString();
     }
+    public void RepeatMessage(string message, Vector3 position, float messageTime, float repeats)
+    {
+        StartCoroutine(RepeatMessage_Coroutine(message, position, messageTime, repeats));
+    }
+    public void ShowProgressBar(float max, Transform parent, Pickable pickable)
+    {
+        Slider _progressBar = Instantiate(_progressBarPrefab, parent.position, Quaternion.identity, _3dCanvas.transform).GetComponent<Slider>();
+       //0.95f of the real max to make the slider finish first
+        _progressBar.maxValue = 0.95f * max;
 
+        StartCoroutine(ProgressBar(parent, pickable, _progressBar));
+    }
 
+    IEnumerator ProgressBar(Transform parent, Pickable pickable, Slider progressBar)
+    {
+        while((pickable.IsPicked() == false) && (progressBar.value < (progressBar.maxValue)))
+        {
+            progressBar.value += Time.fixedDeltaTime;
+            progressBar.gameObject.transform.position = parent.transform.position + Vector3.up;
 
-    public IEnumerator RepeatMessage(string message, Vector3 position, float messageTime, float repeats)
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+
+        }
+
+        Destroy(progressBar.gameObject);
+    }
+    IEnumerator RepeatMessage_Coroutine(string message, Vector3 position, float messageTime, float repeats)
     {
         float _time = 0f;
 
@@ -82,9 +106,11 @@ public class UIController : MonoBehaviour
         var GameObject = Instantiate(_3dHighlightPrefab, position, Quaternion.identity, _3dCanvas.transform);
         GameObject.GetComponentInChildren<Text>().text = Text;
     }
-
     void ChangeAlpha(Image _myImage, bool _state)
     {
         _myImage.color =  new Color(_myImage.color.r, _myImage.color.g, _myImage.color.b, _state ? _buttonOnAlpha : _buttonOffAlpha);
     }
+
+
+
 }

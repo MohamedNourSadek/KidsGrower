@@ -13,6 +13,9 @@ public class PlayerSystem : MonoBehaviour, IHandController
     readonly InputSystem _inputSystem = new();
 
     //Initialization and refreshable functions
+
+
+
     void Awake()
     {
         _inputSystem.Initialize(this);
@@ -115,8 +118,14 @@ public class PlayerSystem : MonoBehaviour, IHandController
     }
     public void PlantInput()
     {
-        if(_handSystem._canPlant)
+        if (_handSystem._canPlant)
+        {
+            Egg egg = (Egg)(_handSystem._objectInHand);
+
             _handSystem.PlantObject();
+
+            UIController.uIController.ShowProgressBar(egg._hatchTime, egg.transform, egg);
+        }
     }
     public void DashInput()
     {
@@ -130,7 +139,7 @@ public class PlayerSystem : MonoBehaviour, IHandController
 
             Vector3 _messagePosition = _handSystem._detector.transform.position + (1f*Vector3.up); 
 
-            base.StartCoroutine(UIController.uIController.RepeatMessage("Petting", _messagePosition, _handSystem._petTime, 5f));
+            UIController.uIController.RepeatMessage("Petting", _messagePosition, _handSystem._petTime, 5f);
         }
     }
 
