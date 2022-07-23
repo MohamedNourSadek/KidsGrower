@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public enum MovementStatus {Moving, Idel, Exploring, Watching};
+public enum MovementStatus {Moving, Idel, Exploring, Watching, Sleeping};
 
 public class NPC : Pickable, IHandController
 {
@@ -26,6 +26,7 @@ public class NPC : Pickable, IHandController
     [SerializeField] float _nearObjectDistance = 1f;
     [SerializeField] float _explorationAmplitude = 10f;
     [SerializeField] float _bordemTime = 30f;
+    [SerializeField] float _sleepTime = 10f;
     [SerializeField] [Range(0, 1)] float _playerLove = 0.1f;
     [SerializeField] [Range(0, 1)] float _npcLove = 0.1f;
     [SerializeField] [Range(0, 1)] float _ballLove = 0.1f;
@@ -34,7 +35,6 @@ public class NPC : Pickable, IHandController
     [SerializeField] [Range(0, 1)] float _throwBallOnNPC = 0.1f;
     [SerializeField] [Range(0, 1)] float _throwBallOnPlayer = 0.1f;
     [SerializeField] [Range(0, 1)] float _punchNpcLove = 0.1f;
-    [SerializeField] [Range(0, 1)] float _pickBallLove = 0.1f;
 
 
 
@@ -50,7 +50,7 @@ public class NPC : Pickable, IHandController
     bool _petting = false;
     
     //Main Functions
-    void Awake()
+    private void Awake()
     {
         _myAgent = GetComponent<NavMeshAgent>();
         _detector.Initialize(_nearObjectDistance);
@@ -62,9 +62,9 @@ public class NPC : Pickable, IHandController
         _detector.OnTreeNear += OnTreeNear;
         _detector.OnNpcNear += OnNpcNear;
 
-        StartCoroutine(GrowingUp());
-        StartCoroutine(AiContinous());
-        StartCoroutine(AiDescrete());
+        base.StartCoroutine(GrowingUp());
+        base.StartCoroutine(AiContinous());
+        base.StartCoroutine(AiDescrete());
     }
     public override void Pick(Transform handPosition)
     {
@@ -83,13 +83,9 @@ public class NPC : Pickable, IHandController
             _myAgent.enabled = false;
 
     }
-    public Rigidbody GetBody()
+    public void StartCoroutine_Custom(IEnumerator routine)
     {
-        return _myBody;
-    }
-    public void startCoroutine(IEnumerator routine)
-    {
-        StartCoroutine(routine);
+        base.StartCoroutine(routine);
     }
     public void StartPetting()
     {
@@ -139,31 +135,35 @@ public class NPC : Pickable, IHandController
     {
         while (true)
         {
-            if(_movementStatus == MovementStatus.Idel)
+            if(!(_movementStatus == MovementStatus.Sleeping))
             {
-                ChooseRandomExplorationPoint();
-            }
-            if(_timeSinceLastAction >= _bordemTime)
-            {
-                _movementStatus = MovementStatus.Idel;
-            }
+                if (_movementStatus == MovementStatus.Idel)
+                {
+                    ChooseRandomExplorationPoint();
+                }
+                if (_timeSinceLastAction >= _bordemTime)
+                {
+                    _movementStatus = MovementStatus.Sleeping;
+                    StartCoroutine(Sleeping());
+                }
 
-            //Player is near and i got a throwable object.
-            if(_detector._playerDetectionStatus == PlayerDetectionStatus.InRange && _handSystem._gotSomething)
-            {
-                ThinkAboutThrowing(_detector.PlayerInRange().gameObject, _throwBallOnPlayer);
-            }
+                //Player is near and i got a throwable object.
+                if (_detector._playerDetectionStatus == PlayerDetectionStatus.InRange && _handSystem._gotSomething)
+                {
+                    ThinkAboutThrowing(_detector.PlayerInRange().gameObject, _throwBallOnPlayer);
+                }
+                //NPC is near and i got a throwable object.
+                if (_detector._npcDetectionStatus == NpcDetectionStatus.InRange && _handSystem._gotSomething)
+                {
+                    ThinkAboutThrowing(_detector.NpcInRange().gameObject, _throwBallOnNPC);
+                }
 
-            //NPC is near and i got a throwable object.
-            if (_detector._npcDetectionStatus == NpcDetectionStatus.InRange && _handSystem._gotSomething)
-            {
-                ThinkAboutThrowing(_detector.NpcInRange().gameObject, _throwBallOnNPC);
-            }
+                //No One is near
+                if (_handSystem._gotSomething)
+                {
+                    ThinkaboutDroppingTheBall();
+                }
 
-            //No One is near
-            if (_handSystem._gotSomething)
-            {
-                ThinkaboutDroppingTheBall();
             }
 
             yield return new WaitForSecondsRealtime(_decisionsDelay);
@@ -225,8 +225,35 @@ public class NPC : Pickable, IHandController
         }
     }
 
-
+     
     //Algorithms
+    IEnumerator Sleeping()
+    {
+        Sleep();
+        
+        float _time = 0;
+
+        while(_time <= _sleepTime)
+        {
+            _time += Time.fixedDeltaTime;
+
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+
+        WakeUp();
+    }
+    void Sleep()
+    {
+        _myBody.isKinematic = true;
+        _myAgent.enabled = false;
+        StartCoroutine(UIController.uIController.RepeatMessage("Sleeping", (this.transform.position + (1f * Vector3.up)), _sleepTime, 15));
+    }
+    void WakeUp()
+    {
+        _movementStatus = MovementStatus.Idel;
+        _myAgent.enabled = true;
+        _myBody.isKinematic = false;
+    }
     void ThinkAboutShakingTree(TreeSystem tree)
     {
         float _randomChance = Random.Range(0f, 1f);

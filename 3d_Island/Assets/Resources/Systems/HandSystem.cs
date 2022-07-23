@@ -15,7 +15,7 @@ public class HandSystem
     [SerializeField] float _throwForce = 20f;
     [SerializeField] float _plantDistance = 1f;
     [SerializeField] float _pickSpeedThrushold = 2f;
-    [SerializeField] float _petTime = 1f;
+    [SerializeField] public float _petTime = 1f;
 
     public DetectorSystem _detector;
     public bool _gotSomething;
@@ -232,11 +232,10 @@ public class HandSystem
                 _canThrow = true;
                 _gotSomething = true;
 
-                _myController.startCoroutine(PetObjectRoutine());
+                _myController.StartCoroutine_Custom(PetObjectRoutine());
             }
         }
     }
-
     IEnumerator PetObjectRoutine()
     {
         float _time = _petTime;
@@ -245,10 +244,7 @@ public class HandSystem
         {
             _time -= Time.fixedDeltaTime;
 
-
-            Debug.Log("Animation " + _time );
-
-
+            Debug.Log("Petting");
 
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
@@ -307,5 +303,5 @@ public interface IHandController
 {
     public Rigidbody GetBody();
 
-    public void startCoroutine(IEnumerator routine);
+    public void StartCoroutine_Custom(IEnumerator routine);
 }

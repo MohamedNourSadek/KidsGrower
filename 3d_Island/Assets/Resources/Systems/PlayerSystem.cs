@@ -9,7 +9,6 @@ public class PlayerSystem : MonoBehaviour, IHandController
     [SerializeField] MovementSystem _movementSystem;
     [SerializeField] CameraSystem _myCamera;
     [SerializeField] HandSystem _handSystem;
-    [SerializeField] UIController _uiController;
     [SerializeField] DetectorSystem _detector;
     readonly InputSystem _inputSystem = new();
 
@@ -34,13 +33,13 @@ public class PlayerSystem : MonoBehaviour, IHandController
     void UpdateUi()
     {
         if (_handSystem._canDrop)
-            _uiController.PickDropButton_SwitchMode(PickMode.Drop);
+            UIController.uIController.PickDropButton_SwitchMode(PickMode.Drop);
         else if (_handSystem._canPick)
-            _uiController.PickDropButton_SwitchMode(PickMode.Pick);
+            UIController.uIController.PickDropButton_SwitchMode(PickMode.Pick);
         else if (_handSystem._detector._treeDetectionStatus == TreeDetectionStatus.VeryNear)
-            _uiController.PickDropButton_SwitchMode(PickMode.Shake);
+            UIController.uIController.PickDropButton_SwitchMode(PickMode.Shake);
         else
-            _uiController.PickDropButton_SwitchMode(PickMode.Pick);
+            UIController.uIController.PickDropButton_SwitchMode(PickMode.Pick);
 
 
         bool _canShake = (!_handSystem._canPick
@@ -50,24 +49,24 @@ public class PlayerSystem : MonoBehaviour, IHandController
 
 
         if (_handSystem._canPick || _handSystem._canDrop || _canShake)
-            _uiController.PickDropButton_Enable(true);
+            UIController.uIController.PickDropButton_Enable(true);
         else
-            _uiController.PickDropButton_Enable(false);
+            UIController.uIController.PickDropButton_Enable(false);
 
         if (_handSystem._canThrow)
-            _uiController.ThrowButton_Enable(true);
+            UIController.uIController.ThrowButton_Enable(true);
         else
-            _uiController.ThrowButton_Enable(false);
+            UIController.uIController.ThrowButton_Enable(false);
 
         if (_handSystem._canPlant)
-            _uiController.PlantButton_Enable(true);
+            UIController.uIController.PlantButton_Enable(true);
         else
-            _uiController.PlantButton_Enable(false);
+            UIController.uIController.PlantButton_Enable(false);
 
 
-        _uiController.JumpButton_Enable(_movementSystem.IsOnGround());
-        _uiController.DashButton_Enable(_movementSystem.IsDashable());
-        _uiController.PetButton_Enable(_handSystem._canPet);
+        UIController.uIController.JumpButton_Enable(_movementSystem.IsOnGround());
+        UIController.uIController.DashButton_Enable(_movementSystem.IsDashable());
+        UIController.uIController.PetButton_Enable(_handSystem._canPet);
     }
 
     //Hand Interface implementations
@@ -75,9 +74,9 @@ public class PlayerSystem : MonoBehaviour, IHandController
     {
         return _playerBody;
     }
-    public void startCoroutine(IEnumerator routine)
+    public void StartCoroutine_Custom(IEnumerator routine)
     {
-        StartCoroutine(routine);
+        base.StartCoroutine(routine);
     }
 
 
@@ -128,8 +127,13 @@ public class PlayerSystem : MonoBehaviour, IHandController
         if(_handSystem._canPet)
         {
             _handSystem.PetObject();
+
+            Vector3 _messagePosition = _handSystem._detector.transform.position + (1f*Vector3.up); 
+
+            base.StartCoroutine(UIController.uIController.RepeatMessage("Petting", _messagePosition, _handSystem._petTime, 5f));
         }
     }
+
 
 
 }

@@ -8,6 +8,13 @@ public enum PickMode { Pick, Drop, Shake};
 
 public class UIController : MonoBehaviour
 {
+
+    public static UIController uIController;
+
+    [Header("References")]
+    [SerializeField] GameObject _3dCanvas;
+    [SerializeField] GameObject _3dHighlightPrefab;
+
     [Header("Ui parameters")]
     [SerializeField] float _buttonOnAlpha = 1f;
     [SerializeField] float _buttonOffAlpha = 0.3f;
@@ -22,6 +29,11 @@ public class UIController : MonoBehaviour
     [SerializeField] Image _petButtonImage;
     [SerializeField] Text _pickDropButtonImage_Text;
 
+
+    private void Awake()
+    {
+        uIController = this;
+    }
     public void PickDropButton_Enable(bool _state)
     {
         ChangeAlpha(_pickDropButtonImage, _state);
@@ -53,6 +65,23 @@ public class UIController : MonoBehaviour
     }
 
 
+
+    public IEnumerator RepeatMessage(string message, Vector3 position, float messageTime, float repeats)
+    {
+        float _time = 0f;
+
+        while (_time <= messageTime)
+        {
+            _time += messageTime / repeats;
+            SpawnMessage(message, position);
+            yield return new WaitForSecondsRealtime(messageTime / repeats);
+        }
+    }
+    void SpawnMessage(string Text, Vector3 position)
+    {
+        var GameObject = Instantiate(_3dHighlightPrefab, position, Quaternion.identity, _3dCanvas.transform);
+        GameObject.GetComponentInChildren<Text>().text = Text;
+    }
 
     void ChangeAlpha(Image _myImage, bool _state)
     {

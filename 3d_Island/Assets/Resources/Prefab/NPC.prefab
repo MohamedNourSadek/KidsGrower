@@ -286,6 +286,7 @@ MonoBehaviour:
     _throwForce: 120
     _plantDistance: 1
     _pickSpeedThrushold: 2
+    _petTime: 1
     _detector: {fileID: 0}
     _gotSomething: 0
     _canPick: 0
@@ -311,7 +312,8 @@ MonoBehaviour:
   _punchForce: 250
   _nearObjectDistance: 1
   _explorationAmplitude: 10
-  _bordemTime: 30
+  _bordemTime: 15
+  _sleepTime: 10
   _playerLove: 0.32
   _npcLove: 0.169
   _ballLove: 0.495
@@ -320,7 +322,6 @@ MonoBehaviour:
   _throwBallOnNPC: 0.647
   _throwBallOnPlayer: 0.866
   _punchNpcLove: 0.248
-  _pickBallLove: 1
   _model: {fileID: 1199720211687785357}
   _bodyRenderers:
   - {fileID: 983630641518498926}
