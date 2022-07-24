@@ -13,7 +13,7 @@ public class NPC : Pickable, IHandController
     [SerializeField] GroundDetector _groundDetector;
 
     [Header("Growing Parameters")]
-    [SerializeField] float _growingUpTime = 120f;
+    [SerializeField] public float growingUpTime = 5f;
     [SerializeField] float _grownBodyMultiplier = 1.35f;
     [SerializeField] float _grownMassMultiplier = 1.35f;
 
@@ -25,16 +25,16 @@ public class NPC : Pickable, IHandController
     [SerializeField] float _punchForce = 120f;
     [SerializeField] float _nearObjectDistance = 1f;
     [SerializeField] float _explorationAmplitude = 10f;
-    [SerializeField] float _bordemTime = 30f;
-    [SerializeField] float _sleepTime = 10f;
-    [SerializeField] [Range(0, 1)] float _playerLove = 0.1f;
-    [SerializeField] [Range(0, 1)] float _npcLove = 0.1f;
-    [SerializeField] [Range(0, 1)] float _ballLove = 0.1f;
-    [SerializeField] [Range(0, 1)] float _treeLove = 0.1f;
-    [SerializeField] [Range(0, 1)] float _droppingBall = 0.1f;
-    [SerializeField] [Range(0, 1)] float _throwBallOnNPC = 0.1f;
-    [SerializeField] [Range(0, 1)] float _throwBallOnPlayer = 0.1f;
-    [SerializeField] [Range(0, 1)] float _punchNpcLove = 0.1f;
+    [SerializeField] public float _bordemTime = 30f;
+    [SerializeField] public float _sleepTime = 10f;
+    [SerializeField] [Range(0, 1)] public float _playerLove = 0.1f;
+    [SerializeField] [Range(0, 1)] public float _npcLove = 0.1f;
+    [SerializeField] [Range(0, 1)] public float _ballLove = 0.1f;
+    [SerializeField] [Range(0, 1)] public float _treeLove = 0.1f;
+    [SerializeField] [Range(0, 1)] public float _droppingBall = 0.1f;
+    [SerializeField] [Range(0, 1)] public float _throwBallOnNPC = 0.1f;
+    [SerializeField] [Range(0, 1)] public float _throwBallOnPlayer = 0.1f;
+    [SerializeField] [Range(0, 1)] public float _punchNpcLove = 0.1f;
 
 
 
@@ -55,13 +55,13 @@ public class NPC : Pickable, IHandController
         _myAgent = GetComponent<NavMeshAgent>();
         _detector.Initialize(_nearObjectDistance);
         _handSystem.Initialize(_detector, this);
+        _groundDetector.Initialize();
 
         _detector.OnObjectEnter += OnObjectEnter;
         _detector.OnObjectExit += OnObjectExit;
         _detector.OnBallNear += OnBallNear;
         _detector.OnTreeNear += OnTreeNear;
         _detector.OnNpcNear += OnNpcNear;
-
         base.StartCoroutine(GrowingUp());
         base.StartCoroutine(AiContinous());
         base.StartCoroutine(AiDescrete());
@@ -93,7 +93,6 @@ public class NPC : Pickable, IHandController
         _myBody.velocity = Vector3.zero;
         _petting = true;
     }
-
     public void EndPetting()
     {
         _myBody.isKinematic = false;
@@ -104,13 +103,13 @@ public class NPC : Pickable, IHandController
     //Growing Up
     IEnumerator GrowingUp()
     {
-        while ((_bornSince < _growingUpTime))
+        while ((_bornSince < growingUpTime))
         {
             _bornSince += Time.fixedDeltaTime;
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
-        if ((_bornSince >= _growingUpTime))
+        if ((_bornSince >= growingUpTime))
             GrowUp();
     }
     void GrowUp()
@@ -229,30 +228,50 @@ public class NPC : Pickable, IHandController
     //Algorithms
     IEnumerator Sleeping()
     {
+        ConditionChecker condition = new ConditionChecker(!_isPicked);
+        StartCoroutine(UpdateSleepCondition(condition));
+
+
+        UIController.uIController.RepeatMessage("Sleeping", (this.transform.position + (1f * Vector3.up)), _sleepTime, 15, condition);
+
         Sleep();
-        
-        float _time = 0;
-
-        while(_time <= _sleepTime)
+        while (condition.isTrue)
         {
-            _time += Time.fixedDeltaTime;
-
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
-
         WakeUp();
     }
     void Sleep()
     {
         _myBody.isKinematic = true;
         _myAgent.enabled = false;
-        UIController.uIController.RepeatMessage("Sleeping", (this.transform.position + (1f * Vector3.up)), _sleepTime, 15);
+    }
+    IEnumerator UpdateSleepCondition(ConditionChecker condition)
+    {
+        bool isConditionTrue = true;
+        float _time = 0;
+
+        while (isConditionTrue)
+        {
+            condition.Update(true);
+
+            isConditionTrue = !_isPicked && (_time <= _sleepTime);
+
+            _time += Time.fixedDeltaTime;
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+
+        condition.Update(false);
     }
     void WakeUp()
     {
         _movementStatus = MovementStatus.Idel;
-        _myAgent.enabled = true;
-        _myBody.isKinematic = false;
+
+        if (!_isPicked)
+        {
+            _myAgent.enabled = true;
+            _myBody.isKinematic = false;
+        }
     }
     void ThinkAboutShakingTree(TreeSystem tree)
     {
@@ -326,13 +345,16 @@ public class NPC : Pickable, IHandController
     }
     void MoveTo(Transform followed)
     {
-        _myAgent.destination = followed.position;
-
-        float distance = (this.transform.position - _myAgent.destination).magnitude;
-
-        if (distance <= _stoppingDistance)
+        if (!_isPicked)
         {
-            _movementStatus = MovementStatus.Watching;
+            _myAgent.destination = followed.position;
+
+            float distance = (this.transform.position - _myAgent.destination).magnitude;
+
+            if (distance <= _stoppingDistance)
+            {
+                _movementStatus = MovementStatus.Watching;
+            }
         }
     }
     void ExplorePoint(Vector3 position)

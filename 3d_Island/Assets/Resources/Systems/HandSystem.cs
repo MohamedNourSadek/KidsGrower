@@ -281,9 +281,16 @@ public class HandSystem
     public void PlantObject()
     {
         var _tempReference = (Egg)_objectInHand;
+        
         DropObject();
 
-        _tempReference.Plant(_myHand.transform.position + (_myHand.transform.forward * _plantDistance));
+        Vector3 _direction = (Vector3.down + _myController.GetBody().transform.forward).normalized;
+        
+        RaycastHit ray;
+        Physics.Raycast(_myHand.transform.position, _direction, out ray, 50, GroundDetector.GetGroundLayer());
+
+
+        _tempReference.Plant(ray.point);
     }
 
     bool IsPickable(PickableOjbects pickableType)

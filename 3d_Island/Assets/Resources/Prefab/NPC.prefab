@@ -302,7 +302,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 64
     _onGroundThreshold: 1.3
-  _growingUpTime: 5
+  growingUpTime: 70
   _grownBodyMultiplier: 1.35
   _grownMassMultiplier: 2
   _movementStatus: 1
@@ -315,9 +315,9 @@ MonoBehaviour:
   _bordemTime: 15
   _sleepTime: 10
   _playerLove: 0.32
-  _npcLove: 0.169
-  _ballLove: 0.495
-  _treeLove: 0.427
+  _npcLove: 0.17
+  _ballLove: 0.49
+  _treeLove: 0.42
   _droppingBall: 0.141
   _throwBallOnNPC: 0.647
   _throwBallOnPlayer: 0.866

@@ -124,7 +124,10 @@ public class PlayerSystem : MonoBehaviour, IHandController
 
             _handSystem.PlantObject();
 
-            UIController.uIController.ShowProgressBar(egg._hatchTime, egg.transform, egg);
+            ConditionChecker condition = new ConditionChecker(true);
+            StartCoroutine(UpdateEggHatchCondition(condition, egg));
+
+            UIController.uIController.ShowProgressBar(egg._hatchTime, egg.transform, condition);
         }
     }
     public void DashInput()
@@ -137,10 +140,51 @@ public class PlayerSystem : MonoBehaviour, IHandController
         {
             _handSystem.PetObject();
 
-            Vector3 _messagePosition = _handSystem._detector.transform.position + (1f*Vector3.up); 
+            Vector3 _messagePosition = _handSystem._detector.transform.position + (1f*Vector3.up);
 
-            UIController.uIController.RepeatMessage("Petting", _messagePosition, _handSystem._petTime, 5f);
+            ConditionChecker condition = new ConditionChecker(true);
+            StartCoroutine(UpdatePetCondition(condition));
+
+            UIController.uIController.RepeatMessage("Petting", _messagePosition, _handSystem._petTime, 5f, condition);
         }
+    }
+
+
+    //Helper functions
+    IEnumerator UpdatePetCondition(ConditionChecker condition)
+    {
+        bool isConditionTrue = true;
+        float _time = 0;
+
+        while (isConditionTrue)
+        {
+            condition.Update(true);
+
+            isConditionTrue = (_time <= _handSystem._petTime);
+
+            _time += Time.fixedDeltaTime;
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+
+        condition.Update(false);
+    }
+    IEnumerator UpdateEggHatchCondition(ConditionChecker condition, Egg egg)
+    {
+        bool isConditionTrue = true;
+        float _time = 0;
+
+        while (isConditionTrue)
+        {
+            condition.Update(true);
+
+            //0.95f to make the condition false before destroying the egg object.
+            isConditionTrue = !egg.IsPicked() && (_time <= (0.95f * (egg._hatchTime)));
+
+            _time += Time.fixedDeltaTime;
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+
+        condition.Update(false);
     }
 
 

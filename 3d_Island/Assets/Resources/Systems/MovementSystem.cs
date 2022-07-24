@@ -33,6 +33,7 @@ public class MovementSystem
     //Interface to the controller
     public void Initialize(Rigidbody _body, Transform _lookdireciton)
     {
+        _groundDetector.Initialize();
         this._body = _body;
         _lookDirection = _lookdireciton;
     }

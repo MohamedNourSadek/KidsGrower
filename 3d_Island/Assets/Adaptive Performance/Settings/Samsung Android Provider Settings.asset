@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Samsung Android Provider Settings
   m_EditorClassIdentifier: 
   m_Logging: 1
-  m_AutomaticPerformanceModeEnabled: 1
+  m_AutomaticPerformanceModeEnabled: 0
   m_EnableBoostOnStartup: 1
   m_StatsLoggingFrequencyInFrames: 50
   m_IndexerSettings:
@@ -168,12 +168,12 @@ MonoBehaviour:
   m_scalerProfileList:
   - m_AdaptiveFramerate:
       m_Name: Adaptive Framerate
-      m_Enabled: 0
+      m_Enabled: 1
       m_Scale: 1
       m_VisualImpact: 2
       m_Target: 7
-      m_MaxLevel: 45
-      m_MinBound: 15
+      m_MaxLevel: 60
+      m_MinBound: 60
       m_MaxBound: 60
     m_AdaptiveResolution:
       m_Name: Adaptive Resolution

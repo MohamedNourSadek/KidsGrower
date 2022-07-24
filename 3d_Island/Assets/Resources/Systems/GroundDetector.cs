@@ -8,10 +8,22 @@ public class GroundDetector
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] float _onGroundThreshold = 1.3f;
 
+    static LayerMask _globalGroundLayers;
+
+    public void Initialize()
+    {
+        _globalGroundLayers = _groundLayer;
+    }
+    public static LayerMask GetGroundLayer()
+    {
+        return _globalGroundLayers;
+    }
     public bool IsOnGroud(Rigidbody _body)
     {
         return DetectGround(_body);
     }
+
+
     bool DetectGround(Rigidbody _body)
     {
         if (_body.isKinematic == false)

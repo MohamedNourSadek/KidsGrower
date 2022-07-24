@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class ConditionChecker
 {
-    public bool condition = true;
+    public bool isTrue = true;
 
-    public ConditionChecker(ref bool _condition)
+    public ConditionChecker(bool _condition)
     {
-        condition = _condition;
+        isTrue = _condition;
     }
-    public void Update(ref bool _condition)
+   
+    public void Update(bool _condition)
     {
-        condition = _condition;
+        isTrue = _condition;
     }
 }
 
