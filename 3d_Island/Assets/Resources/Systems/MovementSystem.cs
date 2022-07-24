@@ -30,6 +30,8 @@ public class MovementSystem
     float _timeSinceLastDash = 0f;
     bool _dashedMidAir = false;
     
+
+
     //Interface to the controller
     public void Initialize(Rigidbody _body, Transform _lookdireciton)
     {
@@ -83,7 +85,6 @@ public class MovementSystem
         if(_canDash)
             _body.AddForce(_body.transform.forward * _dashForce);
     }
-
     public bool IsDashable()
     {
         return (_onGround && _timeSinceLastDash >= _dashRechargeTime) ||
@@ -94,6 +95,8 @@ public class MovementSystem
         return _onGround;
     }
 
+
+    //Internal Algorithms
     void RotatePlayer()
     {
         _body.transform.rotation = Quaternion.Lerp(_body.transform.rotation, _finalAngle, Time.fixedDeltaTime * _rotationSpeed);

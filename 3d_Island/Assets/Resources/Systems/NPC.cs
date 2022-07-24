@@ -13,7 +13,7 @@ public class NPC : Pickable, IHandController
     [SerializeField] GroundDetector _groundDetector;
 
     [Header("Growing Parameters")]
-    [SerializeField] public float growingUpTime = 5f;
+    [SerializeField] public float growTime = 5f;
     [SerializeField] float _grownBodyMultiplier = 1.35f;
     [SerializeField] float _grownMassMultiplier = 1.35f;
 
@@ -25,16 +25,16 @@ public class NPC : Pickable, IHandController
     [SerializeField] float _punchForce = 120f;
     [SerializeField] float _nearObjectDistance = 1f;
     [SerializeField] float _explorationAmplitude = 10f;
-    [SerializeField] public float _bordemTime = 30f;
-    [SerializeField] public float _sleepTime = 10f;
-    [SerializeField] [Range(0, 1)] public float _playerLove = 0.1f;
-    [SerializeField] [Range(0, 1)] public float _npcLove = 0.1f;
-    [SerializeField] [Range(0, 1)] public float _ballLove = 0.1f;
-    [SerializeField] [Range(0, 1)] public float _treeLove = 0.1f;
-    [SerializeField] [Range(0, 1)] public float _droppingBall = 0.1f;
-    [SerializeField] [Range(0, 1)] public float _throwBallOnNPC = 0.1f;
-    [SerializeField] [Range(0, 1)] public float _throwBallOnPlayer = 0.1f;
-    [SerializeField] [Range(0, 1)] public float _punchNpcLove = 0.1f;
+    [SerializeField] public float boredTime = 30f;
+    [SerializeField] public float sleepTime = 10f;
+    [SerializeField] [Range(0, 1)] public float seekPlayerProb = 0.1f;
+    [SerializeField] [Range(0, 1)] public float seekNpcProb = 0.1f;
+    [SerializeField] [Range(0, 1)] public float seekBallProb = 0.1f;
+    [SerializeField] [Range(0, 1)] public float seekTreeProb = 0.1f;
+    [SerializeField] [Range(0, 1)] public float dropBallProb = 0.1f;
+    [SerializeField] [Range(0, 1)] public float throwBallOnNpcProb = 0.1f;
+    [SerializeField] [Range(0, 1)] public float throwBallOnPlayerProb = 0.1f;
+    [SerializeField] [Range(0, 1)] public float punchNpcProb = 0.1f;
 
 
 
@@ -49,6 +49,7 @@ public class NPC : Pickable, IHandController
     float _bornSince = 0f;
     bool _petting = false;
     
+
     //Main Functions
     private void Awake()
     {
@@ -66,11 +67,6 @@ public class NPC : Pickable, IHandController
         base.StartCoroutine(AiContinous());
         base.StartCoroutine(AiDescrete());
     }
-    public override void Pick(Transform handPosition)
-    {
-        base.Pick(handPosition);
-        _myAgent.enabled = false;
-    }
     public void Update()
     {
         _handSystem.Update();
@@ -79,9 +75,14 @@ public class NPC : Pickable, IHandController
         //Reactivate AI only if the npc were thrown and touched the ground and not being bet
         if (_groundDetector.IsOnGroud(_myBody) && !_petting)
             _myAgent.enabled = true;
-        else if(_petting)
+        else if (_petting)
             _myAgent.enabled = false;
 
+    }
+    public override void Pick(Transform handPosition)
+    {
+        base.Pick(handPosition);
+        _myAgent.enabled = false;
     }
     public void StartCoroutine_Custom(IEnumerator routine)
     {
@@ -103,13 +104,13 @@ public class NPC : Pickable, IHandController
     //Growing Up
     IEnumerator GrowingUp()
     {
-        while ((_bornSince < growingUpTime))
+        while ((_bornSince < growTime))
         {
             _bornSince += Time.fixedDeltaTime;
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
-        if ((_bornSince >= growingUpTime))
+        if ((_bornSince >= growTime))
             GrowUp();
     }
     void GrowUp()
@@ -140,7 +141,7 @@ public class NPC : Pickable, IHandController
                 {
                     ChooseRandomExplorationPoint();
                 }
-                if (_timeSinceLastAction >= _bordemTime)
+                if (_timeSinceLastAction >= boredTime)
                 {
                     _movementStatus = MovementStatus.Sleeping;
                     StartCoroutine(Sleeping());
@@ -149,12 +150,12 @@ public class NPC : Pickable, IHandController
                 //Player is near and i got a throwable object.
                 if (_detector._playerDetectionStatus == PlayerDetectionStatus.InRange && _handSystem._gotSomething)
                 {
-                    ThinkAboutThrowing(_detector.PlayerInRange().gameObject, _throwBallOnPlayer);
+                    ThinkAboutThrowing(_detector.PlayerInRange().gameObject, throwBallOnPlayerProb);
                 }
                 //NPC is near and i got a throwable object.
                 if (_detector._npcDetectionStatus == NpcDetectionStatus.InRange && _handSystem._gotSomething)
                 {
-                    ThinkAboutThrowing(_detector.NpcInRange().gameObject, _throwBallOnNPC);
+                    ThinkAboutThrowing(_detector.NpcInRange().gameObject, throwBallOnNpcProb);
                 }
 
                 //No One is near
@@ -171,16 +172,16 @@ public class NPC : Pickable, IHandController
     void OnObjectEnter(GameObject obj)
     {
         if (obj.CompareTag("Player"))
-            ThinkAboutFollowingObject(obj, _playerLove);
+            ThinkAboutFollowingObject(obj, seekPlayerProb);
 
         if (obj.CompareTag("NPC"))
-            ThinkAboutFollowingObject(obj, _npcLove);
+            ThinkAboutFollowingObject(obj, seekNpcProb);
 
         if (obj.CompareTag("Ball"))
-            ThinkAboutFollowingObject(obj, _ballLove);
+            ThinkAboutFollowingObject(obj, seekBallProb);
 
         if (obj.CompareTag("Tree"))
-            ThinkAboutFollowingObject(obj, _treeLove);
+            ThinkAboutFollowingObject(obj, seekTreeProb);
     }
     void OnObjectExit(GameObject obj)
     {
@@ -197,7 +198,7 @@ public class NPC : Pickable, IHandController
     }
     void OnNpcNear(NPC npc)
     {
-        if (_movementStatus == MovementStatus.Watching)
+        if(_movementStatus != MovementStatus.Sleeping)
             ThinkAboutPunchingAnNpc(_detector.NpcInRange()._myBody);
     }
     void OnBallNear(Ball ball)
@@ -225,6 +226,7 @@ public class NPC : Pickable, IHandController
     }
 
      
+
     //Algorithms
     IEnumerator Sleeping()
     {
@@ -232,7 +234,7 @@ public class NPC : Pickable, IHandController
         StartCoroutine(UpdateSleepCondition(condition));
 
 
-        UIController.uIController.RepeatMessage("Sleeping", (this.transform.position + (1f * Vector3.up)), _sleepTime, 15, condition);
+        UIController.uIController.RepeatMessage("Sleeping", (this.transform.position + (1f * Vector3.up)), sleepTime, 15, condition);
 
         Sleep();
         while (condition.isTrue)
@@ -255,7 +257,7 @@ public class NPC : Pickable, IHandController
         {
             condition.Update(true);
 
-            isConditionTrue = !_isPicked && (_time <= _sleepTime);
+            isConditionTrue = !_isPicked && (_time <= sleepTime);
 
             _time += Time.fixedDeltaTime;
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
@@ -277,7 +279,7 @@ public class NPC : Pickable, IHandController
     {
         float _randomChance = Random.Range(0f, 1f);
 
-        if ((_randomChance < _treeLove) && (_randomChance > 0))
+        if ((_randomChance < seekTreeProb) && (_randomChance > 0))
         {
             tree.Shake();
             _movementStatus = MovementStatus.Idel;
@@ -293,9 +295,11 @@ public class NPC : Pickable, IHandController
     }
     void ThinkAboutPunchingAnNpc(Rigidbody body)
     {
+        Debug.Log("Thinking about punching NPC");
+        
         float _randomChance = Random.Range(0f, 1f);
 
-        if ((_randomChance < _punchNpcLove) && (_randomChance > 0))
+        if ((_randomChance < punchNpcProb) && (_randomChance > 0))
         {
             Vector3 direction = (body.transform.position - this.transform.position).normalized;
             body.AddForce(direction * _punchForce, ForceMode.Impulse);
@@ -316,7 +320,7 @@ public class NPC : Pickable, IHandController
     {
         float _randomChance = Random.Range(0f, 1f);
 
-        if ((_randomChance < _droppingBall) && (_randomChance > 0))
+        if ((_randomChance < dropBallProb) && (_randomChance > 0))
         {
             _handSystem.DropObject();
         }

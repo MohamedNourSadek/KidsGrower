@@ -10,7 +10,6 @@ public class ConditionChecker
     {
         isTrue = _condition;
     }
-   
     public void Update(bool _condition)
     {
         isTrue = _condition;

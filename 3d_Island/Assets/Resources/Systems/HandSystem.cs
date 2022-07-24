@@ -15,7 +15,7 @@ public class HandSystem
     [SerializeField] float _throwForce = 20f;
     [SerializeField] float _plantDistance = 1f;
     [SerializeField] float _pickSpeedThrushold = 2f;
-    [SerializeField] public float _petTime = 1f;
+    [SerializeField] float _petTime = 1f;
 
     public DetectorSystem _detector;
     public bool _gotSomething;
@@ -26,11 +26,13 @@ public class HandSystem
     public bool _canPet;
 
     //Private Data
-    public List<Pickable> _toPick = new();
-    public Pickable _objectInHand = new();
+    List<Pickable> _toPick = new();
+    Pickable _objectInHand = new();
     float _nearObjectDistance;
     IHandController _myController;
 
+
+    //Outside Interface
     public void Initialize(DetectorSystem detector, IHandController _controller)
     {
         _detector = detector;
@@ -190,7 +192,6 @@ public class HandSystem
 
         _canPet = (_detector._npcDetectionStatus == NpcDetectionStatus.VeryNear) && (_objectInHand == null);
     }
-
     public void PickObject()
     {
         if ((_toPick.Count > 0) ) 
@@ -219,6 +220,13 @@ public class HandSystem
     }
     public void PetObject()
     {
+        Vector3 _messagePosition = _detector.transform.position + (1f * Vector3.up);
+
+        ConditionChecker condition = new ConditionChecker(true);
+        _myController.StartCoroutine_Custom(UpdatePetCondition(condition));
+
+        UIController.uIController.RepeatMessage("Petting", _messagePosition, _petTime, 5f, condition);
+
         if ((_toPick.Count > 0))
         {
             if ((_toPick[0].GetSpeed() <= _pickSpeedThrushold))
@@ -232,28 +240,10 @@ public class HandSystem
                 _canThrow = true;
                 _gotSomething = true;
 
-                _myController.StartCoroutine_Custom(PetObjectRoutine());
+                _myController.StartCoroutine_Custom(PetObjectRoutine(condition));
             }
         }
     }
-    IEnumerator PetObjectRoutine()
-    {
-        float _time = _petTime;
-
-        while(_time >= 0)
-        {
-            _time -= Time.fixedDeltaTime;
-
-            Debug.Log("Petting");
-
-            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
-        }
-
-        ((NPC)_objectInHand).EndPetting();
-        _myController.GetBody().isKinematic = false;
-        DropObject();
-    }
-
     public void DropObject()
     {
         _canDrop = false;
@@ -280,19 +270,23 @@ public class HandSystem
     }
     public void PlantObject()
     {
-        var _tempReference = (Egg)_objectInHand;
-        
+        Egg egg = (Egg)(_objectInHand);
+
         DropObject();
 
-        Vector3 _direction = (Vector3.down + _myController.GetBody().transform.forward).normalized;
+        ConditionChecker condition = new ConditionChecker(true);
+        _myController.StartCoroutine_Custom(UpdateEggHatchCondition(condition, egg));
+        UIController.uIController.ShowProgressBar(egg._hatchTime, egg.transform, condition);
         
+
+        Vector3 _direction = (Vector3.down + _myController.GetBody().transform.forward).normalized;
         RaycastHit ray;
         Physics.Raycast(_myHand.transform.position, _direction, out ray, 50, GroundDetector.GetGroundLayer());
-
-
-        _tempReference.Plant(ray.point);
+        egg.Plant(ray.point);
     }
 
+
+    //Internal Algorithms
     bool IsPickable(PickableOjbects pickableType)
     {
         foreach(PickableOjbects _pickableType in _whoCanIPick)
@@ -303,12 +297,60 @@ public class HandSystem
 
         return false;
     }
+    IEnumerator PetObjectRoutine(ConditionChecker condition)
+    {
+        while (condition.isTrue)
+        {
+            Debug.Log("Petting");
+
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+
+        ((NPC)_objectInHand).EndPetting();
+        _myController.GetBody().isKinematic = false;
+        DropObject();
+    }
+    IEnumerator UpdateEggHatchCondition(ConditionChecker condition, Egg egg)
+    {
+        bool isConditionTrue = true;
+        float _time = 0;
+
+        while (isConditionTrue)
+        {
+            condition.Update(true);
+
+            //0.95f to make the condition false before destroying the egg object.
+            isConditionTrue = !egg.IsPicked() && (_time <= (0.95f * (egg._hatchTime)));
+
+            _time += Time.fixedDeltaTime;
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+
+        condition.Update(false);
+    }
+    IEnumerator UpdatePetCondition(ConditionChecker condition)
+    {
+        bool isConditionTrue = true;
+        float _time = 0;
+
+        while (isConditionTrue)
+        {
+            condition.Update(true);
+
+            isConditionTrue = (_time <= _petTime);
+
+            _time += Time.fixedDeltaTime;
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+
+        condition.Update(false);
+    }
+
 }
 
 
 public interface IHandController
 {
     public Rigidbody GetBody();
-
     public void StartCoroutine_Custom(IEnumerator routine);
 }

@@ -14,9 +14,16 @@ public class CameraSystem
     [SerializeField] float _rotationSpeed;
     [SerializeField] float _cameraTilt;
 
+
+    //Rotation factor is an angle that describe the camera rotation around the object.
+    float _rotationFactor = 0;
+    float _currentRotationFactor = 0;
+    Vector3 _finalFollowedPosition;
     GameObject _followedObject;
 
 
+
+    //Interface
     public void Initialize(GameObject _target)
     {
         _followedObject = _target;
@@ -26,14 +33,19 @@ public class CameraSystem
     {
         return _controlledCamera.transform;
     }
+    public void RotateCamera(float _deltaRotation)
+    {
+        _rotationFactor += (_rotationInputSensitivity * _deltaRotation);
+    }
+    public void Update()
+    {
+        TraslateCamera();
+        _controlledCamera.transform.LookAt(_followedObject.transform.position);
+    }
 
 
-    //Rotation factor is an angle that describe the camera rotation around the object.
-    float _rotationFactor = 0;
-    float _currentRotationFactor = 0;
-
-    Vector3 _finalFollowedPosition;
-    public void TraslateCamera()
+    //Internal Algorithms
+    void TraslateCamera()
     {
         //Lerping the object position instead of the camera, because we want the camera to move only on its circle.
         _finalFollowedPosition = Vector3.Lerp(_finalFollowedPosition, _followedObject.transform.position, Time.fixedDeltaTime * _delay);
@@ -45,15 +57,5 @@ public class CameraSystem
                                                 + (Vector3.up * _cameraHeight) // Height
                                                 + (_distanceFromObject * Vector3.forward * Mathf.Cos(_currentRotationFactor)) // r * cos(theta)
                                                 + (_distanceFromObject * Vector3.right * Mathf.Sin(_currentRotationFactor));  // r * sin(theta)
-    }
-    public void RotateCamera(float _deltaRotation)
-    {
-        _rotationFactor += (_rotationInputSensitivity * _deltaRotation);
-    }
-
-    public void Update()
-    {
-        TraslateCamera();
-        _controlledCamera.transform.LookAt(_followedObject.transform.position);
     }
 }

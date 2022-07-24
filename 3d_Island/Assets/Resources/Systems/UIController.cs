@@ -31,70 +31,19 @@ public class UIController : MonoBehaviour
     [SerializeField] Text _pickDropButtonImage_Text;
     [SerializeField] GameObject _allSettingsMenus;
     [SerializeField] GameObject _allGameMenus;
+    [SerializeField] List<SliderElement> _sliders = new List<SliderElement>();
+
 
     [Header("Design Only")]
-    [SerializeField] NPC _npcAsset;
     [SerializeField] Text _frameRate;
-    [SerializeField] Slider _growingUpTime;
-    [SerializeField] Text _growingUpTimeText;
-    [SerializeField] Slider _timeToGetBored;
-    [SerializeField] Text _timeToGetBoredText;
-    [SerializeField] Slider _sleepTime;
-    [SerializeField] Text _sleepTimeText;
-    [SerializeField] Slider _seekPlayer;
-    [SerializeField] Text _seekPlayerText;
-    [SerializeField] Slider _seekNPC;
-    [SerializeField] Text _seekNPCText;
-    [SerializeField] Slider _seekTree;
-    [SerializeField] Text _seekTreeText;
-    [SerializeField] Slider _seekBall;
-    [SerializeField] Text _seekBallText;
-    [SerializeField] Slider _dropBall;
-    [SerializeField] Text _dropBallText;
-    [SerializeField] Slider _throwBallOnNPC;
-    [SerializeField] Text _throwBallOnNPCText;
-    [SerializeField] Slider _throwBallOnPlayer;
-    [SerializeField] Text _throwBallOnPlayerText;
-    [SerializeField] Slider _punchNPC;
-    [SerializeField] Text _punchNPCText;
 
 
     private void Awake()
     {
         uIController = this;
 
-        _growingUpTime.onValueChanged.AddListener(OnGrowingUpTime_Changed);
-        OnGrowingUpTime_Changed(_growingUpTime.value);
-
-        _timeToGetBored.onValueChanged.AddListener(OnTimeToGetBored_Changed);
-        OnTimeToGetBored_Changed(_timeToGetBored.value);
-
-        _sleepTime.onValueChanged.AddListener(OnSleepTime_Changed);
-        OnSleepTime_Changed(_sleepTime.value);
-
-        _seekPlayer.onValueChanged.AddListener(OnSeekPlayer_Changed);
-        OnSeekPlayer_Changed(_seekPlayer.value);
-
-        _seekNPC.onValueChanged.AddListener(OnSeekNPC_Changed);
-        OnSeekNPC_Changed(_seekNPC.value);
-
-        _seekTree.onValueChanged.AddListener(OnSeekTree_Changed);
-        OnSeekTree_Changed(_seekTree.value);
-
-        _seekBall.onValueChanged.AddListener(OnSeekBall_Changed);
-        OnSeekBall_Changed(_seekBall.value);
-
-        _dropBall.onValueChanged.AddListener(OnDropBallChanged);
-        OnDropBallChanged(_dropBall.value);
-
-        _throwBallOnNPC.onValueChanged.AddListener(OnThrowBallOnNPC_Changed);
-        OnThrowBallOnNPC_Changed(_throwBallOnNPC.value);
-
-        _throwBallOnPlayer.onValueChanged.AddListener(OnThrowBallOnPlayer_Changed);
-        OnThrowBallOnPlayer_Changed(_throwBallOnPlayer.value);
-
-        _punchNPC.onValueChanged.AddListener(OnPunchNPC_Changed);
-        OnPunchNPC_Changed(_punchNPC.value);
+        foreach (SliderElement slider in _sliders)
+            slider.Initialize();
     }
     public void PickDropButton_Enable(bool _state)
     {
@@ -148,38 +97,13 @@ public class UIController : MonoBehaviour
         _allSettingsMenus.SetActive(state);
         _allGameMenus.SetActive(!state);
     }
-    public void ApplySettings()
+    public List<SliderElement> GetSliders()
     {
-        var _npcs = FindObjectsOfType<NPC>();
-        List<NPC> npcList = new List<NPC>();
-        foreach (NPC npc in _npcs)
-        {
-            npcList.Add(npc);
-        }
-        npcList.Add(_npcAsset);
-
-
-        foreach (NPC npc in npcList)
-        {
-            npc.growingUpTime = _growingUpTime.value;
-            npc._bordemTime = _timeToGetBored.value;
-            npc._sleepTime = _sleepTime.value;
-            npc._playerLove = _seekPlayer.value;
-            npc._npcLove = _seekNPC.value;
-            npc._ballLove = _seekBall.value;
-            npc._treeLove = _seekTree.value;
-            npc._droppingBall = _dropBall.value;
-            npc._throwBallOnNPC = _throwBallOnNPC.value;
-            npc._throwBallOnPlayer = _throwBallOnPlayer.value;
-            npc._punchNpcLove = _punchNPC.value;
-        }    
-
-
-        ShowSettings(false);
+        return _sliders;
     }
 
-
-
+    
+    
     //Interal Algorithms
     IEnumerator ProgressBar(Transform parent, ConditionChecker condition, Slider progressBar)
     {
@@ -213,52 +137,21 @@ public class UIController : MonoBehaviour
     {
         _myImage.color =  new Color(_myImage.color.r, _myImage.color.g, _myImage.color.b, _state ? _buttonOnAlpha : _buttonOffAlpha);
     }
+}
 
-    
-    //Events
-    public void OnGrowingUpTime_Changed(float newValue)
-    {
-        _growingUpTimeText.text = newValue.ToString() + " Seconds";
-    }
-    public void OnTimeToGetBored_Changed(float newValue)
-    {
-        _timeToGetBoredText.text = newValue.ToString() + " Seconds";
-    }
-    public void OnSleepTime_Changed(float newValue)
-    {
-        _sleepTimeText.text = (newValue).ToString() + " Seconds";
-    }
-    public void OnSeekPlayer_Changed(float newValue)
-    {
-        _seekPlayerText.text = (newValue * 100).ToString() + " %";
-    }
-    public void OnSeekNPC_Changed(float newValue)
-    {
-        _seekNPCText.text = (newValue * 100).ToString() + " %";
-    }
-    public void OnSeekTree_Changed(float newValue)
-    {
-        _seekTreeText.text = (newValue * 100).ToString() + " %";
-    }
-    public void OnSeekBall_Changed(float newValue)
-    {
-        _seekBallText.text = (newValue * 100).ToString() + " %";
-    }
-    public void OnDropBallChanged(float newValue)
-    {
-        _dropBallText.text = (newValue * 100).ToString() + " %";
-    }
-    public void OnThrowBallOnNPC_Changed(float newValue)
-    {
-        _throwBallOnNPCText.text = (newValue * 100).ToString() + " %";
-    }
-    public void OnThrowBallOnPlayer_Changed(float newValue)
-    {
-        _throwBallOnPlayerText.text = (newValue * 100).ToString() + " %";
-    }
-    public void OnPunchNPC_Changed(float newValue)
-    {
-        _punchNPCText.text = (newValue * 100).ToString() + " %";
-    }
+[System.Serializable]
+public class SliderElement
+{
+    [SerializeField] public string _saveName;
+    [SerializeField] public Slider _mySlider;
+    [SerializeField] public Text _valueText;
 
+    public void Initialize()
+    {
+        _mySlider.onValueChanged.AddListener(OnValueChanged);
+    }
+    public void OnValueChanged(float value)
+    {
+        _valueText.text = _mySlider.value.ToString();
+    }
 }

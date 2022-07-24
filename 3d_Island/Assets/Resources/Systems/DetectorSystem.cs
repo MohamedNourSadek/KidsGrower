@@ -111,7 +111,8 @@ public class DetectorSystem : MonoBehaviour
 
         if (NpcInRange(_nearObjectDistance))
         {
-            OnNpcNear?.Invoke(NpcInRange(_nearObjectDistance));
+            if(_npcDetectionStatus != NpcDetectionStatus.VeryNear)
+                OnNpcNear?.Invoke(NpcInRange(_nearObjectDistance));
 
             _npcDetectionStatus = NpcDetectionStatus.VeryNear;
         }

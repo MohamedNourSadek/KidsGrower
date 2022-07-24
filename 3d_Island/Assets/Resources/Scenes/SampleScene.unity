@@ -7202,6 +7202,8 @@ MonoBehaviour:
     type: 3}
   _ballAsset: {fileID: 2756139614205274715, guid: 33d2a09faba7cc743a1dd184023dcd27,
     type: 3}
+  _npcAsset: {fileID: 9093430107948229128, guid: 2d6f86611569392469d9f3ca4f651bc2,
+    type: 3}
 --- !u!1 &1346401643
 GameObject:
   m_ObjectHideFlags: 0
@@ -9902,31 +9904,41 @@ MonoBehaviour:
   _pickDropButtonImage_Text: {fileID: 1160350207}
   _allSettingsMenus: {fileID: 1037881723}
   _allGameMenus: {fileID: 1594530135}
-  _npcAsset: {fileID: 9093430107948229128, guid: 2d6f86611569392469d9f3ca4f651bc2,
-    type: 3}
+  _sliders:
+  - _saveName: growTime
+    _mySlider: {fileID: 1039968939}
+    _valueText: {fileID: 1230604077}
+  - _saveName: boredTime
+    _mySlider: {fileID: 1515281350}
+    _valueText: {fileID: 360495643}
+  - _saveName: sleepTime
+    _mySlider: {fileID: 839790825}
+    _valueText: {fileID: 1875935686}
+  - _saveName: seekPlayer
+    _mySlider: {fileID: 1844740553}
+    _valueText: {fileID: 2125443941}
+  - _saveName: seekNpc
+    _mySlider: {fileID: 1842985370}
+    _valueText: {fileID: 384183522}
+  - _saveName: seekTree
+    _mySlider: {fileID: 1172088042}
+    _valueText: {fileID: 1602005905}
+  - _saveName: seekBall
+    _mySlider: {fileID: 1540581480}
+    _valueText: {fileID: 1435391257}
+  - _saveName: dropBall
+    _mySlider: {fileID: 1178620364}
+    _valueText: {fileID: 1972806541}
+  - _saveName: throwBallPlayer
+    _mySlider: {fileID: 1818477436}
+    _valueText: {fileID: 749565613}
+  - _saveName: throwBallNPC
+    _mySlider: {fileID: 2025424722}
+    _valueText: {fileID: 1753180661}
+  - _saveName: punchNPC
+    _mySlider: {fileID: 1325217483}
+    _valueText: {fileID: 1546447509}
   _frameRate: {fileID: 851597066}
-  _growingUpTime: {fileID: 1039968939}
-  _growingUpTimeText: {fileID: 1230604077}
-  _timeToGetBored: {fileID: 1515281350}
-  _timeToGetBoredText: {fileID: 360495643}
-  _sleepTime: {fileID: 839790825}
-  _sleepTimeText: {fileID: 1875935686}
-  _seekPlayer: {fileID: 1844740553}
-  _seekPlayerText: {fileID: 2125443941}
-  _seekNPC: {fileID: 1842985370}
-  _seekNPCText: {fileID: 384183522}
-  _seekTree: {fileID: 1172088042}
-  _seekTreeText: {fileID: 1602005905}
-  _seekBall: {fileID: 1540581480}
-  _seekBallText: {fileID: 1435391257}
-  _dropBall: {fileID: 1178620364}
-  _dropBallText: {fileID: 1972806541}
-  _throwBallOnNPC: {fileID: 1818477436}
-  _throwBallOnNPCText: {fileID: 749565613}
-  _throwBallOnPlayer: {fileID: 2025424722}
-  _throwBallOnPlayerText: {fileID: 1753180661}
-  _punchNPC: {fileID: 1325217483}
-  _punchNPCText: {fileID: 1546447509}
 --- !u!1 &1816855015
 GameObject:
   m_ObjectHideFlags: 0
@@ -12011,8 +12023,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1798784316}
-        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
+      - m_Target: {fileID: 1342396216}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: ApplySettings
         m_Mode: 1
         m_Arguments:

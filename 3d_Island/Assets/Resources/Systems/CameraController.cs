@@ -21,7 +21,6 @@ public class CameraController : MonoBehaviour
         }
 
     }
-
     public void OnTriggerExit(Collider other)
     {
         if (other.GetComponentsInChildren<MeshRenderer>().Length > 0)
