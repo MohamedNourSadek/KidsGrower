@@ -300,6 +300,14 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 64
     _onGroundThreshold: 1.3
+  _levelController:
+    _currentLevel: 0
+    _currentXp: 0
+    _levelsXP:
+    - 0
+    - 500
+    - 1000
+    - 1500
   growTime: 4.9372654
   _grownBodyMultiplier: 1.35
   _grownMassMultiplier: 2
@@ -312,14 +320,14 @@ MonoBehaviour:
   _explorationAmplitude: 10
   boredTime: 22.321056
   sleepTime: 20.521679
-  seekPlayerProb: 0
-  seekNpcProb: 1
-  seekBallProb: 0
-  seekTreeProb: 0
-  dropBallProb: 0
-  throwBallOnNpcProb: 0
-  throwBallOnPlayerProb: 0
-  punchNpcProb: 1
+  seekPlayerProb: 0.47443685
+  seekNpcProb: 0.75583357
+  seekBallProb: 0.4913207
+  seekTreeProb: 0.5194604
+  dropBallProb: 0.27745926
+  throwBallOnNpcProb: 0.38439
+  throwBallOnPlayerProb: 0.2605754
+  punchNpcProb: 0.28308716
   _model: {fileID: 1199720211687785357}
   _bodyRenderers:
   - {fileID: 983630641518498926}

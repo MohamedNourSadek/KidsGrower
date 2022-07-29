@@ -12,7 +12,9 @@ public class NPC : Pickable, IHandController
     [SerializeField] DetectorSystem _detector;
     [SerializeField] GroundDetector _groundDetector;
 
+
     [Header("Growing Parameters")]
+    [SerializeField] LevelController _levelController;
     [SerializeField] public float growTime = 5f;
     [SerializeField] float _grownBodyMultiplier = 1.35f;
     [SerializeField] float _grownMassMultiplier = 1.35f;
@@ -57,6 +59,8 @@ public class NPC : Pickable, IHandController
         _detector.Initialize(_nearObjectDistance);
         _handSystem.Initialize(_detector, this);
         _groundDetector.Initialize();
+        _levelController.Initialize(OnLevelIncrease, OnXPIncrease);
+        InitializeLevelUI();
 
         _detector.OnObjectEnter += OnObjectEnter;
         _detector.OnObjectExit += OnObjectExit;
@@ -71,6 +75,8 @@ public class NPC : Pickable, IHandController
     {
         _handSystem.Update();
         _detector.Update();
+
+        Test();
 
         //Reactivate AI only if the npc were thrown and touched the ground and not being bet
         if (_groundDetector.IsOnGroud(_myBody) && !_petting)
@@ -121,6 +127,31 @@ public class NPC : Pickable, IHandController
         foreach (MeshRenderer mesh in _bodyRenderers)
             mesh.material = _grownMaterial;
     }
+
+
+    //Levels
+    public void InitializeLevelUI()
+    {
+        UIController.uIController.CreateProgressBar(this.gameObject, _levelController.GetLevelLimits(), this.transform);
+    }
+    public void OnXPIncrease()
+    {
+        UIController.uIController.UpdateProgressBar(this.gameObject, _levelController.GetXp());
+    }
+    public void OnLevelIncrease()
+    {
+        UIController.uIController.UpdateProgressBarLimits(this.gameObject, _levelController.GetLevelLimits());
+        UIController.uIController.RepeatMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
+    }
+
+
+
+    public void Test()
+    {
+        if(Input.GetKeyDown("x"))
+            _levelController.IncreaseXP(100);
+    }
+
 
 
     //AI private variables
@@ -234,7 +265,7 @@ public class NPC : Pickable, IHandController
         StartCoroutine(UpdateSleepCondition(condition));
 
 
-        UIController.uIController.RepeatMessage("Sleeping", (this.transform.position + (1f * Vector3.up)), sleepTime, 15, condition);
+        UIController.uIController.RepeatMessage("Sleeping", this.transform, sleepTime, 15, condition);
 
         Sleep();
         while (condition.isTrue)
@@ -376,7 +407,5 @@ public class NPC : Pickable, IHandController
         }
     }
 }
-
-
 
 

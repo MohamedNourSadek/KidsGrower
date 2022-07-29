@@ -9,14 +9,20 @@ public class Egg : Pickable
 
     float _plantedSince = 0f;
 
+    bool _planted = false;
+
     public override void Pick(Transform handPosition)
     {
         base.Pick(handPosition);
-        CancelPlant();
+
+        if(_planted)
+            CancelPlant();
+
     }
     public void Plant(Vector3 _plantLocation)
     {
         _isPicked = false;
+        _planted = true;
         _myBody.isKinematic = true;
         _myBody.transform.rotation = Quaternion.identity;
         transform.position = _plantLocation;
@@ -27,18 +33,27 @@ public class Egg : Pickable
 
     IEnumerator Laying()
     {
+        UIController.uIController.CreateProgressBar(this.gameObject, new Vector2(0f,_hatchTime), this.transform);
+
         while ((_plantedSince < _hatchTime) && !_isPicked)
         {
             _plantedSince += Time.fixedDeltaTime;
+            UIController.uIController.UpdateProgressBar(this.gameObject, _plantedSince);
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
         if(!_isPicked && (_plantedSince >= _hatchTime))
+        {
+            UIController.uIController.DestroyProgressBar(this.gameObject);
             Hatch();
+        }
     }
     void CancelPlant()
     {
         _plantedSince = 0;
+        _planted = false;
+
+        UIController.uIController.DestroyProgressBar(this.gameObject);
         StopCoroutine(Laying());
     }
     void Hatch()

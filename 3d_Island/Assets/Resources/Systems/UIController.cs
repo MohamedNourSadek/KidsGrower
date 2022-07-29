@@ -37,6 +37,7 @@ public class UIController : MonoBehaviour
     [Header("Design Only")]
     [SerializeField] Text _frameRate;
 
+    Dictionary<GameObject, Slider> _slidersContainer = new Dictionary<GameObject, Slider>();
 
     private void Awake()
     {
@@ -75,18 +76,34 @@ public class UIController : MonoBehaviour
         _pickDropButtonImage_Text.text = _mode.ToString();
     }
 
-    public void RepeatMessage(string message, Vector3 position, float messageTime, float repeats, ConditionChecker condition)
+    public void RepeatMessage(string message, Transform parent, float messageTime, float repeats, ConditionChecker condition)
     {
-        StartCoroutine(RepeatMessage_Coroutine(message, position, messageTime, repeats, condition));
+        StartCoroutine(RepeatMessage_Coroutine(message, parent, messageTime, repeats, condition));
     }
-    public void ShowProgressBar(float max, Transform parent, ConditionChecker condition)
+    public void CreateProgressBar(GameObject _user, Vector2 limits, Transform parent)
     {
         Slider _progressBar = Instantiate(_progressBarPrefab, parent.position, Quaternion.identity, _3dCanvas.transform).GetComponent<Slider>();
-       
-        //0.95f of the real max to make the slider finish first
-        _progressBar.maxValue = 0.95f * max;
+        _progressBar.minValue = limits.x;
+        _progressBar.maxValue = limits.y;
 
-        StartCoroutine(ProgressBar(parent, condition, _progressBar));
+        _slidersContainer.Add(_user, _progressBar);
+
+        StartCoroutine(TranslateProgressBar(_progressBar.gameObject, parent));
+    }
+    public void UpdateProgressBar(GameObject _user, float _value)
+    {
+        _slidersContainer[_user].value = _value;
+    }
+    public void UpdateProgressBarLimits(GameObject _user, Vector3 _limits)
+    {
+        _slidersContainer[_user].minValue = _limits.x;
+        _slidersContainer[_user].maxValue = _limits.y;
+    }
+    public void DestroyProgressBar(GameObject _user)
+    {
+        Slider _temp = _slidersContainer[_user];
+        _slidersContainer.Remove(_user);
+        Destroy(_temp.gameObject);
     }
     public void ShowFrameRate(string frameRate)
     {
@@ -105,26 +122,22 @@ public class UIController : MonoBehaviour
     
     
     //Interal Algorithms
-    IEnumerator ProgressBar(Transform parent, ConditionChecker condition, Slider progressBar)
+    IEnumerator TranslateProgressBar(GameObject _object, Transform parent)
     {
-        while(condition.isTrue)
+        while((parent != null ) && (_object != null))
         {
-            progressBar.value += Time.fixedDeltaTime;
-            progressBar.gameObject.transform.position = parent.transform.position + Vector3.up;
-
-            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+            _object.transform.position = parent.transform.position + Vector3.up;
+            yield return new WaitForSecondsRealtime(Time.deltaTime);
         }
-
-        Destroy(progressBar.gameObject);
     }
-    IEnumerator RepeatMessage_Coroutine(string message, Vector3 position, float messageTime, float repeats, ConditionChecker condition)
+    IEnumerator RepeatMessage_Coroutine(string message, Transform parent, float messageTime, float repeats, ConditionChecker condition)
     {
         float _time = 0f;
 
-        while (condition.isTrue)
+        while (condition.isTrue && _time<=messageTime)
         {
             _time += messageTime / repeats;
-            SpawnMessage(message, position);
+            SpawnMessage(message, (parent.position + (1.5f*Vector3.up)));
             yield return new WaitForSecondsRealtime(messageTime / repeats);
         }
     }
@@ -139,19 +152,6 @@ public class UIController : MonoBehaviour
     }
 }
 
-[System.Serializable]
-public class SliderElement
-{
-    [SerializeField] public string _saveName;
-    [SerializeField] public Slider _mySlider;
-    [SerializeField] public Text _valueText;
 
-    public void Initialize()
-    {
-        _mySlider.onValueChanged.AddListener(OnValueChanged);
-    }
-    public void OnValueChanged(float value)
-    {
-        _valueText.text = _mySlider.value.ToString();
-    }
-}
+
+ 

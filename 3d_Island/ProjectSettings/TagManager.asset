@@ -8,6 +8,8 @@ TagManager:
   - NPC
   - Ball
   - Tree
+  - Alter
+  - HideByCam
   layers:
   - Default
   - TransparentFX
