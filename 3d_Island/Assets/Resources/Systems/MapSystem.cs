@@ -15,6 +15,11 @@ public class MapSystem : MonoBehaviour
         ExplorationPoints = _explorationPoints;
     }
 
+    public static Vector3 GetRandomExplorationPoint()
+    {
+        var _randomLocation = Random.Range(0, MapSystem.ExplorationPoints.Count);
+        return MapSystem.ExplorationPoints[_randomLocation].transform.position;
+    }
 
    
 }

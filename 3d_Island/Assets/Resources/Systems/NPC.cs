@@ -32,6 +32,7 @@ public class NPC : Pickable, IHandController
     [SerializeField] public float layingTime = 10f;
     [SerializeField] public float layingTimeInBetween = 60f;
     [SerializeField] public float eatTime = 10f;
+    [SerializeField] public float deathTime = 50f;
     [SerializeField] public float eatingXpPerUpdate = 1f;
     [SerializeField] public float pettingXP = 100f;
     [SerializeField] [Range(0, 1)] public float seekPlayerProb = 0.1f;
@@ -52,6 +53,7 @@ public class NPC : Pickable, IHandController
     [SerializeField] List<MeshRenderer> _bodyRenderers;
     [SerializeField] Material _grownMaterial;
     [SerializeField] GameObject _eggAsset;
+    [SerializeField] GameObject _deadNpcAsset;
 
 
     //Private data
@@ -125,8 +127,16 @@ public class NPC : Pickable, IHandController
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
-        if ((_bornSince >= growTime))
-            GrowUp();
+        GrowUp();
+
+        while((_bornSince < deathTime))
+        {
+            _bornSince += Time.fixedDeltaTime;
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+
+        Die();
+
     }
     void GrowUp()
     {
@@ -135,6 +145,13 @@ public class NPC : Pickable, IHandController
 
         foreach (MeshRenderer mesh in _bodyRenderers)
             mesh.material = _grownMaterial;
+    }
+    void Die()
+    {
+        var _deadNPC =  Instantiate(_deadNpcAsset, this.transform.position, Quaternion.identity);
+        UIController.uIController.DestroyProgressBar(this.gameObject);
+        UIController.uIController.RepeatMessage("Death!!", _deadNPC.transform, 2f, 4f, new ConditionChecker(true));
+        Destroy(this.gameObject);
     }
 
 
@@ -451,14 +468,10 @@ public class NPC : Pickable, IHandController
     }
     void ChooseRandomExplorationPoint()
     {
-        if (!(MapSystem.ExplorationPoints.Count == 0))
-        {
-            _timeSinceLastAction = 0;
-            _deltaExploration = Vector3.zero;
-            var _randomLocation = Random.Range(0, MapSystem.ExplorationPoints.Count);
-            _destination = MapSystem.ExplorationPoints[_randomLocation].transform.position;
-            _movementStatus = MovementStatus.Exploring;
-        }
+        _timeSinceLastAction = 0;
+        _deltaExploration = Vector3.zero;
+        _destination = MapSystem.GetRandomExplorationPoint();
+        _movementStatus = MovementStatus.Exploring;
     }
     void MoveTo(Transform followed)
     {

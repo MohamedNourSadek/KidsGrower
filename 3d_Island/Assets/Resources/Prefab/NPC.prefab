@@ -346,6 +346,7 @@ MonoBehaviour:
   layingTime: 10
   layingTimeInBetween: 10
   eatTime: 10
+  deathTime: 300
   eatingXpPerUpdate: 1
   pettingXP: 100
   seekPlayerProb: 0
@@ -366,6 +367,8 @@ MonoBehaviour:
   - {fileID: 4107583075001511036}
   _grownMaterial: {fileID: 2100000, guid: 538a8383122d24149a03360542b0a990, type: 2}
   _eggAsset: {fileID: 6876410436286045249, guid: 2a45eb92fac01c14d8af05a147bc6e5e,
+    type: 3}
+  _deadNpcAsset: {fileID: 9093430107948232182, guid: 455b6c927cf47db4f8b61e656005cc5d,
     type: 3}
   _timeSinceLastAction: 0
   _dynamicDestination: {fileID: 0}

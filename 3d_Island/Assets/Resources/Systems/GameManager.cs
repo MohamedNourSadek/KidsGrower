@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public static string punchNpcProb_saveString = "punchNPC";
     public static string seekFruit_saveString = "seekFruit";
     public static string seekAlter_saveString = "seekAlter";
+    public static string deathTime_saveString = "deathTime";
 
     void Start()
     {
@@ -90,6 +91,8 @@ public class GameManager : MonoBehaviour
                 _npcAsset.seekFruitProb = slider._mySlider.value;
             else if (slider._saveName == seekAlter_saveString)
                 _npcAsset.seekAlterProb = slider._mySlider.value;
+            else if (slider._saveName == deathTime_saveString)
+                _npcAsset.deathTime = slider._mySlider.value;
         }
 
         //then change the rest to its values (for optimization)
@@ -108,6 +111,7 @@ public class GameManager : MonoBehaviour
             npc.punchNpcProb = _npcAsset.punchNpcProb;
             npc.seekFruitProb = _npcAsset.seekFruitProb;
             npc.seekAlterProb = _npcAsset.seekAlterProb;
+            npc.deathTime = _npcAsset.deathTime;
         }
 
         SaveSettings();
