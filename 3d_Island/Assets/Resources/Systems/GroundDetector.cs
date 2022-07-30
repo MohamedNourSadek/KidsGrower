@@ -23,6 +23,10 @@ public class GroundDetector
         return DetectGround(_body);
     }
 
+    public void SetThreshold(float thrus)
+    {
+        _onGroundThreshold = thrus;
+    }
 
     bool DetectGround(Rigidbody _body)
     {

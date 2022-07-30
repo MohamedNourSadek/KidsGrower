@@ -27,6 +27,11 @@ class LevelController
     {
         return _currentLevel;
     }
+    public float GetLevelToLevelsRation()
+    {
+        return ((GetLevel() * 1f) / _levelsXP.Count);
+    }
+
     public Vector2 GetLevelLimits()
     {
         Vector2 _limits = new Vector2();

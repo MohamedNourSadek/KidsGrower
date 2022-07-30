@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] int _lockFrameRate = 60;
+    [SerializeField] bool _lockFrameRate = false;
+    [SerializeField] int _frameRatelock = 60;
 
     [Header("Game Design")]
     [SerializeField] bool _showFrameRate;
@@ -25,10 +26,15 @@ public class GameManager : MonoBehaviour
     public static string throwBallOnPlayerProb_saveString = "throwBallPlayer";
     public static string throwBallOnNpcProb_saveString = "throwBallNPC";
     public static string punchNpcProb_saveString = "punchNPC";
+    public static string seekFruit_saveString = "seekFruit";
+    public static string seekAlter_saveString = "seekAlter";
 
     void Start()
     {
-        Application.targetFrameRate = _lockFrameRate;
+        if (_lockFrameRate)
+            Application.targetFrameRate = _frameRatelock;
+        else
+            Application.targetFrameRate = 0;
 
         if (_myPlayer == null)
             FindObjectOfType<PlayerSystem>();
@@ -80,6 +86,10 @@ public class GameManager : MonoBehaviour
                 _npcAsset.throwBallOnPlayerProb = slider._mySlider.value;
             else if (slider._saveName == punchNpcProb_saveString)
                 _npcAsset.punchNpcProb = slider._mySlider.value;
+            else if (slider._saveName == seekFruit_saveString)
+                _npcAsset.seekFruitProb = slider._mySlider.value;
+            else if (slider._saveName == seekAlter_saveString)
+                _npcAsset.seekAlterProb = slider._mySlider.value;
         }
 
         //then change the rest to its values (for optimization)
@@ -96,6 +106,8 @@ public class GameManager : MonoBehaviour
             npc.throwBallOnNpcProb = _npcAsset.throwBallOnNpcProb;
             npc.throwBallOnPlayerProb = _npcAsset.throwBallOnPlayerProb;
             npc.punchNpcProb = _npcAsset.punchNpcProb;
+            npc.seekFruitProb = _npcAsset.seekFruitProb;
+            npc.seekAlterProb = _npcAsset.seekAlterProb;
         }
 
         SaveSettings();

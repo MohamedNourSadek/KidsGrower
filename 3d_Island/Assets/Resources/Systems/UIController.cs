@@ -31,6 +31,8 @@ public class UIController : MonoBehaviour
     [SerializeField] Text _pickDropButtonImage_Text;
     [SerializeField] GameObject _allSettingsMenus;
     [SerializeField] GameObject _allGameMenus;
+    [SerializeField] GameObject _page1Menu;
+    [SerializeField] GameObject _page2Menu;
     [SerializeField] List<SliderElement> _sliders = new List<SliderElement>();
 
 
@@ -113,6 +115,16 @@ public class UIController : MonoBehaviour
     {
         _allSettingsMenus.SetActive(state);
         _allGameMenus.SetActive(!state);
+    }
+    public void ShowSettings_Page1()
+    {
+        _page1Menu.SetActive(true);
+        _page2Menu.SetActive(false);
+    }
+    public void ShowSettings_Page2()
+    {
+        _page1Menu.SetActive(false);
+        _page2Menu.SetActive(true);
     }
     public List<SliderElement> GetSliders()
     {

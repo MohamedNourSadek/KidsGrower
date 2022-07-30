@@ -11,14 +11,21 @@ public class Pickable : MonoBehaviour
      
     protected bool _isPicked = false;
 
+    public HandSystem _holder;
 
     public Rigidbody GetBody()
     {
-        return _myBody;
+        if (_myBody)
+            return _myBody;
+        else
+            return null;
     }
     public float GetSpeed()
     {
-        return _myBody.velocity.magnitude;
+        if (_myBody != null)
+            return _myBody.velocity.magnitude;
+        else
+            return 0;
     }
     public bool IsPicked()
     {
@@ -35,14 +42,20 @@ public class Pickable : MonoBehaviour
             _indicatorObject.SetActive(false);
         }
     }
-    public virtual void Pick(Transform handPosition)
+    public virtual void Pick(HandSystem _picker)
     {
+        if (_holder != null)
+            _holder._objectInHand = null;
+
+        _holder = _picker;
+        _holder._objectInHand = this;
+
         _isPicked = true;
         _myBody.isKinematic = true;
         _myBody.velocity = Vector3.zero;
 
-        this.transform.position = handPosition.transform.position;
-        this.transform.parent = handPosition;
+        this.transform.position = _picker.GetHand().position;
+        this.transform.parent = _picker.GetHand();
     }
 
 
@@ -50,6 +63,9 @@ public class Pickable : MonoBehaviour
     {
         _isPicked = false;
         _myBody.isKinematic = false;
+
+        _holder._objectInHand = null;
+        _holder = null;
 
         this.transform.parent = null;
 

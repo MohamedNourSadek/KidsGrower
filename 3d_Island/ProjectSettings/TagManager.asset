@@ -10,6 +10,7 @@ TagManager:
   - Tree
   - Alter
   - HideByCam
+  - Fruit
   layers:
   - Default
   - TransparentFX

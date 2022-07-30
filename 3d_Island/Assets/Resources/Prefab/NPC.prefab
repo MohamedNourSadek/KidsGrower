@@ -279,9 +279,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _indicatorObject: {fileID: 8476445087216368859}
   _myBody: {fileID: 9093430107948229129}
+  _holder:
+    _myHand: {fileID: 0}
+    _whoCanIPick: 
+    _highLightPickable: 0
+    _throwForce: 20
+    _plantDistance: 1
+    _pickSpeedThrushold: 2
+    _petTime: 1
+    _detector: {fileID: 0}
+    _gotSomething: 0
+    _canPick: 0
+    _canDrop: 0
+    _canThrow: 0
+    _canPlant: 0
+    _canPet: 0
+    _objectInHand: {fileID: 0}
   _handSystem:
     _myHand: {fileID: 446940068}
-    _whoCanIPick: 02000000
+    _whoCanIPick: 0200000003000000
     _highLightPickable: 0
     _throwForce: 120
     _plantDistance: 1
@@ -294,6 +310,7 @@ MonoBehaviour:
     _canThrow: 0
     _canPlant: 0
     _canPet: 0
+    _objectInHand: {fileID: 0}
   _detector: {fileID: 2330463048917170657}
   _groundDetector:
     _groundLayer:
@@ -308,6 +325,12 @@ MonoBehaviour:
     - 500
     - 1000
     - 1500
+    - 2000
+    - 2500
+    - 3000
+    - 3500
+    - 4000
+    - 4500
   growTime: 4.9372654
   _grownBodyMultiplier: 1.35
   _grownMassMultiplier: 2
@@ -316,18 +339,25 @@ MonoBehaviour:
   _decisionsDelay: 0.5
   _punchableDistance: 1
   _punchForce: 250
-  _nearObjectDistance: 1
+  _nearObjectDistance: 1.5
   _explorationAmplitude: 10
   boredTime: 22.321056
   sleepTime: 20.521679
-  seekPlayerProb: 0.47443685
-  seekNpcProb: 0.75583357
-  seekBallProb: 0.4913207
-  seekTreeProb: 0.5194604
-  dropBallProb: 0.27745926
-  throwBallOnNpcProb: 0.38439
-  throwBallOnPlayerProb: 0.2605754
-  punchNpcProb: 0.28308716
+  layingTime: 10
+  layingTimeInBetween: 10
+  eatTime: 10
+  eatingXpPerUpdate: 1
+  pettingXP: 100
+  seekPlayerProb: 0
+  seekNpcProb: 0
+  seekBallProb: 0
+  seekTreeProb: 0
+  dropBallProb: 0
+  throwBallOnNpcProb: 0
+  throwBallOnPlayerProb: 0
+  punchNpcProb: 0
+  seekFruitProb: 1
+  seekAlterProb: 1
   _model: {fileID: 1199720211687785357}
   _bodyRenderers:
   - {fileID: 983630641518498926}
@@ -335,6 +365,8 @@ MonoBehaviour:
   - {fileID: 6357098876767871494}
   - {fileID: 4107583075001511036}
   _grownMaterial: {fileID: 2100000, guid: 538a8383122d24149a03360542b0a990, type: 2}
+  _eggAsset: {fileID: 6876410436286045249, guid: 2a45eb92fac01c14d8af05a147bc6e5e,
+    type: 3}
   _timeSinceLastAction: 0
   _dynamicDestination: {fileID: 0}
 --- !u!195 &5323626491861248105

@@ -8,12 +8,16 @@ public enum TreeDetectionStatus { None, InRange, VeryNear };
 public enum PlayerDetectionStatus { None, InRange, VeryNear };
 public enum NpcDetectionStatus { None, InRange, VeryNear };
 public enum EggDetectionStatus { None, InRange, VeryNear };
+public enum FruitDetectionStatus { None, InRange, VeryNear };
+public enum AlterDetectionStatus { None, InRange, VeryNear };
 
 
 public delegate void notify(GameObject obj);
 public delegate void notifyBall(Ball ball);
 public delegate void notifyNPC(NPC npc);
 public delegate void notifyTree(TreeSystem tree);
+public delegate void notifyFruit(Fruit fruit);
+public delegate void notifyAlter(FertilityAlter alter);
 
 [System.Serializable]
 public class DetectorSystem : MonoBehaviour
@@ -26,6 +30,8 @@ public class DetectorSystem : MonoBehaviour
     public PlayerDetectionStatus _playerDetectionStatus = PlayerDetectionStatus.None;
     public NpcDetectionStatus _npcDetectionStatus = NpcDetectionStatus.None;
     public EggDetectionStatus _eggDetectionStatus = EggDetectionStatus.None;
+    public FruitDetectionStatus _fruitDetectionStatus = FruitDetectionStatus.None;
+    public AlterDetectionStatus _alterDetectionStatus = AlterDetectionStatus.None;
 
     public event notify OnObjectEnter;
     public event notify OnObjectExit;
@@ -34,9 +40,11 @@ public class DetectorSystem : MonoBehaviour
     public event notifyBall OnBallNear;
     public event notifyTree OnTreeNear;
     public event notifyNPC OnNpcNear;
+    public event notifyFruit OnFruitNear;
+    public event notifyAlter OnAlterNear;
 
     //Private data
-    readonly DetectorData _detectorData = new();
+    public DetectorData _detectorData = new();
 
 
     public void Initialize(float nearObjectDistance)
@@ -54,6 +62,15 @@ public class DetectorSystem : MonoBehaviour
         }
         if (destroyedIndex != -1)   
             _detectorData.eggs.RemoveAt(destroyedIndex);
+
+        destroyedIndex = -1;
+        for (int i = 0; i < _detectorData.fruits.Count; i++)
+        {
+            if (_detectorData.fruits[i] == null)
+                destroyedIndex = i;
+        }
+        if (destroyedIndex != -1)
+            _detectorData.fruits.RemoveAt(destroyedIndex);
 
         destroyedIndex = -1;
         for (int i = 0; i < _detectorData.npcs.Count; i++)
@@ -83,7 +100,8 @@ public class DetectorSystem : MonoBehaviour
 
         if (TreeInRange(_nearObjectDistance))
         {
-            OnTreeNear?.Invoke(TreeInRange(_nearObjectDistance));
+            if(_treeDetectionStatus != TreeDetectionStatus.VeryNear)
+                OnTreeNear?.Invoke(TreeInRange(_nearObjectDistance));
 
             _treeDetectionStatus = TreeDetectionStatus.VeryNear;
         }
@@ -136,6 +154,49 @@ public class DetectorSystem : MonoBehaviour
         else
         {
             _eggDetectionStatus = EggDetectionStatus.None;
+        }
+
+        if (FruitInRange(_nearObjectDistance))
+        {
+            if(FruitInRange(_nearObjectDistance))
+            {
+                try
+                {
+                    var fruit = FruitInRange(_nearObjectDistance);
+                    OnFruitNear?.Invoke(fruit);
+                }
+                catch 
+                {
+                }
+                
+            }
+
+            _fruitDetectionStatus = FruitDetectionStatus.VeryNear;
+        }
+        else if (FruitInRange())
+        {
+            _fruitDetectionStatus = FruitDetectionStatus.InRange;
+        }
+        else
+        {
+            _fruitDetectionStatus = FruitDetectionStatus.None;
+        }
+
+
+        if (AlterInRange(_nearObjectDistance))
+        {
+            if (_alterDetectionStatus != AlterDetectionStatus.VeryNear)
+                OnAlterNear?.Invoke(AlterInRange(_nearObjectDistance));
+
+            _alterDetectionStatus = AlterDetectionStatus.VeryNear;
+        }
+        else if (AlterInRange())
+        {
+            _alterDetectionStatus = AlterDetectionStatus.InRange;
+        }
+        else
+        {
+            _alterDetectionStatus = AlterDetectionStatus.None;
         }
     }
 
@@ -314,6 +375,72 @@ public class DetectorSystem : MonoBehaviour
     }
 
 
+    public Fruit FruitInRange()
+    {
+        Fruit fruit = null;
+
+        if (_detectorData.fruits.Count == 1)
+        {
+            fruit = _detectorData.fruits[0];
+        }
+        else if (_detectorData.fruits.Count > 1)
+        {
+            fruit = _detectorData.fruits[0];
+
+            foreach (Fruit _fruit in _detectorData.fruits)
+                if (Distance(_fruit.gameObject) < Distance(fruit.gameObject))
+                    fruit = _fruit;
+        }
+
+        return fruit;
+    }
+    public Fruit FruitInRange(float _range)
+    {
+        Fruit fruit = FruitInRange();
+
+        if (fruit != null && IsNear(fruit.gameObject, _range))
+        {
+            return fruit;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+    public FertilityAlter AlterInRange()
+    {
+        FertilityAlter alter = null;
+
+        if (_detectorData.alters.Count == 1)
+        {
+            alter = _detectorData.alters[0];
+        }
+        else if (_detectorData.alters.Count > 1)
+        {
+            alter = _detectorData.alters[0];
+
+            foreach (FertilityAlter _alter in _detectorData.alters)
+                if (Distance(_alter.gameObject) < Distance(alter.gameObject))
+                    alter = _alter;
+        }
+
+        return alter;
+    }
+    public FertilityAlter AlterInRange(float _range)
+    {
+        FertilityAlter alter = AlterInRange();
+
+        if (alter != null && IsNear(alter.gameObject, _range))
+        {
+            return alter;
+        }
+        else
+        {
+            return null;
+        }
+    }
 
 
     //Help functions
@@ -367,6 +494,20 @@ public class DetectorSystem : MonoBehaviour
             if (_detectorData.eggs.Contains(_egg) == false)
                 _detectorData.eggs.Add(_egg);
         }
+        else if (collider.CompareTag("Fruit"))
+        {
+            Fruit _fruit = collider.GetComponentInParent<Fruit>();
+
+            if (_detectorData.fruits.Contains(_fruit) == false)
+                _detectorData.fruits.Add(_fruit);
+        }
+        else if (collider.CompareTag("Alter"))
+        {
+            FertilityAlter _alter = collider.GetComponentInParent<FertilityAlter>();
+
+            if (_detectorData.alters.Contains(_alter) == false)
+                _detectorData.alters.Add(_alter);
+        }
     }
     private void OnTriggerExit(Collider collider)
     {
@@ -407,6 +548,20 @@ public class DetectorSystem : MonoBehaviour
             if (_detectorData.eggs.Contains(_egg) == true)
                 _detectorData.eggs.Remove(_egg);
         }
+        else if (collider.CompareTag("Fruit"))
+        {
+            Fruit _fruit = collider.GetComponentInParent<Fruit>();
+
+            if (_detectorData.fruits.Contains(_fruit) == true)
+                _detectorData.fruits.Remove(_fruit);
+        }
+        else if (collider.CompareTag("Alter"))
+        {
+            FertilityAlter _alter = collider.GetComponentInParent<FertilityAlter>();
+
+            if (_detectorData.alters.Contains(_alter) == true)
+                _detectorData.alters.Remove(_alter);
+        }
     }
 }
 
@@ -420,4 +575,7 @@ public class  DetectorData
     [SerializeField] public List<Ball> balls = new();
     [SerializeField] public List<TreeSystem> trees = new();
     [SerializeField] public List<Egg> eggs = new();
+    [SerializeField] public List<Fruit> fruits = new();
+    [SerializeField] public List<FertilityAlter> alters = new();
+
 }

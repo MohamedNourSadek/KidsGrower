@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public enum MovementStatus {Moving, Idel, Exploring, Watching, Sleeping};
+public enum MovementStatus {Moving, Idel, Exploring, Watching, Sleeping, Eating, Laying};
 
 public class NPC : Pickable, IHandController
 {
@@ -29,6 +29,11 @@ public class NPC : Pickable, IHandController
     [SerializeField] float _explorationAmplitude = 10f;
     [SerializeField] public float boredTime = 30f;
     [SerializeField] public float sleepTime = 10f;
+    [SerializeField] public float layingTime = 10f;
+    [SerializeField] public float layingTimeInBetween = 60f;
+    [SerializeField] public float eatTime = 10f;
+    [SerializeField] public float eatingXpPerUpdate = 1f;
+    [SerializeField] public float pettingXP = 100f;
     [SerializeField] [Range(0, 1)] public float seekPlayerProb = 0.1f;
     [SerializeField] [Range(0, 1)] public float seekNpcProb = 0.1f;
     [SerializeField] [Range(0, 1)] public float seekBallProb = 0.1f;
@@ -37,6 +42,8 @@ public class NPC : Pickable, IHandController
     [SerializeField] [Range(0, 1)] public float throwBallOnNpcProb = 0.1f;
     [SerializeField] [Range(0, 1)] public float throwBallOnPlayerProb = 0.1f;
     [SerializeField] [Range(0, 1)] public float punchNpcProb = 0.1f;
+    [SerializeField] [Range(0, 1)] public float seekFruitProb = 1f;
+    [SerializeField] [Range(0, 1)] public float seekAlterProb = 1f;
 
 
 
@@ -44,13 +51,14 @@ public class NPC : Pickable, IHandController
     [SerializeField] GameObject _model;
     [SerializeField] List<MeshRenderer> _bodyRenderers;
     [SerializeField] Material _grownMaterial;
+    [SerializeField] GameObject _eggAsset;
 
 
     //Private data
     NavMeshAgent _myAgent;
     float _bornSince = 0f;
     bool _petting = false;
-    
+    bool _canLay = true;
 
     //Main Functions
     private void Awake()
@@ -67,6 +75,9 @@ public class NPC : Pickable, IHandController
         _detector.OnBallNear += OnBallNear;
         _detector.OnTreeNear += OnTreeNear;
         _detector.OnNpcNear += OnNpcNear;
+        _detector.OnFruitNear += OnFruitNear;
+        _detector.OnAlterNear += OnAlterNear;
+
         base.StartCoroutine(GrowingUp());
         base.StartCoroutine(AiContinous());
         base.StartCoroutine(AiDescrete());
@@ -76,18 +87,15 @@ public class NPC : Pickable, IHandController
         _handSystem.Update();
         _detector.Update();
 
-        Test();
-
         //Reactivate AI only if the npc were thrown and touched the ground and not being bet
         if (_groundDetector.IsOnGroud(_myBody) && !_petting)
             _myAgent.enabled = true;
         else if (_petting)
             _myAgent.enabled = false;
-
     }
-    public override void Pick(Transform handPosition)
+    public override void Pick(HandSystem _picker)
     {
-        base.Pick(handPosition);
+        base.Pick(_picker);
         _myAgent.enabled = false;
     }
     public void StartCoroutine_Custom(IEnumerator routine)
@@ -96,6 +104,7 @@ public class NPC : Pickable, IHandController
     }
     public void StartPetting()
     {
+        _levelController.IncreaseXP(pettingXP);
         _myBody.isKinematic = true;
         _myBody.velocity = Vector3.zero;
         _petting = true;
@@ -145,15 +154,6 @@ public class NPC : Pickable, IHandController
     }
 
 
-
-    public void Test()
-    {
-        if(Input.GetKeyDown("x"))
-            _levelController.IncreaseXP(100);
-    }
-
-
-
     //AI private variables
     public float _timeSinceLastAction = 0;
     Vector3 _deltaExploration = Vector3.zero;
@@ -178,23 +178,21 @@ public class NPC : Pickable, IHandController
                     StartCoroutine(Sleeping());
                 }
 
-                //Player is near and i got a throwable object.
-                if (_detector._playerDetectionStatus == PlayerDetectionStatus.InRange && _handSystem._gotSomething)
+                //i got a throwable object (ball).
+                if(GotTypeInHand(typeof(Ball)))
                 {
-                    ThinkAboutThrowing(_detector.PlayerInRange().gameObject, throwBallOnPlayerProb);
-                }
-                //NPC is near and i got a throwable object.
-                if (_detector._npcDetectionStatus == NpcDetectionStatus.InRange && _handSystem._gotSomething)
-                {
-                    ThinkAboutThrowing(_detector.NpcInRange().gameObject, throwBallOnNpcProb);
-                }
+                    if (_detector._playerDetectionStatus == PlayerDetectionStatus.InRange)
+                    {
+                        ThinkAboutThrowing(_detector.PlayerInRange().gameObject, throwBallOnPlayerProb);
+                    }
+                    if (_detector._npcDetectionStatus == NpcDetectionStatus.InRange)
+                    {
+                        ThinkAboutThrowing(_detector.NpcInRange().gameObject, throwBallOnNpcProb);
+                    }
 
-                //No One is near
-                if (_handSystem._gotSomething)
-                {
+                    //No One is near
                     ThinkaboutDroppingTheBall();
                 }
-
             }
 
             yield return new WaitForSecondsRealtime(_decisionsDelay);
@@ -213,6 +211,16 @@ public class NPC : Pickable, IHandController
 
         if (obj.CompareTag("Tree"))
             ThinkAboutFollowingObject(obj, seekTreeProb);
+
+        if (obj.CompareTag("Fruit"))
+            if(obj.GetComponent<Fruit>().OnGround())
+                ThinkAboutFollowingObject(obj, seekFruitProb);
+
+        if(obj.CompareTag("Alter"))
+            if (_canLay)
+                ThinkAboutlayingAnEgg(obj.GetComponentInParent<FertilityAlter>());
+
+
     }
     void OnObjectExit(GameObject obj)
     {
@@ -224,8 +232,7 @@ public class NPC : Pickable, IHandController
     }
     void OnTreeNear(TreeSystem tree)
     {
-        if(_movementStatus == MovementStatus.Watching)
-            ThinkAboutShakingTree(tree);
+        ThinkAboutShakingTree(tree);
     }
     void OnNpcNear(NPC npc)
     {
@@ -237,6 +244,26 @@ public class NPC : Pickable, IHandController
         if (_movementStatus == MovementStatus.Watching)
             ThinkAboutPickingBall();
     }
+    void OnFruitNear(Fruit fruit)
+    {
+        if (_movementStatus != MovementStatus.Eating && fruit.OnGround())
+        {
+            _movementStatus = MovementStatus.Eating;
+
+            _handSystem.PickObject();
+            StopCoroutine(Eating(fruit));
+            StartCoroutine(Eating(fruit));
+        }
+    }
+    void OnAlterNear(FertilityAlter alter)
+    {
+        if (_canLay)
+        {
+            _movementStatus = MovementStatus.Laying;
+            StartCoroutine(Laying(alter));
+        }
+    }
+
     IEnumerator AiContinous()
     {
         while(true)
@@ -256,54 +283,109 @@ public class NPC : Pickable, IHandController
         }
     }
 
-     
 
     //Algorithms
-    IEnumerator Sleeping()
+    IEnumerator Eating(Fruit _fruit)
     {
+        float _time = 0;
         ConditionChecker condition = new ConditionChecker(!_isPicked);
-        StartCoroutine(UpdateSleepCondition(condition));
+        UIController.uIController.RepeatMessage("Eating", this.transform, eatTime, 15, condition);
 
-
-        UIController.uIController.RepeatMessage("Sleeping", this.transform, sleepTime, 15, condition);
-
-        Sleep();
         while (condition.isTrue)
         {
+            _time += Time.fixedDeltaTime;
+
+            condition.Update(!_isPicked && (_time <= eatTime) && GotTypeInHand(typeof(Fruit)) && _fruit.HasEnergy());
+
+            _levelController.IncreaseXP(_fruit.GetEnergy());
+
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
-        WakeUp();
+
+        _handSystem.DropObject();
+
+        _movementStatus = MovementStatus.Idel;
     }
-    void Sleep()
+    IEnumerator Sleeping()
     {
+        float _time = 0;
+        ConditionChecker condition = new ConditionChecker(!_isPicked);
+        UIController.uIController.RepeatMessage("Sleeping", this.transform, sleepTime, 15, condition);
+
+        //sleep
         _myBody.isKinematic = true;
         _myAgent.enabled = false;
-    }
-    IEnumerator UpdateSleepCondition(ConditionChecker condition)
-    {
-        bool isConditionTrue = true;
-        float _time = 0;
 
-        while (isConditionTrue)
+        while (condition.isTrue)
         {
-            condition.Update(true);
-
-            isConditionTrue = !_isPicked && (_time <= sleepTime);
-
             _time += Time.fixedDeltaTime;
+
+            condition.Update(!_isPicked && (_time <= sleepTime));
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
-        condition.Update(false);
-    }
-    void WakeUp()
-    {
+        //Wake up
         _movementStatus = MovementStatus.Idel;
-
         if (!_isPicked)
         {
             _myAgent.enabled = true;
             _myBody.isKinematic = false;
+        }
+    }
+    IEnumerator Laying(FertilityAlter alter)
+    {
+        float _time = 0;
+        ConditionChecker condition = new ConditionChecker(!_isPicked);
+        UIController.uIController.RepeatMessage("Laying", this.transform, layingTime, 15, condition);
+
+        //Laying
+        _myBody.isKinematic = true;
+        _myAgent.enabled = false;
+
+        while (condition.isTrue)
+        {
+            _time += Time.fixedDeltaTime;
+
+            condition.Update(!_isPicked && (_time <= layingTime));
+
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+
+        //Done
+        if (!_isPicked)
+        {
+            _myAgent.enabled = true;
+            _myBody.isKinematic = false;
+        }
+        _movementStatus = MovementStatus.Idel;
+
+        if (_time >= layingTime)
+        {
+            _canLay = false;
+
+            Egg _egg = Instantiate(_eggAsset.gameObject, alter.transform.position + Vector3.up, Quaternion.identity).GetComponent<Egg>();
+            _egg.SetRottenness(1f - _levelController.GetLevelToLevelsRation());
+
+            //Reset the ability to lay
+            _time = 0;
+            while (_time <= layingTimeInBetween)
+            {
+                _time += Time.fixedDeltaTime;
+
+                yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+            }
+
+            _canLay = true;
+        }
+    }
+
+    void ThinkAboutlayingAnEgg(FertilityAlter alter)
+    {
+        float _randomChance = Random.Range(0f, 1f);
+
+        if ((_randomChance < seekAlterProb) && (_randomChance > 0))
+        {
+            ThinkAboutFollowingObject(alter.gameObject, 1f);
         }
     }
     void ThinkAboutShakingTree(TreeSystem tree)
@@ -406,6 +488,15 @@ public class NPC : Pickable, IHandController
             _deltaExploration = new Vector3(x, 0, z);
         }
     }
+    bool GotTypeInHand(System.Type _type)
+    {
+        if(_handSystem.ObjectInHand() != null && _handSystem.ObjectInHand().GetType() == _type)
+            return true;
+        else
+            return false;
+    }
+
+
 }
 
 

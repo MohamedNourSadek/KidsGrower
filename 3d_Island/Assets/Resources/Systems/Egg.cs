@@ -6,14 +6,23 @@ public class Egg : Pickable
 {
     [SerializeField] NPC _babyNpcPrefab;
     [SerializeField] public float _hatchTime = 30;
+    [SerializeField] MeshRenderer myMesh;
+    [SerializeField] float RottenThrusHold = 0.5f;
 
     float _plantedSince = 0f;
-
     bool _planted = false;
+    float _rottenness = 0f;
 
-    public override void Pick(Transform handPosition)
+    public void SetRottenness(float rottenness)
     {
-        base.Pick(handPosition);
+        _rottenness = rottenness;
+        
+        ChangeMaterial();
+    }
+
+    public override void Pick(HandSystem _picker)
+    {
+        base.Pick(_picker);
 
         if(_planted)
             CancelPlant();
@@ -31,6 +40,10 @@ public class Egg : Pickable
     }
 
 
+    void ChangeMaterial()
+    {
+        myMesh.material.color = Color.Lerp(myMesh.material.color, Color.black, _rottenness);
+    }
     IEnumerator Laying()
     {
         UIController.uIController.CreateProgressBar(this.gameObject, new Vector2(0f,_hatchTime), this.transform);
@@ -58,8 +71,23 @@ public class Egg : Pickable
     }
     void Hatch()
     {
-        Instantiate(_babyNpcPrefab.gameObject, this.transform.position, _babyNpcPrefab.transform.rotation);
-        DestroyImmediate(this.gameObject);
+        if(_rottenness <= RottenThrusHold)
+        {
+            Instantiate(_babyNpcPrefab.gameObject, this.transform.position, _babyNpcPrefab.transform.rotation);
+            DestroyImmediate(this.gameObject);
+        }
+        else
+        {
+            UIController.uIController.RepeatMessage("Rotten", this.gameObject.transform, 1f, 3f, new ConditionChecker(true));
+            StartCoroutine(DestroyMe());
+        }
+
+    }
+
+    IEnumerator DestroyMe()
+    {
+        yield return new WaitForSecondsRealtime(1f);
+        Destroy(this.gameObject);
     }
 
 }

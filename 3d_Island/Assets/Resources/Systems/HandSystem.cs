@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum PickableOjbects { NPC, Egg, Ball}
+public enum PickableOjbects { NPC, Egg, Ball, Fruit}
 
 [System.Serializable]
 public class HandSystem
@@ -27,7 +27,7 @@ public class HandSystem
 
     //Private Data
     List<Pickable> _toPick = new();
-    Pickable _objectInHand = new();
+    public Pickable _objectInHand = new();
     float _nearObjectDistance;
     IHandController _myController;
 
@@ -140,6 +140,37 @@ public class HandSystem
                         }
                     }
                 }
+                if ((IsPickable(PickableOjbects.Fruit)))
+                {
+                    Fruit _fruit = null;
+
+                    if (_detector._fruitDetectionStatus == FruitDetectionStatus.VeryNear)
+                        _fruit = _detector.FruitInRange(_nearObjectDistance);
+
+                    foreach (Fruit fruit in _detector.GetDetectedData().fruits)
+                    {
+                        if (fruit == _fruit)
+                        {
+                            if (!_toPick.Contains(fruit))
+                            {
+                                if (_highLightPickable)
+                                    fruit.PickablilityIndicator(true);
+
+                                _toPick.Add(fruit);
+                            }
+                        }
+                        else
+                        {
+                            if (_toPick.Contains(fruit))
+                            {
+                                if (_highLightPickable)
+                                    fruit.PickablilityIndicator(false);
+
+                                _toPick.Remove(fruit);
+                            }
+                        }
+                    }
+                }
 
 
                 if (_toPick.Count > 1)
@@ -199,15 +230,14 @@ public class HandSystem
             if ((_toPick[0].GetSpeed() <= _pickSpeedThrushold))
             {
                 _objectInHand = _toPick[0];
-
-                _objectInHand.Pick(_myHand.transform);
+                _objectInHand.Pick(this);
 
                 _canPick = false;
                 _canDrop = true;
                 _canThrow = true;
                 _gotSomething = true;
 
-                if (_objectInHand.GetType() == typeof(Egg))
+                if (_objectInHand?.GetType() == typeof(Egg))
                 {
                     _canPlant = true;
                 }
@@ -279,7 +309,14 @@ public class HandSystem
         Physics.Raycast(_myHand.transform.position, _direction, out ray, 50, GroundDetector.GetGroundLayer());
         egg.Plant(ray.point);
     }
-
+    public Pickable ObjectInHand()
+    {
+        return _objectInHand;
+    }
+    public Transform GetHand()
+    {
+        return _myHand.transform;
+    }
 
     //Internal Algorithms
     bool IsPickable(PickableOjbects pickableType)
