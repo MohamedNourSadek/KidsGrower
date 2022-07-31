@@ -74,13 +74,13 @@ public class NPC : Pickable, IHandController
         _levelController.Initialize(OnLevelIncrease, OnXPIncrease);
         InitializeLevelUI();
 
-        _detector.OnObjectEnter += OnObjectEnter;
-        _detector.OnObjectExit += OnObjectExit;
-        _detector.OnBallNear += OnBallNear;
-        _detector.OnTreeNear += OnTreeNear;
-        _detector.OnNpcNear += OnNpcNear;
-        _detector.OnFruitNear += OnFruitNear;
-        _detector.OnAlterNear += OnAlterNear;
+
+        foreach(DetectableElement element in _detector._detectableElements)
+        {
+            element._OnNear += OnDetectableNear;
+            element._OnInRange += OnDetectableInRange;
+            element._OnInRangeExit += OnDetectableExit;
+        }
 
         base.StartCoroutine(GrowingUp());
         base.StartCoroutine(AiContinous());
@@ -210,13 +210,13 @@ public class NPC : Pickable, IHandController
                 //i got a throwable object (ball).
                 if(GotTypeInHand(typeof(Ball)))
                 {
-                    if (_detector._playerDetectionStatus == DetectionStatus.InRange)
+                    if (_detector.GetDetectable("Ball")._detectionStatus == DetectionStatus.InRange)
                     {
-                        ThinkAboutThrowing(_detector.PlayerInRange().gameObject, throwBallOnPlayerProb);
+                        ThinkAboutThrowing(((PlayerSystem)(_detector.DetectableInRange("Player"))).gameObject, throwBallOnPlayerProb);
                     }
-                    if (_detector._npcDetectionStatus == DetectionStatus.InRange)
+                    if (_detector.GetDetectable("NPC")._detectionStatus == DetectionStatus.InRange)
                     {
-                        ThinkAboutThrowing(_detector.NpcInRange().gameObject, throwBallOnNpcProb);
+                        ThinkAboutThrowing(((PlayerSystem)(_detector.DetectableInRange("NPC"))).gameObject, throwBallOnNpcProb);
                     }
 
                     //No One is near
@@ -227,80 +227,15 @@ public class NPC : Pickable, IHandController
             yield return new WaitForSecondsRealtime(_decisionsDelay);
         }
     }
-    void OnObjectEnter(GameObject obj)
-    {
-        if (obj.CompareTag("Player"))
-            ThinkAboutFollowingObject(obj, seekPlayerProb);
-
-        if (obj.CompareTag("NPC"))
-            ThinkAboutFollowingObject(obj, seekNpcProb);
-
-        if (obj.CompareTag("Ball"))
-            ThinkAboutFollowingObject(obj, seekBallProb);
-
-        if (obj.CompareTag("Tree"))
-            ThinkAboutFollowingObject(obj, seekTreeProb);
-
-        if (obj.CompareTag("Fruit"))
-            if(obj.GetComponent<Fruit>().OnGround())
-                ThinkAboutFollowingObject(obj, seekFruitProb);
-
-        if(obj.CompareTag("Alter"))
-            if (_canLay)
-                ThinkAboutlayingAnEgg(obj.GetComponentInParent<FertilityAlter>());
-
-
-    }
-    void OnObjectExit(GameObject obj)
-    {
-        //If the object i am following got out of range
-        if(_dynamicDestination == obj.transform)
-        {
-            _movementStatus = MovementStatus.Idel;
-        }
-    }
-    void OnTreeNear(TreeSystem tree)
-    {
-        ThinkAboutShakingTree(tree);
-    }
-    void OnNpcNear(NPC npc)
-    {
-        if(_movementStatus != MovementStatus.Sleeping)
-            ThinkAboutPunchingAnNpc(_detector.NpcInRange()._myBody);
-    }
-    void OnBallNear(Ball ball)
-    {
-        if (_movementStatus == MovementStatus.Watching)
-            ThinkAboutPickingBall();
-    }
-    void OnFruitNear(Fruit fruit)
-    {
-        if (_movementStatus != MovementStatus.Eating && fruit.OnGround())
-        {
-            _movementStatus = MovementStatus.Eating;
-
-            _handSystem.PickObject();
-            StopCoroutine(Eating(fruit));
-            StartCoroutine(Eating(fruit));
-        }
-    }
-    void OnAlterNear(FertilityAlter alter)
-    {
-        if (_canLay)
-        {
-            _movementStatus = MovementStatus.Laying;
-            StartCoroutine(Laying(alter));
-        }
-    }
     IEnumerator AiContinous()
     {
-        while(true)
+        while (true)
         {
             if ((_movementStatus == MovementStatus.Moving))
             {
                 MoveTo(_dynamicDestination);
             }
-            else if(_movementStatus == MovementStatus.Exploring)
+            else if (_movementStatus == MovementStatus.Exploring)
             {
                 ExplorePoint(_destination);
             }
@@ -309,6 +244,74 @@ public class NPC : Pickable, IHandController
             _timeSinceLastAction += Time.fixedDeltaTime;
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
+    }
+    void OnDetectableInRange(IDetectable detectable)
+    {
+        if (detectable.tag == "Player")
+            ThinkAboutFollowingObject(((PlayerSystem)detectable).gameObject, seekPlayerProb);
+
+        if (detectable.tag == ("NPC"))
+            ThinkAboutFollowingObject(((NPC)detectable).gameObject, seekNpcProb);
+
+        if (detectable.tag == ("Ball"))
+            ThinkAboutFollowingObject(((Ball)detectable).gameObject, seekBallProb);
+
+        if (detectable.tag == ("Tree"))
+            ThinkAboutFollowingObject(((TreeSystem)detectable).gameObject, seekTreeProb);
+
+        if (detectable.tag == ("Fruit"))
+            if (((Fruit)detectable).GetComponent<Fruit>().OnGround())
+                ThinkAboutFollowingObject(((Fruit)detectable).gameObject, seekFruitProb);
+
+        if (detectable.tag == ("Alter"))
+            if (_canLay)
+            {
+                Debug.Log("Alter in Range");
+
+                ThinkAboutlayingAnEgg(((FertilityAlter)detectable));
+            }
+    }
+    void OnDetectableExit(IDetectable detectable)
+    {
+        //If the object i am following got out of range
+        if (_dynamicDestination == ((MonoBehaviour)detectable).gameObject.transform)
+        {
+            _movementStatus = MovementStatus.Idel;
+        }
+    }
+    void OnDetectableNear(IDetectable detectable)
+    {
+        if (detectable.tag == "Player")
+            ThinkAboutFollowingObject(((PlayerSystem)detectable).gameObject, seekPlayerProb);
+
+        if (detectable.tag == ("NPC"))
+            if (_movementStatus != MovementStatus.Sleeping)
+                ThinkAboutPunchingAnNpc(((NPC)(detectable))._myBody);
+
+        if (detectable.tag == ("Ball"))
+            if (_movementStatus == MovementStatus.Watching)
+                ThinkAboutPickingBall();
+
+        if (detectable.tag == ("Tree"))
+            ThinkAboutShakingTree((TreeSystem)detectable);
+
+        if (detectable.tag == ("Fruit"))
+            if (_movementStatus != MovementStatus.Eating && ((Fruit)detectable).OnGround())
+            {
+                _movementStatus = MovementStatus.Eating;
+
+                _handSystem.PickObject();
+                StartCoroutine(Eating(((Fruit)detectable)));
+            }
+
+        if (detectable.tag == ("Alter"))
+            if (_canLay)
+            {
+                Debug.Log("Alter is near");
+
+                _movementStatus = MovementStatus.Laying;
+                StartCoroutine(Laying(((FertilityAlter)detectable)));
+            }
     }
 
 

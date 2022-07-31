@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Pickable : MonoBehaviour
+public class Pickable : MonoBehaviour, IDetectable
 {
     [Header("Objects References")]
     [SerializeField] protected GameObject _indicatorObject;

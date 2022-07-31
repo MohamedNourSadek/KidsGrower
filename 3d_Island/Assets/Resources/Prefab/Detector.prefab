@@ -45,15 +45,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 006704070f3c98145ab2d15deb858a2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _detectorData:
-    players: []
-    npcs: []
-    balls: []
-    trees: []
-  _ballDetectionStatus: 0
-  _treeDetectionStatus: 0
-  _playerDetectionStatus: 0
-  _npcDetectionStatus: 0
+  _whoCanIPick: 
+  _highLightPickable: 0
+  _detectableElements:
+  - Tag: Player
+    _detectionStatus: 0
+    _notifyOnlyAtFirst: 1
+  - Tag: NPC
+    _detectionStatus: 0
+    _notifyOnlyAtFirst: 0
+  - Tag: Ball
+    _detectionStatus: 0
+    _notifyOnlyAtFirst: 0
+  - Tag: Fruit
+    _detectionStatus: 0
+    _notifyOnlyAtFirst: 0
+  - Tag: Egg
+    _detectionStatus: 0
+    _notifyOnlyAtFirst: 0
+  - Tag: Alter
+    _detectionStatus: 0
+    _notifyOnlyAtFirst: 1
+  - Tag: Tree
+    _detectionStatus: 0
+    _notifyOnlyAtFirst: 1
+  _nearObjectDistance: 1.5
+  _toPick: []
 --- !u!135 &8033384870979999703
 SphereCollider:
   m_ObjectHideFlags: 0

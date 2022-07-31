@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeSystem : MonoBehaviour
+public class TreeSystem : MonoBehaviour, IDetectable
 {
     [SerializeField] int _breakForce = 50;
     [SerializeField] int _breakTorque = 50;

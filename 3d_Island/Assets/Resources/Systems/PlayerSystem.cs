@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSystem : MonoBehaviour, IHandController
+public class PlayerSystem : MonoBehaviour, IHandController, IDetectable
 {
     //Editor Fields
     [SerializeField] Rigidbody _playerBody;
@@ -37,7 +37,7 @@ public class PlayerSystem : MonoBehaviour, IHandController
             UIController.uIController.PickDropButton_SwitchMode(PickMode.Drop);
         else if (_handSystem._canPick)
             UIController.uIController.PickDropButton_SwitchMode(PickMode.Pick);
-        else if (_handSystem._detector._treeDetectionStatus == DetectionStatus.VeryNear)
+        else if (_handSystem._detector.GetDetectable("Tree")._detectionStatus == DetectionStatus.VeryNear)
             UIController.uIController.PickDropButton_SwitchMode(PickMode.Shake);
         else
             UIController.uIController.PickDropButton_SwitchMode(PickMode.Pick);
@@ -45,7 +45,7 @@ public class PlayerSystem : MonoBehaviour, IHandController
 
         bool _canShake = (!_handSystem._canPick
                        && !_handSystem._canDrop
-                       && (_handSystem._detector._treeDetectionStatus == DetectionStatus.VeryNear));
+                       && (_handSystem._detector.GetDetectable("Tree")._detectionStatus == DetectionStatus.VeryNear));
 
         if (_handSystem._canPick || _handSystem._canDrop || _canShake)
             UIController.uIController.PickDropButton_Enable(true);
@@ -103,9 +103,9 @@ public class PlayerSystem : MonoBehaviour, IHandController
         {
             _handSystem.DropObject();
         }
-        else if(_handSystem._detector._treeDetectionStatus == DetectionStatus.VeryNear)
+        else if(_handSystem._detector.GetDetectable("Tree")._detectionStatus == DetectionStatus.VeryNear)
         {
-            _handSystem._detector.TreeInRange().Shake();
+            ((TreeSystem)(_handSystem._detector.DetectableInRange("Tree"))).Shake();
         }
     }
     public void ThrowInput()

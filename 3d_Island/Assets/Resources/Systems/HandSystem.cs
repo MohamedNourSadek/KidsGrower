@@ -54,7 +54,7 @@ public class HandSystem
             _gotSomething = true;
         }
 
-        _canPet = (_detector._npcDetectionStatus == DetectionStatus.VeryNear) && (_objectInHand == null);
+        _canPet = (_detector.GetDetectable("NPC")._detectionStatus == DetectionStatus.VeryNear) && (_objectInHand == null);
     }
 
 
@@ -62,7 +62,9 @@ public class HandSystem
     {
         if ((_detector.GetPickables().Count > 0) ) 
         {
-            if ((_detector.GetPickables()[0].GetSpeed() <= _pickSpeedThrushold))
+            float _speed = (_detector.GetPickables()[0].GetSpeed());
+
+            if (_speed <= _pickSpeedThrushold)
             {
                 _objectInHand = _detector.GetPickables()[0];
                 _objectInHand.Pick(this);

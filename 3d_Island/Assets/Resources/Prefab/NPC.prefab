@@ -297,7 +297,7 @@ MonoBehaviour:
     _myHand: {fileID: 446940068}
     _throwForce: 120
     _plantDistance: 1
-    _pickSpeedThrushold: 2
+    _pickSpeedThrushold: 3
     _petTime: 1
     _detector: {fileID: 0}
     _gotSomething: 0
@@ -333,26 +333,26 @@ MonoBehaviour:
   _movementStatus: 1
   _nearObjectDistance: 1.5
   _decisionsDelay: 0.5
-  _punchForce: 250
+  _punchForce: 25
   _explorationAmplitude: 10
   layingTimeInBetween: 10
   eatingXpPerUpdate: 1
   pettingXP: 100
-  boredTime: 22.321056
+  boredTime: 76.88774
   sleepTime: 20.521679
   layingTime: 10
   eatTime: 10
-  deathTime: 300
+  deathTime: 354.62082
   seekPlayerProb: 0
-  seekNpcProb: 0
+  seekNpcProb: 1
   seekBallProb: 0
   seekTreeProb: 0
   dropBallProb: 0
   throwBallOnNpcProb: 0
   throwBallOnPlayerProb: 0
-  punchNpcProb: 0
-  seekFruitProb: 1
-  seekAlterProb: 1
+  punchNpcProb: 1
+  seekFruitProb: 0
+  seekAlterProb: 0
   _model: {fileID: 1199720211687785357}
   _bodyRenderers:
   - {fileID: 983630641518498926}
@@ -470,6 +470,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
+      propertyPath: _highLightPickable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
       propertyPath: _whoCanIPick.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -482,6 +487,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _whoCanIPick.Array.data[1]
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _detectableElements.Array.data[6]._notifyOnlyAtFirst
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d682e10d1ad04fd499cd64d51ecd2485, type: 3}
