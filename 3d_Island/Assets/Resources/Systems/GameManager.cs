@@ -41,14 +41,14 @@ public class GameManager : MonoBehaviour
             FindObjectOfType<PlayerSystem>();
 
         if (!_showFrameRate)
-            UIController.uIController.ShowFrameRate("");
+            UIController.uIController.UpdateFrameRate("");
 
         LoadSettings();
     }
     void Update()
     {
         if (_showFrameRate)
-            UIController.uIController.ShowFrameRate((1f / Time.deltaTime).ToString());
+            UIController.uIController.UpdateFrameRate((1f / Time.deltaTime).ToString());
     }
 
     
@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
     {
         var _npcs = FindObjectsOfType<NPC>();
         List<NPC> npcList = new List<NPC>();
+      
         foreach (NPC npc in _npcs)
         {
             npcList.Add(npc);

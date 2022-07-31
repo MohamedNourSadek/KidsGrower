@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 7540999982275635899}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.7974, y: 1.0875, z: 2.295716}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -49,6 +49,11 @@ MonoBehaviour:
   _meshesToHide:
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _inCameraAlpha: 0.2
+  _normalAlpha: 1
 --- !u!54 &7323031274965923853
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -632,6 +632,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
         type: 3}
+      propertyPath: _meshesToHide.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
+        type: 3}
       propertyPath: _meshesToHide.Array.data[0]
       value: 
       objectReference: {fileID: 6814319390351702083}

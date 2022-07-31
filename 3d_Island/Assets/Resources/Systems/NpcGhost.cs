@@ -11,15 +11,13 @@ public class NpcGhost : MonoBehaviour
     Vector3 _destination = new Vector3();
 
 
-    private void Awake()
+    void Awake()
     {
         _destination = MapSystem.GetRandomExplorationPoint();
         _moving = true;
 
         StartCoroutine(_TakeDecision());
     }
-    
-    
     IEnumerator _TakeDecision()
     {
         while(true)

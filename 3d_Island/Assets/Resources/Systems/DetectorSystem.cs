@@ -1,16 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 
-public enum BallDetectionStatus { None, InRange, VeryNear };
-public enum TreeDetectionStatus { None, InRange, VeryNear };
-public enum PlayerDetectionStatus { None, InRange, VeryNear };
-public enum NpcDetectionStatus { None, InRange, VeryNear };
-public enum EggDetectionStatus { None, InRange, VeryNear };
-public enum FruitDetectionStatus { None, InRange, VeryNear };
-public enum AlterDetectionStatus { None, InRange, VeryNear };
-
+public enum DetectionStatus { None, InRange, VeryNear };
 
 public delegate void notify(GameObject obj);
 public delegate void notifyBall(Ball ball);
@@ -23,15 +17,19 @@ public delegate void notifyAlter(FertilityAlter alter);
 public class DetectorSystem : MonoBehaviour
 {
 
+    [SerializeField] List<PickableTags> _whoCanIPick;
+    [SerializeField] bool _highLightPickable;
+
+
     public float _nearObjectDistance = 1f;
 
-    public BallDetectionStatus _ballDetectionStatus = BallDetectionStatus.None;
-    public TreeDetectionStatus _treeDetectionStatus = TreeDetectionStatus.None;
-    public PlayerDetectionStatus _playerDetectionStatus = PlayerDetectionStatus.None;
-    public NpcDetectionStatus _npcDetectionStatus = NpcDetectionStatus.None;
-    public EggDetectionStatus _eggDetectionStatus = EggDetectionStatus.None;
-    public FruitDetectionStatus _fruitDetectionStatus = FruitDetectionStatus.None;
-    public AlterDetectionStatus _alterDetectionStatus = AlterDetectionStatus.None;
+    public DetectionStatus _ballDetectionStatus = DetectionStatus.None;
+    public DetectionStatus _treeDetectionStatus = DetectionStatus.None;
+    public DetectionStatus _playerDetectionStatus = DetectionStatus.None;
+    public DetectionStatus _npcDetectionStatus = DetectionStatus.None;
+    public DetectionStatus _eggDetectionStatus = DetectionStatus.None;
+    public DetectionStatus _fruitDetectionStatus = DetectionStatus.None;
+    public DetectionStatus _alterDetectionStatus = DetectionStatus.None;
 
     public event notify OnObjectEnter;
     public event notify OnObjectExit;
@@ -45,161 +43,309 @@ public class DetectorSystem : MonoBehaviour
 
     //Private data
     public DetectorData _detectorData = new();
+    public List<Pickable> _toPick = new();
 
 
     public void Initialize(float nearObjectDistance)
     {
         _nearObjectDistance = nearObjectDistance;
     }
+
     public void Update()
     {
-        //Safty for destroyed Objects
-        int destroyedIndex = -1;
-        for(int i = 0; i < _detectorData.eggs.Count; i++)
-        {
-            if (_detectorData.eggs[i] == null)
-                destroyedIndex = i;
-        }
-        if (destroyedIndex != -1)   
-            _detectorData.eggs.RemoveAt(destroyedIndex);
+        CleanAllListsFromDestroyed();
 
-        destroyedIndex = -1;
-        for (int i = 0; i < _detectorData.fruits.Count; i++)
+        UpdateStates();
+        UpdatePickables();
+    }
+    
+    public void CleanAllListsFromDestroyed()
+    {
+        CleanListsFromDestroyedObjects(_toPick);
+        CleanListsFromDestroyedObjects(_detectorData.eggs);
+        CleanListsFromDestroyedObjects(_detectorData.fruits);
+        CleanListsFromDestroyedObjects(_detectorData.npcs);
+    }
+    public void UpdatePickables()
+    {
+        //Detecting near objects
+        foreach(PickableTags pickableTag in _whoCanIPick)
         {
-            if (_detectorData.fruits[i] == null)
-                destroyedIndex = i;
-        }
-        if (destroyedIndex != -1)
-            _detectorData.fruits.RemoveAt(destroyedIndex);
+            if (pickableTag == PickableTags.Ball)
+            {
+                Ball _ball = null;
 
-        destroyedIndex = -1;
-        for (int i = 0; i < _detectorData.npcs.Count; i++)
+                if (_ballDetectionStatus == DetectionStatus.VeryNear)
+                    _ball = BallInRange(_nearObjectDistance);
+
+                foreach (Ball ball in GetDetectedData().balls)
+                {
+                    if (ball == _ball)
+                    {
+                        if (!_toPick.Contains(ball))
+                        {
+                            if (_highLightPickable)
+                                ball.PickablilityIndicator(true);
+
+                            _toPick.Add(ball);
+                        }
+                    }
+                    else
+                    {
+                        if (_toPick.Contains(ball))
+                        {
+                            if (_highLightPickable)
+                                ball.PickablilityIndicator(false);
+
+                            _toPick.Remove(ball);
+                        }
+                    }
+                }
+            }
+            if (pickableTag == PickableTags.NPC)
+            {
+                NPC _npc = null;
+
+                if (_npcDetectionStatus == DetectionStatus.VeryNear)
+                    _npc = NpcInRange(_nearObjectDistance);
+
+                foreach (NPC npc in GetDetectedData().npcs)
+                {
+                    if (npc == _npc)
+                    {
+                        if (!_toPick.Contains(npc))
+                        {
+                            if (_highLightPickable)
+                                npc.PickablilityIndicator(true);
+
+                            _toPick.Add(npc);
+                        }
+
+                    }
+                    else
+                    {
+                        if (_toPick.Contains(npc))
+                        {
+                            if (_highLightPickable)
+                                npc.PickablilityIndicator(false);
+
+                            _toPick.Remove(npc);
+                        }
+                    }
+                }
+            }
+            if (pickableTag == PickableTags.Egg)
+            {
+                Egg _egg = null;
+
+                if (_eggDetectionStatus == DetectionStatus.VeryNear)
+                    _egg = EggInRange(_nearObjectDistance);
+
+                foreach (Egg egg in GetDetectedData().eggs)
+                {
+                    if (egg == _egg)
+                    {
+                        if (!_toPick.Contains(egg))
+                        {
+                            if (_highLightPickable)
+                                egg.PickablilityIndicator(true);
+
+                            _toPick.Add(egg);
+                        }
+
+                    }
+                    else
+                    {
+                        if (_toPick.Contains(egg))
+                        {
+                            if (_highLightPickable)
+                                egg.PickablilityIndicator(false);
+
+                            _toPick.Remove(egg);
+                        }
+                    }
+                }
+            }
+            if (pickableTag == PickableTags.Fruit)
+            {
+                Fruit _fruit = null;
+
+                if (_fruitDetectionStatus == DetectionStatus.VeryNear)
+                    _fruit = FruitInRange(_nearObjectDistance);
+
+                foreach (Fruit fruit in GetDetectedData().fruits)
+                {
+                    if (fruit == _fruit)
+                    {
+                        if (!_toPick.Contains(fruit))
+                        {
+                            if (_highLightPickable)
+                                fruit.PickablilityIndicator(true);
+
+                            _toPick.Add(fruit);
+                        }
+                    }
+                    else
+                    {
+                        if (_toPick.Contains(fruit))
+                        {
+                            if (_highLightPickable)
+                                fruit.PickablilityIndicator(false);
+
+                            _toPick.Remove(fruit);
+                        }
+                    }
+                }
+            }
+        }
+
+        
+        if (_toPick.Count > 1)
         {
-            if (_detectorData.npcs[i] == null)
-                destroyedIndex = i;
-        }
-        if (destroyedIndex != -1)
-            _detectorData.npcs.RemoveAt(destroyedIndex);
+            //Safty for destroyed Objects
+            List<Pickable> _newList = new();
+            foreach (Pickable pickable in _toPick)
+                if (pickable != null)
+                    _newList.Add(pickable);
 
+            var temp = _newList[0];
+
+            foreach (Pickable pickable in _newList)
+                if (Distance(pickable.gameObject) < Distance(temp.gameObject))
+                    temp = pickable;
+
+            foreach (Pickable pickable in _newList)
+                if (_highLightPickable)
+                    pickable.PickablilityIndicator(false);
+
+            if (_highLightPickable)
+                temp.PickablilityIndicator(true);
+
+            _newList.Clear();
+            _newList.Add(temp);
+            _toPick = _newList;
+        }
+    }
+    public void UpdateStates()
+    {
         //Update status
         if (BallInRange(_nearObjectDistance))
         {
             //To invoke the event once.
             OnBallNear?.Invoke(BallInRange(_nearObjectDistance));
-            _ballDetectionStatus = BallDetectionStatus.VeryNear;
+            _ballDetectionStatus = DetectionStatus.VeryNear;
         }
         else if (BallInRange())
         {
 
-            _ballDetectionStatus = BallDetectionStatus.InRange;
+            _ballDetectionStatus = DetectionStatus.InRange;
         }
         else
         {
-            _ballDetectionStatus = BallDetectionStatus.None;
+            _ballDetectionStatus = DetectionStatus.None;
         }
 
         if (TreeInRange(_nearObjectDistance))
         {
-            if(_treeDetectionStatus != TreeDetectionStatus.VeryNear)
+            if (_treeDetectionStatus != DetectionStatus.VeryNear)
                 OnTreeNear?.Invoke(TreeInRange(_nearObjectDistance));
 
-            _treeDetectionStatus = TreeDetectionStatus.VeryNear;
+            _treeDetectionStatus = DetectionStatus.VeryNear;
         }
         else if (TreeInRange())
         {
-            _treeDetectionStatus = TreeDetectionStatus.InRange;
+            _treeDetectionStatus = DetectionStatus.InRange;
         }
         else
         {
-            _treeDetectionStatus = TreeDetectionStatus.None;
+            _treeDetectionStatus = DetectionStatus.None;
         }
 
         if (PlayerInRange(_nearObjectDistance))
         {
-            _playerDetectionStatus = PlayerDetectionStatus.VeryNear;
+            _playerDetectionStatus = DetectionStatus.VeryNear;
         }
         else if (PlayerInRange())
         {
-            _playerDetectionStatus = PlayerDetectionStatus.InRange;
+            _playerDetectionStatus = DetectionStatus.InRange;
         }
         else
         {
-            _playerDetectionStatus = PlayerDetectionStatus.None;
+            _playerDetectionStatus = DetectionStatus.None;
         }
 
         if (NpcInRange(_nearObjectDistance))
         {
-            if(_npcDetectionStatus != NpcDetectionStatus.VeryNear)
+            if (_npcDetectionStatus != DetectionStatus.VeryNear)
                 OnNpcNear?.Invoke(NpcInRange(_nearObjectDistance));
 
-            _npcDetectionStatus = NpcDetectionStatus.VeryNear;
+            _npcDetectionStatus = DetectionStatus.VeryNear;
         }
         else if (NpcInRange())
         {
-            _npcDetectionStatus = NpcDetectionStatus.InRange;
+            _npcDetectionStatus = DetectionStatus.InRange;
         }
         else
         {
-            _npcDetectionStatus = NpcDetectionStatus.None;
+            _npcDetectionStatus = DetectionStatus.None;
         }
 
         if (EggInRange(_nearObjectDistance))
         {
-            _eggDetectionStatus = EggDetectionStatus.VeryNear;
+            _eggDetectionStatus = DetectionStatus.VeryNear;
         }
         else if (EggInRange())
         {
-            _eggDetectionStatus = EggDetectionStatus.InRange;
+            _eggDetectionStatus = DetectionStatus.InRange;
         }
         else
         {
-            _eggDetectionStatus = EggDetectionStatus.None;
+            _eggDetectionStatus = DetectionStatus.None;
         }
 
         if (FruitInRange(_nearObjectDistance))
         {
-            if(FruitInRange(_nearObjectDistance))
+            if (FruitInRange(_nearObjectDistance))
             {
                 try
                 {
                     var fruit = FruitInRange(_nearObjectDistance);
                     OnFruitNear?.Invoke(fruit);
                 }
-                catch 
+                catch
                 {
                 }
-                
+
             }
 
-            _fruitDetectionStatus = FruitDetectionStatus.VeryNear;
+            _fruitDetectionStatus = DetectionStatus.VeryNear;
         }
         else if (FruitInRange())
         {
-            _fruitDetectionStatus = FruitDetectionStatus.InRange;
+            _fruitDetectionStatus = DetectionStatus.InRange;
         }
         else
         {
-            _fruitDetectionStatus = FruitDetectionStatus.None;
+            _fruitDetectionStatus = DetectionStatus.None;
         }
 
 
         if (AlterInRange(_nearObjectDistance))
         {
-            if (_alterDetectionStatus != AlterDetectionStatus.VeryNear)
+            if (_alterDetectionStatus != DetectionStatus.VeryNear)
                 OnAlterNear?.Invoke(AlterInRange(_nearObjectDistance));
 
-            _alterDetectionStatus = AlterDetectionStatus.VeryNear;
+            _alterDetectionStatus = DetectionStatus.VeryNear;
         }
         else if (AlterInRange())
         {
-            _alterDetectionStatus = AlterDetectionStatus.InRange;
+            _alterDetectionStatus = DetectionStatus.InRange;
         }
         else
         {
-            _alterDetectionStatus = AlterDetectionStatus.None;
+            _alterDetectionStatus = DetectionStatus.None;
         }
     }
-
 
 
     //Interfaces for outside use
@@ -207,6 +353,11 @@ public class DetectorSystem : MonoBehaviour
     {
         return _detectorData;
     }
+    public List<Pickable> GetPickables()
+    {
+        return _toPick;
+    }
+
 
     public PlayerSystem PlayerInRange()
     {
@@ -444,7 +595,7 @@ public class DetectorSystem : MonoBehaviour
 
 
     //Help functions
-    public float Distance(GameObject _object)
+    float Distance(GameObject _object)
     {
         return (_object.transform.position - this.transform.position).magnitude;
     }
@@ -452,7 +603,27 @@ public class DetectorSystem : MonoBehaviour
     {
         return Distance(_object) <= _range;
     }
+    bool IsPickable(PickableTags pickableType)
+    {
+        foreach (PickableTags _pickableType in _whoCanIPick)
+        {
+            if (_pickableType == pickableType)
+                return true;
+        }
 
+        return false;
+    }
+    void CleanListsFromDestroyedObjects(IList list)
+    {
+        int destroyedIndex = -1;
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (((MonoBehaviour)list[i]) == null)
+                destroyedIndex = i;
+        }
+        if (destroyedIndex != -1)
+            list.RemoveAt(destroyedIndex);
+    }
 
     //Detection functions
     private void OnTriggerEnter(Collider collider)
@@ -579,3 +750,5 @@ public class  DetectorData
     [SerializeField] public List<FertilityAlter> alters = new();
 
 }
+
+

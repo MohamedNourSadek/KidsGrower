@@ -281,8 +281,6 @@ MonoBehaviour:
   _myBody: {fileID: 9093430107948229129}
   _holder:
     _myHand: {fileID: 0}
-    _whoCanIPick: 
-    _highLightPickable: 0
     _throwForce: 20
     _plantDistance: 1
     _pickSpeedThrushold: 2
@@ -297,8 +295,6 @@ MonoBehaviour:
     _objectInHand: {fileID: 0}
   _handSystem:
     _myHand: {fileID: 446940068}
-    _whoCanIPick: 0200000003000000
-    _highLightPickable: 0
     _throwForce: 120
     _plantDistance: 1
     _pickSpeedThrushold: 2
@@ -335,20 +331,18 @@ MonoBehaviour:
   _grownBodyMultiplier: 1.35
   _grownMassMultiplier: 2
   _movementStatus: 1
-  _stoppingDistance: 1
-  _decisionsDelay: 0.5
-  _punchableDistance: 1
-  _punchForce: 250
   _nearObjectDistance: 1.5
+  _decisionsDelay: 0.5
+  _punchForce: 250
   _explorationAmplitude: 10
+  layingTimeInBetween: 10
+  eatingXpPerUpdate: 1
+  pettingXP: 100
   boredTime: 22.321056
   sleepTime: 20.521679
   layingTime: 10
-  layingTimeInBetween: 10
   eatTime: 10
   deathTime: 300
-  eatingXpPerUpdate: 1
-  pettingXP: 100
   seekPlayerProb: 0
   seekNpcProb: 0
   seekBallProb: 0
@@ -473,6 +467,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _whoCanIPick.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _whoCanIPick.Array.data[0]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _whoCanIPick.Array.data[1]
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d682e10d1ad04fd499cd64d51ecd2485, type: 3}

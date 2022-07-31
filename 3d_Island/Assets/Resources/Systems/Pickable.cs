@@ -57,8 +57,6 @@ public class Pickable : MonoBehaviour
         this.transform.position = _picker.GetHand().position;
         this.transform.parent = _picker.GetHand();
     }
-
-
     public virtual void Drop()
     {
         _isPicked = false;

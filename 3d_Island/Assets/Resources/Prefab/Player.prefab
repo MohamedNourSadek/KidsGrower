@@ -158,11 +158,10 @@ MonoBehaviour:
     _cameraTilt: -0.5
   _handSystem:
     _myHand: {fileID: 6949429004428104456}
-    _whoCanIPick: 000000000200000001000000
-    _highLightPickable: 1
     _throwForce: 100
     _plantDistance: 1
     _pickSpeedThrushold: 5
+    _petTime: 1
     _detector: {fileID: 2931690313484480716}
     _gotSomething: 0
     _canPick: 0
@@ -170,9 +169,7 @@ MonoBehaviour:
     _canThrow: 0
     _canPlant: 0
     _canPet: 0
-    _toPick: []
     _objectInHand: {fileID: 0}
-  _uiController: {fileID: 0}
   _detector: {fileID: 2931690313484480716}
 --- !u!1001 &6949429004816503881
 PrefabInstance:
@@ -415,6 +412,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _highLightPickable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _whoCanIPick.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _whoCanIPick.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _whoCanIPick.Array.data[2]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _whoCanIPick.Array.data[3]
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d682e10d1ad04fd499cd64d51ecd2485, type: 3}

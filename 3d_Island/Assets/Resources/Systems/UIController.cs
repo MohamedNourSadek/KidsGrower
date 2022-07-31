@@ -35,19 +35,26 @@ public class UIController : MonoBehaviour
     [SerializeField] GameObject _page2Menu;
     [SerializeField] List<SliderElement> _sliders = new List<SliderElement>();
 
-
     [Header("Design Only")]
-    [SerializeField] Text _frameRate;
+    [SerializeField] Text _frameRateUi;
 
     Dictionary<GameObject, Slider> _slidersContainer = new Dictionary<GameObject, Slider>();
 
-    private void Awake()
+    //Helpers
+    void Awake()
     {
         uIController = this;
 
         foreach (SliderElement slider in _sliders)
             slider.Initialize();
     }
+    public List<SliderElement> GetSliders()
+    {
+        return _sliders;
+    }
+
+
+    //UI control
     public void PickDropButton_Enable(bool _state)
     {
         ChangeAlpha(_pickDropButtonImage, _state);
@@ -77,7 +84,13 @@ public class UIController : MonoBehaviour
     {
         _pickDropButtonImage_Text.text = _mode.ToString();
     }
+    public void UpdateFrameRate(string frameRate)
+    {
+        _frameRateUi.text = frameRate;
+    }
 
+
+    //In Game UI
     public void RepeatMessage(string message, Transform parent, float messageTime, float repeats, ConditionChecker condition)
     {
         StartCoroutine(RepeatMessage_Coroutine(message, parent, messageTime, repeats, condition));
@@ -107,10 +120,9 @@ public class UIController : MonoBehaviour
         _slidersContainer.Remove(_user);
         Destroy(_temp.gameObject);
     }
-    public void ShowFrameRate(string frameRate)
-    {
-        _frameRate.text = frameRate;
-    }
+    
+    
+    //Control UI flow
     public void ShowSettings(bool state)
     {
         _allSettingsMenus.SetActive(state);
@@ -125,10 +137,6 @@ public class UIController : MonoBehaviour
     {
         _page1Menu.SetActive(false);
         _page2Menu.SetActive(true);
-    }
-    public List<SliderElement> GetSliders()
-    {
-        return _sliders;
     }
 
     

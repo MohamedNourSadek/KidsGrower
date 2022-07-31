@@ -19,7 +19,6 @@ public class Egg : Pickable
         
         ChangeMaterial();
     }
-
     public override void Pick(HandSystem _picker)
     {
         base.Pick(_picker);
@@ -83,7 +82,6 @@ public class Egg : Pickable
         }
 
     }
-
     IEnumerator DestroyMe()
     {
         yield return new WaitForSecondsRealtime(1f);

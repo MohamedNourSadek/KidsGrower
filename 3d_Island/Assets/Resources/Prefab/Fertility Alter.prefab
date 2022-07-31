@@ -1263,21 +1263,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3961035419634582149, guid: c3c5a706854e1bc48a02f94b72a351c5,
         type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.7974
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961035419634582149, guid: c3c5a706854e1bc48a02f94b72a351c5,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.0875
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961035419634582149, guid: c3c5a706854e1bc48a02f94b72a351c5,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2.295716
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961035419634582149, guid: c3c5a706854e1bc48a02f94b72a351c5,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
       objectReference: {fileID: 0}
@@ -1328,11 +1313,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
         type: 3}
-      propertyPath: _meshesToHide.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
-        type: 3}
       propertyPath: _meshesToHide.Array.data[0]
       value: 
       objectReference: {fileID: 177980288779916082}
@@ -1360,11 +1340,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HideByCamera
-      objectReference: {fileID: 0}
-    - target: {fileID: 7540999982275635899, guid: c3c5a706854e1bc48a02f94b72a351c5,
-        type: 3}
-      propertyPath: m_TagString
-      value: HideByCam
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3c5a706854e1bc48a02f94b72a351c5, type: 3}

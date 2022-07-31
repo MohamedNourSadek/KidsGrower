@@ -19,22 +19,23 @@ public class NPC : Pickable, IHandController
     [SerializeField] float _grownBodyMultiplier = 1.35f;
     [SerializeField] float _grownMassMultiplier = 1.35f;
 
-    [Header("AI Parameters")]
+
+    [Header("Character parameters")]
     [SerializeField] MovementStatus _movementStatus = MovementStatus.Idel;
-    [SerializeField] float _stoppingDistance = 1f;
-    [SerializeField] float _decisionsDelay = 0.5f;
-    [SerializeField] float _punchableDistance = 1.5f;
-    [SerializeField] float _punchForce = 120f;
     [SerializeField] float _nearObjectDistance = 1f;
+    [SerializeField] float _decisionsDelay = 0.5f;
+    [SerializeField] float _punchForce = 120f;
     [SerializeField] float _explorationAmplitude = 10f;
+    [SerializeField] public float layingTimeInBetween = 60f;
+    [SerializeField] public float eatingXpPerUpdate = 1f;
+    [SerializeField] public float pettingXP = 100f;
+
+    [Header("AI Parameters")]
     [SerializeField] public float boredTime = 30f;
     [SerializeField] public float sleepTime = 10f;
     [SerializeField] public float layingTime = 10f;
-    [SerializeField] public float layingTimeInBetween = 60f;
     [SerializeField] public float eatTime = 10f;
     [SerializeField] public float deathTime = 50f;
-    [SerializeField] public float eatingXpPerUpdate = 1f;
-    [SerializeField] public float pettingXP = 100f;
     [SerializeField] [Range(0, 1)] public float seekPlayerProb = 0.1f;
     [SerializeField] [Range(0, 1)] public float seekNpcProb = 0.1f;
     [SerializeField] [Range(0, 1)] public float seekBallProb = 0.1f;
@@ -62,7 +63,8 @@ public class NPC : Pickable, IHandController
     bool _petting = false;
     bool _canLay = true;
 
-    //Main Functions
+
+    //Helper functions
     private void Awake()
     {
         _myAgent = GetComponent<NavMeshAgent>();
@@ -95,6 +97,16 @@ public class NPC : Pickable, IHandController
         else if (_petting)
             _myAgent.enabled = false;
     }
+    bool GotTypeInHand(System.Type _type)
+    {
+        if (_handSystem.ObjectInHand() != null && _handSystem.ObjectInHand().GetType() == _type)
+            return true;
+        else
+            return false;
+    }
+
+
+    //Interface
     public override void Pick(HandSystem _picker)
     {
         base.Pick(_picker);
@@ -155,7 +167,7 @@ public class NPC : Pickable, IHandController
     }
 
 
-    //Levels
+    //UI-Level Functions
     public void InitializeLevelUI()
     {
         UIController.uIController.CreateProgressBar(this.gameObject, _levelController.GetLevelLimits(), this.transform);
@@ -198,11 +210,11 @@ public class NPC : Pickable, IHandController
                 //i got a throwable object (ball).
                 if(GotTypeInHand(typeof(Ball)))
                 {
-                    if (_detector._playerDetectionStatus == PlayerDetectionStatus.InRange)
+                    if (_detector._playerDetectionStatus == DetectionStatus.InRange)
                     {
                         ThinkAboutThrowing(_detector.PlayerInRange().gameObject, throwBallOnPlayerProb);
                     }
-                    if (_detector._npcDetectionStatus == NpcDetectionStatus.InRange)
+                    if (_detector._npcDetectionStatus == DetectionStatus.InRange)
                     {
                         ThinkAboutThrowing(_detector.NpcInRange().gameObject, throwBallOnNpcProb);
                     }
@@ -280,7 +292,6 @@ public class NPC : Pickable, IHandController
             StartCoroutine(Laying(alter));
         }
     }
-
     IEnumerator AiContinous()
     {
         while(true)
@@ -395,7 +406,6 @@ public class NPC : Pickable, IHandController
             _canLay = true;
         }
     }
-
     void ThinkAboutlayingAnEgg(FertilityAlter alter)
     {
         float _randomChance = Random.Range(0f, 1f);
@@ -481,7 +491,7 @@ public class NPC : Pickable, IHandController
 
             float distance = (this.transform.position - _myAgent.destination).magnitude;
 
-            if (distance <= _stoppingDistance)
+            if (distance <= _nearObjectDistance)
             {
                 _movementStatus = MovementStatus.Watching;
             }
@@ -493,7 +503,7 @@ public class NPC : Pickable, IHandController
 
         float distance = (this.transform.position - _myAgent.destination).magnitude;
 
-        if (distance <= _stoppingDistance)
+        if (distance <= _nearObjectDistance)
         {
             float x = Random.Range(0f, _explorationAmplitude);
             float z = Random.Range(0f, _explorationAmplitude);
@@ -501,15 +511,6 @@ public class NPC : Pickable, IHandController
             _deltaExploration = new Vector3(x, 0, z);
         }
     }
-    bool GotTypeInHand(System.Type _type)
-    {
-        if(_handSystem.ObjectInHand() != null && _handSystem.ObjectInHand().GetType() == _type)
-            return true;
-        else
-            return false;
-    }
-
-
 }
 
 

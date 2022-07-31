@@ -37,7 +37,7 @@ public class PlayerSystem : MonoBehaviour, IHandController
             UIController.uIController.PickDropButton_SwitchMode(PickMode.Drop);
         else if (_handSystem._canPick)
             UIController.uIController.PickDropButton_SwitchMode(PickMode.Pick);
-        else if (_handSystem._detector._treeDetectionStatus == TreeDetectionStatus.VeryNear)
+        else if (_handSystem._detector._treeDetectionStatus == DetectionStatus.VeryNear)
             UIController.uIController.PickDropButton_SwitchMode(PickMode.Shake);
         else
             UIController.uIController.PickDropButton_SwitchMode(PickMode.Pick);
@@ -45,7 +45,7 @@ public class PlayerSystem : MonoBehaviour, IHandController
 
         bool _canShake = (!_handSystem._canPick
                        && !_handSystem._canDrop
-                       && (_handSystem._detector._treeDetectionStatus == TreeDetectionStatus.VeryNear));
+                       && (_handSystem._detector._treeDetectionStatus == DetectionStatus.VeryNear));
 
         if (_handSystem._canPick || _handSystem._canDrop || _canShake)
             UIController.uIController.PickDropButton_Enable(true);
@@ -103,7 +103,7 @@ public class PlayerSystem : MonoBehaviour, IHandController
         {
             _handSystem.DropObject();
         }
-        else if(_handSystem._detector._treeDetectionStatus == TreeDetectionStatus.VeryNear)
+        else if(_handSystem._detector._treeDetectionStatus == DetectionStatus.VeryNear)
         {
             _handSystem._detector.TreeInRange().Shake();
         }

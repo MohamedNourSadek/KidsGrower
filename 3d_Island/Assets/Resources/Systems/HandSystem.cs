@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum PickableOjbects { NPC, Egg, Ball, Fruit}
+public enum PickableTags { NPC, Egg, Ball, Fruit}
 
 [System.Serializable]
 public class HandSystem
 {
     [Header("Pickable Parameters")]
     [SerializeField] GameObject _myHand;
-    [SerializeField] List<PickableOjbects> _whoCanIPick;
-    [SerializeField] bool _highLightPickable;
     [SerializeField] float _throwForce = 20f;
     [SerializeField] float _plantDistance = 1f;
     [SerializeField] float _pickSpeedThrushold = 2f;
@@ -26,7 +24,6 @@ public class HandSystem
     public bool _canPet;
 
     //Private Data
-    List<Pickable> _toPick = new();
     public Pickable _objectInHand = new();
     float _nearObjectDistance;
     IHandController _myController;
@@ -41,195 +38,33 @@ public class HandSystem
     }
     public void Update()
     { 
-        try
+        if(_objectInHand == null)
         {
-            if(_objectInHand == null)
-            {
-                if ((IsPickable(PickableOjbects.Ball)))
-                {
-                    Ball _ball = null;
-
-                    if (_detector._ballDetectionStatus == BallDetectionStatus.VeryNear)
-                         _ball = _detector.BallInRange(_nearObjectDistance);
-
-                    foreach(Ball ball in _detector.GetDetectedData().balls)
-                    {
-                        if(ball == _ball)
-                        {
-                            if (!_toPick.Contains(ball))
-                            {
-                                if (_highLightPickable)
-                                    ball.PickablilityIndicator(true);
-
-                                _toPick.Add(ball);
-                            }
-                        }
-                        else
-                        {
-                            if (_toPick.Contains(ball))
-                            {
-                                if (_highLightPickable)
-                                    ball.PickablilityIndicator(false);
-
-                                _toPick.Remove(ball);
-                            }
-                        }
-                    }
-                }
-                if ((IsPickable(PickableOjbects.NPC)))
-                {
-                    NPC _npc = null;
-
-                    if (_detector._npcDetectionStatus == NpcDetectionStatus.VeryNear)
-                        _npc = _detector.NpcInRange(_nearObjectDistance);
-
-                    foreach (NPC npc in _detector.GetDetectedData().npcs)
-                    {
-                        if (npc == _npc)
-                        {
-                            if (!_toPick.Contains(npc))
-                            {
-                                if (_highLightPickable)
-                                    npc.PickablilityIndicator(true);
-
-                                _toPick.Add(npc);
-                            }
-
-                        }
-                        else
-                        {
-                            if (_toPick.Contains(npc))
-                            {
-                                if (_highLightPickable)
-                                    npc.PickablilityIndicator(false);
-
-                                _toPick.Remove(npc);
-                            }
-                        }
-                    }
-                }
-                if ((IsPickable(PickableOjbects.Egg)))
-                {
-                    Egg _egg = null;
-
-                    if (_detector._eggDetectionStatus == EggDetectionStatus.VeryNear)
-                        _egg = _detector.EggInRange(_nearObjectDistance);
-
-                    foreach (Egg egg in _detector.GetDetectedData().eggs)
-                    {
-                        if (egg == _egg)
-                        {
-                            if (!_toPick.Contains(egg))
-                            {
-                                if (_highLightPickable)
-                                    egg.PickablilityIndicator(true);
-
-                                _toPick.Add(egg);
-                            }
-
-                        }
-                        else
-                        {
-                            if (_toPick.Contains(egg))
-                            {
-                                if (_highLightPickable)
-                                    egg.PickablilityIndicator(false);
-
-                                _toPick.Remove(egg);
-                            }
-                        }
-                    }
-                }
-                if ((IsPickable(PickableOjbects.Fruit)))
-                {
-                    Fruit _fruit = null;
-
-                    if (_detector._fruitDetectionStatus == FruitDetectionStatus.VeryNear)
-                        _fruit = _detector.FruitInRange(_nearObjectDistance);
-
-                    foreach (Fruit fruit in _detector.GetDetectedData().fruits)
-                    {
-                        if (fruit == _fruit)
-                        {
-                            if (!_toPick.Contains(fruit))
-                            {
-                                if (_highLightPickable)
-                                    fruit.PickablilityIndicator(true);
-
-                                _toPick.Add(fruit);
-                            }
-                        }
-                        else
-                        {
-                            if (_toPick.Contains(fruit))
-                            {
-                                if (_highLightPickable)
-                                    fruit.PickablilityIndicator(false);
-
-                                _toPick.Remove(fruit);
-                            }
-                        }
-                    }
-                }
-
-
-                if (_toPick.Count > 1)
-                {
-                    //Safty for destroyed Objects
-                    List<Pickable> _newList = new();
-                    foreach (Pickable pickable in _toPick)
-                        if (pickable != null)
-                            _newList.Add(pickable);
-
-                    var temp = _newList[0];
-
-                    foreach (Pickable pickable in _newList)
-                        if (_detector.Distance(pickable.gameObject) < _detector.Distance(temp.gameObject))
-                            temp = pickable;
-
-                    foreach (Pickable pickable in _newList)
-                        if (_highLightPickable)
-                            pickable.PickablilityIndicator(false);
-
-                    if (_highLightPickable)
-                        temp.PickablilityIndicator(true);
-
-                    _newList.Clear();
-                    _newList.Add(temp);
-                    _toPick = _newList;
-                }
-
-
-
-                _canPick = _toPick.Count > 0;
-                _canThrow = false;
-                _gotSomething = false;
-                _canPlant = false;
-            }
-            else
-            {
-
-                _canPick = false;
-                _canDrop = true;
-                _canThrow = true;
-                _gotSomething = true;
-            }
+            _canPick = _detector.GetPickables().Count > 0;
+            _canThrow = false;
+            _gotSomething = false;
+            _canPlant = false;
         }
-        catch
+        else
         {
 
+            _canPick = false;
+            _canDrop = true;
+            _canThrow = true;
+            _gotSomething = true;
         }
 
-
-        _canPet = (_detector._npcDetectionStatus == NpcDetectionStatus.VeryNear) && (_objectInHand == null);
+        _canPet = (_detector._npcDetectionStatus == DetectionStatus.VeryNear) && (_objectInHand == null);
     }
+
+
     public void PickObject()
     {
-        if ((_toPick.Count > 0) ) 
+        if ((_detector.GetPickables().Count > 0) ) 
         {
-            if ((_toPick[0].GetSpeed() <= _pickSpeedThrushold))
+            if ((_detector.GetPickables()[0].GetSpeed() <= _pickSpeedThrushold))
             {
-                _objectInHand = _toPick[0];
+                _objectInHand = _detector.GetPickables()[0];
                 _objectInHand.Pick(this);
 
                 _canPick = false;
@@ -250,18 +85,18 @@ public class HandSystem
     }
     public void PetObject()
     {
-        Transform _petObject = _toPick[0].transform;
+        Transform _petObject = _detector.GetPickables()[0].transform;
 
         ConditionChecker condition = new ConditionChecker(true);
         _myController.StartCoroutine_Custom(UpdatePetCondition(condition));
 
         UIController.uIController.RepeatMessage("Petting", _petObject, _petTime, 5f, condition);
 
-        if ((_toPick.Count > 0))
+        if ((_detector.GetPickables().Count > 0))
         {
-            if ((_toPick[0].GetSpeed() <= _pickSpeedThrushold))
+            if ((_detector.GetPickables()[0].GetSpeed() <= _pickSpeedThrushold))
             {
-                _objectInHand = _toPick[0];
+                _objectInHand = _detector.GetPickables()[0];
                 _myController.GetBody().isKinematic = true;
                 ((NPC)_objectInHand).StartPetting();
 
@@ -320,16 +155,6 @@ public class HandSystem
 
    
     //Internal Algorithms
-    bool IsPickable(PickableOjbects pickableType)
-    {
-        foreach(PickableOjbects _pickableType in _whoCanIPick)
-        {
-            if (_pickableType == pickableType)
-                return true;
-        }
-
-        return false;
-    }
     IEnumerator PetObjectRoutine(ConditionChecker condition)
     {
         while (condition.isTrue)
