@@ -15,12 +15,12 @@ public class Tests : MonoBehaviour
     {
         if(Input.GetKeyDown("y"))
         {
-            Debug.Log(TestSuit.ComputeTime(test, (int)_range.y));
+            //Debug.Log(TestSuit.ComputeTime(test, (int)_range.y));
         }
 
         if (Input.GetKeyDown("x"))
         {
-            Debug.Log(TestSuit.ComputeTime(test2, (int)_range.y));
+            //Debug.Log(TestSuit.ComputeTime(test2, (int)_range.y));
         }
     }
 

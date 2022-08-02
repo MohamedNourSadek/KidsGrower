@@ -161,8 +161,6 @@ public class HandSystem
     {
         while (condition.isTrue)
         {
-            Debug.Log("Petting");
-
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
