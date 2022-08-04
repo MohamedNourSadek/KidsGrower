@@ -9,7 +9,7 @@ public enum PickMode { Pick, Drop, Shake};
 public class UIController : MonoBehaviour
 {
 
-    public static UIController uIController;
+    public static UIController instance;
 
     [Header("References")]
     [SerializeField] GameObject _3dCanvas;
@@ -29,8 +29,12 @@ public class UIController : MonoBehaviour
     [SerializeField] Image _dashButtonImage;
     [SerializeField] Image _petButtonImage;
     [SerializeField] Text _pickDropButtonImage_Text;
+    [SerializeField] Text _customizeDebugger;
+    [SerializeField] GameObject _modeSelection;
+    [SerializeField] GameObject _customizedUi;
     [SerializeField] GameObject _allSettingsMenus;
     [SerializeField] GameObject _allGameMenus;
+    [SerializeField] GameObject _designMenus;
     [SerializeField] GameObject _page1Menu;
     [SerializeField] GameObject _page2Menu;
     [SerializeField] List<SliderElement> _sliders = new List<SliderElement>();
@@ -43,7 +47,7 @@ public class UIController : MonoBehaviour
     //Helpers
     void Awake()
     {
-        uIController = this;
+        instance = this;
 
         foreach (SliderElement slider in _sliders)
             slider.Initialize();
@@ -120,9 +124,48 @@ public class UIController : MonoBehaviour
         _slidersContainer.Remove(_user);
         Destroy(_temp.gameObject);
     }
+    public void CustomizeLog(string text, Color color)
+    {
+        _customizeDebugger.text = text;
+        _customizeDebugger.color = color;
+    }
     
-    
+
     //Control UI flow
+    public void ToggleDesignButtonsVisibility()
+    {
+        _designMenus.SetActive(!_designMenus.activeInHierarchy);
+    }
+    public void ShowMainScreen()
+    {
+        ShowModeSelection();
+        GameManager.instance.SwitchMove_MainScreen();
+    }
+    public void ShowModeSelection()
+    {
+        _modeSelection.SetActive(true);
+
+        _allGameMenus.SetActive(false);
+        _customizedUi.SetActive(false);
+        MapSystem.instance.SetCustomizing(false);
+    }
+    public void ShowCustomize()
+    {
+        _modeSelection.SetActive(false);
+        _customizedUi.SetActive(true);
+        MapSystem.instance.SetCustomizing(true);
+    }
+    public void StartGame()
+    {
+        _allGameMenus.SetActive(true);
+        _modeSelection.SetActive(false);
+        GameManager.instance.SwitchMode_Game();
+    }
+    public void ApplySettings()
+    {
+        GameManager.instance.ApplySettings();
+        ShowSettings(false);
+    }
     public void ShowSettings(bool state)
     {
         _allSettingsMenus.SetActive(state);

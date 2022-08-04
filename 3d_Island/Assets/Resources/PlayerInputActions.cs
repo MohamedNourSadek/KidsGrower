@@ -98,6 +98,24 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Press"",
+                    ""type"": ""Button"",
+                    ""id"": ""fca1951c-20ee-4faa-baef-5f384a44d51d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hand"",
+                    ""type"": ""Value"",
+                    ""id"": ""caf89cc2-5350-46ff-b791-906fd88e8b76"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -342,6 +360,50 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Pet"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e18d9156-3691-4ce3-a0ef-7ea3f8b403e2"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Hand"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92930dfe-18d7-4ff3-9c1a-ca0634e04ee1"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Hand"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7cd0d3dd-2768-4d54-b1dd-20f8d01ffa49"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Press"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""feec9607-2cdd-4ba6-86be-e556ce2f6fd5"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Game pad"",
+                    ""action"": ""Press"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -381,6 +443,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Plant = m_Player.FindAction("Plant", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Pet = m_Player.FindAction("Pet", throwIfNotFound: true);
+        m_Player_Press = m_Player.FindAction("Press", throwIfNotFound: true);
+        m_Player_Hand = m_Player.FindAction("Hand", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -448,6 +512,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Plant;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Pet;
+    private readonly InputAction m_Player_Press;
+    private readonly InputAction m_Player_Hand;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -460,6 +526,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Plant => m_Wrapper.m_Player_Plant;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @Pet => m_Wrapper.m_Player_Pet;
+        public InputAction @Press => m_Wrapper.m_Player_Press;
+        public InputAction @Hand => m_Wrapper.m_Player_Hand;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -493,6 +561,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Pet.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPet;
                 @Pet.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPet;
                 @Pet.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPet;
+                @Press.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPress;
+                @Press.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPress;
+                @Press.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPress;
+                @Hand.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHand;
+                @Hand.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHand;
+                @Hand.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHand;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -521,6 +595,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Pet.started += instance.OnPet;
                 @Pet.performed += instance.OnPet;
                 @Pet.canceled += instance.OnPet;
+                @Press.started += instance.OnPress;
+                @Press.performed += instance.OnPress;
+                @Press.canceled += instance.OnPress;
+                @Hand.started += instance.OnHand;
+                @Hand.performed += instance.OnHand;
+                @Hand.canceled += instance.OnHand;
             }
         }
     }
@@ -553,5 +633,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnPlant(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnPet(InputAction.CallbackContext context);
+        void OnPress(InputAction.CallbackContext context);
+        void OnHand(InputAction.CallbackContext context);
     }
 }

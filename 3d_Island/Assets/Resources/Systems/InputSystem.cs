@@ -6,14 +6,13 @@ using UnityEngine.InputSystem;
 
 public class InputSystem
 {
-    PlayerSystem _myPlayer;
+    IInputUser _myUser;
     PlayerInputActions _inputActions;
     Vector2 _xyAxis;
-    float _xyRotateAxis;
 
-    public void Initialize(PlayerSystem _player)
+    public void Initialize(IInputUser _user)
     {
-        _myPlayer = _player;
+        _myUser = _user;
         _inputActions = new PlayerInputActions();
         _inputActions.Enable();
         _inputActions.Player.Jump.performed += JumpInput;
@@ -22,6 +21,7 @@ public class InputSystem
         _inputActions.Player.Plant.performed += PlantInput;
         _inputActions.Player.Dash.performed += DashInput;
         _inputActions.Player.Pet.performed += PetInput;
+        _inputActions.Player.Press.performed += PressInput;
     }
     public void Update()
     {
@@ -32,27 +32,35 @@ public class InputSystem
 
     void PickInput(InputAction.CallbackContext obj)
     {
-        _myPlayer.PickInput();
+        _myUser.PickInput();
     }
     void JumpInput(InputAction.CallbackContext context)
     {
-        _myPlayer.JumpInput();
+        _myUser.JumpInput();
     }
     void ThrowInput(InputAction.CallbackContext obj)
     {
-        _myPlayer.ThrowInput();
+        _myUser.ThrowInput();
     }
     void PlantInput(InputAction.CallbackContext obj)
     {
-        _myPlayer.PlantInput();
+        _myUser.PlantInput();
     }
     void DashInput(InputAction.CallbackContext obj)
     {
-        _myPlayer.DashInput();
+        _myUser.DashInput();
     }
     void PetInput(InputAction.CallbackContext obj)
     {
-        _myPlayer.PetInput();
+        _myUser.PetInput();
+    }
+    void PressInput(InputAction.CallbackContext obj)
+    {
+        _myUser.PressInput();
+    }
+    public Vector2 GetMousePosition()
+    {
+        return _inputActions.Player.Hand.ReadValue<Vector2>();
     }
 
 
@@ -62,7 +70,7 @@ public class InputSystem
 
         if (_xyAxis.magnitude > 0)
         {
-            _myPlayer.MoveInput(_xyAxis);
+            _myUser.MoveInput(_xyAxis);
         }
     }
     void RotateInput()
@@ -71,7 +79,20 @@ public class InputSystem
 
         if (Mathf.Abs(_deltaRotate) > 0)
         {
-            _myPlayer.RotateInput(_deltaRotate);
+            _myUser.RotateInput(_deltaRotate);
         }
     }
+}
+
+public interface IInputUser
+{
+    public void PetInput();
+    public void DashInput();
+    public void PlantInput();
+    public void ThrowInput();
+    public void JumpInput();
+    public void PickInput();
+    public void PressInput();
+    public void MoveInput(Vector2 _movementInput);
+    public void RotateInput(float _deltaRotate);
 }

@@ -13,7 +13,7 @@ public class NpcGhost : MonoBehaviour
 
     void Awake()
     {
-        _destination = MapSystem.GetRandomExplorationPoint();
+        _destination = MapSystem.instance.GetRandomExplorationPoint();
         _moving = true;
 
         StartCoroutine(_TakeDecision());
@@ -33,7 +33,7 @@ public class NpcGhost : MonoBehaviour
             }
             else
             {
-                _destination = MapSystem.GetRandomExplorationPoint();
+                _destination = MapSystem.instance.GetRandomExplorationPoint();
                 _moving = true;
             }
 

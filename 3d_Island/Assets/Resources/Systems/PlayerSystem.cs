@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSystem : MonoBehaviour, IHandController, IDetectable
+public class PlayerSystem : MonoBehaviour, IHandController, IDetectable, IInputUser
 {
     //Editor Fields
     [SerializeField] Rigidbody _playerBody;
@@ -34,13 +34,13 @@ public class PlayerSystem : MonoBehaviour, IHandController, IDetectable
     void UpdateUi()
     {
         if (_handSystem._canDrop)
-            UIController.uIController.PickDropButton_SwitchMode(PickMode.Drop);
+            UIController.instance.PickDropButton_SwitchMode(PickMode.Drop);
         else if (_handSystem._canPick)
-            UIController.uIController.PickDropButton_SwitchMode(PickMode.Pick);
+            UIController.instance.PickDropButton_SwitchMode(PickMode.Pick);
         else if (_handSystem._detector.GetDetectable("Tree")._detectionStatus == DetectionStatus.VeryNear)
-            UIController.uIController.PickDropButton_SwitchMode(PickMode.Shake);
+            UIController.instance.PickDropButton_SwitchMode(PickMode.Shake);
         else
-            UIController.uIController.PickDropButton_SwitchMode(PickMode.Pick);
+            UIController.instance.PickDropButton_SwitchMode(PickMode.Pick);
 
 
         bool _canShake = (!_handSystem._canPick
@@ -48,25 +48,24 @@ public class PlayerSystem : MonoBehaviour, IHandController, IDetectable
                        && (_handSystem._detector.GetDetectable("Tree")._detectionStatus == DetectionStatus.VeryNear));
 
         if (_handSystem._canPick || _handSystem._canDrop || _canShake)
-            UIController.uIController.PickDropButton_Enable(true);
+            UIController.instance.PickDropButton_Enable(true);
         else
-            UIController.uIController.PickDropButton_Enable(false);
+            UIController.instance.PickDropButton_Enable(false);
 
         if (_handSystem._canThrow)
-            UIController.uIController.ThrowButton_Enable(true);
+            UIController.instance.ThrowButton_Enable(true);
         else
-            UIController.uIController.ThrowButton_Enable(false);
+            UIController.instance.ThrowButton_Enable(false);
 
         if (_handSystem._canPlant)
-            UIController.uIController.PlantButton_Enable(true);
+            UIController.instance.PlantButton_Enable(true);
         else
-            UIController.uIController.PlantButton_Enable(false);
+            UIController.instance.PlantButton_Enable(false);
 
-        UIController.uIController.JumpButton_Enable(_movementSystem.IsOnGround());
-        UIController.uIController.DashButton_Enable(_movementSystem.IsDashable());
-        UIController.uIController.PetButton_Enable(_handSystem._canPet);
+        UIController.instance.JumpButton_Enable(_movementSystem.IsOnGround());
+        UIController.instance.DashButton_Enable(_movementSystem.IsDashable());
+        UIController.instance.PetButton_Enable(_handSystem._canPet);
     }
-
 
 
     //Hand controller Interface implementations
@@ -127,5 +126,5 @@ public class PlayerSystem : MonoBehaviour, IHandController, IDetectable
         if(_handSystem._canPet)
             _handSystem.PetObject();
     }
-
+    public void PressInput() { }
 }

@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] bool _lockFrameRate = false;
     [SerializeField] int _frameRatelock = 60;
+    [SerializeField] bool _startFrozen = true;
 
     [Header("Game Design")]
     [SerializeField] bool _showFrameRate;
@@ -30,8 +33,20 @@ public class GameManager : MonoBehaviour
     public static string seekAlter_saveString = "seekAlter";
     public static string deathTime_saveString = "deathTime";
 
+
+    public static GameManager instance;
+
+    Vector3 _camCustomizingViewPos;
+    Quaternion _camCustomizingViewRot;
+
+
     void Start()
     {
+        instance = this;
+
+        if(_startFrozen)
+            Time.timeScale = 0f;
+
         if (_lockFrameRate)
             Application.targetFrameRate = _frameRatelock;
         else
@@ -41,14 +56,17 @@ public class GameManager : MonoBehaviour
             FindObjectOfType<PlayerSystem>();
 
         if (!_showFrameRate)
-            UIController.uIController.UpdateFrameRate("");
+            UIController.instance.UpdateFrameRate("");
+
+        _camCustomizingViewPos = Camera.main.transform.position;
+        _camCustomizingViewRot = Camera.main.transform.rotation;
 
         LoadSettings();
     }
     void Update()
     {
         if (_showFrameRate)
-            UIController.uIController.UpdateFrameRate((1f / Time.deltaTime).ToString());
+            UIController.instance.UpdateFrameRate((1f / Time.deltaTime).ToString());
     }
 
     
@@ -64,7 +82,7 @@ public class GameManager : MonoBehaviour
         }
 
         //Change NPC asset first
-        foreach (SliderElement slider in UIController.uIController.GetSliders())
+        foreach (SliderElement slider in UIController.instance.GetSliders())
         {
             if (slider._saveName == growTime_saveString)
                 _npcAsset.growTime = slider._mySlider.value;
@@ -116,20 +134,36 @@ public class GameManager : MonoBehaviour
         }
 
         SaveSettings();
-        UIController.uIController.ShowSettings(false);
     }
     public void LoadSettings()
     {
-        foreach (SliderElement slider in UIController.uIController.GetSliders())
+        foreach (SliderElement slider in UIController.instance.GetSliders())
             slider._mySlider.value = PlayerPrefs.GetFloat(slider._saveName);
 
         ApplySettings();
     }
     public void SaveSettings()
     {
-        foreach (SliderElement slider in UIController.uIController.GetSliders())
+        foreach (SliderElement slider in UIController.instance.GetSliders())
             PlayerPrefs.SetFloat(slider._saveName, slider._mySlider.value);
     }
+    public void SwitchMode_Game()
+    {
+        Time.timeScale = 1f;
+        _myPlayer.gameObject.SetActive(true);
+    }
+    public void SwitchMove_MainScreen()
+    {
+        _myPlayer.gameObject.SetActive(false);
+
+        Camera.main.transform.position = _camCustomizingViewPos;
+        Camera.main.transform.rotation = _camCustomizingViewRot;
+    }
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(0);
+    }
+    
 
 
     //for design Buttons
@@ -141,7 +175,5 @@ public class GameManager : MonoBehaviour
     {
         Instantiate(_eggAsset.gameObject, _myPlayer.transform.position + _myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
-
-
 
 }

@@ -167,8 +167,8 @@ public class NPC : Pickable, IHandController, IStateMachineController
     void Die()
     {
         var _deadNPC =  Instantiate(_deadNpcAsset, this.transform.position, Quaternion.identity);
-        UIController.uIController.DestroyProgressBar(this.gameObject);
-        UIController.uIController.RepeatMessage("Death!!", _deadNPC.transform, 2f, 4f, new ConditionChecker(true));
+        UIController.instance.DestroyProgressBar(this.gameObject);
+        UIController.instance.RepeatMessage("Death!!", _deadNPC.transform, 2f, 4f, new ConditionChecker(true));
         Destroy(this.gameObject);
     }
 
@@ -176,16 +176,16 @@ public class NPC : Pickable, IHandController, IStateMachineController
     //UI-Level Functions
     public void InitializeLevelUI()
     {
-        UIController.uIController.CreateProgressBar(this.gameObject, _levelController.GetLevelLimits(), this.transform);
+        UIController.instance.CreateProgressBar(this.gameObject, _levelController.GetLevelLimits(), this.transform);
     }
     public void OnXPIncrease()
     {
-        UIController.uIController.UpdateProgressBar(this.gameObject, _levelController.GetXp());
+        UIController.instance.UpdateProgressBar(this.gameObject, _levelController.GetXp());
     }
     public void OnLevelIncrease()
     {
-        UIController.uIController.UpdateProgressBarLimits(this.gameObject, _levelController.GetLevelLimits());
-        UIController.uIController.RepeatMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
+        UIController.instance.UpdateProgressBarLimits(this.gameObject, _levelController.GetLevelLimits());
+        UIController.instance.RepeatMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
     }
 
 
@@ -320,7 +320,7 @@ public class NPC : Pickable, IHandController, IStateMachineController
     {
         float _time = 0;
         ConditionChecker condition = new ConditionChecker(!_isPicked);
-        UIController.uIController.RepeatMessage("Eating", this.transform, eatTime, 15, condition);
+        UIController.instance.RepeatMessage("Eating", this.transform, eatTime, 15, condition);
 
         while (condition.isTrue)
         {
@@ -346,7 +346,7 @@ public class NPC : Pickable, IHandController, IStateMachineController
     {
         float _time = 0;
         ConditionChecker condition = new ConditionChecker(!_isPicked);
-        UIController.uIController.RepeatMessage("Sleeping", this.transform, sleepTime, 15, condition);
+        UIController.instance.RepeatMessage("Sleeping", this.transform, sleepTime, 15, condition);
 
         //sleep
         _myBody.isKinematic = true;
@@ -376,7 +376,7 @@ public class NPC : Pickable, IHandController, IStateMachineController
     {
         float _time = 0;
         ConditionChecker condition = new ConditionChecker(!_isPicked);
-        UIController.uIController.RepeatMessage("Laying", this.transform, layingTime, 15, condition);
+        UIController.instance.RepeatMessage("Laying", this.transform, layingTime, 15, condition);
 
         //Laying
         _myBody.isKinematic = true;
@@ -499,7 +499,7 @@ public class NPC : Pickable, IHandController, IStateMachineController
     void ExplorePoint()
     {
         _deltaExploration = Vector3.zero;
-        _destination = MapSystem.GetRandomExplorationPoint();
+        _destination = MapSystem.instance.GetRandomExplorationPoint();
 
         float distance = (this.transform.position - _myAgent.destination).magnitude;
 

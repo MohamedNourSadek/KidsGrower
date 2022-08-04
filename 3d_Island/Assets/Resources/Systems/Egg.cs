@@ -45,18 +45,18 @@ public class Egg : Pickable
     }
     IEnumerator Laying()
     {
-        UIController.uIController.CreateProgressBar(this.gameObject, new Vector2(0f,_hatchTime), this.transform);
+        UIController.instance.CreateProgressBar(this.gameObject, new Vector2(0f,_hatchTime), this.transform);
 
         while ((_plantedSince < _hatchTime) && !_isPicked)
         {
             _plantedSince += Time.fixedDeltaTime;
-            UIController.uIController.UpdateProgressBar(this.gameObject, _plantedSince);
+            UIController.instance.UpdateProgressBar(this.gameObject, _plantedSince);
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
         if(!_isPicked && (_plantedSince >= _hatchTime))
         {
-            UIController.uIController.DestroyProgressBar(this.gameObject);
+            UIController.instance.DestroyProgressBar(this.gameObject);
             Hatch();
         }
     }
@@ -65,7 +65,7 @@ public class Egg : Pickable
         _plantedSince = 0;
         _planted = false;
 
-        UIController.uIController.DestroyProgressBar(this.gameObject);
+        UIController.instance.DestroyProgressBar(this.gameObject);
         StopCoroutine(Laying());
     }
     void Hatch()
@@ -77,7 +77,7 @@ public class Egg : Pickable
         }
         else
         {
-            UIController.uIController.RepeatMessage("Rotten", this.gameObject.transform, 1f, 3f, new ConditionChecker(true));
+            UIController.instance.RepeatMessage("Rotten", this.gameObject.transform, 1f, 3f, new ConditionChecker(true));
             StartCoroutine(DestroyMe());
         }
 

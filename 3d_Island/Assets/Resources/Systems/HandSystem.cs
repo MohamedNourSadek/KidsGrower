@@ -92,7 +92,7 @@ public class HandSystem
         ConditionChecker condition = new ConditionChecker(true);
         _myController.StartCoroutine_Custom(UpdatePetCondition(condition));
 
-        UIController.uIController.RepeatMessage("Petting", _petObject, _petTime, 5f, condition);
+        UIController.instance.RepeatMessage("Petting", _petObject, _petTime, 5f, condition);
 
         if ((_detector.GetPickables().Count > 0))
         {
