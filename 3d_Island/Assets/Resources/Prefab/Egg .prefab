@@ -228,7 +228,8 @@ MonoBehaviour:
     _canPet: 0
     _objectInHand: {fileID: 0}
   _plantTime: 5
-  _allowedToPlantOn: 0000000001000000
+  _plantDistance: 1
+  _allowedToPlantOn: 00000000
   _babyNpcPrefab: {fileID: 9093430107948229128, guid: 2d6f86611569392469d9f3ca4f651bc2,
     type: 3}
   myMesh: {fileID: 6876410436286045252}

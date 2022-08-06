@@ -21,7 +21,7 @@ public class HandSystem
     public bool _canThrow;
     public bool _canPlant; 
     public bool _canPet;
-    
+     
 
     //Private Data
     public Pickable _objectInHand = new();
@@ -132,7 +132,7 @@ public class HandSystem
 
         DropObject();
 
-        Vector3 _direction = (Vector3.down + _myController.GetBody().transform.forward).normalized;
+        Vector3 _direction = (Vector3.down + (_platable._plantDistance * _myController.GetBody().transform.forward)).normalized;
         RaycastHit ray;
         Physics.Raycast(_myHand.transform.position, _direction, out ray, 50, GroundDetector.GetGroundLayer());
 

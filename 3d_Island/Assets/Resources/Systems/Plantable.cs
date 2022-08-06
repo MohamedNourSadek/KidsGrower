@@ -8,6 +8,7 @@ public enum GroundTag { Ground, Farm}
 public abstract class Plantable : Pickable
 {
     [SerializeField] public float _plantTime = 30;
+    [SerializeField] public float _plantDistance = 1f;
     [SerializeField] List<GroundTag> _allowedToPlantOn = new();
     
     protected float _plantedSince = 0f;
@@ -68,9 +69,8 @@ public abstract class Plantable : Pickable
 
     public bool IsOnPlatingGround(Vector3 position)
     {
-        Debug.Log("not implemented");
-
         RaycastHit hit;
+
         Physics.Raycast(position, Vector3.down, out hit);
 
         if (hit.collider)

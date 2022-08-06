@@ -113,7 +113,7 @@ Transform:
   m_GameObject: {fileID: 5430353140077561009}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.2572646, y: 2.7245338, z: 2.8084233}
-  m_LocalScale: {x: 0.16375066, y: 0.7521416, z: 0.16375066}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5430353139167690919}
@@ -217,7 +217,6 @@ MonoBehaviour:
   _holder:
     _myHand: {fileID: 0}
     _throwForce: 20
-    _plantDistance: 1
     _pickSpeedThrushold: 2
     _petTime: 1
     _detector: {fileID: 0}
@@ -229,3 +228,5 @@ MonoBehaviour:
     _canPet: 0
     _objectInHand: {fileID: 0}
   _plantTime: 30
+  _plantDistance: 0
+  _allowedToPlantOn: 01000000
