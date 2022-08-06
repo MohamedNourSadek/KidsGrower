@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public enum PickMode { Pick, Drop, Shake};
 
 public class UIController : MonoBehaviour
@@ -15,6 +14,7 @@ public class UIController : MonoBehaviour
     [SerializeField] GameObject _3dCanvas;
     [SerializeField] GameObject _3dHighlightPrefab;
     [SerializeField] GameObject _progressBarPrefab;
+    [SerializeField] GameObject _npcUiElementPrefab;
 
     [Header("Ui parameters")]
     [SerializeField] float _buttonOnAlpha = 1f;
@@ -43,6 +43,8 @@ public class UIController : MonoBehaviour
     [SerializeField] Text _frameRateUi;
 
     Dictionary<GameObject, Slider> _slidersContainer = new Dictionary<GameObject, Slider>();
+    Dictionary<GameObject, NPC_UIElement> _npcUiContainer = new();
+
 
     //Helpers
     void Awake()
@@ -107,7 +109,7 @@ public class UIController : MonoBehaviour
 
         _slidersContainer.Add(_user, _progressBar);
 
-        StartCoroutine(TranslateProgressBar(_progressBar.gameObject, parent));
+        StartCoroutine(TranslateUiElement(_progressBar.gameObject, parent));
     }
     public void UpdateProgressBar(GameObject _user, float _value)
     {
@@ -117,6 +119,35 @@ public class UIController : MonoBehaviour
     {
         _slidersContainer[_user].minValue = _limits.x;
         _slidersContainer[_user].maxValue = _limits.y;
+    }
+    public void CreateNPCUi(GameObject _user, Vector2 limits, Transform parent)
+    {
+        NPC_UIElement _npcUi = Instantiate(_npcUiElementPrefab, parent.position, Quaternion.identity, _3dCanvas.transform).GetComponent<NPC_UIElement>();
+        _npcUi.levelSlider.minValue = limits.x;
+        _npcUi.levelSlider.maxValue = limits.y;
+
+        _npcUiContainer.Add(_user, _npcUi);
+
+        StartCoroutine(TranslateUiElement(_npcUi.gameObject, parent));
+    }
+    public void UpateNpcUiElement(GameObject _user, float _value)
+    {
+        _npcUiContainer[_user].levelSlider.value = _value;
+    }
+    public void UpateNpcUiElement(GameObject _user, string _text)
+    {
+        _npcUiContainer[_user].levelText.text = _text;
+    }
+    public void UpateNpcUiElement(GameObject _user, Vector3 _limits)
+    {
+        _npcUiContainer[_user].levelSlider.minValue = _limits.x;
+        _npcUiContainer[_user].levelSlider.maxValue = _limits.y;
+    }
+    public void DestroyNpcUiElement(GameObject _user)
+    {
+        NPC_UIElement _temp = _npcUiContainer[_user];
+        _npcUiContainer.Remove(_user);
+        Destroy(_temp.gameObject);
     }
     public void DestroyProgressBar(GameObject _user)
     {
@@ -185,7 +216,7 @@ public class UIController : MonoBehaviour
     
     
     //Interal Algorithms
-    IEnumerator TranslateProgressBar(GameObject _object, Transform parent)
+    IEnumerator TranslateUiElement(GameObject _object, Transform parent)
     {
         while((parent != null ) && (_object != null))
         {

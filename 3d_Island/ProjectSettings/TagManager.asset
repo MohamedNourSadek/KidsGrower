@@ -12,6 +12,7 @@ TagManager:
   - HideByCam
   - Fruit
   - Ground
+  - Seed
   layers:
   - Default
   - TransparentFX

@@ -8,7 +8,7 @@ public class Pickable : MonoBehaviour, IDetectable
     [Header("Objects References")]
     [SerializeField] protected GameObject _indicatorObject;
     [SerializeField] protected Rigidbody _myBody;
-     
+
     protected bool _isPicked = false;
 
     public HandSystem _holder;

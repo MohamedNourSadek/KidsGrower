@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum PickableTags { NPC, Egg, Ball, Fruit}
+public enum PickableTags { NPC, Egg, Ball, Fruit, Seed}
 
 [System.Serializable]
 public class HandSystem
@@ -11,17 +11,17 @@ public class HandSystem
     [Header("Pickable Parameters")]
     [SerializeField] GameObject _myHand;
     [SerializeField] float _throwForce = 20f;
-    [SerializeField] float _plantDistance = 1f;
     [SerializeField] float _pickSpeedThrushold = 2f;
     [SerializeField] float _petTime = 1f;
-
+     
     public DetectorSystem _detector;
     public bool _gotSomething;
     public bool _canPick;
     public bool _canDrop;
     public bool _canThrow;
-    public bool _canPlant;
+    public bool _canPlant; 
     public bool _canPet;
+    
 
     //Private Data
     public Pickable _objectInHand = new();
@@ -47,16 +47,18 @@ public class HandSystem
         }
         else
         {
-
             _canPick = false;
             _canDrop = true;
             _canThrow = true;
             _gotSomething = true;
         }
 
+        if (_objectInHand && _objectInHand.GetComponent<Plantable>())
+            _canPlant = _objectInHand.GetComponent<Plantable>().IsOnPlatingGround(this._myController.GetBody().transform.position);
+
         _canPet = (_detector.GetDetectable("NPC")._detectionStatus == DetectionStatus.VeryNear) && (_objectInHand == null);
     }
-
+    
 
     public void PickObject()
     {
@@ -73,15 +75,6 @@ public class HandSystem
                 _canDrop = true;
                 _canThrow = true;
                 _gotSomething = true;
-
-                if (_objectInHand?.GetType() == typeof(Egg))
-                {
-                    _canPlant = true;
-                }
-                else
-                {
-                    _canPlant = false;
-                }
             }
         }
     }
@@ -98,16 +91,14 @@ public class HandSystem
         {
             if ((_detector.GetPickables()[0].GetSpeed() <= _pickSpeedThrushold))
             {
-                _objectInHand = _detector.GetPickables()[0];
+                NPC _npc = (NPC)(_detector.GetPickables()[0]);
+
                 _myController.GetBody().isKinematic = true;
-                ((NPC)_objectInHand).StartPetting();
+                _npc.StartPetting();
 
                 _canPick = false;
-                _canDrop = true;
-                _canThrow = true;
-                _gotSomething = true;
 
-                _myController.StartCoroutine_Custom(PetObjectRoutine(condition));
+                _myController.StartCoroutine_Custom(PetObjectRoutine(condition,_npc));
             }
         }
     }
@@ -137,14 +128,15 @@ public class HandSystem
     }
     public void PlantObject()
     {
-        Egg egg = (Egg)(_objectInHand);
+        Plantable _platable = _objectInHand.GetComponent<Plantable>();
 
         DropObject();
 
         Vector3 _direction = (Vector3.down + _myController.GetBody().transform.forward).normalized;
         RaycastHit ray;
         Physics.Raycast(_myHand.transform.position, _direction, out ray, 50, GroundDetector.GetGroundLayer());
-        egg.Plant(ray.point);
+
+        _platable.Plant(ray.point);
     }
     public Pickable ObjectInHand()
     {
@@ -155,16 +147,16 @@ public class HandSystem
         return _myHand.transform;
     }
 
-   
+     
     //Internal Algorithms
-    IEnumerator PetObjectRoutine(ConditionChecker condition)
+    IEnumerator PetObjectRoutine(ConditionChecker condition, NPC _npc)
     {
         while (condition.isTrue)
         {
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
-        ((NPC)_objectInHand).EndPetting();
+        _npc.EndPetting();
         _myController.GetBody().isKinematic = false;
         DropObject();
     }

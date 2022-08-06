@@ -61,7 +61,7 @@ public class NPC : Pickable, IHandController, IStateMachineController
     float _bornSince = 0f;
     bool _petting = false;
     bool _canLay = true;
-
+    List<MovementStatus> actionsQueue = new();
 
     //Helper functions
     private void Awake()
@@ -90,11 +90,7 @@ public class NPC : Pickable, IHandController, IStateMachineController
         _handSystem.Update();
         _detector.Update();
 
-        //Reactivate AI only if the npc were thrown and touched the ground and not being bet
-        if (_groundDetector.IsOnGroud(_myBody) && !_petting)
-            _myAgent.enabled = true;
-        else if (_petting)
-            _myAgent.enabled = false;
+
     }
     bool GotTypeInHand(System.Type _type)
     {
@@ -167,7 +163,7 @@ public class NPC : Pickable, IHandController, IStateMachineController
     void Die()
     {
         var _deadNPC =  Instantiate(_deadNpcAsset, this.transform.position, Quaternion.identity);
-        UIController.instance.DestroyProgressBar(this.gameObject);
+        UIController.instance.DestroyNpcUiElement(this.gameObject);
         UIController.instance.RepeatMessage("Death!!", _deadNPC.transform, 2f, 4f, new ConditionChecker(true));
         Destroy(this.gameObject);
     }
@@ -176,15 +172,17 @@ public class NPC : Pickable, IHandController, IStateMachineController
     //UI-Level Functions
     public void InitializeLevelUI()
     {
-        UIController.instance.CreateProgressBar(this.gameObject, _levelController.GetLevelLimits(), this.transform);
+        UIController.instance.CreateNPCUi(this.gameObject, _levelController.GetLevelLimits(), this.transform);
+        UIController.instance.UpateNpcUiElement(this.gameObject, "Level " + _levelController.GetLevel().ToString());
     }
     public void OnXPIncrease()
     {
-        UIController.instance.UpdateProgressBar(this.gameObject, _levelController.GetXp());
+        UIController.instance.UpateNpcUiElement(this.gameObject, _levelController.GetXp());
     }
     public void OnLevelIncrease()
     {
-        UIController.instance.UpdateProgressBarLimits(this.gameObject, _levelController.GetLevelLimits());
+        UIController.instance.UpateNpcUiElement(this.gameObject, _levelController.GetLevelLimits());
+        UIController.instance.UpateNpcUiElement(this.gameObject, "Level " + _levelController.GetLevel().ToString());
         UIController.instance.RepeatMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
     }
 
@@ -200,8 +198,12 @@ public class NPC : Pickable, IHandController, IStateMachineController
     {
         while (true)
         {
-            if (aiStateMachine.GetTimeSinceLastChange() >= boredTime)
+            if (actionsQueue.Count > 0)
+                SendActionQueue();
+
+            if ((aiStateMachine.GetTimeSinceLastChange() >= boredTime) && !(aiStateMachine.GetCurrentState() == MovementStatus.Sleep))
                 ActionRequest(MovementStatus.Sleep);
+
 
             if ((aiStateMachine.GetCurrentState()) == MovementStatus.Idel && !_isPicked)
                 ActionRequest(MovementStatus.Explore);
@@ -222,6 +224,7 @@ public class NPC : Pickable, IHandController, IStateMachineController
                 ThinkaboutDroppingTheBall();
             }
 
+
             yield return new WaitForSecondsRealtime(_decisionsDelay);
         }
     }
@@ -229,18 +232,44 @@ public class NPC : Pickable, IHandController, IStateMachineController
     {
         while (true)
         {
+            CheckReached();
+
             if ((aiStateMachine.GetCurrentState() == MovementStatus.Move))
             {
                 if(_dynamicDestination && _myAgent.isActiveAndEnabled)
                     MoveTo(_dynamicDestination);
             }
 
+            //Reactivate AI only if the npc were thrown and touched the ground and not being bet
+            if (_groundDetector.IsOnGroud(_myBody) && !_petting)
+                _myAgent.enabled = true;
+            else if (_petting)
+                _myAgent.enabled = false;
+
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
     }
     public void ActionRequest(MovementStatus mov)
     {
-        aiStateMachine.ActionRequest(mov);
+        //only add it if it's not the last one added to the list
+        if ((actionsQueue.Count == 0) || (actionsQueue[actionsQueue.Count - 1] != mov))
+        {
+            actionsQueue.Add(mov);
+        }
+    }
+    public void SendActionQueue()
+    {
+        List<MovementStatus> actions = new List<MovementStatus>();
+
+        foreach(var action in actionsQueue)
+        {
+            actions.Add(action);
+        }
+
+        actionsQueue.Clear();
+
+        foreach(var action in actions)
+            aiStateMachine.ActionRequest(action);
     }
     public void ActionExecution(MovementStatus mov)
     {
@@ -254,10 +283,17 @@ public class NPC : Pickable, IHandController, IStateMachineController
         }
         else if (mov == MovementStatus.Eat)
         {
-            _handSystem.PickObject();
+            if (_handSystem.ObjectInHand())
+            {
+                if ((_handSystem.ObjectInHand()).tag == "Fruit")
+                {
+                    _handSystem.PickObject();
 
-            if ((Fruit)(_handSystem.ObjectInHand()))
-                StartCoroutine(Eating((Fruit)(_handSystem.ObjectInHand())));
+                    if ((Fruit)(_handSystem.ObjectInHand()))
+                        StartCoroutine(Eating((Fruit)(_handSystem.ObjectInHand())));
+                }
+            }
+
         }
         else if (mov == MovementStatus.Lay)
         {
@@ -291,7 +327,7 @@ public class NPC : Pickable, IHandController, IStateMachineController
         //If the object i am following got out of range
         if (_dynamicDestination == ((MonoBehaviour)detectable).gameObject.transform)
         {
-            ActionRequest(MovementStatus.Move);
+            ActionRequest(MovementStatus.Idel);
         }
     }
     void OnDetectableNear(IDetectable detectable)
@@ -305,7 +341,7 @@ public class NPC : Pickable, IHandController, IStateMachineController
         if (detectable.tag == ("Tree"))
             ThinkAboutShakingTree((TreeSystem)detectable);
 
-        if (detectable.tag == ("Fruit"))
+        if (detectable.tag == ("Fruit") && _handSystem.ObjectInHand() == null)
             if (((Fruit)detectable).OnGround())
                 ActionRequest(MovementStatus.Eat);
 
@@ -326,12 +362,11 @@ public class NPC : Pickable, IHandController, IStateMachineController
         {
             _time += Time.fixedDeltaTime;
 
-            condition.Update(
-                !_isPicked &&
-                (_time <= eatTime) &&
-                GotTypeInHand(typeof(Fruit)) &&
-                _fruit.HasEnergy() &&
-                aiStateMachine.GetCurrentState() == MovementStatus.Eat);
+            bool _timeCond = (_time <= eatTime);
+            bool _fruitInHand = GotTypeInHand(typeof(Fruit));
+            bool _hasEnergy = _fruit.HasEnergy();
+
+            condition.Update(!_isPicked && _timeCond && _fruitInHand && _hasEnergy);
 
             _levelController.IncreaseXP(_fruit.GetEnergy());
 
@@ -485,17 +520,8 @@ public class NPC : Pickable, IHandController, IStateMachineController
         if (!_isPicked)
         {
             _myAgent.destination = followed.position;
-
-            float distance = (this.transform.position - _myAgent.destination).magnitude;
-
-            if (distance <= _nearObjectDistance)
-            {
-                ActionRequest(MovementStatus.Idel);
-            }
         }
     }
-
-
     void ExplorePoint()
     {
         _deltaExploration = Vector3.zero;
@@ -514,6 +540,15 @@ public class NPC : Pickable, IHandController, IStateMachineController
         if(_myAgent.isActiveAndEnabled)
             _myAgent.destination = _destination + _deltaExploration;
 
+    }
+    void CheckReached()
+    {
+        float distance = (this.transform.position - _myAgent.destination).magnitude;
+
+        if (distance <= _nearObjectDistance)
+        {
+            ActionRequest(MovementStatus.Idel);
+        }
     }
 
 

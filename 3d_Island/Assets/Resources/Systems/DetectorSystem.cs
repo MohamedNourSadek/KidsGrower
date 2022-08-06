@@ -6,7 +6,6 @@ using System;
 
 public class DetectorSystem : MonoBehaviour
 {
-
     [SerializeField] List<PickableTags> _whoCanIPick;
     [SerializeField] bool _highLightPickable;
     [SerializeField] public List<DetectableElement> _detectableElements = new List<DetectableElement>();
@@ -15,7 +14,6 @@ public class DetectorSystem : MonoBehaviour
 
     //Private data
     public List<Pickable> _toPick = new();
-
 
     public void Initialize(float nearObjectDistance)
     {

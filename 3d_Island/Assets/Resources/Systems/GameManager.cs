@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
     Vector3 _camCustomizingViewPos;
     Quaternion _camCustomizingViewRot;
 
-
     void Start()
     {
         instance = this;
@@ -69,7 +68,6 @@ public class GameManager : MonoBehaviour
             UIController.instance.UpdateFrameRate((1f / Time.deltaTime).ToString());
     }
 
-    
     //Settings
     public void ApplySettings()
     {

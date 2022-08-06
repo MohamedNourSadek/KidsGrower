@@ -13,7 +13,7 @@ public class AIStateMachine : MonoBehaviour
     IStateMachineController _stateMachineController;
     List<StateInfo> _myStates = new List<StateInfo>();
     int _currentStateHash;
-    float _timeSinceLastAction = 0;
+    public float _timeSinceLastAction = 0;
 
 
     private void Awake()
@@ -53,8 +53,14 @@ public class AIStateMachine : MonoBehaviour
     //Interface
     public void ActionRequest(MovementStatus trigger)
     {
-        _myStateMachine.SetTrigger(trigger.ToString());
-        Debug.Log(trigger);
+        try 
+        {
+            _myStateMachine.SetTrigger(trigger.ToString());
+        }
+        catch 
+        {
+
+        }
     }
     public MovementStatus GetCurrentState()
     {

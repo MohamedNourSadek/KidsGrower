@@ -7,7 +7,7 @@ public enum CustomizingState { Detecting, Moving}
 
 public class MapSystem : MonoBehaviour, IInputUser
 {
-    [SerializeField] readonly List<Transform> _explorationPoints = new();
+    [SerializeField] List<Transform> _explorationPoints = new();
     [SerializeField] CustomizingState _customizingState = CustomizingState.Detecting;
 
     public static MapSystem instance;
