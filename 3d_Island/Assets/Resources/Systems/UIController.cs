@@ -12,11 +12,14 @@ public class UIController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] GameObject _3dCanvas;
+    [SerializeField] GameObject _gameCanvas;
     [SerializeField] GameObject _3dHighlightPrefab;
     [SerializeField] GameObject _progressBarPrefab;
     [SerializeField] GameObject _npcUiElementPrefab;
+    [SerializeField] GameObject _inventoryElementPrefab;
 
     [Header("Ui parameters")]
+
     [SerializeField] float _buttonOnAlpha = 1f;
     [SerializeField] float _buttonOffAlpha = 0.3f;
 
@@ -42,8 +45,9 @@ public class UIController : MonoBehaviour
     [Header("Design Only")]
     [SerializeField] Text _frameRateUi;
 
-    Dictionary<GameObject, Slider> _slidersContainer = new Dictionary<GameObject, Slider>();
-    Dictionary<GameObject, NPC_UIElement> _npcUiContainer = new();
+    Dictionary<GameObject, Slider> _slidersContainer = new ();
+    Dictionary<GameObject, UIElement_NPC> _npcUiContainer = new();
+    Dictionary<string, UiElement_Inventory> _InventoryItemsContainer = new();
 
 
     //Helpers
@@ -111,6 +115,20 @@ public class UIController : MonoBehaviour
 
         StartCoroutine(TranslateUiElement(_progressBar.gameObject, parent));
     }
+    public void CreateNPCUi(GameObject _user, Vector2 limits, Transform parent)
+    {
+        UIElement_NPC _npcUi = Instantiate(_npcUiElementPrefab, parent.position, Quaternion.identity, _3dCanvas.transform).GetComponent<UIElement_NPC>();
+        _npcUi.levelSlider.minValue = limits.x;
+        _npcUi.levelSlider.maxValue = limits.y;
+
+        _npcUiContainer.Add(_user, _npcUi);
+
+        StartCoroutine(TranslateUiElement(_npcUi.gameObject, parent));
+    }
+    public void CreateInventoryUI(string _itemTag)
+    {
+
+    }
     public void UpdateProgressBar(GameObject _user, float _value)
     {
         _slidersContainer[_user].value = _value;
@@ -119,16 +137,6 @@ public class UIController : MonoBehaviour
     {
         _slidersContainer[_user].minValue = _limits.x;
         _slidersContainer[_user].maxValue = _limits.y;
-    }
-    public void CreateNPCUi(GameObject _user, Vector2 limits, Transform parent)
-    {
-        NPC_UIElement _npcUi = Instantiate(_npcUiElementPrefab, parent.position, Quaternion.identity, _3dCanvas.transform).GetComponent<NPC_UIElement>();
-        _npcUi.levelSlider.minValue = limits.x;
-        _npcUi.levelSlider.maxValue = limits.y;
-
-        _npcUiContainer.Add(_user, _npcUi);
-
-        StartCoroutine(TranslateUiElement(_npcUi.gameObject, parent));
     }
     public void UpateNpcUiElement(GameObject _user, float _value)
     {
@@ -143,9 +151,13 @@ public class UIController : MonoBehaviour
         _npcUiContainer[_user].levelSlider.minValue = _limits.x;
         _npcUiContainer[_user].levelSlider.maxValue = _limits.y;
     }
+    public void UpdateInventoryUI(string _itemTag, int _nubmer)
+    {
+
+    }
     public void DestroyNpcUiElement(GameObject _user)
     {
-        NPC_UIElement _temp = _npcUiContainer[_user];
+        UIElement_NPC _temp = _npcUiContainer[_user];
         _npcUiContainer.Remove(_user);
         Destroy(_temp.gameObject);
     }
@@ -155,12 +167,22 @@ public class UIController : MonoBehaviour
         _slidersContainer.Remove(_user);
         Destroy(_temp.gameObject);
     }
+    public void DestroyInventoryUI(string _itemTag)
+    {
+        UiElement_Inventory _temp = _InventoryItemsContainer[_itemTag];
+        _InventoryItemsContainer.Remove(_itemTag);
+        Destroy(_temp.gameObject);
+
+    }
     public void CustomizeLog(string text, Color color)
     {
         _customizeDebugger.text = text;
         _customizeDebugger.color = color;
     }
-    
+    public bool DoesInventoryItemExists(string _itemTag)
+    {
+        return (_InventoryItemsContainer.ContainsKey(_itemTag));
+    }
 
     //Control UI flow
     public void ToggleDesignButtonsVisibility()
@@ -213,8 +235,6 @@ public class UIController : MonoBehaviour
         _page2Menu.SetActive(true);
     }
 
-    
-    
     //Interal Algorithms
     IEnumerator TranslateUiElement(GameObject _object, Transform parent)
     {
@@ -245,7 +265,6 @@ public class UIController : MonoBehaviour
         _myImage.color =  new Color(_myImage.color.r, _myImage.color.g, _myImage.color.b, _state ? _buttonOnAlpha : _buttonOffAlpha);
     }
 }
-
 
 
  

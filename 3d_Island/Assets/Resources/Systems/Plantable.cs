@@ -32,7 +32,7 @@ public abstract class Plantable : Pickable
 
         StartCoroutine(Planting());
     }
-    protected void CancelPlant()
+    protected virtual void CancelPlant()
     {
         _plantedSince = 0;
         _planted = false;
@@ -60,7 +60,7 @@ public abstract class Plantable : Pickable
             OnPlantDone();
         }
     }
-    protected IEnumerator DestroyMe()
+    protected IEnumerator DestroyMe(float _delay)
     {
         yield return new WaitForSecondsRealtime(1f);
         Destroy(this.gameObject);

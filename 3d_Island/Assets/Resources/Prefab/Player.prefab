@@ -159,7 +159,6 @@ MonoBehaviour:
   _handSystem:
     _myHand: {fileID: 6949429004428104456}
     _throwForce: 100
-    _plantDistance: 1
     _pickSpeedThrushold: 5
     _petTime: 1
     _detector: {fileID: 2931690313484480716}
@@ -421,7 +420,7 @@ PrefabInstance:
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: _whoCanIPick.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
@@ -442,6 +441,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _whoCanIPick.Array.data[4]
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _whoCanIPick.Array.data[5]
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d682e10d1ad04fd499cd64d51ecd2485, type: 3}

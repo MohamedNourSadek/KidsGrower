@@ -26,7 +26,7 @@ public class Egg : Plantable
         else
         {
             UIController.instance.RepeatMessage("Rotten", this.gameObject.transform, 1f, 3f, new ConditionChecker(true));
-            StartCoroutine(DestroyMe());
+            StartCoroutine(DestroyMe(0.5f));
         }
     }
     protected override void PlantingUpdate(){}

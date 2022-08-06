@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 
 
-public class NPC : Pickable, IHandController, IStateMachineController
+public class NPC : Pickable, IController, IStateMachineController
 {
     [SerializeField] HandSystem _handSystem;
     [SerializeField] DetectorSystem _detector;

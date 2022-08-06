@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSystem : MonoBehaviour, IHandController, IDetectable, IInputUser
+public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
 {
     //Editor Fields
     [SerializeField] Rigidbody _playerBody;
@@ -10,12 +10,13 @@ public class PlayerSystem : MonoBehaviour, IHandController, IDetectable, IInputU
     [SerializeField] CameraSystem _myCamera;
     [SerializeField] HandSystem _handSystem;
     [SerializeField] DetectorSystem _detector;
-    readonly InputSystem _inputSystem = new();
-
+    InputSystem _inputSystem = new();
+    InventorySystem _inventorySystem;
    
     //Initialization and refreshable functions
     void Awake()
     {
+        _inventorySystem = new InventorySystem(this);
         _inputSystem.Initialize(this);
         _movementSystem.Initialize(_playerBody, _myCamera.GetCameraTransform());
         _myCamera.Initialize(this.gameObject);
@@ -28,6 +29,8 @@ public class PlayerSystem : MonoBehaviour, IHandController, IDetectable, IInputU
         _movementSystem.Update();
         _detector.Update();
         _handSystem.Update();
+
+        Debug.Log(_inventorySystem.items.Count);
 
         UpdateUi();
     }
@@ -96,7 +99,14 @@ public class PlayerSystem : MonoBehaviour, IHandController, IDetectable, IInputU
     {
         if(_handSystem._canPick)
         {
-            _handSystem.PickObject();
+            if(InventorySystem.IsStorable(_handSystem.GetNearest()))
+            {
+                _inventorySystem.Add((_handSystem.GetNearest()).GetComponent<IInventoryItem>());
+            }
+            else
+            {
+                _handSystem.PickObject();
+            }
         }
         else if(_handSystem._canDrop)
         {

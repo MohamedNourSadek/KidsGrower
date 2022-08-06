@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 
 
+public enum PickableTags { NPC, Egg, Ball, Fruit, Seed, Harvest }
+
 public class DetectorSystem : MonoBehaviour
 {
     [SerializeField] List<PickableTags> _whoCanIPick;

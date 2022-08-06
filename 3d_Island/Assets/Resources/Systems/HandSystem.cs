@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum PickableTags { NPC, Egg, Ball, Fruit, Seed}
 
 [System.Serializable]
 public class HandSystem
@@ -26,11 +25,11 @@ public class HandSystem
     //Private Data
     public Pickable _objectInHand = new();
     float _nearObjectDistance;
-    IHandController _myController;
+    IController _myController;
 
 
     //Outside Interface
-    public void Initialize(DetectorSystem detector, IHandController _controller)
+    public void Initialize(DetectorSystem detector, IController _controller)
     {
         _detector = detector;
         _nearObjectDistance = _detector._nearObjectDistance;
@@ -142,6 +141,10 @@ public class HandSystem
     {
         return _objectInHand;
     }
+    public Pickable GetNearest()
+    {
+        return _detector.GetPickables()[0];
+    }
     public Transform GetHand()
     {
         return _myHand.transform;
@@ -180,7 +183,7 @@ public class HandSystem
 }
 
 
-public interface IHandController
+public interface IController
 {
     public Rigidbody GetBody();
     public void StartCoroutine_Custom(IEnumerator routine);
