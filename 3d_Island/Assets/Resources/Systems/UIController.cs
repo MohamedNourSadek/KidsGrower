@@ -118,6 +118,7 @@ public class UIController : MonoBehaviour
     public void CreateNPCUi(GameObject _user, Vector2 limits, Transform parent)
     {
         UIElement_NPC _npcUi = Instantiate(_npcUiElementPrefab, parent.position, Quaternion.identity, _3dCanvas.transform).GetComponent<UIElement_NPC>();
+       
         _npcUi.levelSlider.minValue = limits.x;
         _npcUi.levelSlider.maxValue = limits.y;
 
@@ -125,9 +126,15 @@ public class UIController : MonoBehaviour
 
         StartCoroutine(TranslateUiElement(_npcUi.gameObject, parent));
     }
-    public void CreateInventoryUI(string _itemTag)
+    public void CreateInventoryUI(string _itemTag, UnityEngine.Events.UnityAction _onClick)
     {
+        var _inventoryItem = Instantiate(_inventoryElementPrefab, _gameCanvas.transform).GetComponent<UiElement_Inventory>();
 
+        _inventoryItem.elementButton.onClick.AddListener(_onClick);
+        _inventoryItem.elementName.text = _itemTag;
+        _inventoryItem.elementNo.text = 1.ToString();
+
+        _InventoryItemsContainer.Add(_itemTag, _inventoryItem);
     }
     public void UpdateProgressBar(GameObject _user, float _value)
     {
@@ -153,7 +160,7 @@ public class UIController : MonoBehaviour
     }
     public void UpdateInventoryUI(string _itemTag, int _nubmer)
     {
-
+        _InventoryItemsContainer[_itemTag].elementNo.text = _nubmer.ToString();
     }
     public void DestroyNpcUiElement(GameObject _user)
     {
@@ -172,7 +179,6 @@ public class UIController : MonoBehaviour
         UiElement_Inventory _temp = _InventoryItemsContainer[_itemTag];
         _InventoryItemsContainer.Remove(_itemTag);
         Destroy(_temp.gameObject);
-
     }
     public void CustomizeLog(string text, Color color)
     {

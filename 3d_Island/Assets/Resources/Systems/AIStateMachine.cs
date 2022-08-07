@@ -20,7 +20,7 @@ public class AIStateMachine : MonoBehaviour
     {
         _stateMachineController = GetComponentInParent<IStateMachineController>();
         _myStateMachine = GetComponent<Animator>();
-        
+
         foreach (MovementStatus state in Enum.GetValues(typeof(MovementStatus)))
         {
             StateInfo _state = new StateInfo();
@@ -53,14 +53,7 @@ public class AIStateMachine : MonoBehaviour
     //Interface
     public void ActionRequest(MovementStatus trigger)
     {
-        try 
-        {
-            _myStateMachine.SetTrigger(trigger.ToString());
-        }
-        catch 
-        {
-
-        }
+        _myStateMachine.SetTrigger(trigger.ToString());
     }
     public MovementStatus GetCurrentState()
     {

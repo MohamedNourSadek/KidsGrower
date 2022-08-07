@@ -198,8 +198,7 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         while (true)
         {
-            if (actionsQueue.Count > 0)
-                SendActionQueue();
+
 
             if ((aiStateMachine.GetTimeSinceLastChange() >= boredTime) && !(aiStateMachine.GetCurrentState() == MovementStatus.Sleep))
                 ActionRequest(MovementStatus.Sleep);
@@ -233,6 +232,13 @@ public class NPC : Pickable, IController, IStateMachineController
         while (true)
         {
             CheckReached();
+            
+            if (actionsQueue.Count > 0)
+            {
+                Debug.Log(actionsQueue[0]);
+                aiStateMachine.ActionRequest((actionsQueue[0]));
+                actionsQueue.Remove(actionsQueue[0]);
+            }
 
             if ((aiStateMachine.GetCurrentState() == MovementStatus.Move))
             {
@@ -257,20 +263,6 @@ public class NPC : Pickable, IController, IStateMachineController
             actionsQueue.Add(mov);
         }
     }
-    public void SendActionQueue()
-    {
-        List<MovementStatus> actions = new List<MovementStatus>();
-
-        foreach(var action in actionsQueue)
-        {
-            actions.Add(action);
-        }
-
-        actionsQueue.Clear();
-
-        foreach(var action in actions)
-            aiStateMachine.ActionRequest(action);
-    }
     public void ActionExecution(MovementStatus mov)
     {
         if (mov == MovementStatus.Explore)
@@ -283,9 +275,9 @@ public class NPC : Pickable, IController, IStateMachineController
         }
         else if (mov == MovementStatus.Eat)
         {
-            if (_handSystem.ObjectInHand())
+            if (_handSystem.GetNearest())
             {
-                if ((_handSystem.ObjectInHand()).tag == "Fruit")
+                if ((_handSystem.GetNearest()).tag == "Fruit")
                 {
                     _handSystem.PickObject();
 
@@ -357,6 +349,7 @@ public class NPC : Pickable, IController, IStateMachineController
         float _time = 0;
         ConditionChecker condition = new ConditionChecker(!_isPicked);
         UIController.instance.RepeatMessage("Eating", this.transform, eatTime, 15, condition);
+        Debug.Log("eating");
 
         while (condition.isTrue)
         {
@@ -367,7 +360,6 @@ public class NPC : Pickable, IController, IStateMachineController
             bool _hasEnergy = _fruit.HasEnergy();
 
             condition.Update(!_isPicked && _timeCond && _fruitInHand && _hasEnergy);
-
             _levelController.IncreaseXP(_fruit.GetEnergy());
 
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);

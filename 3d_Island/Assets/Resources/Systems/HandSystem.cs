@@ -143,7 +143,10 @@ public class HandSystem
     }
     public Pickable GetNearest()
     {
-        return _detector.GetPickables()[0];
+        if (_detector.GetPickables().Count > 0)
+            return _detector.GetPickables()[0];
+        else
+            return null;
     }
     public Transform GetHand()
     {

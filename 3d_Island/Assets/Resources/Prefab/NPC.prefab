@@ -283,7 +283,6 @@ MonoBehaviour:
   _holder:
     _myHand: {fileID: 0}
     _throwForce: 20
-    _plantDistance: 1
     _pickSpeedThrushold: 2
     _petTime: 1
     _detector: {fileID: 0}
@@ -297,7 +296,6 @@ MonoBehaviour:
   _handSystem:
     _myHand: {fileID: 446940068}
     _throwForce: 120
-    _plantDistance: 1
     _pickSpeedThrushold: 3
     _petTime: 1
     _detector: {fileID: 0}
@@ -328,7 +326,7 @@ MonoBehaviour:
     - 3500
     - 4000
     - 4500
-  growTime: 4.9372654
+  growTime: 14.769965
   _grownBodyMultiplier: 1.35
   _grownMassMultiplier: 2
   _nearObjectDistance: 1.5
@@ -338,21 +336,21 @@ MonoBehaviour:
   layingTimeInBetween: 10
   eatingXpPerUpdate: 1
   pettingXP: 100
-  boredTime: 76.88774
-  sleepTime: 20.521679
+  boredTime: 23.27552
+  sleepTime: 23.889553
   layingTime: 10
   eatTime: 10
-  deathTime: 354.62082
+  deathTime: 242.01775
   seekPlayerProb: 0
-  seekNpcProb: 1
-  seekBallProb: 0
-  seekTreeProb: 0
-  dropBallProb: 0
-  throwBallOnNpcProb: 0
-  throwBallOnPlayerProb: 0
-  punchNpcProb: 1
-  seekFruitProb: 0
-  seekAlterProb: 0
+  seekNpcProb: 0.21097745
+  seekBallProb: 1
+  seekTreeProb: 0.48710978
+  dropBallProb: 0.0619148
+  throwBallOnNpcProb: 0.15232983
+  throwBallOnPlayerProb: 0.20120281
+  punchNpcProb: 0.030147409
+  seekFruitProb: 1
+  seekAlterProb: 1
   aiStateMachine: {fileID: 5469732067356300806}
   _model: {fileID: 1199720211687785357}
   _bodyRenderers:
@@ -574,6 +572,26 @@ PrefabInstance:
         type: 3}
       propertyPath: _whoCanIPick.Array.data[1]
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _detectableElements.Array.data[1]._notifyOnlyAtFirst
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _detectableElements.Array.data[2]._notifyOnlyAtFirst
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _detectableElements.Array.data[3]._notifyOnlyAtFirst
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _detectableElements.Array.data[4]._notifyOnlyAtFirst
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}

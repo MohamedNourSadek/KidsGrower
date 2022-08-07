@@ -30,8 +30,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
         _detector.Update();
         _handSystem.Update();
 
-        Debug.Log(_inventorySystem.items.Count);
-
         UpdateUi();
     }
     void UpdateUi()
