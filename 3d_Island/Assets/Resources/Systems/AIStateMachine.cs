@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum MovementStatus { Move, Picked, Idel, Explore, Sleep, Eat, Lay };
+public enum MovementStatus { Move, Picked, Idel, Explore, Sleep, Eat, Lay, Ball};
+public enum BooleanStates { bored, tired, fruitNear, ballNear, alterNear, Picked}
+public enum TriggerStates { foundTarget, lostTarget, doneEating, doneLaying, doneSleeping, doneBalling, reached}
 
 
 public class AIStateMachine : MonoBehaviour
@@ -51,14 +53,15 @@ public class AIStateMachine : MonoBehaviour
 
 
     //Interface
-    public void ActionRequest(MovementStatus trigger)
+    public void SetBool(BooleanStates _stateName, bool state)
     {
-        _myStateMachine.SetTrigger(trigger.ToString());
+        _myStateMachine.SetBool(_stateName.ToString(), state);
     }
-    public MovementStatus GetCurrentState()
+    public void SetTrigger(TriggerStates _stateName)
     {
-        return GetEnumByHash(_currentStateHash);
+        _myStateMachine.SetTrigger(_stateName.ToString());
     }
+
     public float GetTimeSinceLastChange()
     {
         return _timeSinceLastAction;
@@ -77,6 +80,10 @@ public class AIStateMachine : MonoBehaviour
         }
 
         return MovementStatus.Idel;
+    }
+    public MovementStatus GetCurrentState()
+    {
+        return GetEnumByHash(_currentStateHash);
     }
 }
 

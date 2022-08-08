@@ -27,7 +27,8 @@ public class Fruit : Pickable
         }
         else
         {
-            Destroy(this.gameObject);
+            if(this)
+                Destroy(this.gameObject);
             return 0;
         }
     }

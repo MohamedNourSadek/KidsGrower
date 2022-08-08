@@ -38,8 +38,9 @@ public class UIController : MonoBehaviour
     [SerializeField] GameObject _allSettingsMenus;
     [SerializeField] GameObject _allGameMenus;
     [SerializeField] GameObject _designMenus;
-    [SerializeField] GameObject _page1Menu;
-    [SerializeField] GameObject _page2Menu;
+    [SerializeField] List<GameObject> _designPages = new();
+    [SerializeField] Button _nextButton;
+    [SerializeField] Button _previousButton;
     [SerializeField] List<SliderElement> _sliders = new List<SliderElement>();
 
     [Header("Design Only")]
@@ -230,16 +231,13 @@ public class UIController : MonoBehaviour
         _allSettingsMenus.SetActive(state);
         _allGameMenus.SetActive(!state);
     }
-    public void ShowSettings_Page1()
+    public void ShowIncrementPage(int i)
     {
-        _page1Menu.SetActive(true);
-        _page2Menu.SetActive(false);
+        int _page = FindActivePage() + i;
+        UpdateNextPrevious(_page);
+        ActivatePage(_page);
     }
-    public void ShowSettings_Page2()
-    {
-        _page1Menu.SetActive(false);
-        _page2Menu.SetActive(true);
-    }
+    
 
     //Interal Algorithms
     IEnumerator TranslateUiElement(GameObject _object, Transform parent)
@@ -269,6 +267,45 @@ public class UIController : MonoBehaviour
     void ChangeAlpha(Image _myImage, bool _state)
     {
         _myImage.color =  new Color(_myImage.color.r, _myImage.color.g, _myImage.color.b, _state ? _buttonOnAlpha : _buttonOffAlpha);
+    }
+    int FindActivePage()
+    {
+        for(int i = 0; i <= _designPages.Count - 1; i++)
+        {
+            if (_designPages[i].activeInHierarchy)
+                return i;
+        }
+
+        return 0;
+    }
+    void ActivatePage(int pageNum)
+    {
+        for (int i = 0; i <= _designPages.Count - 1; i++)
+        {
+            if (i == pageNum)
+                _designPages[i].SetActive(true);
+            else
+                _designPages[i].SetActive(false);
+        }
+
+    }
+    void UpdateNextPrevious(int activePage)
+    {
+        if (activePage == 0)
+        {
+            _previousButton.interactable = false;
+            _nextButton.interactable = true;
+        }
+        else if (activePage == _designPages.Count - 1)
+        {
+            _nextButton.interactable = false;
+            _previousButton.interactable = true;
+        }
+        else
+        {
+            _previousButton.interactable = true;
+            _nextButton.interactable = true;
+        }
     }
 }
 

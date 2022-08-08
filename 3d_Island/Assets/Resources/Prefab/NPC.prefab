@@ -326,31 +326,31 @@ MonoBehaviour:
     - 3500
     - 4000
     - 4500
-  growTime: 14.769965
+  growTime: 21.361248
   _grownBodyMultiplier: 1.35
   _grownMassMultiplier: 2
-  _nearObjectDistance: 1.5
+  _nearObjectDistance: 1
   _decisionsDelay: 0.5
   _punchForce: 25
   _explorationAmplitude: 10
   layingTimeInBetween: 10
   eatingXpPerUpdate: 1
   pettingXP: 100
-  boredTime: 23.27552
-  sleepTime: 23.889553
+  boredTime: 33.82003
+  sleepTime: 14.638497
   layingTime: 10
   eatTime: 10
-  deathTime: 242.01775
+  deathTime: 328.5238
   seekPlayerProb: 0
-  seekNpcProb: 0.21097745
-  seekBallProb: 1
-  seekTreeProb: 0.48710978
-  dropBallProb: 0.0619148
-  throwBallOnNpcProb: 0.15232983
-  throwBallOnPlayerProb: 0.20120281
-  punchNpcProb: 0.030147409
+  seekNpcProb: 0
+  seekBallProb: 0
+  seekTreeProb: 0
+  dropBallProb: 0
+  throwBallOnNpcProb: 0
+  throwBallOnPlayerProb: 0
+  punchNpcProb: 0
   seekFruitProb: 1
-  seekAlterProb: 1
+  seekAlterProb: 0
   aiStateMachine: {fileID: 5469732067356300806}
   _model: {fileID: 1199720211687785357}
   _bodyRenderers:
@@ -378,7 +378,7 @@ NavMeshAgent:
   m_Acceleration: 240
   avoidancePriority: 50
   m_AngularSpeed: 240
-  m_StoppingDistance: 0
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -556,7 +556,7 @@ PrefabInstance:
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: _highLightPickable
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
@@ -575,23 +575,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
+      propertyPath: _detectableElements.Array.data[0]._notifyOnlyAtFirst
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
       propertyPath: _detectableElements.Array.data[1]._notifyOnlyAtFirst
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: _detectableElements.Array.data[2]._notifyOnlyAtFirst
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: _detectableElements.Array.data[3]._notifyOnlyAtFirst
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: _detectableElements.Array.data[4]._notifyOnlyAtFirst
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: _detectableElements.Array.data[5]._notifyOnlyAtFirst
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
