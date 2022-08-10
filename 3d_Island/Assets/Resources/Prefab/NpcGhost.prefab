@@ -42,6 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9093430107948232183}
   - component: {fileID: 3636960503494415593}
+  - component: {fileID: 8208333895620847901}
   m_Layer: 0
   m_Name: NpcGhost
   m_TagString: Untagged
@@ -79,6 +80,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 0.2
   _arrivalDistance: 1
+--- !u!114 &8208333895620847901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9093430107948232182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee127d48df462f84ba73f4145afcb61b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _time: 150
 --- !u!1001 &9093430109555902397
 PrefabInstance:
   m_ObjectHideFlags: 0

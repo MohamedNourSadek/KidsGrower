@@ -11,20 +11,19 @@ public class MapSystem : MonoBehaviour, IInputUser
     [SerializeField] CustomizingState _customizingState = CustomizingState.Detecting;
 
     public static MapSystem instance;
-    readonly InputSystem _inputSystem = new();
     bool _customizing = false;
     CustomizableObject _lastdetected;
 
-    void Awake()
+    void Start()
     {
         instance = this;
-        _inputSystem.Initialize(this);
+        InputSystem.SubscribeUser(this);
     }
     RaycastHit CastFromMouse()
     {
         RaycastHit _hit;
 
-        Vector2 _mouse2D = _inputSystem.GetMousePosition();
+        Vector2 _mouse2D = InputSystem.GetMousePosition();
         Vector3 _mousePosition = new(_mouse2D.x, _mouse2D.y, 2f);
 
         Ray ray = Camera.main.ScreenPointToRay(_mousePosition, Camera.MonoOrStereoscopicEye.Mono);
@@ -94,5 +93,5 @@ public class MapSystem : MonoBehaviour, IInputUser
     public void JumpInput(){}
     public void PickInput(){}
     public void MoveInput(Vector2 _movementInput){}
-    public void RotateInput(float _deltaRotate){}
+    public void RotateInput(Vector2 _deltaRotate){}
 }

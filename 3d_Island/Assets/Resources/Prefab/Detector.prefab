@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4410002396949848161}
   - component: {fileID: 5250669480810313006}
   - component: {fileID: 8033384870979999703}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Detector
-  m_TagString: NPC
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,27 +51,35 @@ MonoBehaviour:
   - Tag: Player
     _detectionStatus: 0
     _notifyOnlyAtFirst: 1
+    _priority: 3
   - Tag: NPC
     _detectionStatus: 0
     _notifyOnlyAtFirst: 0
+    _priority: 8
   - Tag: Ball
     _detectionStatus: 0
     _notifyOnlyAtFirst: 0
+    _priority: 11
   - Tag: Fruit
     _detectionStatus: 0
     _notifyOnlyAtFirst: 0
+    _priority: 50
   - Tag: Egg
     _detectionStatus: 0
     _notifyOnlyAtFirst: 0
+    _priority: 6
   - Tag: Alter
     _detectionStatus: 0
     _notifyOnlyAtFirst: 1
+    _priority: 40
   - Tag: Tree
     _detectionStatus: 0
     _notifyOnlyAtFirst: 1
+    _priority: 47
   - Tag: Seed
     _detectionStatus: 0
     _notifyOnlyAtFirst: 1
+    _priority: 0
   _nearObjectDistance: 1.5
   _toPick: []
 --- !u!135 &8033384870979999703

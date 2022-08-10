@@ -14,12 +14,23 @@ public class TreeSystem : MonoBehaviour, IDetectable
     [SerializeField] GameObject _branch1;
     [SerializeField] GameObject _branch2;
     [SerializeField] GameObject _fruitAsset;
-   
+
+    public GameObject GetGameObject()
+    {
+        return this.gameObject;
+    }
+
+    public bool GotFruit()
+    {
+        if(_branch1.GetComponent<CharacterJoint>() || _branch1.GetComponent<CharacterJoint>())
+            return true;
+        else
+            return false;
+    }
     public void Shake()
     {
         _animator.SetTrigger("Shake");
     }
-
 
     void Awake()
     {

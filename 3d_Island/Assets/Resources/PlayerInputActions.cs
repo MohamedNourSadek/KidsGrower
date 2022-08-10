@@ -37,9 +37,18 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Rotate"",
+                    ""name"": ""RotateX"",
                     ""type"": ""Value"",
                     ""id"": ""9fe806f5-d4a0-4b83-a2ca-d0fc5c125a6e"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RotateY"",
+                    ""type"": ""Value"",
+                    ""id"": ""6f5e9f61-53fc-4bdc-9503-93fe54e7b00e"",
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -280,7 +289,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Rotate"",
+                    ""action"": ""RotateX"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -291,7 +300,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": ""Scale(factor=-5)"",
                     ""groups"": """",
-                    ""action"": ""Rotate"",
+                    ""action"": ""RotateX"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -302,7 +311,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Rotate"",
+                    ""action"": ""RotateX"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -313,7 +322,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Rotate"",
+                    ""action"": ""RotateX"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -404,6 +413,50 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Press"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ee730fa2-a1d9-4be8-a1c0-7b6b889dcfdb"",
+                    ""path"": ""<Mouse>/delta/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateY"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Analog"",
+                    ""id"": ""07474776-0a52-4b9d-b09f-de03b3405809"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=-5)"",
+                    ""groups"": """",
+                    ""action"": ""RotateY"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""5b03311a-7c15-4cad-8821-a2a8e388f244"",
+                    ""path"": ""<Gamepad>/rightStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateY"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""97c08fe4-5ce6-492a-bed8-306675838508"",
+                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateY"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -436,7 +489,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
-        m_Player_Rotate = m_Player.FindAction("Rotate", throwIfNotFound: true);
+        m_Player_RotateX = m_Player.FindAction("RotateX", throwIfNotFound: true);
+        m_Player_RotateY = m_Player.FindAction("RotateY", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Pick = m_Player.FindAction("Pick", throwIfNotFound: true);
         m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
@@ -505,7 +559,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
-    private readonly InputAction m_Player_Rotate;
+    private readonly InputAction m_Player_RotateX;
+    private readonly InputAction m_Player_RotateY;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Pick;
     private readonly InputAction m_Player_Throw;
@@ -519,7 +574,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         private @PlayerInputActions m_Wrapper;
         public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
-        public InputAction @Rotate => m_Wrapper.m_Player_Rotate;
+        public InputAction @RotateX => m_Wrapper.m_Player_RotateX;
+        public InputAction @RotateY => m_Wrapper.m_Player_RotateY;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Pick => m_Wrapper.m_Player_Pick;
         public InputAction @Throw => m_Wrapper.m_Player_Throw;
@@ -540,9 +596,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
-                @Rotate.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotate;
-                @Rotate.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotate;
-                @Rotate.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotate;
+                @RotateX.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotateX;
+                @RotateX.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotateX;
+                @RotateX.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotateX;
+                @RotateY.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotateY;
+                @RotateY.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotateY;
+                @RotateY.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotateY;
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
@@ -574,9 +633,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @Rotate.started += instance.OnRotate;
-                @Rotate.performed += instance.OnRotate;
-                @Rotate.canceled += instance.OnRotate;
+                @RotateX.started += instance.OnRotateX;
+                @RotateX.performed += instance.OnRotateX;
+                @RotateX.canceled += instance.OnRotateX;
+                @RotateY.started += instance.OnRotateY;
+                @RotateY.performed += instance.OnRotateY;
+                @RotateY.canceled += instance.OnRotateY;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
@@ -626,7 +688,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
-        void OnRotate(InputAction.CallbackContext context);
+        void OnRotateX(InputAction.CallbackContext context);
+        void OnRotateY(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnPick(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);

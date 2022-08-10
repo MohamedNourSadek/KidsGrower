@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class FertilityAlter : MonoBehaviour, IDetectable
 {
-
+    public GameObject GetGameObject()
+    {
+        return this.gameObject;
+    }
 }
 

@@ -68,4 +68,8 @@ public class Pickable : MonoBehaviour, IDetectable
         this.transform.parent = null;
 
     }
+    public GameObject GetGameObject()
+    {
+        return this.gameObject;
+    }
 }

@@ -29,11 +29,14 @@ public class NPC : Pickable, IController, IStateMachineController
     [SerializeField] public float pettingXP = 100f;
 
     [Header("AI Parameters")]
+    [Header("Timing Parameters")]
     [SerializeField] public float boredTime = 30f;
     [SerializeField] public float sleepTime = 10f;
     [SerializeField] public float layingTime = 10f;
     [SerializeField] public float eatTime = 10f;
     [SerializeField] public float deathTime = 50f;
+
+    [Header("Probability Parameters")]
     [SerializeField] [Range(0, 1)] public float seekPlayerProb = 0.1f;
     [SerializeField] [Range(0, 1)] public float seekNpcProb = 0.1f;
     [SerializeField] [Range(0, 1)] public float seekBallProb = 0.1f;
@@ -46,7 +49,6 @@ public class NPC : Pickable, IController, IStateMachineController
     [SerializeField] [Range(0, 1)] public float seekAlterProb = 1f;
 
 
-
     [Header("References")]
     [SerializeField] AIStateMachine aiStateMachine;
     [SerializeField] GameObject _model;
@@ -57,10 +59,11 @@ public class NPC : Pickable, IController, IStateMachineController
 
 
     //Private data
+    public List<GameObject> _wantToFollow = new List<GameObject>();
     NavMeshAgent _myAgent;
     float _bornSince = 0f;
     bool _petting = false;
-    bool _canLay = true;
+    bool _canLay = false;
 
     //Helper functions
     private void Awake()
@@ -89,6 +92,9 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         _handSystem.Update();
         _detector.Update();
+
+        if (_groundDetector.IsOnWater(_myBody))
+            Die();
     }
     bool GotTypeInHand(System.Type _type)
     {
@@ -139,6 +145,7 @@ public class NPC : Pickable, IController, IStateMachineController
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
+        _canLay = true;
         GrowUp();
 
         while((_bornSince < deathTime))
@@ -189,12 +196,25 @@ public class NPC : Pickable, IController, IStateMachineController
     Vector3 _deltaExploration = Vector3.zero;
     public Transform _dynamicDestination;
 
-
+    public bool debug = false;
     //AI Decision Making
     IEnumerator AiDescrete()
     {
         while (true)
         {
+            if (_wantToFollow.Count >= 1)
+            {
+                GameObject _obj = _detector.GetHighestProp(_wantToFollow);
+
+                if (_obj != _dynamicDestination)
+                {
+                    if (_obj.tag == "Tree" && _obj.GetComponent<TreeSystem>().GotFruit())
+                        SetDes(_obj);
+                    else if(_obj.tag != "Tree")
+                        SetDes(_obj);
+                }
+            }
+
             if ((aiStateMachine.GetTimeSinceLastChange() >= boredTime))
                 aiStateMachine.SetBool(BooleanStates.tired, true);
             else
@@ -229,6 +249,7 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         while (true)
         {
+
             if ((aiStateMachine.GetCurrentState() == MovementStatus.Move))
             {
                 if (_dynamicDestination && _myAgent.isActiveAndEnabled)
@@ -332,6 +353,7 @@ public class NPC : Pickable, IController, IStateMachineController
         if (detectable.tag == ("Tree"))
             ThinkAboutFollowingObject(((TreeSystem)detectable).gameObject, seekTreeProb);
 
+
         if (detectable.tag == ("Fruit"))
             if (((Fruit)detectable).GetComponent<Fruit>().OnGround())
                 ThinkAboutFollowingObject(((Fruit)detectable).gameObject, seekFruitProb);
@@ -348,6 +370,9 @@ public class NPC : Pickable, IController, IStateMachineController
             if ((aiStateMachine.GetCurrentState() == MovementStatus.Move))
                 aiStateMachine.SetTrigger(TriggerStates.lostTarget);
         }
+
+        if (_wantToFollow.Contains(detectable.GetGameObject()))
+            _wantToFollow.Remove(detectable.GetGameObject());
     }
     void OnDetectableNear(IDetectable detectable)
     {
@@ -356,6 +381,9 @@ public class NPC : Pickable, IController, IStateMachineController
 
         if (detectable.tag == ("Tree"))
             ThinkAboutShakingTree((TreeSystem)detectable);
+
+
+
     }
 
 
@@ -504,7 +532,8 @@ public class NPC : Pickable, IController, IStateMachineController
 
         if((_randomChance < chance) && (_randomChance > 0))
         {
-            SetDes(obj);
+            if (!_wantToFollow.Contains(obj))
+                _wantToFollow.Add(obj);
         }
     }
     void ExplorePoint()
@@ -534,7 +563,6 @@ public class NPC : Pickable, IController, IStateMachineController
             _myAgent.destination = _dynamicDestination.position;
             aiStateMachine.SetTrigger(TriggerStates.foundTarget);
         }
-
     }
     void CheckReached()
     {

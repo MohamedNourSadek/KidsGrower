@@ -45,10 +45,10 @@ public class AIStateMachine : MonoBehaviour
             _timeSinceLastAction += Time.deltaTime;
         }
     }
-    void OnStateChange(MovementStatus trigger)
+    void OnStateChange(MovementStatus triggerStats)
     {
         _timeSinceLastAction = 0;
-        _stateMachineController.ActionExecution(trigger);
+        _stateMachineController.ActionExecution(triggerStats);
     }
 
 

@@ -184,6 +184,17 @@ public class DetectorSystem : MonoBehaviour
 
 
     //Help functions
+    public GameObject GetHighestProp(List<GameObject> _list)
+    {
+        GameObject highest = _list[0];
+
+        foreach (GameObject _obj in _list)
+            if (GetDetectable(_obj.tag)._priority > GetDetectable(highest.tag)._priority)
+                highest = _obj;
+
+        return highest;
+    }
+
     float Distance(GameObject _object)
     {
         return (_object.transform.position - this.transform.position).magnitude;
@@ -249,10 +260,10 @@ public class DetectableElement
 {
     [SerializeField] public string Tag;
     [SerializeField] public DetectionStatus _detectionStatus;
-    [SerializeField] public List<IDetectable> _detectedList = new List<IDetectable>();
+    [SerializeField] public bool _notifyOnlyAtFirst;
+    [SerializeField] [Range(0,50)] public int _priority;
 
-    public bool _notifyOnlyAtFirst;
-
+    public List<IDetectable> _detectedList = new List<IDetectable>();
     public event notifyInRange _OnInRange;
     public event notifyInRangeExit _OnInRangeExit;
     public event notifyNear _OnNear;
@@ -277,4 +288,5 @@ public interface IDetectable
         get;
         set;
     }
+    public GameObject GetGameObject();
 }

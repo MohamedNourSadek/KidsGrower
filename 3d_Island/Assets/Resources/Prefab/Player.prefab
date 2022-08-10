@@ -141,6 +141,9 @@ MonoBehaviour:
       _groundLayer:
         serializedVersion: 2
         m_Bits: 64
+      _waterLayer:
+        serializedVersion: 2
+        m_Bits: 16
       _onGroundThreshold: 1.3
     _acceleration: 1250
     _maxSpeed: 5
@@ -151,9 +154,9 @@ MonoBehaviour:
   _myCamera:
     _controlledCamera: {fileID: 0}
     _distanceFromObject: 5
-    _cameraHeight: 4
+    _cameraHeighLimits: {x: 3, y: 7}
+    _rotationInputSensitivity: {x: 0.025, y: 0.025}
     _delay: 0.75
-    _rotationInputSensitivity: 0.01
     _rotationSpeed: 25
     _cameraTilt: -0.5
   _handSystem:

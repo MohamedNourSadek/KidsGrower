@@ -4,15 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputSystem
+public class InputSystem : MonoBehaviour
 {
-    IInputUser _myUser;
+    List<IInputUser> _users = new();
     PlayerInputActions _inputActions;
     Vector2 _xyAxis;
 
-    public void Initialize(IInputUser _user)
+    static InputSystem instance;
+
+    void Awake()
     {
-        _myUser = _user;
+        instance = this;
+
         _inputActions = new PlayerInputActions();
         _inputActions.Enable();
         _inputActions.Player.Jump.performed += JumpInput;
@@ -23,63 +26,77 @@ public class InputSystem
         _inputActions.Player.Pet.performed += PetInput;
         _inputActions.Player.Press.performed += PressInput;
     }
-    public void Update()
+    void Update()
     {
         MovementInput();
         RotateInput();
     }
 
-
+    public static void SubscribeUser(IInputUser _user)
+    {
+        instance._users.Add(_user);
+    }
+    
     void PickInput(InputAction.CallbackContext obj)
     {
-        _myUser.PickInput();
+        foreach(IInputUser user in _users)
+            user.PickInput();
     }
     void JumpInput(InputAction.CallbackContext context)
     {
-        _myUser.JumpInput();
+        foreach (IInputUser user in _users)
+            user.JumpInput();
     }
     void ThrowInput(InputAction.CallbackContext obj)
     {
-        _myUser.ThrowInput();
+        foreach (IInputUser user in _users)
+            user.ThrowInput();
     }
     void PlantInput(InputAction.CallbackContext obj)
     {
-        _myUser.PlantInput();
+        foreach (IInputUser user in _users)
+            user.PlantInput();
     }
     void DashInput(InputAction.CallbackContext obj)
     {
-        _myUser.DashInput();
+        foreach (IInputUser user in _users)
+            user.DashInput();
     }
     void PetInput(InputAction.CallbackContext obj)
     {
-        _myUser.PetInput();
+        foreach (IInputUser user in _users)
+            user.PetInput();
     }
     void PressInput(InputAction.CallbackContext obj)
     {
-        _myUser.PressInput();
+        foreach (IInputUser user in _users)
+            user.PressInput();
     }
-    public Vector2 GetMousePosition()
+    public static Vector2 GetMousePosition()
     {
-        return _inputActions.Player.Hand.ReadValue<Vector2>();
+        return instance._inputActions.Player.Hand.ReadValue<Vector2>();
     }
-
-
     void MovementInput()
     {
         _xyAxis = _inputActions.Player.Move.ReadValue<Vector2>();
 
         if (_xyAxis.magnitude > 0)
         {
-            _myUser.MoveInput(_xyAxis);
+            foreach (IInputUser user in _users)
+                user.MoveInput(_xyAxis);
         }
     }
     void RotateInput()
     {
-        float _deltaRotate = _inputActions.Player.Rotate.ReadValue<float>();
+        Vector2 _deltaRotate = new Vector2();
 
-        if (Mathf.Abs(_deltaRotate) > 0)
+        _deltaRotate.x = _inputActions.Player.RotateX.ReadValue<float>();
+        _deltaRotate.y = _inputActions.Player.RotateY.ReadValue<float>();
+
+        if (_deltaRotate.magnitude > 0)
         {
-            _myUser.RotateInput(_deltaRotate);
+            foreach (IInputUser user in _users)
+                user.RotateInput(_deltaRotate);
         }
     }
 }
@@ -94,5 +111,5 @@ public interface IInputUser
     public void PickInput();
     public void PressInput();
     public void MoveInput(Vector2 _movementInput);
-    public void RotateInput(float _deltaRotate);
+    public void RotateInput(Vector2 _deltaRotate);
 }

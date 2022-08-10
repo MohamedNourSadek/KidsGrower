@@ -10,21 +10,19 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     [SerializeField] CameraSystem _myCamera;
     [SerializeField] HandSystem _handSystem;
     [SerializeField] DetectorSystem _detector;
-    InputSystem _inputSystem = new();
     InventorySystem _inventorySystem;
    
     //Initialization and refreshable functions
     void Awake()
     {
+        InputSystem.SubscribeUser(this);
         _inventorySystem = new InventorySystem(this);
-        _inputSystem.Initialize(this);
         _movementSystem.Initialize(_playerBody, _myCamera.GetCameraTransform());
         _myCamera.Initialize(this.gameObject);
         _handSystem.Initialize(_detector, this);
     }
     void FixedUpdate()
     {
-        _inputSystem.Update();
         _myCamera.Update();
         _movementSystem.Update();
         _detector.Update();
@@ -85,7 +83,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     {
         _movementSystem.PreformMove(_movementInput);
     }
-    public void RotateInput(float _deltaRotation)
+    public void RotateInput(Vector2 _deltaRotation)
     {
         _myCamera.RotateCamera(_deltaRotation);
     }
@@ -135,4 +133,8 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
             _handSystem.PetObject();
     }
     public void PressInput() { }
+    public GameObject GetGameObject()
+    {
+        return this.gameObject;
+    }
 }

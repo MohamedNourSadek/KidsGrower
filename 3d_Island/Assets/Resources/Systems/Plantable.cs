@@ -62,7 +62,7 @@ public abstract class Plantable : Pickable
     }
     protected IEnumerator DestroyMe(float _delay)
     {
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSecondsRealtime(_delay);
         Destroy(this.gameObject);
     }
 
