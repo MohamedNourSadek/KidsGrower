@@ -138,12 +138,11 @@ MonoBehaviour:
   _playerBody: {fileID: 6949429005409692763}
   _movementSystem:
     _groundDetector:
-      _groundLayer:
+      _detectableLayers:
         serializedVersion: 2
-        m_Bits: 64
-      _waterLayer:
-        serializedVersion: 2
-        m_Bits: 16
+        m_Bits: 80
+      _groundTag: Ground
+      _waterTag: Water
       _onGroundThreshold: 1.3
     _acceleration: 1250
     _maxSpeed: 5
@@ -427,28 +426,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
+      propertyPath: _whoCanIPick.Array.data[0]
+      value: NPC
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
       propertyPath: _whoCanIPick.Array.data[1]
-      value: 1
+      value: Egg
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: _whoCanIPick.Array.data[2]
-      value: 2
+      value: Fruit
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: _whoCanIPick.Array.data[3]
-      value: 3
+      value: Ball
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: _whoCanIPick.Array.data[4]
-      value: 4
+      value: Seed
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: _whoCanIPick.Array.data[5]
-      value: 5
+      value: Harvest
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d682e10d1ad04fd499cd64d51ecd2485, type: 3}

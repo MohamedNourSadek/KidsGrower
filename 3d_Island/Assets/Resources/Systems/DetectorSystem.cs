@@ -4,11 +4,9 @@ using UnityEngine;
 using System;
 
 
-public enum PickableTags { NPC, Egg, Ball, Fruit, Seed, Harvest }
-
 public class DetectorSystem : MonoBehaviour
 {
-    [SerializeField] List<PickableTags> _whoCanIPick;
+    [SerializeField] List<string> _whoCanIPick;
     [SerializeField] bool _highLightPickable;
     [SerializeField] public List<DetectableElement> _detectableElements = new List<DetectableElement>();
 
@@ -39,11 +37,10 @@ public class DetectorSystem : MonoBehaviour
     public void UpdatePickables()
     {
         //Detecting near objects
-        foreach(PickableTags pickableTag in _whoCanIPick)
+        foreach(string pickableTag in _whoCanIPick)
         {
             foreach(DetectableElement element in _detectableElements)
             {
-
                 if (pickableTag.ToString() == element.Tag)
                 {
                     IDetectable _detectable = null;

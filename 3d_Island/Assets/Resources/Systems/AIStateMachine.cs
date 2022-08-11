@@ -3,73 +3,74 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public enum MovementStatus { Move, Picked, Idel, Explore, Sleep, Eat, Lay, Ball};
-public enum BooleanStates { bored, tired, fruitNear, ballNear, alterNear, Picked}
-public enum TriggerStates { foundTarget, lostTarget, doneEating, doneLaying, doneSleeping, doneBalling, reached}
-
-
 public class AIStateMachine : MonoBehaviour
 {
     Animator _myStateMachine;
     IStateMachineController _stateMachineController;
     List<StateInfo> _myStates = new List<StateInfo>();
     int _currentStateHash;
-    public float _timeSinceLastAction = 0;
+    bool IsInitialized = false;
+    float _timeSinceLastAction = 0;
 
-
-    private void Awake()
+    //Interface
+    public void Initialize(Enum states)
     {
         _stateMachineController = GetComponentInParent<IStateMachineController>();
         _myStateMachine = GetComponent<Animator>();
 
-        foreach (MovementStatus state in Enum.GetValues(typeof(MovementStatus)))
+        foreach (var state in Enum.GetValues(states.GetType()))
         {
             StateInfo _state = new StateInfo();
             _state.stateName = state.ToString();
             _state.stateHash = Animator.StringToHash(_state.stateName);
-            _state.state = state;
+            _state.state = (Enum)state;
 
             _myStates.Add(_state);
         }
-    }
-    private void Update()
-    {
-        if (_myStateMachine.GetCurrentAnimatorStateInfo(0).shortNameHash != _currentStateHash)
-        {
-            _currentStateHash = _myStateMachine.GetCurrentAnimatorStateInfo(0).shortNameHash;
-            OnStateChange(GetEnumByHash(_currentStateHash));
-        }
-        else
-        {
-            _timeSinceLastAction += Time.deltaTime;
-        }
-    }
-    void OnStateChange(MovementStatus triggerStats)
-    {
-        _timeSinceLastAction = 0;
-        _stateMachineController.ActionExecution(triggerStats);
-    }
 
-
-    //Interface
-    public void SetBool(BooleanStates _stateName, bool state)
-    {
-        _myStateMachine.SetBool(_stateName.ToString(), state);
+        IsInitialized = true;
     }
-    public void SetTrigger(TriggerStates _stateName)
+    public void SetBool(Enum _boolName, bool state)
     {
-        _myStateMachine.SetTrigger(_stateName.ToString());
+        _myStateMachine.SetBool(_boolName.ToString(), state);
     }
-
+    public void SetTrigger(Enum _triggerName)
+    {
+        _myStateMachine.SetTrigger(_triggerName.ToString());
+    }
     public float GetTimeSinceLastChange()
     {
         return _timeSinceLastAction;
     }
+    public Enum GetCurrentState()
+    {
+        return (GetEnumByHash(_currentStateHash));
+    }
 
 
     //Helpers
-    MovementStatus GetEnumByHash(int hash)
+    void Update()
+    {
+        if(IsInitialized)
+        {
+            if (_myStateMachine.GetCurrentAnimatorStateInfo(0).shortNameHash != _currentStateHash)
+            {
+                _currentStateHash = _myStateMachine.GetCurrentAnimatorStateInfo(0).shortNameHash;
+                OnStateChange((GetEnumByHash(_currentStateHash)));
+            }
+            else
+            {
+                _timeSinceLastAction += Time.deltaTime;
+            }
+        }
+
+    }
+    void OnStateChange(Enum triggerStats)
+    {
+        _timeSinceLastAction = 0;
+        _stateMachineController.ActionExecution(triggerStats);
+    }
+    Enum GetEnumByHash(int hash)
     {
         foreach (StateInfo _state in _myStates)
         {
@@ -79,11 +80,7 @@ public class AIStateMachine : MonoBehaviour
             }
         }
 
-        return MovementStatus.Idel;
-    }
-    public MovementStatus GetCurrentState()
-    {
-        return GetEnumByHash(_currentStateHash);
+        return _myStates[0].state;
     }
 }
 
@@ -93,10 +90,10 @@ public class AIStateMachine : MonoBehaviour
 {
     public string stateName;
     public int stateHash;
-    public MovementStatus state;
+    public Enum state;
 }
 public interface IStateMachineController
 {
-    public void ActionExecution(MovementStatus trigger);
+    public void ActionExecution(Enum trigger);
 }
 
