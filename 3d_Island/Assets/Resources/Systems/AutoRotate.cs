@@ -11,6 +11,6 @@ public class AutoRotate : MonoBehaviour
     {
         this.transform.rotation = Quaternion.Euler(defaultRotation.x
                                                  , defaultRotation.y + (speed * Time.realtimeSinceStartup),
-                                                   defaultRotation.zw);
+                                                   defaultRotation.z);
     }
 }
