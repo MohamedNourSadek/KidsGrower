@@ -1,7 +1,7 @@
 ClassName : class names
 
-_variableName = private variables
-variableName : Global variable
+_variableName = temp variables like arguments and loops
+variableName : Global and private variable
 
 FunctionName: Public and private functions
 

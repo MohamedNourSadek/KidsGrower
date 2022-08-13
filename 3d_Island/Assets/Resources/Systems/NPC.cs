@@ -125,10 +125,6 @@ public class NPC : Pickable, IController, IStateMachineController
 
         aiStateMachine.SetBool(BooleanStates.Picked, false);
     }
-    public void StartCoroutine_Custom(IEnumerator routine)
-    {
-        base.StartCoroutine(routine);
-    }
     public void StartPetting()
     {
         _levelController.IncreaseXP(pettingXP);

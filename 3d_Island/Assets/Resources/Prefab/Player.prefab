@@ -144,7 +144,7 @@ MonoBehaviour:
       _groundTag: Ground
       _waterTag: Water
       _onGroundThreshold: 1.3
-    _acceleration: 1250
+    _acceleration: 5000
     _maxSpeed: 5
     _rotationSpeed: 6
     _jumpForce: 15000

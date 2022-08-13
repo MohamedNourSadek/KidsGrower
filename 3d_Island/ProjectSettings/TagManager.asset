@@ -15,6 +15,7 @@ TagManager:
   - Seed
   - Farm
   - Harvest
+  - Water
   layers:
   - Default
   - TransparentFX

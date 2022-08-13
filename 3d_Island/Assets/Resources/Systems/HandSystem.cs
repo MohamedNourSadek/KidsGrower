@@ -82,7 +82,7 @@ public class HandSystem
         Transform _petObject = _detector.GetPickables()[0].transform;
 
         ConditionChecker condition = new ConditionChecker(true);
-        _myController.StartCoroutine_Custom(UpdatePetCondition(condition));
+        CoRoutineProvider.instance.StartCoroutine(UpdatePetCondition(condition));
 
         UIController.instance.RepeatMessage("Petting", _petObject, _petTime, 5f, condition);
 
@@ -97,7 +97,7 @@ public class HandSystem
 
                 _canPick = false;
 
-                _myController.StartCoroutine_Custom(PetObjectRoutine(condition,_npc));
+                CoRoutineProvider.instance.StartCoroutine(PetObjectRoutine(condition,_npc));
             }
         }
     }
@@ -189,5 +189,4 @@ public class HandSystem
 public interface IController
 {
     public Rigidbody GetBody();
-    public void StartCoroutine_Custom(IEnumerator routine);
 }

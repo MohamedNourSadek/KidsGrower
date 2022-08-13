@@ -10,11 +10,6 @@ public class Seed : Plantable
     [SerializeField] GameObject _medium;
     [SerializeField] GameObject _final;
 
-    public GameObject GetGameObject()
-    {
-        return this.gameObject;
-    }
-
     protected override void CancelPlant()
     {
         base.CancelPlant();

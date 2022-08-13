@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public enum PickMode { Pick, Drop, Shake};
 
@@ -196,6 +197,10 @@ public class UIController : MonoBehaviour
     public void ToggleDesignButtonsVisibility()
     {
         _designMenus.SetActive(!_designMenus.activeInHierarchy);
+    }
+    public void OpenMainMenu()
+    {
+        SceneManager.LoadSceneAsync(0);
     }
     public void ShowMainScreen()
     {

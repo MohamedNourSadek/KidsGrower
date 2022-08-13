@@ -72,10 +72,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     {
         return _playerBody;
     }
-    public void StartCoroutine_Custom(IEnumerator routine)
-    {
-        base.StartCoroutine(routine);
-    }
 
 
     ///(Movement-Input-Hand) Interface
