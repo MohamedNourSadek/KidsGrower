@@ -41,13 +41,13 @@ public class TestSuit
     {
         Debug.Log(GetTimeFormated(ComputeTime(_function, repeats)));
     }
-    public static float ComputeTime(Action _function, int repeats)
+    public static float ComputeTime(Action _function, int _repeats)
     {
         float starttime = 0f;
 
         starttime = Time.realtimeSinceStartup;
 
-        for (int i = 0; i <= repeats; i++)
+        for (int i = 0; i <= _repeats; i++)
         {
             _function();
         }
@@ -104,34 +104,34 @@ public class TestSuit
         return snap;
 
     }
-    static void SaveToPNG(Texture2D snap, string path)
+    static void SaveToPNG(Texture2D _snap, string _path)
     {
-        string iter = System.DateTime.UtcNow.ToLongTimeString().Replace(":", "_");
+        string _iter = System.DateTime.UtcNow.ToLongTimeString().Replace(":", "_");
         byte[] bytes;
-        bytes = snap.EncodeToPNG();
-        System.IO.File.WriteAllBytes(path, bytes);
+        bytes = _snap.EncodeToPNG();
+        System.IO.File.WriteAllBytes(_path, bytes);
     }
-    static public string GetTimeFormated(float time)
+    static public string GetTimeFormated(float _time)
     {
-        if (time <= 0)
+        if (_time <= 0)
         {
             return "0 s";
         }
-        else if (time >= 1)
+        else if (_time >= 1)
         {
-            return time + " s";
+            return _time + " s";
         }
-        else if (time >= 1f / 1000f)
+        else if (_time >= 1f / 1000f)
         {
-            return (time * 1000) + " ms";
+            return (_time * 1000) + " ms";
         }
-        else if (time >= 1f / 1000000f)
+        else if (_time >= 1f / 1000000f)
         {
-            return (time * 1000000) + " us";
+            return (_time * 1000000) + " us";
         }
         else
         {
-            return (time * 1000000000) + " ns";
+            return (_time * 1000000000) + " ns";
         }
     }
 }

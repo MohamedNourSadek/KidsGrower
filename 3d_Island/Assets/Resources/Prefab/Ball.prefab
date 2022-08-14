@@ -129,8 +129,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c3b1f9d165adaf4aa5a2735d3a01743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _indicatorObject: {fileID: 3679434013816477170}
-  _myBody: {fileID: 2756139614205274716}
+  indicatorObject: {fileID: 3679434013816477170}
+  myBody: {fileID: 2756139614205274716}
+  holder:
+    myHand: {fileID: 0}
+    throwForce: 20
+    pickSpeedThrushold: 2
+    petTime: 1
+    detector: {fileID: 0}
+    gotSomething: 0
+    canPick: 0
+    canDrop: 0
+    canThrow: 0
+    canPlant: 0
+    canPet: 0
 --- !u!1 &3679434013816477170
 GameObject:
   m_ObjectHideFlags: 0

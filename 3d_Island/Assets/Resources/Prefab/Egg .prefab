@@ -212,25 +212,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5d97d05be12de04db6766e358542815, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _indicatorObject: {fileID: 6876410435036662736}
-  _myBody: {fileID: 6876410436286045254}
-  _holder:
-    _myHand: {fileID: 0}
-    _throwForce: 20
-    _pickSpeedThrushold: 2
-    _petTime: 1
-    _detector: {fileID: 0}
-    _gotSomething: 0
-    _canPick: 0
-    _canDrop: 0
-    _canThrow: 0
-    _canPlant: 0
-    _canPet: 0
-    _objectInHand: {fileID: 0}
-  _plantTime: 5
-  _plantDistance: 1
-  _allowedToPlantOn: 00000000
-  _babyNpcPrefab: {fileID: 9093430107948229128, guid: 2d6f86611569392469d9f3ca4f651bc2,
+  indicatorObject: {fileID: 6876410435036662736}
+  myBody: {fileID: 6876410436286045254}
+  holder:
+    myHand: {fileID: 0}
+    throwForce: 20
+    pickSpeedThrushold: 2
+    petTime: 1
+    detector: {fileID: 0}
+    gotSomething: 0
+    canPick: 0
+    canDrop: 0
+    canThrow: 0
+    canPlant: 0
+    canPet: 0
+  plantTime: 5
+  plantDistance: 1
+  allowedToPlantOn: 00000000
+  babyNpcPrefab: {fileID: 9093430107948229128, guid: 2d6f86611569392469d9f3ca4f651bc2,
     type: 3}
   myMesh: {fileID: 6876410436286045252}
-  RottenThrusHold: 0.5
+  rottenThrusHold: 0.5

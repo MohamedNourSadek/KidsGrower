@@ -45,43 +45,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 006704070f3c98145ab2d15deb858a2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _whoCanIPick: 
-  _highLightPickable: 0
-  _detectableElements:
-  - Tag: Player
-    _detectionStatus: 0
-    _notifyOnlyAtFirst: 1
-    _priority: 3
-  - Tag: NPC
-    _detectionStatus: 0
-    _notifyOnlyAtFirst: 0
-    _priority: 8
-  - Tag: Ball
-    _detectionStatus: 0
-    _notifyOnlyAtFirst: 0
-    _priority: 11
-  - Tag: Fruit
-    _detectionStatus: 0
-    _notifyOnlyAtFirst: 0
-    _priority: 50
-  - Tag: Egg
-    _detectionStatus: 0
-    _notifyOnlyAtFirst: 0
-    _priority: 6
-  - Tag: Alter
-    _detectionStatus: 0
-    _notifyOnlyAtFirst: 1
-    _priority: 40
-  - Tag: Tree
-    _detectionStatus: 0
-    _notifyOnlyAtFirst: 1
-    _priority: 47
-  - Tag: Seed
-    _detectionStatus: 0
-    _notifyOnlyAtFirst: 1
-    _priority: 0
-  _nearObjectDistance: 1.5
-  _toPick: []
+  whoCanIPick: []
+  highLightPickable: 0
+  detectableElements:
+  - tag: Player
+    detectionStatus: 0
+    notifyOnlyAtFirst: 1
+    priority: 3
+  - tag: NPC
+    detectionStatus: 0
+    notifyOnlyAtFirst: 0
+    priority: 8
+  - tag: Ball
+    detectionStatus: 0
+    notifyOnlyAtFirst: 0
+    priority: 11
+  - tag: Fruit
+    detectionStatus: 0
+    notifyOnlyAtFirst: 0
+    priority: 50
+  - tag: Egg
+    detectionStatus: 0
+    notifyOnlyAtFirst: 0
+    priority: 6
+  - tag: Alter
+    detectionStatus: 0
+    notifyOnlyAtFirst: 0
+    priority: 40
+  - tag: Tree
+    detectionStatus: 0
+    notifyOnlyAtFirst: 1
+    priority: 47
+  - tag: Seed
+    detectionStatus: 0
+    notifyOnlyAtFirst: 1
+    priority: 0
 --- !u!135 &8033384870979999703
 SphereCollider:
   m_ObjectHideFlags: 0

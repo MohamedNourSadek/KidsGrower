@@ -391,7 +391,7 @@ RectTransform:
   - {fileID: 551046593}
   - {fileID: 831370522}
   m_Father: {fileID: 1423103411}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -471,16 +471,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e66204b7a29a3749b008755a1ff94ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _panelsManager:
+  panelsManager:
     updateNames: 0
     defaultPanel: 0
     menuPanels:
-    - _panalName: 0
-      _menuObjectl: {fileID: 551046592}
-      _menuPanelItems:
-      - _name: Play
-        _item: {fileID: 2820674480839998631}
-        _OnPress:
+    - panalName: 0
+      menuObjectl: {fileID: 551046592}
+      menuPanelItems:
+      - name: Play
+        item: {fileID: 2820674480839998631}
+        OnPress:
           m_PersistentCalls:
             m_Calls:
             - m_Target: {fileID: 540526009}
@@ -495,9 +495,9 @@ MonoBehaviour:
                 m_StringArgument: 
                 m_BoolArgument: 0
               m_CallState: 2
-      - _name: Quit
-        _item: {fileID: 2820674479831806494}
-        _OnPress:
+      - name: Quit
+        item: {fileID: 2820674479831806494}
+        OnPress:
           m_PersistentCalls:
             m_Calls:
             - m_Target: {fileID: 540526009}
@@ -512,19 +512,19 @@ MonoBehaviour:
                 m_StringArgument: 
                 m_BoolArgument: 0
               m_CallState: 2
-      _animationSettings:
-        _offScale: {x: 1, y: 0, z: 0}
-        _onScale: {x: 1, y: 1, z: 1}
-        _InAnimationTime: 0.5
-        _OutAnimationTime: 0.1
-        _InAnimationCurve: 32
-        _OutAnimationCurve: 32
-    - _panalName: 2
-      _menuObjectl: {fileID: 831370521}
-      _menuPanelItems:
-      - _name: Free Mode
-        _item: {fileID: 850663682}
-        _OnPress:
+      animationSettings:
+        offScale: {x: 1, y: 0, z: 0}
+        onScale: {x: 1, y: 1, z: 1}
+        InAnimationTime: 0.3
+        OutAnimationTime: 0.1
+        InAnimationCurve: 32
+        OutAnimationCurve: 32
+    - panalName: 2
+      menuObjectl: {fileID: 831370521}
+      menuPanelItems:
+      - name: Free Mode
+        item: {fileID: 850663682}
+        OnPress:
           m_PersistentCalls:
             m_Calls:
             - m_Target: {fileID: 540526009}
@@ -539,9 +539,9 @@ MonoBehaviour:
                 m_StringArgument: 
                 m_BoolArgument: 0
               m_CallState: 2
-      - _name: Back
-        _item: {fileID: 428211444}
-        _OnPress:
+      - name: Back
+        item: {fileID: 428211444}
+        OnPress:
           m_PersistentCalls:
             m_Calls:
             - m_Target: {fileID: 540526009}
@@ -556,29 +556,34 @@ MonoBehaviour:
                 m_StringArgument: 
                 m_BoolArgument: 0
               m_CallState: 2
-      _animationSettings:
-        _offScale: {x: 1, y: 0, z: 0}
-        _onScale: {x: 1, y: 1, z: 1}
-        _InAnimationTime: 0.5
-        _OutAnimationTime: 0.1
-        _InAnimationCurve: 32
-        _OutAnimationCurve: 32
-  _speed: 0.31
-  _animationkeys:
+      animationSettings:
+        offScale: {x: 1, y: 0, z: 0}
+        onScale: {x: 1, y: 1, z: 1}
+        InAnimationTime: 0.3
+        OutAnimationTime: 0.1
+        InAnimationCurve: 32
+        OutAnimationCurve: 32
+  speed: 0.3
+  animationkeys:
   - position: {x: 0, y: 50}
     alpha: 0.25
     color:
       serializedVersion: 2
-      rgba: 4288315904
+      rgba: 4294967295
   - position: {x: 50, y: 0}
     alpha: 0.35
     color:
       serializedVersion: 2
-      rgba: 4294967295
-  _positionAnimationStyle: 1
-  _colorAnimationStyle: 1
-  _movableBackground: {fileID: 1940144678}
-  _frame: {fileID: 1039869655}
+      rgba: 4288651167
+  - position: {x: 50, y: 50}
+    alpha: 0.48
+    color:
+      serializedVersion: 2
+      rgba: 4294962176
+  positionAnimationStyle: 1
+  colorAnimationStyle: 1
+  movableBackground: {fileID: 1940144678}
+  frame: {fileID: 1039869655}
 --- !u!4 &546408246 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 177980288045853385, guid: cf0b7238940c98f47ad2fbd19164e17b,
@@ -993,7 +998,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1423103411}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!114 &705507996
 MonoBehaviour:
@@ -1527,7 +1532,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1423103411}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 45, y: 167.927, z: 0}
 --- !u!65 &963194230
 BoxCollider:
@@ -1726,7 +1731,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1093176598}
-  - component: {fileID: 1093176599}
   m_Layer: 0
   m_Name: Coroutine provide
   m_TagString: Untagged
@@ -1747,20 +1751,14 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1423103411}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1093176599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+--- !u!4 &1129630685 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6617423111876444381, guid: acda37e8d54a6f4499ddc52e8c862719,
+    type: 3}
+  m_PrefabInstance: {fileID: 6617423110747441920}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1093176597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdf5250d70b28044284f9fb36c96f613, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1294254140
 GameObject:
   m_ObjectHideFlags: 0
@@ -2038,6 +2036,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1129630685}
   - {fileID: 963194228}
   - {fileID: 705507995}
   - {fileID: 1967625907}
@@ -2603,7 +2602,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1423103411}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1967625908
 MonoBehaviour:
@@ -3448,6 +3447,75 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3915144190255916046}
   m_CullTransparentMesh: 1
+--- !u!1001 &6617423110747441920
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1423103411}
+    m_Modifications:
+    - target: {fileID: 6617423111876444380, guid: acda37e8d54a6f4499ddc52e8c862719,
+        type: 3}
+      propertyPath: m_Name
+      value: Services provider
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617423111876444381, guid: acda37e8d54a6f4499ddc52e8c862719,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617423111876444381, guid: acda37e8d54a6f4499ddc52e8c862719,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617423111876444381, guid: acda37e8d54a6f4499ddc52e8c862719,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617423111876444381, guid: acda37e8d54a6f4499ddc52e8c862719,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617423111876444381, guid: acda37e8d54a6f4499ddc52e8c862719,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617423111876444381, guid: acda37e8d54a6f4499ddc52e8c862719,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617423111876444381, guid: acda37e8d54a6f4499ddc52e8c862719,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617423111876444381, guid: acda37e8d54a6f4499ddc52e8c862719,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617423111876444381, guid: acda37e8d54a6f4499ddc52e8c862719,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617423111876444381, guid: acda37e8d54a6f4499ddc52e8c862719,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617423111876444381, guid: acda37e8d54a6f4499ddc52e8c862719,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: acda37e8d54a6f4499ddc52e8c862719, type: 3}
 --- !u!1001 &6814319391075359643
 PrefabInstance:
   m_ObjectHideFlags: 0

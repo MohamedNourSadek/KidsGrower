@@ -261,29 +261,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec95adf4b0dee14a8e8f1e9478f4b3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _indicatorObject: {fileID: 8623895066074952830}
-  _myBody: {fileID: 7058220185831580078}
-  _holder:
-    _myHand: {fileID: 0}
-    _throwForce: 20
-    _pickSpeedThrushold: 2
-    _petTime: 1
-    _detector: {fileID: 0}
-    _gotSomething: 0
-    _canPick: 0
-    _canDrop: 0
-    _canThrow: 0
-    _canPlant: 0
-    _canPet: 0
-    _objectInHand: {fileID: 0}
-  _plantTime: 10
-  _plantDistance: 0
-  _allowedToPlantOn: 01000000
-  _harvestPrefab: {fileID: 1622378823701921160, guid: 042a16388f9dae64eacd82ef58a77842,
+  indicatorObject: {fileID: 8623895066074952830}
+  myBody: {fileID: 7058220185831580078}
+  holder:
+    myHand: {fileID: 0}
+    throwForce: 20
+    pickSpeedThrushold: 2
+    petTime: 1
+    detector: {fileID: 0}
+    gotSomething: 0
+    canPick: 0
+    canDrop: 0
+    canThrow: 0
+    canPlant: 0
+    canPet: 0
+  plantTime: 10
+  plantDistance: 0
+  allowedToPlantOn: 01000000
+  harvestPrefab: {fileID: 1622378823701921160, guid: 042a16388f9dae64eacd82ef58a77842,
     type: 3}
-  _small: {fileID: 8623895068058628201}
-  _medium: {fileID: 590682803784169611}
-  _final: {fileID: 590682803283720484}
+  small: {fileID: 8623895068058628201}
+  medium: {fileID: 590682803784169611}
+  final: {fileID: 590682803283720484}
 --- !u!1 &8623895066074952830
 GameObject:
   m_ObjectHideFlags: 0

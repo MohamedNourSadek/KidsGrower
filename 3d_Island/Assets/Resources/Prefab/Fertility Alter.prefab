@@ -1083,6 +1083,61 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
         type: 3}
+      propertyPath: meshesToHide.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
+        type: 3}
+      propertyPath: meshesToHide.Array.data[0]
+      value: 
+      objectReference: {fileID: 177980288779916082}
+    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
+        type: 3}
+      propertyPath: meshesToHide.Array.data[1]
+      value: 
+      objectReference: {fileID: 177980288631541328}
+    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
+        type: 3}
+      propertyPath: meshesToHide.Array.data[2]
+      value: 
+      objectReference: {fileID: 177980287957762132}
+    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
+        type: 3}
+      propertyPath: meshesToHide.Array.data[3]
+      value: 
+      objectReference: {fileID: 177980288741304407}
+    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
+        type: 3}
+      propertyPath: meshesToHide.Array.data[4]
+      value: 
+      objectReference: {fileID: 6832540191020744009}
+    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
+        type: 3}
+      propertyPath: meshesToHide.Array.data[5]
+      value: 
+      objectReference: {fileID: 177980288779916082}
+    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
+        type: 3}
+      propertyPath: meshesToHide.Array.data[6]
+      value: 
+      objectReference: {fileID: 177980288631541328}
+    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
+        type: 3}
+      propertyPath: meshesToHide.Array.data[7]
+      value: 
+      objectReference: {fileID: 177980287957762132}
+    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
+        type: 3}
+      propertyPath: meshesToHide.Array.data[8]
+      value: 
+      objectReference: {fileID: 177980288741304407}
+    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
+        type: 3}
+      propertyPath: meshesToHide.Array.data[9]
+      value: 
+      objectReference: {fileID: 6832540191020744009}
+    - target: {fileID: 7357462396101251033, guid: c3c5a706854e1bc48a02f94b72a351c5,
+        type: 3}
       propertyPath: _meshesToHide.Array.data[0]
       value: 
       objectReference: {fileID: 177980288779916082}

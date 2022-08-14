@@ -5,33 +5,33 @@ using UnityEngine;
 public class AdditionalMath 
 {
     //returns angles between two vectors
-    public static float CircleAngle(Vector2 origin, Vector2 target)
+    public static float CircleAngle(Vector2 _origin, Vector2 _target)
     {
-        Vector2 Direction = (target - origin);
+        Vector2 _direction = (_target - _origin);
 
-        var Angle = Mathf.Rad2Deg * Mathf.Atan(Direction.y / Direction.x);
+        var _angle = Mathf.Rad2Deg * Mathf.Atan(_direction.y / _direction.x);
 
-        if (Direction.y > 0 && Direction.x < 0 || Direction.y < 0 && Direction.x < 0)
-            return Angle + 180;
+        if (_direction.y > 0 && _direction.x < 0 || _direction.y < 0 && _direction.x < 0)
+            return _angle + 180;
 
-        if (Direction.y < 0 && Direction.x > 0)
-            return Angle + 360;
+        if (_direction.y < 0 && _direction.x > 0)
+            return _angle + 360;
 
-        else return Angle;
+        else return _angle;
     }
 
 
     //returns the angle between two vectors
-    public static float Get_Angle(Vector3 to, Vector3 from, bool Return_The_Smaller, bool ChangeToRad)
+    public static float Get_Angle(Vector3 _to, Vector3 _from, bool _return_The_Smaller, bool _changeToRad)
     {
-        float Angle = Vector3.Angle(to, from);
+        float _angle = Vector3.Angle(_to, _from);
 
-        if (Return_The_Smaller)
+        if (_return_The_Smaller)
         {
-            Angle = (Angle <= 90f) ? Angle : (180f - Angle);
+            _angle = (_angle <= 90f) ? _angle : (180f - _angle);
         }
 
-        return ChangeToRad ? Angle * Mathf.Deg2Rad : Angle;
+        return _changeToRad ? _angle * Mathf.Deg2Rad : _angle;
     }
     public static bool IsTheSameSign(float x1, float x2)
     {
@@ -45,39 +45,39 @@ public class AdditionalMath
 
       
     //Used for Remaping different ranges
-    public static float RemapRange(float Value, Vector2 InitialRange, Vector2 FinalRange)
+    public static float RemapRange(float _value, Vector2 _initialRange, Vector2 _finalRange)
     {
-        return (FinalRange.y - FinalRange.x) * ((Value - InitialRange.x) / (InitialRange.y - InitialRange.x)); ;
+        return (_finalRange.y - _finalRange.x) * ((_value - _initialRange.x) / (_initialRange.y - _initialRange.x)); ;
     }
 
 
-    //returns angle from y axis to 2D vector
+    //returns angle _from y axis _to 2D vector
     
     public static float AngleFromY(Vector2 _vector)
     {
-        float Angle = Mathf.Atan(_vector.x / _vector.y) * Mathf.Rad2Deg;
+        float _angle = Mathf.Atan(_vector.x / _vector.y) * Mathf.Rad2Deg;
 
         bool _isXpositive = _vector.x >= 0;
         bool _isYpositive = _vector.y >= 0;
 
         if (_isXpositive && _isYpositive)
         {
-            Angle += 0;
+            _angle += 0;
         }
         else if (_isXpositive && !_isYpositive)
         {
-            Angle += 180f;
+            _angle += 180f;
         }
         else if (!_isXpositive && !_isYpositive)
         {
-            Angle += 180f;
+            _angle += 180f;
 
         }
         else if (!_isXpositive && _isYpositive)
         {
-            Angle += 360f;
+            _angle += 360f;
         }
 
-        return Angle;
+        return _angle;
     }
 }
