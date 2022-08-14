@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class DestroyAfter : MonoBehaviour
 {
-    [SerializeField] float _time = 3f;
-    float _timeSinceSpawned = 0f;
+    [SerializeField] float time = 3f;
+    float timeSinceSpawned = 0f;
 
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if(_timeSinceSpawned >= _time)
+        if(timeSinceSpawned >= time)
             Destroy(this.gameObject);
         else
-            _timeSinceSpawned += Time.deltaTime;
+            timeSinceSpawned += Time.fixedDeltaTime;
     }
 }

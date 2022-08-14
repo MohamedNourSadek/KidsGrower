@@ -5,86 +5,84 @@ using UnityEngine;
 
 public class AIStateMachine : MonoBehaviour
 {
-    Animator _myStateMachine;
-    IStateMachineController _stateMachineController;
-    List<StateInfo> _myStates = new List<StateInfo>();
-    int _currentStateHash;
-    bool IsInitialized = false;
-    float _timeSinceLastAction = 0;
+    Animator myStateMachine;
+    IStateMachineController stateMachineController;
+    List<StateInfo> myStates = new List<StateInfo>();
+    int currentStateHash;
+    bool isInitialized = false;
+    float timeSinceLastAction = 0;
 
     //Interface
-    public void Initialize(Enum states)
+    public void Initialize(Enum _states)
     {
-        _stateMachineController = GetComponentInParent<IStateMachineController>();
-        _myStateMachine = GetComponent<Animator>();
+        stateMachineController = GetComponentInParent<IStateMachineController>();
+        myStateMachine = GetComponent<Animator>();
 
-        foreach (var state in Enum.GetValues(states.GetType()))
+        foreach (var _state in Enum.GetValues(_states.GetType()))
         {
-            StateInfo _state = new StateInfo();
-            _state.stateName = state.ToString();
-            _state.stateHash = Animator.StringToHash(_state.stateName);
-            _state.state = (Enum)state;
+            StateInfo _newState = new StateInfo();
+            _newState.stateName = _state.ToString();
+            _newState.stateHash = Animator.StringToHash(_newState.stateName);
+            _newState.state = (Enum)_state;
 
-            _myStates.Add(_state);
+            myStates.Add(_newState);
         }
 
-        IsInitialized = true;
+        isInitialized = true;
     }
-    public void SetBool(Enum _boolName, bool state)
+    public void SetBool(Enum _boolName, bool _state)
     {
-        _myStateMachine.SetBool(_boolName.ToString(), state);
+        myStateMachine.SetBool(_boolName.ToString(), _state);
     }
     public void SetTrigger(Enum _triggerName)
     {
-        _myStateMachine.SetTrigger(_triggerName.ToString());
+        myStateMachine.SetTrigger(_triggerName.ToString());
     }
     public float GetTimeSinceLastChange()
     {
-        return _timeSinceLastAction;
+        return timeSinceLastAction;
     }
     public Enum GetCurrentState()
     {
-        return (GetEnumByHash(_currentStateHash));
+        return (GetEnumByHash(currentStateHash));
     }
 
 
     //Helpers
     void Update()
     {
-        if(IsInitialized)
+        if(isInitialized)
         {
-            if (_myStateMachine.GetCurrentAnimatorStateInfo(0).shortNameHash != _currentStateHash)
+            if (myStateMachine.GetCurrentAnimatorStateInfo(0).shortNameHash != currentStateHash)
             {
-                _currentStateHash = _myStateMachine.GetCurrentAnimatorStateInfo(0).shortNameHash;
-                OnStateChange((GetEnumByHash(_currentStateHash)));
+                currentStateHash = myStateMachine.GetCurrentAnimatorStateInfo(0).shortNameHash;
+                OnStateChange((GetEnumByHash(currentStateHash)));
             }
             else
             {
-                _timeSinceLastAction += Time.deltaTime;
+                timeSinceLastAction += Time.deltaTime;
             }
         }
 
     }
-    void OnStateChange(Enum triggerStats)
+    void OnStateChange(Enum _triggerStats)
     {
-        _timeSinceLastAction = 0;
-        _stateMachineController.ActionExecution(triggerStats);
+        timeSinceLastAction = 0;
+        stateMachineController.ActionExecution(_triggerStats);
     }
-    Enum GetEnumByHash(int hash)
+    Enum GetEnumByHash(int _hash)
     {
-        foreach (StateInfo _state in _myStates)
+        foreach (StateInfo _state in myStates)
         {
-            if(_state.stateHash == hash)
+            if(_state.stateHash == _hash)
             {
                 return _state.state;
             }
         }
 
-        return _myStates[0].state;
+        return myStates[0].state;
     }
 }
-
-
 
 [Serializable] public class StateInfo
 {
@@ -94,6 +92,6 @@ public class AIStateMachine : MonoBehaviour
 }
 public interface IStateMachineController
 {
-    public void ActionExecution(Enum trigger);
+    public void ActionExecution(Enum _trigger);
 }
 

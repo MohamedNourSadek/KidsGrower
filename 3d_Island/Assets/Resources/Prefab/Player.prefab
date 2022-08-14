@@ -151,13 +151,13 @@ MonoBehaviour:
     _dashRechargeTime: 1
     _dashForce: 26000
   _myCamera:
-    _controlledCamera: {fileID: 0}
-    _distanceFromObject: 5
-    _cameraHeighLimits: {x: 3, y: 7}
-    _rotationInputSensitivity: {x: 0.025, y: 0.025}
-    _delay: 0.75
-    _rotationSpeed: 25
-    _cameraTilt: -0.5
+    controlledCamera: {fileID: 0}
+    distanceFromObject: 5
+    cameraHeighLimits: {x: 3, y: 7}
+    rotationInputSensitivity: {x: 0.025, y: 0.025}
+    delay: 0.75
+    rotationSpeed: 25
+    cameraTilt: -0.5
   _handSystem:
     _myHand: {fileID: 6949429004428104456}
     _throwForce: 100
