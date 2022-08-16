@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour, IInputUser
 {
     [SerializeField] bool lockFrameRate = false;
     [SerializeField] int frameRatelock = 60;
-    [SerializeField] bool startFrozen = true;
 
     [Header("Game Design")]
     [SerializeField] bool showFrameRate;
@@ -49,9 +48,6 @@ public class GameManager : MonoBehaviour, IInputUser
         instance = this;
 
         InputSystem.SubscribeUser(this);
-
-        if (startFrozen)
-            Time.timeScale = 0f;
 
         if (lockFrameRate)
             Application.targetFrameRate = frameRatelock;
@@ -95,6 +91,21 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         customizing = state;
     }
+    public void SetPlaying(bool state)
+    {
+        if (state)
+        {
+            myPlayer.gameObject.SetActive(true);
+        }
+        else
+        {
+            myPlayer.gameObject.SetActive(false);
+
+            Camera.main.transform.position = camCustomizingViewPos;
+            Camera.main.transform.rotation = camCustomizingViewRot;
+        }
+    }
+
     public void ApplySettings()
     {
         var _npcs = FindObjectsOfType<NPC>();
@@ -171,23 +182,17 @@ public class GameManager : MonoBehaviour, IInputUser
         foreach (SliderElement slider in UIController.instance.GetSliders())
             PlayerPrefs.SetFloat(slider.saveName, slider.mySlider.value);
     }
-    public void SwitchMode_Game()
-    {
-        Time.timeScale = 1f;
-        myPlayer.gameObject.SetActive(true);
-    }
-    public void SwitchMove_MainScreen()
-    {
-        myPlayer.gameObject.SetActive(false);
-
-        Camera.main.transform.position = camCustomizingViewPos;
-        Camera.main.transform.rotation = camCustomizingViewRot;
-    }
+    
+    
     public void RestartLevel()
     {
         SceneManager.LoadScene(0);
     }
-    
+    public void OpenMainMenu()
+    {
+        SceneManager.LoadSceneAsync(0);
+    }
+
 
 
     //for design Buttons

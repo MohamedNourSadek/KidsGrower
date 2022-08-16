@@ -471,42 +471,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e66204b7a29a3749b008755a1ff94ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultPanel: Main
   panelsManager:
     updateNames: 0
-    defaultPanel: 0
     menuPanels:
-    - panalName: 0
+    - panalName: Main
       menuObjectl: {fileID: 551046592}
       menuPanelItems:
       - name: Play
-        item: {fileID: 2820674480839998631}
+        item: {fileID: 3915144190255916046}
         OnPress:
           m_PersistentCalls:
             m_Calls:
             - m_Target: {fileID: 540526009}
               m_TargetAssemblyTypeName: UIMenu, Assembly-CSharp
-              m_MethodName: OpenScreen
-              m_Mode: 3
+              m_MethodName: OpenMenuPanel
+              m_Mode: 5
               m_Arguments:
                 m_ObjectArgument: {fileID: 0}
                 m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-                m_IntArgument: 2
+                m_IntArgument: 0
                 m_FloatArgument: 0
-                m_StringArgument: 
+                m_StringArgument: Modes
                 m_BoolArgument: 0
               m_CallState: 2
       - name: Quit
-        item: {fileID: 2820674479831806494}
+        item: {fileID: 3915144189250841271}
         OnPress:
           m_PersistentCalls:
             m_Calls:
-            - m_Target: {fileID: 540526009}
-              m_TargetAssemblyTypeName: UIMenu, Assembly-CSharp
-              m_MethodName: Quit
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: 
+              m_MethodName: 
               m_Mode: 1
               m_Arguments:
                 m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_ObjectArgumentAssemblyTypeName: 
                 m_IntArgument: 0
                 m_FloatArgument: 0
                 m_StringArgument: 
@@ -519,11 +519,12 @@ MonoBehaviour:
         OutAnimationTime: 0.1
         InAnimationCurve: 32
         OutAnimationCurve: 32
-    - panalName: 2
+      active: 0
+    - panalName: Modes
       menuObjectl: {fileID: 831370521}
       menuPanelItems:
       - name: Free Mode
-        item: {fileID: 850663682}
+        item: {fileID: 850663680}
         OnPress:
           m_PersistentCalls:
             m_Calls:
@@ -540,20 +541,20 @@ MonoBehaviour:
                 m_BoolArgument: 0
               m_CallState: 2
       - name: Back
-        item: {fileID: 428211444}
+        item: {fileID: 428211442}
         OnPress:
           m_PersistentCalls:
             m_Calls:
             - m_Target: {fileID: 540526009}
               m_TargetAssemblyTypeName: UIMenu, Assembly-CSharp
-              m_MethodName: OpenScreen
-              m_Mode: 3
+              m_MethodName: OpenMenuPanel
+              m_Mode: 5
               m_Arguments:
                 m_ObjectArgument: {fileID: 0}
                 m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
                 m_IntArgument: 0
                 m_FloatArgument: 0
-                m_StringArgument: 
+                m_StringArgument: Main
                 m_BoolArgument: 0
               m_CallState: 2
       animationSettings:
@@ -563,27 +564,34 @@ MonoBehaviour:
         OutAnimationTime: 0.1
         InAnimationCurve: 32
         OutAnimationCurve: 32
-  speed: 0.3
-  animationkeys:
-  - position: {x: 0, y: 50}
-    alpha: 0.25
-    color:
-      serializedVersion: 2
-      rgba: 4294967295
-  - position: {x: 50, y: 0}
-    alpha: 0.35
-    color:
-      serializedVersion: 2
-      rgba: 4288651167
-  - position: {x: 50, y: 50}
-    alpha: 0.48
-    color:
-      serializedVersion: 2
-      rgba: 4294962176
-  positionAnimationStyle: 1
-  colorAnimationStyle: 1
-  movableBackground: {fileID: 1940144678}
-  frame: {fileID: 1039869655}
+      active: 0
+  backgroundAnimation:
+    speed: 0.25
+    animationkeys:
+    - position: {x: -50, y: 0}
+      alpha: 0.15
+      color:
+        serializedVersion: 2
+        rgba: 4287072135
+    - position: {x: 50, y: 50}
+      alpha: 0.45
+      color:
+        serializedVersion: 2
+        rgba: 4294967295
+    - position: {x: 50, y: -50}
+      alpha: 0.15
+      color:
+        serializedVersion: 2
+        rgba: 4294491964
+    - position: {x: -50, y: -50}
+      alpha: 0.45
+      color:
+        serializedVersion: 2
+        rgba: 4290032820
+    positionAnimationStyle: 1
+    colorAnimationStyle: 1
+    movableBackground: {fileID: 1940144678}
+    frame: {fileID: 1039869655}
 --- !u!4 &546408246 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 177980288045853385, guid: cf0b7238940c98f47ad2fbd19164e17b,
@@ -1270,7 +1278,7 @@ GameObject:
   - component: {fileID: 831370522}
   - component: {fileID: 831370523}
   m_Layer: 0
-  m_Name: Modes Panel
+  m_Name: Modes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

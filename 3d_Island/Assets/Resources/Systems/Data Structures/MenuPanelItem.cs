@@ -4,26 +4,30 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+
+
 [System.Serializable]
-public class MenuPanelButton
+public class MenuPanelItem
 {
     [SerializeField] public string name;
-    [SerializeField] public Button item;
+    [SerializeField] public GameObject item;
     [SerializeField] public UnityEvent OnPress;
     bool active;
 
     public void Initialize()
     {
-        item.onClick.AddListener(InvokeEvent);
-    }
-    void InvokeEvent()
-    {
-        OnPress.Invoke();
+        if(item.GetComponentInChildren<Button>())
+            (item.GetComponentInChildren<Button>()).onClick.AddListener(InvokeEvent);
     }
     public void ActivateItem(bool _state, MenuAnimatioSettings _animationSettings)
     {
         ServicesProvider.instance.StartCoroutine(ActivateItem_CoRoutine(_state, _animationSettings));
     }
+    public bool IsActive()
+    {
+        return active;
+    }
+
     IEnumerator ActivateItem_CoRoutine(bool _state, MenuAnimatioSettings _animationSettings)
     {
         if (_state)
@@ -47,10 +51,10 @@ public class MenuPanelButton
 
         active = _state;
     }
-
-    public bool IsActive()
+    void InvokeEvent()
     {
-        return active;
+        Debug.Log("Pressed");
+        OnPress.Invoke();
     }
 }
 

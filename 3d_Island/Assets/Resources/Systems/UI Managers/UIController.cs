@@ -6,9 +6,12 @@ using UnityEngine.SceneManagement;
 
 public enum PickMode { Pick, Drop, Shake};
 
-public class UIController : MonoBehaviour
+public class UIController : MonoBehaviour, IPanelsManagerUser
 {
     public static UIController instance;
+
+    [SerializeField] string defaultPanel;
+    [SerializeField] PanelsManager panelsManager;
 
     [Header("References")]
     [SerializeField] GameObject threeDCanvas;
@@ -59,6 +62,12 @@ public class UIController : MonoBehaviour
 
         foreach (SliderElement slider in sliders)
             slider.Initialize();
+
+        panelsManager.Initialize("Main");
+    }
+    void OnDrawGizmos()
+    {
+        panelsManager.OnDrawGizmos();
     }
     public List<SliderElement> GetSliders()
     {
@@ -192,40 +201,19 @@ public class UIController : MonoBehaviour
         return (InventoryItemsContainer.ContainsKey(_itemTag));
     }
 
-   
+
     //Control UI flow
+    public void Test()
+    {
+        Debug.Log("ressed");
+    }
+    public void OpenMenuPanel(string _menuPanelName)
+    {
+        panelsManager.OpenMenuPanel(_menuPanelName);
+    }
     public void ToggleDesignButtonsVisibility()
     {
         designMenus.SetActive(!designMenus.activeInHierarchy);
-    }
-    public void OpenMainMenu()
-    {
-        SceneManager.LoadSceneAsync(0);
-    }
-    public void ShowMainScreen()
-    {
-        ShowModeSelection();
-        GameManager.instance.SwitchMove_MainScreen();
-    }
-    public void ShowModeSelection()
-    {
-        modeSelection.SetActive(true);
-
-        allGameMenus.SetActive(false);
-        customizedUi.SetActive(false);
-        GameManager.instance.SetCustomizing(false);
-    }
-    public void ShowCustomize()
-    {
-        modeSelection.SetActive(false);
-        customizedUi.SetActive(true);
-        GameManager.instance.SetCustomizing(true);
-    }
-    public void StartGame()
-    {
-        allGameMenus.SetActive(true);
-        modeSelection.SetActive(false);
-        GameManager.instance.SwitchMode_Game();
     }
     public void ApplySettings()
     {
@@ -313,6 +301,8 @@ public class UIController : MonoBehaviour
             nextButton.interactable = true;
         }
     }
+
+
 }
 
 

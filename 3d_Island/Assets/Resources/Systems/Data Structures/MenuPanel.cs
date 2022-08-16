@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [System.Serializable]
 public class MenuPanel
 {
-    [SerializeField] public MenuPanelNames panalName;
+    [SerializeField] public string panalName;
     [SerializeField] public GameObject menuObjectl;
-    [SerializeField] public List<MenuPanelButton> menuPanelItems;
+    [SerializeField] public List<MenuPanelItem> menuPanelItems;
     [SerializeField] MenuAnimatioSettings animationSettings;
 
-    bool active;
+    public bool active;
 
     public bool IsActive()
     {
@@ -37,7 +38,7 @@ public class MenuPanel
         if (_state)
             menuObjectl.SetActive(_state);
 
-        foreach (MenuPanelButton item in menuPanelItems)
+        foreach (MenuPanelItem item in menuPanelItems)
             item.ActivateItem(_state, animationSettings);
 
         if (!_state)
