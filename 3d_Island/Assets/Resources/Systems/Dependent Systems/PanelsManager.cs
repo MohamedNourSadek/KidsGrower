@@ -38,7 +38,7 @@ public class PanelsManager
         }
 
         currentMenuPanel = defaultPanel;
-        OpenMenuPanel(currentMenuPanel, false);
+        OpenMenuPanel(currentMenuPanel, true);
     }
     public void OnDrawGizmos()
     {
@@ -88,6 +88,49 @@ public class PanelsManager
             OpenMenuPanel(_menuPanelName, _exculsive);
         }
     }
+    
+    
+    public string GetPanelRelativeToActive(int i)
+    {
+        return menuPanels[GetActivePage() + i].panalName;
+    }
+    public int GetActivePage()
+    {
+        int _activePage = 0;
+
+        for (int j = 0; j < menuPanels.Count; j++)
+        {
+            if (menuPanels[j].active)
+                _activePage = j;
+        }
+
+        return _activePage;
+    }
+
+    public ListPossibleDirections GetPossibleDirection(int _activePage)
+    {
+        ListPossibleDirections _directions = new();
+
+        if (_activePage == 0)
+        {
+            _directions.Previous = false;
+            _directions.Next = true;
+        }
+        else if (_activePage == menuPanels.Count - 1)
+        {
+            _directions.Next = false;
+            _directions.Previous = true;
+        }
+        else
+        {
+            _directions.Previous = true;
+            _directions.Next = true;
+        }
+
+        return _directions;
+    }
+
+
 
     public static void OpenMenuPanel(string _menuPanelName_PlusMangerNum, List<PanelsManager> _managers, bool _exclusive)
     {
@@ -111,10 +154,12 @@ public class PanelsManager
         _managers[_num].CloseMenuPanel(_menuName);
     }
 
+
+
     IEnumerator OpenMenuPanel_Coroutine(string _menuPanelName, bool exculsive)
     {
         //DeactivateFirst
-        if(exculsive == false)
+        if(exculsive == true)
         {
             foreach (MenuPanel _menuPanel in menuPanels)
             {

@@ -998,7 +998,9 @@ GameObject:
   m_Component:
   - component: {fileID: 140322750}
   m_Layer: 5
-  m_Name: Seek fruit
+  m_Name: 'Seek fruit
+
+'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2965,7 +2967,7 @@ RectTransform:
   m_GameObject: {fileID: 361123111}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.4969957, y: 1.4969957, z: 1.4969957}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 456995218}
@@ -14751,6 +14753,163 @@ MonoBehaviour:
         pressedAnimationTime: 0
         pressedAnimationCurve: 0
       active: 0
+  - name: Options Screens
+    updateNames: 0
+    overrideAnimations: 1
+    defaultPanel: Page 0
+    animationSettings:
+      offScale: {x: 1, y: 0, z: 0}
+      onScale: {x: 1.5, y: 1.5, z: 1.5}
+      InAnimationTime: 0.3
+      OutAnimationTime: 0.1
+      InAnimationCurve: 32
+      OutAnimationCurve: 32
+      pressedIncrementScale: {x: 0.1, y: 0.1, z: 0.1}
+      pressedAnimationTime: 0.1
+      pressedAnimationCurve: 32
+    menuPanels:
+    - panalName: Page 0
+      menuObjectl: {fileID: 1855221965}
+      menuPanelItems:
+      - name: Growing Up Time
+        item: {fileID: 361123111}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Time To Get Bored
+        item: {fileID: 1147725379}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Sleep Time
+        item: {fileID: 103455922}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      animationSettings:
+        offScale: {x: 0, y: 0, z: 0}
+        onScale: {x: 0, y: 0, z: 0}
+        InAnimationTime: 0
+        OutAnimationTime: 0
+        InAnimationCurve: 0
+        OutAnimationCurve: 0
+        pressedIncrementScale: {x: 0, y: 0, z: 0}
+        pressedAnimationTime: 0
+        pressedAnimationCurve: 0
+      active: 0
+    - panalName: Page 1
+      menuObjectl: {fileID: 909952905}
+      menuPanelItems:
+      - name: Death Time
+        item: {fileID: 612086799}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Seek Player
+        item: {fileID: 240926314}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Seek NPC
+        item: {fileID: 1223188646}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      animationSettings:
+        offScale: {x: 0, y: 0, z: 0}
+        onScale: {x: 0, y: 0, z: 0}
+        InAnimationTime: 0
+        OutAnimationTime: 0
+        InAnimationCurve: 0
+        OutAnimationCurve: 0
+        pressedIncrementScale: {x: 0, y: 0, z: 0}
+        pressedAnimationTime: 0
+        pressedAnimationCurve: 0
+      active: 0
+    - panalName: Page 2
+      menuObjectl: {fileID: 1489556853}
+      menuPanelItems:
+      - name: 'Seek fruit
+
+'
+        item: {fileID: 140322749}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Seek alter
+        item: {fileID: 657598979}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Punch an NPC
+        item: {fileID: 1987202312}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      animationSettings:
+        offScale: {x: 0, y: 0, z: 0}
+        onScale: {x: 0, y: 0, z: 0}
+        InAnimationTime: 0
+        OutAnimationTime: 0
+        InAnimationCurve: 0
+        OutAnimationCurve: 0
+        pressedIncrementScale: {x: 0, y: 0, z: 0}
+        pressedAnimationTime: 0
+        pressedAnimationCurve: 0
+      active: 0
+    - panalName: Page 3
+      menuObjectl: {fileID: 1108631635}
+      menuPanelItems:
+      - name: Seek Tree
+        item: {fileID: 1861465377}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Seek Ball
+        item: {fileID: 1707172985}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Drop Ball
+        item: {fileID: 1897947550}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      animationSettings:
+        offScale: {x: 0, y: 0, z: 0}
+        onScale: {x: 0, y: 0, z: 0}
+        InAnimationTime: 0
+        OutAnimationTime: 0
+        InAnimationCurve: 0
+        OutAnimationCurve: 0
+        pressedIncrementScale: {x: 0, y: 0, z: 0}
+        pressedAnimationTime: 0
+        pressedAnimationCurve: 0
+      active: 0
+    - panalName: Page 4
+      menuObjectl: {fileID: 1485981256}
+      menuPanelItems:
+      - name: Throw Ball on NPC
+        item: {fileID: 572680147}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Throw Ball on player
+        item: {fileID: 1916673454}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      animationSettings:
+        offScale: {x: 0, y: 0, z: 0}
+        onScale: {x: 0, y: 0, z: 0}
+        InAnimationTime: 0
+        OutAnimationTime: 0
+        InAnimationCurve: 0
+        OutAnimationCurve: 0
+        pressedIncrementScale: {x: 0, y: 0, z: 0}
+        pressedAnimationTime: 0
+        pressedAnimationCurve: 0
+      active: 0
   threeDCanvas: {fileID: 1097234460}
   gameCanvas: {fileID: 1798784311}
   ThreeDHighlightPrefab: {fileID: 4673458148026814139, guid: 22b9a2ffca3d54c4cb98d743ada91f2a,
@@ -14771,17 +14930,7 @@ MonoBehaviour:
   petButtonImage: {fileID: 1283826984}
   pickDropButtonImage_Text: {fileID: 1160350207}
   customizeDebugger: {fileID: 794728981}
-  modeSelection: {fileID: 0}
-  customizedUi: {fileID: 0}
-  allSettingsMenus: {fileID: 1037881723}
-  allGameMenus: {fileID: 1594530135}
   designMenus: {fileID: 732591682}
-  designPages:
-  - {fileID: 1855221965}
-  - {fileID: 909952905}
-  - {fileID: 1489556853}
-  - {fileID: 1108631635}
-  - {fileID: 1485981256}
   nextButton: {fileID: 1187022637}
   previousButton: {fileID: 1685116274}
   sliders:

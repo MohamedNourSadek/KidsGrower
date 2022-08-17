@@ -35,12 +35,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     [SerializeField] Image petButtonImage;
     [SerializeField] Text pickDropButtonImage_Text;
     [SerializeField] Text customizeDebugger;
-    [SerializeField] GameObject modeSelection;
-    [SerializeField] GameObject customizedUi;
-    [SerializeField] GameObject allSettingsMenus;
-    [SerializeField] GameObject allGameMenus;
     [SerializeField] GameObject designMenus;
-    [SerializeField] List<GameObject> designPages = new();
     [SerializeField] Button nextButton;
     [SerializeField] Button previousButton;
     [SerializeField] List<SliderElement> sliders = new List<SliderElement>();
@@ -204,11 +199,11 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     //Control UI flow
     public void OpenMenuPanel(string _menuPanelName_PlusManagerNum)
     {
-        PanelsManager.OpenMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers, false);
+        PanelsManager.OpenMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers, true);
     }
     public void OpenMenuPanelNonExclusive(string _menuPanelName_PlusManagerNum)
     {
-        PanelsManager.OpenMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers, true);
+        PanelsManager.OpenMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers, false);
     }
     public void CloseMenuPanelNonExclusive(string _menuPanelName_PlusManagerNum)
     {
@@ -216,62 +211,32 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     }
     public void ToggleMenuPanel(string _menuInfo)
     {
-        PanelsManager.TogglePanel(_menuInfo, PanelsManagers, true);
+        PanelsManager.TogglePanel(_menuInfo, PanelsManagers, false);
     }
-    public void ToggleDesignButtonsVisibility()
+    public void ShowIncrementPage(int _incrementTimesManagerNum)
     {
-        designMenus.SetActive(!designMenus.activeInHierarchy);
-    }
-    
-    
-    public void ShowIncrementPage(int i)
-    {
-        int _page = FindActivePage() + i;
-        UpdateNextPrevious(_page);
-        ActivatePage(_page);
-    }
-    int FindActivePage()
-    {
-        for (int i = 0; i <= designPages.Count - 1; i++)
-        {
-            if (designPages[i].activeInHierarchy)
-                return i;
-        }
+        int _managerNumber = Mathf.Abs(_incrementTimesManagerNum);
+        
+        int _increment = _incrementTimesManagerNum / Mathf.Abs(_incrementTimesManagerNum);
 
-        return 0;
-    }
-    void ActivatePage(int _pageNum)
-    {
-        for (int i = 0; i <= designPages.Count - 1; i++)
-        {
-            if (i == _pageNum)
-                designPages[i].SetActive(true);
-            else
-                designPages[i].SetActive(false);
-        }
+        string _targetPanel = PanelsManagers[_managerNumber].GetPanelRelativeToActive(_increment);
 
+        var _directions = PanelsManagers[_managerNumber].GetPossibleDirection(PanelsManagers[_managerNumber].GetActivePage() + _increment);
+
+        UpdateNextPrevious(_directions);
+
+        PanelsManagers[_managerNumber].OpenMenuPanel(_targetPanel, true);
     }
-    void UpdateNextPrevious(int _activePage)
-    {
-        if (_activePage == 0)
-        {
-            previousButton.interactable = false;
-            nextButton.interactable = true;
-        }
-        else if (_activePage == designPages.Count - 1)
-        {
-            nextButton.interactable = false;
-            previousButton.interactable = true;
-        }
-        else
-        {
-            previousButton.interactable = true;
-            nextButton.interactable = true;
-        }
-    }
+
 
 
     //Interal Algorithms
+    void UpdateNextPrevious(ListPossibleDirections _directions)
+    {
+        previousButton.interactable = _directions.Previous;
+        nextButton.interactable = _directions.Next;
+    }
+
     IEnumerator TranslateUiElement(GameObject _object, Transform _parent)
     {
         while((_parent != null ) && (_object != null))

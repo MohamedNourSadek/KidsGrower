@@ -8,4 +8,5 @@ public interface IPanelsManagerUser
     public void OpenMenuPanelNonExclusive(string _menuInfo);
     public void CloseMenuPanelNonExclusive(string _menuInfo);
     public void ToggleMenuPanel(string _menuInfo);
+
 }

@@ -24,7 +24,7 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
 
     public void OpenMenuPanel(string _menuName)
     {
-        panelsManager.OpenMenuPanel(_menuName, false);
+        panelsManager.OpenMenuPanel(_menuName, true);
     }
     public void ToggleMenuPanel(string _menuInfo)
     {
@@ -32,7 +32,7 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     }
     public void OpenMenuPanelNonExclusive(string _menuInfo)
     {
-        panelsManager.OpenMenuPanel(_menuInfo, true);
+        panelsManager.OpenMenuPanel(_menuInfo, false);
     }
     public void CloseMenuPanelNonExclusive(string _menuInfo)
     {
