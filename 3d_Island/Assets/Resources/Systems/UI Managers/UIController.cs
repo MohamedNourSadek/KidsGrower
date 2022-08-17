@@ -10,8 +10,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
 {
     public static UIController instance;
 
-    [SerializeField] string defaultPanel;
-    [SerializeField] PanelsManager panelsManager;
+    [SerializeField] List<PanelsManager> PanelsManagers;
 
     [Header("References")]
     [SerializeField] GameObject threeDCanvas;
@@ -53,8 +52,6 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     Dictionary<GameObject, UIElement_NPC> npcUiContainer = new();
     Dictionary<string, UiElement_Inventory> InventoryItemsContainer = new();
 
-
-
     //Helpers
     void Awake()
     {
@@ -63,11 +60,13 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
         foreach (SliderElement slider in sliders)
             slider.Initialize();
 
-        panelsManager.Initialize("Main");
+        foreach(PanelsManager panelManager in PanelsManagers)
+            panelManager.Initialize();
     }
     void OnDrawGizmos()
     {
-        panelsManager.OnDrawGizmos();
+        foreach (PanelsManager panelManager in PanelsManagers)
+            panelManager.OnDrawGizmos();
     }
     public List<SliderElement> GetSliders()
     {
@@ -203,68 +202,37 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
 
 
     //Control UI flow
-    public void Test()
+    public void OpenMenuPanel(string _menuPanelName_PlusManagerNum)
     {
-        Debug.Log("ressed");
+        PanelsManager.OpenMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers, false);
     }
-    public void OpenMenuPanel(string _menuPanelName)
+    public void OpenMenuPanelNonExclusive(string _menuPanelName_PlusManagerNum)
     {
-        panelsManager.OpenMenuPanel(_menuPanelName);
+        PanelsManager.OpenMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers, true);
+    }
+    public void CloseMenuPanelNonExclusive(string _menuPanelName_PlusManagerNum)
+    {
+        PanelsManager.CloseMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers);
+    }
+    public void ToggleMenuPanel(string _menuInfo)
+    {
+        PanelsManager.TogglePanel(_menuInfo, PanelsManagers, true);
     }
     public void ToggleDesignButtonsVisibility()
     {
         designMenus.SetActive(!designMenus.activeInHierarchy);
     }
-    public void ApplySettings()
-    {
-        GameManager.instance.ApplySettings();
-        ShowSettings(false);
-    }
-    public void ShowSettings(bool _state)
-    {
-        allSettingsMenus.SetActive(_state);
-        allGameMenus.SetActive(!_state);
-    }
+    
+    
     public void ShowIncrementPage(int i)
     {
         int _page = FindActivePage() + i;
         UpdateNextPrevious(_page);
         ActivatePage(_page);
     }
-    
-
-    //Interal Algorithms
-    IEnumerator TranslateUiElement(GameObject _object, Transform _parent)
-    {
-        while((_parent != null ) && (_object != null))
-        {
-            _object.transform.position = _parent.transform.position + Vector3.up;
-            yield return new WaitForSecondsRealtime(Time.deltaTime);
-        }
-    }
-    IEnumerator RepeatMessage_Coroutine(string _message, Transform _parent, float _messageTime, float _repeats, ConditionChecker _condition)
-    {
-        float _time = 0f;
-
-        while (_condition.isTrue && _time<=_messageTime)
-        {
-            _time += _messageTime / _repeats;
-            SpawnMessage(_message, (_parent.position + (1.5f*Vector3.up)));
-            yield return new WaitForSecondsRealtime(_messageTime / _repeats);
-        }
-    }
-    void SpawnMessage(string _Text, Vector3 _position)
-    {
-        var _gameObject = Instantiate(ThreeDHighlightPrefab, _position, Quaternion.identity, threeDCanvas.transform);
-        _gameObject.GetComponentInChildren<Text>().text = _Text;
-    }
-    void ChangeAlpha(Image _myImage, bool _state)
-    {
-        _myImage.color =  new Color(_myImage.color.r, _myImage.color.g, _myImage.color.b, _state ? buttonOnAlpha : buttonOffAlpha);
-    }
     int FindActivePage()
     {
-        for(int i = 0; i <= designPages.Count - 1; i++)
+        for (int i = 0; i <= designPages.Count - 1; i++)
         {
             if (designPages[i].activeInHierarchy)
                 return i;
@@ -300,6 +268,37 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
             previousButton.interactable = true;
             nextButton.interactable = true;
         }
+    }
+
+
+    //Interal Algorithms
+    IEnumerator TranslateUiElement(GameObject _object, Transform _parent)
+    {
+        while((_parent != null ) && (_object != null))
+        {
+            _object.transform.position = _parent.transform.position + Vector3.up;
+            yield return new WaitForSecondsRealtime(Time.deltaTime);
+        }
+    }
+    IEnumerator RepeatMessage_Coroutine(string _message, Transform _parent, float _messageTime, float _repeats, ConditionChecker _condition)
+    {
+        float _time = 0f;
+
+        while (_condition.isTrue && _time<=_messageTime)
+        {
+            _time += _messageTime / _repeats;
+            SpawnMessage(_message, (_parent.position + (1.5f*Vector3.up)));
+            yield return new WaitForSecondsRealtime(_messageTime / _repeats);
+        }
+    }
+    void SpawnMessage(string _Text, Vector3 _position)
+    {
+        var _gameObject = Instantiate(ThreeDHighlightPrefab, _position, Quaternion.identity, threeDCanvas.transform);
+        _gameObject.GetComponentInChildren<Text>().text = _Text;
+    }
+    void ChangeAlpha(Image _myImage, bool _state)
+    {
+        _myImage.color =  new Color(_myImage.color.r, _myImage.color.g, _myImage.color.b, _state ? buttonOnAlpha : buttonOffAlpha);
     }
 
 

@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour, IInputUser
 
         LoadSettings();
     }
-    void Update()
+    void FixedUpdate()
     {
         if (showFrameRate)
             UIController.instance.UpdateFrameRate((1f / Time.deltaTime).ToString());

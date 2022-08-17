@@ -9,7 +9,7 @@ public class MenuPanel
     [SerializeField] public string panalName;
     [SerializeField] public GameObject menuObjectl;
     [SerializeField] public List<MenuPanelItem> menuPanelItems;
-    [SerializeField] MenuAnimatioSettings animationSettings;
+    [SerializeField] public MenuAnimatioSettings animationSettings;
 
     public bool active;
 
@@ -39,7 +39,7 @@ public class MenuPanel
             menuObjectl.SetActive(_state);
 
         foreach (MenuPanelItem item in menuPanelItems)
-            item.ActivateItem(_state, animationSettings);
+            item.ActivateItem(_state);
 
         if (!_state)
         {

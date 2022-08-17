@@ -12,49 +12,59 @@ public class MenuPanelItem
     [SerializeField] public string name;
     [SerializeField] public GameObject item;
     [SerializeField] public UnityEvent OnPress;
+    
     bool active;
+    MenuAnimatioSettings animationSettings;
 
-    public void Initialize()
+    public void Initialize(MenuAnimatioSettings _animationSettings)
     {
         if(item.GetComponentInChildren<Button>())
             (item.GetComponentInChildren<Button>()).onClick.AddListener(InvokeEvent);
+
+        animationSettings = _animationSettings;
     }
-    public void ActivateItem(bool _state, MenuAnimatioSettings _animationSettings)
+    public void ActivateItem(bool _state)
     {
-        ServicesProvider.instance.StartCoroutine(ActivateItem_CoRoutine(_state, _animationSettings));
+        ServicesProvider.instance.StartCoroutine(ActivateItem_CoRoutine(_state));
     }
     public bool IsActive()
     {
         return active;
     }
 
-    IEnumerator ActivateItem_CoRoutine(bool _state, MenuAnimatioSettings _animationSettings)
+    IEnumerator ActivateItem_CoRoutine(bool _state)
     {
         if (_state)
         {
-            item.gameObject.SetActive(_state);
+            item.gameObject.LeanScale(animationSettings.offScale, 0f);
+            item.gameObject.LeanScale(animationSettings.onScale, animationSettings.InAnimationTime).setEase(animationSettings.InAnimationCurve);
 
-            item.gameObject.LeanScale(_animationSettings.offScale, 0f);
-            item.gameObject.LeanScale(_animationSettings.onScale, _animationSettings.InAnimationTime).setEase(_animationSettings.InAnimationCurve);
-
-            yield return new WaitForSeconds(_animationSettings.InAnimationTime);
+            yield return new WaitForSeconds(animationSettings.InAnimationTime);
         }
         else
         {
-            item.gameObject.LeanScale(_animationSettings.onScale, 0f);
-            item.transform.LeanScale(_animationSettings.offScale, _animationSettings.OutAnimationTime).setEase(_animationSettings.OutAnimationCurve);
+            item.gameObject.LeanScale(animationSettings.onScale, 0f);
+            item.transform.LeanScale(animationSettings.offScale, animationSettings.OutAnimationTime).setEase(animationSettings.OutAnimationCurve);
 
-            yield return new WaitForSeconds(_animationSettings.OutAnimationTime);
-
-            item.gameObject.SetActive(_state);
+            yield return new WaitForSeconds(animationSettings.OutAnimationTime);
         }
 
         active = _state;
     }
     void InvokeEvent()
     {
-        Debug.Log("Pressed");
         OnPress.Invoke();
+
+        ServicesProvider.instance.StartCoroutine(OnPressAnimation());
     }
+    IEnumerator OnPressAnimation()
+    {
+        item.gameObject.LeanScale(animationSettings.onScale - animationSettings.pressedIncrementScale, animationSettings.pressedAnimationTime).setEase(animationSettings.pressedAnimationCurve);
+
+        yield return new WaitForSeconds(animationSettings.pressedAnimationTime);
+
+        item.gameObject.LeanScale(animationSettings.onScale, animationSettings.pressedAnimationTime).setEase(animationSettings.pressedAnimationCurve);
+    }
+
 }
 

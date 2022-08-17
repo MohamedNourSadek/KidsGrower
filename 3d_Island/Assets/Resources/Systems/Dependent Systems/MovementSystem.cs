@@ -84,7 +84,7 @@ public class MovementSystem
             _canDash = true;
         }
 
-        if(_canDash)
+        if(_canDash && body)
             body.AddForce(body.transform.forward * dashForce);
     }
     public bool IsDashable()

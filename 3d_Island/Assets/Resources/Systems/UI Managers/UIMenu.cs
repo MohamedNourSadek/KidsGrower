@@ -8,15 +8,14 @@ using UnityEngine.SceneManagement;
 
 public class UIMenu : MonoBehaviour, IPanelsManagerUser
 {
-    [SerializeField] string defaultPanel;
     [SerializeField] PanelsManager panelsManager;
     [SerializeField] BackgroundAnimation backgroundAnimation;
 
     void Start()
     {
         backgroundAnimation.Initialize();
-        panelsManager.Initialize(defaultPanel);
-    }
+        panelsManager.Initialize();
+    } 
     void OnDrawGizmos()
     {
         panelsManager.OnDrawGizmos();
@@ -25,7 +24,19 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
 
     public void OpenMenuPanel(string _menuName)
     {
-        panelsManager.OpenMenuPanel(_menuName);
+        panelsManager.OpenMenuPanel(_menuName, false);
+    }
+    public void ToggleMenuPanel(string _menuInfo)
+    {
+        panelsManager.ToggleMenuPanel(_menuInfo, false);
+    }
+    public void OpenMenuPanelNonExclusive(string _menuInfo)
+    {
+        panelsManager.OpenMenuPanel(_menuInfo, true);
+    }
+    public void CloseMenuPanelNonExclusive(string _menuInfo)
+    {
+        panelsManager.CloseMenuPanel(_menuInfo);
     }
     public void Quit()
     {
@@ -35,6 +46,8 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     {
         SceneManager.LoadSceneAsync(1);
     }
+
+
 }
 
 

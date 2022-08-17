@@ -471,9 +471,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e66204b7a29a3749b008755a1ff94ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPanel: Main
   panelsManager:
     updateNames: 0
+    overrideAnimations: 0
+    defaultPanel: Main
+    animationSettings:
+      offScale: {x: 1, y: 0, z: 0}
+      onScale: {x: 1, y: 1, z: 1}
+      InAnimationTime: 0.3
+      OutAnimationTime: 0.3
+      InAnimationCurve: 32
+      OutAnimationCurve: 32
+      pressedIncrementScale: {x: 1, y: 1, z: 1}
+      pressedAnimationTime: 0.1
+      pressedAnimationCurve: 32
     menuPanels:
     - panalName: Main
       menuObjectl: {fileID: 551046592}
@@ -519,6 +530,9 @@ MonoBehaviour:
         OutAnimationTime: 0.1
         InAnimationCurve: 32
         OutAnimationCurve: 32
+        pressedIncrementScale: {x: 1, y: 1, z: 1}
+        pressedAnimationTime: 0.1
+        pressedAnimationCurve: 32
       active: 0
     - panalName: Modes
       menuObjectl: {fileID: 831370521}
@@ -564,6 +578,9 @@ MonoBehaviour:
         OutAnimationTime: 0.1
         InAnimationCurve: 32
         OutAnimationCurve: 32
+        pressedIncrementScale: {x: 1, y: 1, z: 1}
+        pressedAnimationTime: 0.1
+        pressedAnimationCurve: 32
       active: 0
   backgroundAnimation:
     speed: 0.25
