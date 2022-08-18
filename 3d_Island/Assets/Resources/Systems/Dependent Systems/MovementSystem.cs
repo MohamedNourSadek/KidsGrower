@@ -73,10 +73,7 @@ public class MovementSystem
     }
     public void PerformDash()
     {
-        Debug.Log("Dash");
-
         bool _canDash = false;
-
         if(IsDashable())
         {
             timeSinceLastDash = 0f;

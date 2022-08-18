@@ -15,6 +15,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     [Header("References")]
     [SerializeField] GameObject threeDCanvas;
     [SerializeField] GameObject gameCanvas;
+    [SerializeField] GameObject inGamePanel;
     [SerializeField] GameObject ThreeDHighlightPrefab;
     [SerializeField] GameObject progressBarPrefab;
     [SerializeField] GameObject npcUiElementPrefab;
@@ -57,6 +58,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
 
         foreach(PanelsManager panelManager in PanelsManagers)
             panelManager.Initialize();
+
     }
     void OnDrawGizmos()
     {
@@ -133,7 +135,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     }
     public void CreateInventoryUI(string _itemTag, UnityEngine.Events.UnityAction _onClick)
     {
-        var _inventoryItem = Instantiate(inventoryElementPrefab, gameCanvas.transform).GetComponent<UiElement_Inventory>();
+        var _inventoryItem = Instantiate(inventoryElementPrefab, inGamePanel.transform).GetComponent<UiElement_Inventory>();
 
         _inventoryItem.elementButton.onClick.AddListener(_onClick);
         _inventoryItem.elementName.text = _itemTag;

@@ -62,13 +62,22 @@ public class GameManager : MonoBehaviour, IInputUser
 
         camCustomizingViewPos = Camera.main.transform.position;
         camCustomizingViewRot = Camera.main.transform.rotation;
-
+        
         LoadSettings();
+
+        StartCoroutine(UpdateFrameRate());
     }
-    void FixedUpdate()
+    IEnumerator UpdateFrameRate()
     {
-        if (showFrameRate)
-            UIController.instance.UpdateFrameRate((1f / Time.deltaTime).ToString());
+        while(true)
+        {
+            if (showFrameRate)
+                UIController.instance.UpdateFrameRate(((int)(1f / Time.deltaTime)).ToString());
+            else
+                UIController.instance.UpdateFrameRate("");
+
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime * 10f);
+        }
     }
     RaycastHit CastFromMouse()
     {

@@ -138,7 +138,7 @@ MonoBehaviour:
   nearObjectDistance: 1
   playerBody: {fileID: 6949429005409692763}
   movementSystem:
-    _groundDetector:
+    groundDetector:
       detectableLayers:
         serializedVersion: 2
         m_Bits: 80
@@ -163,7 +163,7 @@ MonoBehaviour:
     myHand: {fileID: 6949429004428104456}
     throwForce: 100
     pickSpeedThrushold: 50
-    petTime: 1
+    petTime: 4
     detector: {fileID: 0}
     gotSomething: 0
     canPick: 0

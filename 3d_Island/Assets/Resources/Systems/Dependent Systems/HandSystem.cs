@@ -25,6 +25,7 @@ public class HandSystem
     //Private Data
     Pickable objectInHand = new();
     IController myController;
+    bool isPetting;
 
 
     //Outside Interface
@@ -53,7 +54,7 @@ public class HandSystem
         if (objectInHand && objectInHand.GetComponent<Plantable>())
             canPlant = objectInHand.GetComponent<Plantable>().IsOnPlatingGround(this.myController.GetBody().transform.position);
 
-        canPet = (detector.GetDetectable("NPC").detectionStatus == DetectionStatus.VeryNear) && (objectInHand == null);
+        canPet = (detector.GetDetectable("NPC").detectionStatus == DetectionStatus.VeryNear) && (objectInHand == null) && (isPetting == false);
     }
     
 
@@ -93,6 +94,8 @@ public class HandSystem
 
                 myController.GetBody().isKinematic = true;
                 _npc.StartPetting();
+
+                isPetting = true;
 
                 canPick = false;
 
@@ -176,6 +179,8 @@ public class HandSystem
         _npc.EndPetting();
         myController.GetBody().isKinematic = false;
         DropObject();
+
+        isPetting = false;
     }
     IEnumerator UpdatePetCondition(ConditionChecker _condition)
     {

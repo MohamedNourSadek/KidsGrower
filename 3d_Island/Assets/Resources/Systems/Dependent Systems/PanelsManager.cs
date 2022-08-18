@@ -94,19 +94,6 @@ public class PanelsManager
     {
         return menuPanels[GetActivePage() + i].panalName;
     }
-    public int GetActivePage()
-    {
-        int _activePage = 0;
-
-        for (int j = 0; j < menuPanels.Count; j++)
-        {
-            if (menuPanels[j].active)
-                _activePage = j;
-        }
-
-        return _activePage;
-    }
-
     public ListPossibleDirections GetPossibleDirection(int _activePage)
     {
         ListPossibleDirections _directions = new();
@@ -128,6 +115,18 @@ public class PanelsManager
         }
 
         return _directions;
+    }
+    public int GetActivePage()
+    {
+        int _activePage = 0;
+
+        for (int j = 0; j < menuPanels.Count; j++)
+        {
+            if (menuPanels[j].active)
+                _activePage = j;
+        }
+
+        return _activePage;
     }
 
 

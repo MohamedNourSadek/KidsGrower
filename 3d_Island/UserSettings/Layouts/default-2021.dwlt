@@ -43,7 +43,7 @@ MonoBehaviour:
     width: 1858
     height: 1037
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Project
   m_RootView: {fileID: 7}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 221}
   m_MaxSize: {x: 4000, y: 4021}
   vertical: 0
-  controlID: 45
+  controlID: 24
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 70
+  controlID: 17
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -244,7 +244,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 68
+  controlID: 15
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -269,7 +269,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 69
+  controlID: 16
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -342,8 +342,8 @@ MonoBehaviour:
     y: 0
     width: 681
     height: 987
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 71}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 20}
   m_Panes:
   - {fileID: 20}
@@ -391,22 +391,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Resources/Systems/Data Structures
+    - Assets/Resources/Systems
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Resources/Systems/Data Structures
+  - Assets/Resources/Systems
   m_LastFoldersGridSize: -1
   m_LastProjectPath: Z:\3d island Game\Repo\Upwork_3DIsland\3d_Island
   m_LockTracker:
-    m_IsLocked: 1
+    m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 113}
-    m_SelectedIDs: 04780000
-    m_LastClickedID: 30724
-    m_ExpandedIDs: 00000000de770000e0770000e2770000ea770000
+    m_SelectedIDs: f4770000
+    m_LastClickedID: 30708
+    m_ExpandedIDs: 00000000f2770000f4770000f6770000fe770000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -434,7 +434,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000de770000e0770000e2770000
+    m_ExpandedIDs: 00000000f2770000f4770000f6770000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -486,7 +486,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 124}
+    m_ScrollPosition: {x: 0, y: 0}
     m_GridSize: 16
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 200
@@ -522,9 +522,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 22270200
+      m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 64d5ffffd6280200
+      m_ExpandedIDs: 30e1ffffeee1ffff56e8ffff6aeaffff1cfbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -583,7 +583,7 @@ MonoBehaviour:
   m_ShowGizmos: 0
   m_TargetDisplay: 0
   m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
-  m_TargetSize: {x: 1920, y: 1080}
+  m_TargetSize: {x: 1218, y: 685}
   m_TextureFilterMode: 0
   m_TextureHideFlags: 61
   m_RenderIMGUI: 1
@@ -598,10 +598,10 @@ MonoBehaviour:
     m_VRangeLocked: 0
     hZoomLockedByDefault: 0
     vZoomLockedByDefault: 0
-    m_HBaseRangeMin: -960
-    m_HBaseRangeMax: 960
-    m_VBaseRangeMin: -540
-    m_VBaseRangeMax: 540
+    m_HBaseRangeMin: -609
+    m_HBaseRangeMax: 609
+    m_VBaseRangeMin: -342.5
+    m_VBaseRangeMax: 342.5
     m_HAllowExceedBaseRangeMin: 1
     m_HAllowExceedBaseRangeMax: 1
     m_VAllowExceedBaseRangeMin: 1
@@ -621,7 +621,7 @@ MonoBehaviour:
       y: 21
       width: 1218
       height: 982
-    m_Scale: {x: 0.634375, y: 0.634375}
+    m_Scale: {x: 1, y: 1}
     m_Translation: {x: 609, y: 491}
     m_MarginLeft: 0
     m_MarginRight: 0
@@ -629,12 +629,12 @@ MonoBehaviour:
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -960.00006
-      y: -773.9902
-      width: 1920.0001
-      height: 1547.9803
+      x: -609
+      y: -491
+      width: 1218
+      height: 982
     m_MinimalGUI: 1
-  m_defaultScale: 0.634375
+  m_defaultScale: 1
   m_LastWindowPixelSize: {x: 1218, y: 1003}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
