@@ -1308,7 +1308,6 @@ GameObject:
   - component: {fileID: 173165267}
   - component: {fileID: 173165268}
   - component: {fileID: 173165271}
-  - component: {fileID: 173165270}
   m_Layer: 5
   m_Name: Option Keys
   m_TagString: Untagged
@@ -1364,36 +1363,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &173165270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 173165266}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &173165271
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6053,7 +6022,6 @@ GameObject:
   - component: {fileID: 732591683}
   - component: {fileID: 732591684}
   - component: {fileID: 732591687}
-  - component: {fileID: 732591686}
   m_Layer: 5
   m_Name: Design Tools
   m_TagString: Untagged
@@ -6109,36 +6077,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &732591686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 732591682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &732591687
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10569,7 +10507,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a72fe27d62413d546b924f0f397f227d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gm: {fileID: 79885352}
 --- !u!1 &1346223313
 GameObject:
   m_ObjectHideFlags: 0
@@ -14708,6 +14645,46 @@ MonoBehaviour:
     - panalName: Game
       menuObjectl: {fileID: 1594530135}
       menuPanelItems:
+      - name: Move
+        item: {fileID: 666944376}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Cam
+        item: {fileID: 1225312508}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Jump
+        item: {fileID: 735624346}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Pick
+        item: {fileID: 1132470708}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Throw
+        item: {fileID: 445975211}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Plant
+        item: {fileID: 1556173579}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Dash
+        item: {fileID: 722245221}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
+      - name: Pet
+        item: {fileID: 1533739141}
+        OnPress:
+          m_PersistentCalls:
+            m_Calls: []
       - name: Options
         item: {fileID: 898166117}
         OnPress:
@@ -14756,46 +14733,6 @@ MonoBehaviour:
                 m_StringArgument: Design Tools0
                 m_BoolArgument: 0
               m_CallState: 2
-      - name: Move
-        item: {fileID: 666944376}
-        OnPress:
-          m_PersistentCalls:
-            m_Calls: []
-      - name: Cam
-        item: {fileID: 1225312508}
-        OnPress:
-          m_PersistentCalls:
-            m_Calls: []
-      - name: Jump
-        item: {fileID: 735624346}
-        OnPress:
-          m_PersistentCalls:
-            m_Calls: []
-      - name: Pick
-        item: {fileID: 1132470708}
-        OnPress:
-          m_PersistentCalls:
-            m_Calls: []
-      - name: Throw
-        item: {fileID: 445975211}
-        OnPress:
-          m_PersistentCalls:
-            m_Calls: []
-      - name: Plant
-        item: {fileID: 1556173579}
-        OnPress:
-          m_PersistentCalls:
-            m_Calls: []
-      - name: Dash
-        item: {fileID: 722245221}
-        OnPress:
-          m_PersistentCalls:
-            m_Calls: []
-      - name: Pet
-        item: {fileID: 1533739141}
-        OnPress:
-          m_PersistentCalls:
-            m_Calls: []
       animationSettings:
         offScale: {x: 0, y: 0, z: 0}
         onScale: {x: 0, y: 0, z: 0}

@@ -483,7 +483,7 @@ MonoBehaviour:
       OutAnimationTime: 0.3
       InAnimationCurve: 32
       OutAnimationCurve: 32
-      pressedIncrementScale: {x: 1, y: 1, z: 1}
+      pressedIncrementScale: {x: 0.2, y: 0.2, z: 0.2}
       pressedAnimationTime: 0.1
       pressedAnimationCurve: 32
     menuPanels:
