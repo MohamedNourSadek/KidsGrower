@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using Unity.VisualScripting;
+
 
 public enum CustomizingState { Detecting, Moving }
 
@@ -9,6 +13,9 @@ public class GameManager : MonoBehaviour, IInputUser
 {
     [SerializeField] bool lockFrameRate = false;
     [SerializeField] int frameRatelock = 60;
+
+    [Header("References")]
+    [SerializeField] Volume volume;
 
     [Header("Game Design")]
     [SerializeField] bool showFrameRate;
@@ -41,7 +48,8 @@ public class GameManager : MonoBehaviour, IInputUser
     CustomizableObject lastdetected;
     Vector3 camCustomizingViewPos;
     Quaternion camCustomizingViewRot;
-
+    DepthOfField depthOfField;
+    
 
     void Start()
     {
@@ -66,6 +74,10 @@ public class GameManager : MonoBehaviour, IInputUser
         LoadSettings();
 
         StartCoroutine(UpdateFrameRate());
+
+        VolumeProfile profile = volume.sharedProfile;
+        depthOfField = (DepthOfField)(profile.components[2]);
+        depthOfField.focusDistance.value = 0f;
     }
     IEnumerator UpdateFrameRate()
     {
@@ -99,12 +111,21 @@ public class GameManager : MonoBehaviour, IInputUser
     public void SetCustomizing(bool state)
     {
         customizing = state;
+
+        if(state)
+            depthOfField.focusDistance.value = 10f;
+        else
+            depthOfField.focusDistance.value = 0f;
+
     }
     public void SetPlaying(bool state)
     {
+
         if (state)
         {
             myPlayer.gameObject.SetActive(true);
+
+            depthOfField.focusDistance.value = 10f;
         }
         else
         {
@@ -112,6 +133,8 @@ public class GameManager : MonoBehaviour, IInputUser
 
             Camera.main.transform.position = camCustomizingViewPos;
             Camera.main.transform.rotation = camCustomizingViewRot;
+
+            depthOfField.focusDistance.value = 0f;
         }
     }
 
