@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 590682803283720483}
   - component: {fileID: 590682803283720482}
   m_Layer: 7
-  m_Name: Seed_big
+  m_Name: Seed_med
   m_TagString: Seed
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 590682803283720484}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 2.4869, z: 1}
+  m_LocalScale: {x: 0.42548, y: 2.2716913, z: 0.42548}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7058220185831580077}
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4de1e092d4dadf141842af87cbbc59c0, type: 2}
+  - {fileID: 2100000, guid: ab5cf8c98816322448a447e9dcd3a182, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 590682803784169622}
   - component: {fileID: 590682803784169609}
   m_Layer: 7
-  m_Name: Seed_med
+  m_Name: Seed_big
   m_TagString: Seed
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,7 +126,7 @@ Transform:
   m_GameObject: {fileID: 590682803784169611}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 2.4869, z: 1}
+  m_LocalScale: {x: 1.275913, y: 1.0674616, z: 1.275913}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7058220185831580077}
@@ -160,7 +160,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ab5cf8c98816322448a447e9dcd3a182, type: 2}
+  - {fileID: 2100000, guid: 4de1e092d4dadf141842af87cbbc59c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -196,7 +196,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0.00000047683716, z: 0.000015258789}
---- !u!1 &7058220185831580065
+--- !u!1 &1156392986627540040
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -204,96 +204,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7058220185831580077}
-  - component: {fileID: 7058220185831580078}
-  - component: {fileID: 1282976081454155759}
-  m_Layer: 7
-  m_Name: 'Seed '
-  m_TagString: Seed
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7058220185831580077
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7058220185831580065}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.9971678, y: -3.002325, z: -1.7429314}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8623895066074952831}
-  - {fileID: 8623895068058628197}
-  - {fileID: 590682803784169608}
-  - {fileID: 590682803283720485}
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &7058220185831580078
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7058220185831580065}
-  serializedVersion: 2
-  m_Mass: 5
-  m_Drag: 2
-  m_AngularDrag: 0.1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 2
---- !u!114 &1282976081454155759
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7058220185831580065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aec95adf4b0dee14a8e8f1e9478f4b3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  indicatorObject: {fileID: 8623895066074952830}
-  myBody: {fileID: 7058220185831580078}
-  holder:
-    myHand: {fileID: 0}
-    throwForce: 20
-    pickSpeedThrushold: 2
-    petTime: 1
-    detector: {fileID: 0}
-    gotSomething: 0
-    canPick: 0
-    canDrop: 0
-    canThrow: 0
-    canPlant: 0
-    canPet: 0
-  plantTime: 10
-  plantDistance: 0
-  allowedToPlantOn: 01000000
-  harvestPrefab: {fileID: 1622378823701921160, guid: 042a16388f9dae64eacd82ef58a77842,
-    type: 3}
-  small: {fileID: 8623895068058628201}
-  medium: {fileID: 590682803784169611}
-  final: {fileID: 590682803283720484}
---- !u!1 &8623895066074952830
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8623895066074952831}
-  - component: {fileID: 8623895066074952825}
-  - component: {fileID: 8623895066074952824}
+  - component: {fileID: 7813163038172718708}
+  - component: {fileID: 6065093043715655028}
+  - component: {fileID: 3693140719927781232}
   m_Layer: 7
   m_Name: Indicator
   m_TagString: Seed
@@ -301,36 +214,36 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!4 &8623895066074952831
+--- !u!4 &7813163038172718708
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8623895066074952830}
+  m_GameObject: {fileID: 1156392986627540040}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0972, y: 1.0972, z: 1.0972}
+  m_LocalScale: {x: 1.6571131, y: 1.6571131, z: 1.6571131}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7058220185831580077}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &8623895066074952825
+--- !u!33 &6065093043715655028
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8623895066074952830}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &8623895066074952824
+  m_GameObject: {fileID: 1156392986627540040}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &3693140719927781232
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8623895066074952830}
+  m_GameObject: {fileID: 1156392986627540040}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -366,6 +279,93 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7058220185831580065
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7058220185831580077}
+  - component: {fileID: 7058220185831580078}
+  - component: {fileID: 1282976081454155759}
+  m_Layer: 7
+  m_Name: 'Seed '
+  m_TagString: Seed
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7058220185831580077
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7058220185831580065}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.9971678, y: -3.002325, z: -1.7429314}
+  m_LocalScale: {x: 0.17248, y: 0.17248, z: 0.17248}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7813163038172718708}
+  - {fileID: 8623895068058628197}
+  - {fileID: 590682803283720485}
+  - {fileID: 590682803784169608}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &7058220185831580078
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7058220185831580065}
+  serializedVersion: 2
+  m_Mass: 5
+  m_Drag: 2
+  m_AngularDrag: 0.1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 2
+--- !u!114 &1282976081454155759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7058220185831580065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec95adf4b0dee14a8e8f1e9478f4b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  indicatorObject: {fileID: 1156392986627540040}
+  myBody: {fileID: 7058220185831580078}
+  holder:
+    myHand: {fileID: 0}
+    throwForce: 20
+    pickSpeedThrushold: 2
+    petTime: 1
+    detector: {fileID: 0}
+    gotSomething: 0
+    canPick: 0
+    canDrop: 0
+    canThrow: 0
+    canPlant: 0
+    canPet: 0
+  plantTime: 10
+  plantDistance: 0
+  allowedToPlantOn: 01000000
+  harvestPrefab: {fileID: 1622378823701921160, guid: 042a16388f9dae64eacd82ef58a77842,
+    type: 3}
+  small: {fileID: 8623895068058628201}
+  medium: {fileID: 590682803283720484}
+  final: {fileID: 590682803784169611}
 --- !u!1 &8623895068058628201
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,7 +377,7 @@ GameObject:
   - component: {fileID: 8623895068058628197}
   - component: {fileID: 8623895068058628196}
   - component: {fileID: 8623895068058628203}
-  - component: {fileID: 8623895068058628214}
+  - component: {fileID: 440595797100046803}
   m_Layer: 7
   m_Name: Seed_small
   m_TagString: Seed
@@ -394,7 +394,7 @@ Transform:
   m_GameObject: {fileID: 8623895068058628201}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.3977, y: 1.3977, z: 1.3977}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7058220185831580077}
@@ -407,7 +407,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8623895068058628201}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &8623895068058628203
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -450,8 +450,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &8623895068058628214
-CapsuleCollider:
+--- !u!135 &440595797100046803
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -460,7 +460,6 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0.000015258789}
+  m_Center: {x: 0, y: 0, z: 0}

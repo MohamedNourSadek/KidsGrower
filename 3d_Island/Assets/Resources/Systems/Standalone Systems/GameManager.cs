@@ -77,7 +77,8 @@ public class GameManager : MonoBehaviour, IInputUser
 
         VolumeProfile profile = volume.sharedProfile;
         depthOfField = (DepthOfField)(profile.components[2]);
-        depthOfField.focusDistance.value = 0f;
+
+        SetBlur(true);
     }
     IEnumerator UpdateFrameRate()
     {
@@ -112,20 +113,15 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         customizing = state;
 
-        if(state)
-            depthOfField.focusDistance.value = 10f;
-        else
-            depthOfField.focusDistance.value = 0f;
-
+        SetBlur(!state);
     }
     public void SetPlaying(bool state)
     {
+        SetBlur(!state);
 
         if (state)
         {
             myPlayer.gameObject.SetActive(true);
-
-            depthOfField.focusDistance.value = 10f;
         }
         else
         {
@@ -133,11 +129,17 @@ public class GameManager : MonoBehaviour, IInputUser
 
             Camera.main.transform.position = camCustomizingViewPos;
             Camera.main.transform.rotation = camCustomizingViewRot;
-
-            depthOfField.focusDistance.value = 0f;
         }
     }
 
+
+    public void SetBlur(bool state)
+    {
+        if(!state)
+            depthOfField.focusDistance.value = 10f;
+        else
+            depthOfField.focusDistance.value = 0f;
+    }
     public void ApplySettings()
     {
         var _npcs = FindObjectsOfType<NPC>();

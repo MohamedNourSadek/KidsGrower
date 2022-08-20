@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &9195431514108108733
+--- !u!1 &931315857208889071
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9195431514108108732}
-  - component: {fileID: 9195431514108108730}
-  - component: {fileID: 9195431514108108731}
+  - component: {fileID: 6563160909789883508}
+  - component: {fileID: 7985467461409327067}
+  - component: {fileID: 1808370137526891156}
   m_Layer: 7
   m_Name: Indicator
   m_TagString: Fruit
@@ -18,36 +18,36 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!4 &9195431514108108732
+--- !u!4 &6563160909789883508
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9195431514108108733}
+  m_GameObject: {fileID: 931315857208889071}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0972, y: 1.0972, z: 1.0972}
+  m_LocalScale: {x: 1.2033, y: 1.2033, z: 1.2033}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9195431515479874470}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &9195431514108108730
+--- !u!33 &7985467461409327067
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9195431514108108733}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &9195431514108108731
+  m_GameObject: {fileID: 931315857208889071}
+  m_Mesh: {fileID: -472147775963580301, guid: c2ec9edac26693945942243f872abb95, type: 3}
+--- !u!23 &1808370137526891156
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9195431514108108733}
+  m_GameObject: {fileID: 931315857208889071}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -94,9 +94,9 @@ GameObject:
   - component: {fileID: 9195431515479874470}
   - component: {fileID: 9195431515479874471}
   - component: {fileID: 9195431515479874472}
-  - component: {fileID: 9195431515479874473}
   - component: {fileID: 9195431515479874469}
   - component: {fileID: 9195431515479874468}
+  - component: {fileID: 8472993618989808573}
   m_Layer: 7
   m_Name: Fruit
   m_TagString: Fruit
@@ -113,10 +113,10 @@ Transform:
   m_GameObject: {fileID: 9195431515479874474}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.39, y: 1.92, z: -0.17}
-  m_LocalScale: {x: 0.4741428, y: 0.20977062, z: 0.4741428}
+  m_LocalScale: {x: 0.005543728, y: 0.0055437265, z: 0.005543728}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 9195431514108108732}
+  - {fileID: 6563160909789883508}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -127,7 +127,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9195431515479874474}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -472147775963580301, guid: c2ec9edac26693945942243f872abb95, type: 3}
 --- !u!23 &9195431515479874472
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -170,20 +170,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &9195431515479874473
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9195431515479874474}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &9195431515479874469
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -212,7 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733adfa2bd557934d97fe2d79ad07755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  indicatorObject: {fileID: 9195431514108108733}
+  indicatorObject: {fileID: 931315857208889071}
   myBody: {fileID: 9195431515479874469}
   holder:
     myHand: {fileID: 0}
@@ -234,3 +220,16 @@ MonoBehaviour:
     groundTag: Ground
     waterTag: Water
     onGroundThreshold: 1.3
+--- !u!135 &8472993618989808573
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9195431515479874474}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 40.01
+  m_Center: {x: 0, y: 3, z: 0}
