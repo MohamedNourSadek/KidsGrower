@@ -7,6 +7,7 @@ using UnityEngine;
 public class CameraSystem 
 {
     [SerializeField] Camera controlledCamera;
+    [SerializeField] CameraCollision camCollision;
     [SerializeField] float distanceFromObject;
     [SerializeField] Vector2 cameraHeighLimits;
     [SerializeField] Vector2 rotationInputSensitivity;
@@ -48,12 +49,12 @@ public class CameraSystem
     void TraslateCamera()
     {
         //Lerping the object position instead of the camera, because we want the camera to move only on its circle.
-        finalFollowedPosition = Vector3.Lerp(finalFollowedPosition, followedObject.transform.position, Time.fixedDeltaTime * delay);
+        finalFollowedPosition = Vector3.Lerp(finalFollowedPosition, followedObject.transform.position + camCollision.GetCollisionModification(), Time.fixedDeltaTime * delay);
          
         currentRotationFactor = currentRotationFactor +  ((rotationFactor.x - currentRotationFactor) *  Time.fixedDeltaTime * rotationSpeed);
 
         //Move the camera to the final Position on the circle.
-        controlledCamera.transform.position = finalFollowedPosition
+        controlledCamera.transform.position = finalFollowedPosition 
                                                 + (Vector3.up * rotationFactor.y) // Height
                                                 + (distanceFromObject * Vector3.forward * Mathf.Cos(currentRotationFactor)) // r * cos(theta)
                                                 + (distanceFromObject * Vector3.right * Mathf.Sin(currentRotationFactor));  // r * sin(theta)

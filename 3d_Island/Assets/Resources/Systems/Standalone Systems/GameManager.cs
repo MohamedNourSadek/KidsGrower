@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour, IInputUser
             else
                 UIController.instance.UpdateFrameRate("");
 
-            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime * 10f);
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime * 5f);
         }
     }
     RaycastHit CastFromMouse()
@@ -135,10 +135,10 @@ public class GameManager : MonoBehaviour, IInputUser
 
     public void SetBlur(bool state)
     {
-        if(!state)
-            depthOfField.focusDistance.value = 10f;
+        if (!state)
+            depthOfField.active = false;
         else
-            depthOfField.focusDistance.value = 0f;
+            depthOfField.active = true;
     }
     public void ApplySettings()
     {

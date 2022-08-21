@@ -267,8 +267,6 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     {
         _myImage.color =  new Color(_myImage.color.r, _myImage.color.g, _myImage.color.b, _state ? buttonOnAlpha : buttonOffAlpha);
     }
-
-
 }
 
 
