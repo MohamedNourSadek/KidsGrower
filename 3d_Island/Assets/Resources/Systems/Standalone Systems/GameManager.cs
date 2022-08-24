@@ -2,9 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
-using Unity.VisualScripting;
 
 
 public enum CustomizingState { Detecting, Moving }
@@ -13,9 +10,7 @@ public class GameManager : MonoBehaviour, IInputUser
 {
     [SerializeField] bool lockFrameRate = false;
     [SerializeField] int frameRatelock = 60;
-
-    [Header("References")]
-    [SerializeField] Volume volume;
+    [SerializeField] PostProcessingFunctions posProcessingFunctions;
 
     [Header("Game Design")]
     [SerializeField] bool showFrameRate;
@@ -42,13 +37,11 @@ public class GameManager : MonoBehaviour, IInputUser
 
 
     public static GameManager instance;
-    
     CustomizingState customizingState = CustomizingState.Detecting;
     bool customizing = false;
     CustomizableObject lastdetected;
     Vector3 camCustomizingViewPos;
     Quaternion camCustomizingViewRot;
-    DepthOfField depthOfField;
     
 
     void Start()
@@ -75,9 +68,7 @@ public class GameManager : MonoBehaviour, IInputUser
 
         StartCoroutine(UpdateFrameRate());
 
-        VolumeProfile profile = volume.sharedProfile;
-        depthOfField = (DepthOfField)(profile.components[2]);
-
+        posProcessingFunctions.Initialize();
         SetBlur(true);
     }
     IEnumerator UpdateFrameRate()
@@ -132,13 +123,9 @@ public class GameManager : MonoBehaviour, IInputUser
         }
     }
 
-
-    public void SetBlur(bool state)
+    public void SetBlur(bool _state)
     {
-        if (!state)
-            depthOfField.active = false;
-        else
-            depthOfField.active = true;
+        posProcessingFunctions.SetBlur(_state);
     }
     public void ApplySettings()
     {
@@ -216,7 +203,6 @@ public class GameManager : MonoBehaviour, IInputUser
         foreach (SliderElement slider in UIController.instance.GetSliders())
             PlayerPrefs.SetFloat(slider.saveName, slider.mySlider.value);
     }
-    
     
     public void RestartLevel()
     {

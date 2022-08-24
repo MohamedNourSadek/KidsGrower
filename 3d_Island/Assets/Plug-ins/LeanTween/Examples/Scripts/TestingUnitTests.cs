@@ -394,7 +394,7 @@ namespace DentedPixel.LTExamples
                     {
                         setPosOnUpdate = false;
                     }
-                    //                  Debug.LogWarning("New Position: " + newPosition.ToString());
+                    //                  Debug.LogWarning("Add Position: " + newPosition.ToString());
                 }).
                 setOnCompleteParam(finalDict).
                 setOnComplete((object param) => {

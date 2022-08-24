@@ -60,6 +60,8 @@ public class PanelsManager
                         name = item.item.GetComponentInChildren<Text>().text;
                     else if(item.item.GetComponent<Text>())
                         name = item.item.GetComponent<Text>().text;
+                    else
+                        name = item.name;
 
 
                     item.item.name = name;
@@ -88,7 +90,16 @@ public class PanelsManager
             OpenMenuPanel(_menuPanelName, _exculsive);
         }
     }
-    
+    public MenuPanel GetPanel(string _menuPanelName)
+    {
+        foreach(MenuPanel _panel in menuPanels)
+        {
+            if(_panel.panalName == _menuPanelName)
+                return _panel;  
+        }
+
+        return null;
+    }
     
     public string GetPanelRelativeToActive(int i)
     {
