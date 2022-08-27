@@ -53,7 +53,7 @@ public class CameraSystem
          
         currentRotationFactor = currentRotationFactor +  ((rotationFactor.x - currentRotationFactor) *  Time.fixedDeltaTime * rotationSpeed);
 
-        //Move the camera to the final Position on the circle.
+        //Move the camera to the final nVector3 on the circle.
         controlledCamera.transform.position = finalFollowedPosition 
                                                 + (Vector3.up * rotationFactor.y) // Height
                                                 + (distanceFromObject * Vector3.forward * Mathf.Cos(currentRotationFactor)) // r * cos(theta)

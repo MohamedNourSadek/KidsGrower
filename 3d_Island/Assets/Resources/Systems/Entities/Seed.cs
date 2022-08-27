@@ -10,6 +10,21 @@ public class Seed : Plantable
     [SerializeField] GameObject medium;
     [SerializeField] GameObject final;
 
+
+    public void LoadData(Seed_Data seed_Data)
+    {
+        transform.position = seed_Data.position.GetVector();
+    }
+    public Seed_Data GetData()
+    {
+        Seed_Data seed_data = new Seed_Data();
+
+        seed_data.position = new nVector3(transform.position);
+
+        return seed_data;
+    }
+
+
     protected override void CancelPlant()
     {
         base.CancelPlant();

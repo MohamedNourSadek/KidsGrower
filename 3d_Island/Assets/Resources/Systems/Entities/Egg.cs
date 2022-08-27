@@ -11,6 +11,21 @@ public class Egg : Plantable
 
     float rottenness = 0f;
 
+
+    public void LoadData(Egg_Data egg_data)
+    {
+        transform.position = egg_data.position.GetVector();
+    }
+    public Egg_Data GetData()
+    {
+        Egg_Data egg_data = new Egg_Data();
+
+        egg_data.position = new nVector3(transform.position);
+
+        return egg_data;
+    }
+
+
     public void SetRottenness(float _rottenness)
     {
         this.rottenness = _rottenness;

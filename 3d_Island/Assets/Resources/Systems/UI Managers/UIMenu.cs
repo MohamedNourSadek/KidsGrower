@@ -52,13 +52,7 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     {
         var _time = System.DateTime.Now;
 
-        SessionData sessionData = new SessionData()
-        {
-            sessionName = saveNameInput.text,
-            modeName = "Mode1",
-            since = _time.ToString(),
-            data = new GameData() {npcs = " 1"},
-        };
+        SessionData sessionData = new SessionData(saveNameInput.text, "Model 1", _time.ToString());
 
         DataManager.instance.Add(sessionData);
         
@@ -67,6 +61,9 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     }
     public void LoadSave()
     {
+        var _save = selected.GetComponent<SaveInfo>();
+        DataManager.instance.SetCurrentSession(_save.saveName.text);
+
         OpenGame();
     }
     public void DeleteSave()

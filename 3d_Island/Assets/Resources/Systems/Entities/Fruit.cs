@@ -14,6 +14,20 @@ public class Fruit : Pickable
         currentEnergy = totalEnergy;
     }
 
+
+    public void LoadData(Fruit_Data fruit_data)
+    {
+        transform.position = fruit_data.position.GetVector();
+    }
+    public Fruit_Data GetData()
+    {
+        Fruit_Data fruit_data = new Fruit_Data();
+
+        fruit_data.position = new nVector3(transform.position);
+
+        return fruit_data;
+    }
+
     public bool OnGround()
     {
         return ground.IsOnGroud(myBody);

@@ -113,6 +113,26 @@ public class NPC : Pickable, IController, IStateMachineController
 
 
     //Interface
+    public void LoadData(NPC_Data npc_data)
+    {
+        transform.position = npc_data.position.GetVector();
+        transform.rotation = npc_data.rotation.GetQuaternion();
+        bornSince = npc_data.bornSince;
+        
+        levelController.IncreaseXP(npc_data.xp);
+        OnXPIncrease();
+    }
+    public NPC_Data GetData()
+    {
+        NPC_Data npc_data = new NPC_Data();
+
+        npc_data.position = new nVector3(transform.position);
+        npc_data.rotation = new nQuaternion(transform.rotation);
+        npc_data.bornSince = bornSince;
+        npc_data.xp = levelController.GetXp();
+
+        return npc_data;
+    }
     public override void Pick(HandSystem _picker)
     {
         base.Pick(_picker);
@@ -137,7 +157,6 @@ public class NPC : Pickable, IController, IStateMachineController
         myBody.isKinematic = false;
         petting = false;
     }
-
 
     //Growing Up
     IEnumerator GrowingUp()
@@ -577,7 +596,7 @@ public class NPC : Pickable, IController, IStateMachineController
     }
 
 
-    private void OnDrawGizmos()
+    void OnDrawGizmos()
     {
         if(myAgent)
             Gizmos.DrawSphere(myAgent.destination, .2f);

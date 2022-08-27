@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
 {
@@ -11,7 +12,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     [SerializeField] CameraSystem myCamera;
     [SerializeField] HandSystem handSystem;
     [SerializeField] DetectorSystem detector;
-    
     
     InventorySystem inventorySystem;
    
@@ -71,18 +71,37 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     }
 
 
+    //Interface 
+    public void LoadData(Player_Data player_data)
+    {
+        if (player_data.position.GetVector().magnitude != 0)
+            transform.position = player_data.position.GetVector();
+
+        transform.rotation = player_data.rotation.GetQuaternion();
+    }
+    public Player_Data GetData()
+    {
+        Player_Data player_data = new Player_Data();
+
+        player_data.position = new nVector3(transform.position);
+        player_data.rotation = new nQuaternion(transform.rotation);
+
+        return player_data;
+    }
+
+
     //Hand controller Interface implementations
     public Rigidbody GetBody()
     {
         return playerBody;
     }
-
+    
 
     ///(Movement-Input-Hand) Interface
     public void MoveInput(Vector2 _movementInput)
     {
         movementSystem.PreformMove(_movementInput);
-    }
+    } 
     public void RotateInput(Vector2 _deltaRotation)
     {
         myCamera.RotateCamera(_deltaRotation);

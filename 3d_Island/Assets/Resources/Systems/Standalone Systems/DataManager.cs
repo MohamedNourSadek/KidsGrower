@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 using System.IO;
+using UnityEditor;
 
 public class DataManager : MonoBehaviour 
 {
+    public static DataManager instance;
+
+
     //Internal
     static string path;
     List<SessionData> dataCache;
+    SessionData currentSession;
 
     void Awake()
     {
         if(instance == null)
         {
             instance = this;
-            path = Application.persistentDataPath + "savedDate.json";
+            path = Application.persistentDataPath + "/savedDate.json";
+            if (File.Exists(path) == false)
+                File.Create(path);
         }
         else
         {
@@ -32,15 +39,19 @@ public class DataManager : MonoBehaviour
     }
 
 
-    public static DataManager instance;
+    //Interface to access all sessions Data
     public List<SessionData> GetSavedData()
     {
         if(dataCache == null)
         {
             string save = File.ReadAllText(path);
+            
             List<SessionData> data = JsonConvert.DeserializeObject<List<SessionData>>(save);
 
-            dataCache = data;
+            if(data != null)
+                dataCache = data;
+            else 
+                dataCache = new List<SessionData>(); 
         }
 
         return dataCache;
@@ -48,16 +59,8 @@ public class DataManager : MonoBehaviour
     public void Add(SessionData sessionData)
     {
         List<SessionData> list = GetSavedData();
-        list.Add(sessionData);
 
-        SaveData(list);
-    }
-    public void Modify(SessionData newData)
-    {
-        List<SessionData> list = GetSavedData();
-        SessionData oldData = list.Find(x => x.sessionName == newData.sessionName);
-        int i = list.IndexOf(oldData);
-        list[i] = newData;
+        list.Add(sessionData);
 
         SaveData(list);
     }
@@ -69,16 +72,46 @@ public class DataManager : MonoBehaviour
 
         SaveData(list);
     }
-    public bool Contains(string SessionName)
+    public bool Contains(string sessionName)
     {
         List<SessionData> list = GetSavedData();
 
-        if (list.Count >= 0)
-            if (list.Find(x => x.sessionName == SessionName) != null)
+        if (list.Count > 0)
+            if (list.Find(x => x.sessionName == sessionName) != null)
                 return true;
             else
                 return false;
         else
             return false;
     }
+
+
+
+    //Interface to access currentSessionData
+    public void SetCurrentSession(string sessionName)
+    {
+        currentSession = GetSessionData(sessionName);
+    }
+    public void Modify(SessionData newData)
+    {
+        List<SessionData> list = GetSavedData();
+        SessionData oldData = list.Find(x => x.sessionName == newData.sessionName);
+        int i = list.IndexOf(oldData);
+        list[i] = newData;
+
+        SaveData(list);
+    }
+    public SessionData GetSessionData(string sessionName)
+    {
+        List<SessionData> list = GetSavedData();
+        
+        SessionData data = list.Find(x => x.sessionName == sessionName);
+
+        return data;
+    }
+    public SessionData GetCurrentSession()
+    {
+        return currentSession;
+    }
+
 }

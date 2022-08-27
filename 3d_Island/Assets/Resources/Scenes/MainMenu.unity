@@ -1187,6 +1187,64 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 430474416}
   m_CullTransparentMesh: 1
+--- !u!1 &449701576
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 449701577}
+  - component: {fileID: 449701579}
+  - component: {fileID: 449701578}
+  m_Layer: 0
+  m_Name: Cross Scenes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &449701577
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449701576}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 536486765}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &449701578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449701576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1532df73f6d69d145b2339e488a3c491, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &449701579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449701576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e2e750acb84d03458404b1d716496e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LastScreen: Main
 --- !u!1 &473495821
 GameObject:
   m_ObjectHideFlags: 0
@@ -1471,6 +1529,7 @@ Transform:
   - {fileID: 568242000}
   - {fileID: 1363371511}
   - {fileID: 1967633276}
+  - {fileID: 449701577}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1533,19 +1592,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelsManager:
     name: 
-    updateNames: 0
-    overrideAnimations: 1
+    GetDefaultFromCrossScenes: 1
     defaultPanel: Main
-    animationSettings:
-      offScale: {x: 1, y: 0, z: 0}
-      onScale: {x: 1, y: 1, z: 1}
-      InAnimationTime: 0.3
-      OutAnimationTime: 0.1
-      InAnimationCurve: 32
-      OutAnimationCurve: 32
-      pressedIncrementScale: {x: 0.2, y: 0.2, z: 0.2}
-      pressedAnimationTime: 0.1
-      pressedAnimationCurve: 32
     menuPanels:
     - panalName: Main
       menuObjectl: {fileID: 336828867}
@@ -1606,6 +1654,18 @@ MonoBehaviour:
             - m_Target: {fileID: 568242001}
               m_TargetAssemblyTypeName: UIMenu, Assembly-CSharp
               m_MethodName: OpenMenuPanel
+              m_Mode: 5
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: Game Data
+                m_BoolArgument: 0
+              m_CallState: 2
+            - m_Target: {fileID: 449701579}
+              m_TargetAssemblyTypeName: CrossScenes, Assembly-CSharp
+              m_MethodName: SetLastScreen
               m_Mode: 5
               m_Arguments:
                 m_ObjectArgument: {fileID: 0}
@@ -1815,6 +1875,18 @@ MonoBehaviour:
         pressedAnimationTime: 0.1
         pressedAnimationCurve: 32
       active: 0
+    updateNames: 0
+    overrideAnimations: 1
+    animationSettings:
+      offScale: {x: 1, y: 0, z: 0}
+      onScale: {x: 1, y: 1, z: 1}
+      InAnimationTime: 0.3
+      OutAnimationTime: 0.1
+      InAnimationCurve: 32
+      OutAnimationCurve: 32
+      pressedIncrementScale: {x: 0.2, y: 0.2, z: 0.2}
+      pressedAnimationTime: 0.1
+      pressedAnimationCurve: 32
   backgroundAnimation:
     speed: 0.25
     animationkeys:
@@ -3228,8 +3300,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978d1aecaa0b86e40b33259a22e13445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sessions: []
-  savetext: 
 --- !u!114 &1363371513
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour, IInputUser
     [SerializeField] PlayerSystem myPlayer;
     [SerializeField] GameObject eggAsset;
     [SerializeField] GameObject ballAsset;
+    [SerializeField] GameObject fruitAsset;
+    [SerializeField] GameObject harvestAsset;
+    [SerializeField] GameObject seedAsset;
     [SerializeField] NPC npcAsset;
 
     [Header("Save Keys")]
@@ -70,7 +73,48 @@ public class GameManager : MonoBehaviour, IInputUser
 
         posProcessingFunctions.Initialize();
         SetBlur(true);
+
+        SpawnSaved();
     }
+    void SpawnSaved()
+    {
+        SessionData sessionData = DataManager.instance.GetCurrentSession();
+
+        foreach(NPC_Data npc_data in  sessionData.data.npcs)
+            npc_data.SpawnWithData(npcAsset.gameObject);
+
+        foreach (Ball_Data ball_data in sessionData.data.balls)
+            ball_data.SpawnWithData(ballAsset);
+
+        foreach (Egg_Data egg_data in sessionData.data.eggs)
+            egg_data.SpawnWithData(eggAsset);
+
+        foreach (Fruit_Data fruit_data in sessionData.data.fruits)
+            fruit_data.SpawnWithData(fruitAsset);
+
+        foreach (Harvest_Data harvest_Data in sessionData.data.harvests)
+            harvest_Data.SpawnWithData(harvestAsset);
+
+        foreach (Seed_Data seed_data in sessionData.data.seeds)
+            seed_data.SpawnWithData(seedAsset);
+
+        sessionData.data.player.SpawnWithData(myPlayer.gameObject);
+    }
+    void Save()
+    {
+        SessionData sessionData = DataManager.instance.GetCurrentSession();
+        
+        sessionData.data.npcs = NPC_Data.GameToDate(FindObjectsOfType<NPC>());
+        sessionData.data.balls = Ball_Data.GameToDate(FindObjectsOfType<Ball>());
+        sessionData.data.eggs = Egg_Data.GameToDate(FindObjectsOfType<Egg>());
+        sessionData.data.fruits = Fruit_Data.GameToDate(FindObjectsOfType<Fruit>());
+        sessionData.data.harvests = Harvest_Data.GameToDate(FindObjectsOfType<Harvest>());
+        sessionData.data.seeds = Seed_Data.GameToDate(FindObjectsOfType<Seed>());
+        sessionData.data.player = Player_Data.GameToData(myPlayer);
+
+        DataManager.instance.Modify(sessionData);
+    }
+
     IEnumerator UpdateFrameRate()
     {
         while(true)
@@ -206,10 +250,12 @@ public class GameManager : MonoBehaviour, IInputUser
     
     public void RestartLevel()
     {
+        Save();
         SceneManager.LoadScene(0);
     }
     public void OpenMainMenu()
     {
+        Save();
         SceneManager.LoadSceneAsync(0);
     }
 
@@ -223,6 +269,11 @@ public class GameManager : MonoBehaviour, IInputUser
     public void SpawnEgg()
     {
         Instantiate(eggAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+    }
+
+    public void SpawnSeed()
+    {
+        Instantiate(seedAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
 
 

@@ -22,6 +22,7 @@ public class InventorySystem
                 UIController.instance.CreateInventoryUI(tempTag, OnButtonClick);
 
             items.Add(_item);
+
             _item.GetGameObject().transform.position = new Vector3(2000, 2000, 2000);
 
             UIController.instance.RepeatMessage(

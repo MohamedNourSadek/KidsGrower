@@ -9,17 +9,25 @@ using static UnityEngine.Rendering.DebugUI;
 [System.Serializable]
 public class PanelsManager
 {
+
     [SerializeField] string name;
+    [SerializeField] bool GetDefaultFromCrossScenes;
+    [SerializeField] string defaultPanel;
+    [SerializeField] public List<MenuPanel> menuPanels;
+
+    [Header("Editor")]
     [SerializeField] bool updateNames;
     [SerializeField] bool overrideAnimations;
-    [SerializeField] string defaultPanel;
     [SerializeField] MenuAnimatioSettings animationSettings;
-    [SerializeField] public List<MenuPanel> menuPanels;
+
     string currentMenuPanel;
 
 
     public void Initialize()
     {
+        if(GetDefaultFromCrossScenes)
+            defaultPanel = CrossScenes.instance.GetLastScreen();
+
         //reset all first
         foreach (MenuPanel _panel in menuPanels)
         {

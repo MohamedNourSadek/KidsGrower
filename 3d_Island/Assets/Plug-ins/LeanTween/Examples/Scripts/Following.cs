@@ -28,7 +28,7 @@ public class Following : MonoBehaviour {
     {
         followArrow.gameObject.LeanDelayedCall(3f, moveArrow).setOnStart(moveArrow).setRepeat(-1);
 
-        // Follow Local Y Position of Arrow
+        // Follow Local Y nVector3 of Arrow
         LeanTween.followDamp(dude1, followArrow, LeanProp.localY, 1.1f);
         LeanTween.followSpring(dude2, followArrow, LeanProp.localY, 1.1f);
         LeanTween.followBounceOut(dude3, followArrow, LeanProp.localY, 1.1f);
