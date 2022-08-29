@@ -27,7 +27,7 @@ public class PathSplines : MonoBehaviour {
 	
 	private float iter;
 	void Update () {
-		// Or Update Manually
+		// Or update Manually
 		// cr.place( avatar1.transform, iter );
 
 		iter += Time.deltaTime*0.07f;

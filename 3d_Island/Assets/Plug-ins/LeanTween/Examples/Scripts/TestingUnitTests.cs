@@ -160,7 +160,7 @@ namespace DentedPixel.LTExamples
                 float beforeX = jumpCube.transform.position.x;
                 d.setTime(0.5f);
                 LeanTween.delayedCall(0.0f, () => { }).setOnStart(() => {
-                    float diffAmt = 1f;// This variable is dependent on a good frame-rate because it evalutes at the next Update
+                    float diffAmt = 1f;// This variable is dependent on a good frame-rate because it evalutes at the next update
                     beforeX += Time.deltaTime * 100f * 2f;
                     LeanTest.expect(Mathf.Abs(jumpCube.transform.position.x - beforeX) < diffAmt, "CHANGING TIME DOESN'T JUMP AHEAD", "Difference:" + Mathf.Abs(jumpCube.transform.position.x - beforeX) + " beforeX:" + beforeX + " now:" + jumpCube.transform.position.x + " dt:" + Time.deltaTime);
                 });

@@ -36,7 +36,7 @@ public class OldGUIExamplesCS : MonoBehaviour {
 		Debug.Log("cat moved...");
 	}
 	
-	// Update is called once per frame
+	// update is called once per frame
 	void OnGUI () {
 		GUI.DrawTexture( grumpyRect.rect, grumpy);
 

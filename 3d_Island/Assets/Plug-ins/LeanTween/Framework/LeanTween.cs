@@ -1813,7 +1813,7 @@ public class LeanTween : MonoBehaviour {
     * 
     * @method LeanTween.value (float)
     * @param {GameObject} GameObject gameObject GameObject with which to tie the tweening with. This is only used when you need to cancel this tween, it does not actually perform any operations on this gameObject
-    * @param {Action<float>} callOnUpdate:Action<float> The function that is called on every Update frame, this function needs to accept a float value ex: function updateValue( float val ){ }
+    * @param {Action<float>} callOnUpdate:Action<float> The function that is called on every update frame, this function needs to accept a float value ex: function updateValue( float val ){ }
     * @param {float} float from The original value to start the tween from
     * @param {float} float to The value to end the tween on
     * @param {float} float time The time to complete the tween in
@@ -1841,7 +1841,7 @@ public class LeanTween : MonoBehaviour {
     * 
     * @method LeanTween.value (float)
     * @param {GameObject} GameObject gameObject GameObject with which to tie the tweening with. This is only used when you need to cancel this tween, it does not actually perform any operations on this gameObject
-    * @param {Action<float, float>} callOnUpdateRatio:Action<float,float> Function that's called every Update frame. It must accept two float values ex: function updateValue( float val, float ratio){ }
+    * @param {Action<float, float>} callOnUpdateRatio:Action<float,float> Function that's called every update frame. It must accept two float values ex: function updateValue( float val, float ratio){ }
     * @param {float} float from The original value to start the tween from
     * @param {float} float to The value to end the tween on
     * @param {float} float time The time to complete the tween in
@@ -1869,7 +1869,7 @@ public class LeanTween : MonoBehaviour {
     * 
     * @method LeanTween.value (Color)
     * @param {GameObject} GameObject gameObject GameObject with which to tie the tweening with. This is only used when you need to cancel this tween, it does not actually perform any operations on this gameObject
-    * @param {Action<Color>} callOnUpdate:Action<Color> The function that is called on every Update frame, this function needs to accept a color value ex: function updateValue( Color val ){ }
+    * @param {Action<Color>} callOnUpdate:Action<Color> The function that is called on every update frame, this function needs to accept a color value ex: function updateValue( Color val ){ }
     * @param {Color} Color from The original value to start the tween from
     * @param {Color} Color to The value to end the tween on
     * @param {Color} Color time The time to complete the tween in
@@ -1902,7 +1902,7 @@ public class LeanTween : MonoBehaviour {
     * 
     * @method LeanTween.value (Vector2)
     * @param {GameObject} gameObject:GameObject Gameobject that you wish to attach the tween to
-    * @param {Action<Vector2>} callOnUpdate:Action<Vector2> The function that is called on every Update frame, this function needs to accept a float value ex: function updateValue( Vector3 val ){ }
+    * @param {Action<Vector2>} callOnUpdate:Action<Vector2> The function that is called on every update frame, this function needs to accept a float value ex: function updateValue( Vector3 val ){ }
     * @param {float} from:Vector2 The original value to start the tween from
     * @param {Vector2} to:Vector2 The final Vector3 with which to tween to
     * @param {float} time:float The time to complete the tween in
@@ -1917,7 +1917,7 @@ public class LeanTween : MonoBehaviour {
     * 
     * @method LeanTween.value (Vector3)
     * @param {GameObject} gameObject:GameObject Gameobject that you wish to attach the tween to
-    * @param {Action<Vector3>} callOnUpdate:Action<Vector3> The function that is called on every Update frame, this function needs to accept a float value ex: function updateValue( Vector3 val ){ }
+    * @param {Action<Vector3>} callOnUpdate:Action<Vector3> The function that is called on every update frame, this function needs to accept a float value ex: function updateValue( Vector3 val ){ }
     * @param {float} from:Vector3 The original value to start the tween from
     * @param {Vector3} to:Vector3 The final Vector3 with which to tween to
     * @param {float} time:float The time to complete the tween in
@@ -1932,7 +1932,7 @@ public class LeanTween : MonoBehaviour {
     * 
     * @method LeanTween.value (float,object)
     * @param {GameObject} gameObject:GameObject Gameobject that you wish to attach the tween to
-    * @param {Action<float,object>} callOnUpdate:Action<float,object> The function that is called on every Update frame, this function needs to accept a float value ex: function updateValue( Vector3 val, object obj ){ }
+    * @param {Action<float,object>} callOnUpdate:Action<float,object> The function that is called on every update frame, this function needs to accept a float value ex: function updateValue( Vector3 val, object obj ){ }
     * @param {float} from:float The original value to start the tween from
     * @param {Vector3} to:float The final Vector3 with which to tween to
     * @param {float} time:float The time to complete the tween in

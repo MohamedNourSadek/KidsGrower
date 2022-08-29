@@ -12,7 +12,6 @@ public class TreeSystem : MonoBehaviour, IDetectable
     [Header("references")]
     [SerializeField] Animator animator;
     [SerializeField] GameObject branch1;
-    [SerializeField] GameObject branch2;
     [SerializeField] GameObject fruitAsset;
 
     public GameObject GetGameObject()
@@ -45,10 +44,6 @@ public class TreeSystem : MonoBehaviour, IDetectable
             if (branch1.GetComponent<CharacterJoint>() == null)
             {
                 StartCoroutine(SpawnFruit(branch1));
-            }
-            if (branch2.GetComponent<CharacterJoint>() == null)
-            {
-                StartCoroutine(SpawnFruit(branch2));
             }
 
             yield return new WaitForSecondsRealtime(_randomTime);

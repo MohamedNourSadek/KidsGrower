@@ -40,7 +40,7 @@ public class PathSplineTrack : MonoBehaviour {
 
 		}
 
-		// Update avatar's position on correct track
+		// update avatar's position on correct track
 		track.place( car.transform, trackPosition );
 
 		trackPosition += Time.deltaTime * 0.03f;// * Input.GetAxis("Vertical"); // Uncomment to have the forward and backwards controlled by the directional arrows

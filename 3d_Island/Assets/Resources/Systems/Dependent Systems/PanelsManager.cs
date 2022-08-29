@@ -26,7 +26,7 @@ public class PanelsManager
     public void Initialize()
     {
         if(GetDefaultFromCrossScenes)
-            defaultPanel = CrossScenes.instance.GetLastScreen();
+            defaultPanel = DataManager.instance.GetLastScene();
 
         //reset all first
         foreach (MenuPanel _panel in menuPanels)
@@ -156,6 +156,13 @@ public class PanelsManager
         int _num = PanelsManager.GetManagerNumb(_menuPanelName_PlusMangerNum);
 
         _managers[_num].OpenMenuPanel(_menuName, _exclusive);
+    }
+    public static void SetDefault(string _menuPanelName_PlusMangerNum, List<PanelsManager> _managers)
+    {
+        string _menuName = PanelsManager.GetPanelName(_menuPanelName_PlusMangerNum);
+        int _num = PanelsManager.GetManagerNumb(_menuPanelName_PlusMangerNum);
+
+        _managers[_num].defaultPanel = _menuName;
     }
     public static void TogglePanel(string _menuPanelName_PlusMangerNum, List<PanelsManager> _managers, bool _exclusive)
     {

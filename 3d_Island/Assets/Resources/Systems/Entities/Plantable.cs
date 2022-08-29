@@ -81,5 +81,5 @@ public abstract class Plantable : Pickable
         return false;
     }
     protected abstract void OnPlantDone(); 
-    protected abstract void PlantingUpdate(); //Update while planting
+    protected abstract void PlantingUpdate(); //update while planting
 }

@@ -40,12 +40,6 @@ public class MenuPanel
         if (_state)
             menuObjectl.SetActive(_state);
 
-        if (menuPanelItems.Count > 0)
-        {
-            if (menuPanelItems[0].item.GetComponent<Button>())
-                menuPanelItems[0].item.GetComponent<Button>().Select();
-        }
-
         foreach (MenuPanelItem item in menuPanelItems)
             item.ActivateItem(_state);
 

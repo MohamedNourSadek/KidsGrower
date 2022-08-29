@@ -7,6 +7,9 @@ using UnityEditor;
 
 public class DataManager : MonoBehaviour 
 {
+    string lastScene = "Main";
+
+
     public static DataManager instance;
 
 
@@ -14,15 +17,20 @@ public class DataManager : MonoBehaviour
     static string path;
     List<SessionData> dataCache;
     SessionData currentSession;
+    modes currentMode;
 
     void Awake()
     {
         if(instance == null)
         {
             instance = this;
+            
             path = Application.persistentDataPath + "/savedDate.json";
+
             if (File.Exists(path) == false)
                 File.Create(path);
+            else
+                GetSavedData();
         }
         else
         {
@@ -92,6 +100,34 @@ public class DataManager : MonoBehaviour
     {
         currentSession = GetSessionData(sessionName);
     }
+    public void SetCurrentMode(string modeName)
+    {
+        currentMode = ModesEnums.GetEnumFromString(modeName);
+    }
+    public void SetLastScenen(string _lastScenen)
+    {
+        lastScene = _lastScenen;
+    }
+    public modes GetCurrentMode()
+    {
+        return currentMode;
+    }
+    public SessionData GetSessionData(string sessionName)
+    {
+        List<SessionData> list = GetSavedData();
+
+        SessionData data = list.Find(x => x.sessionName == sessionName);
+
+        return data;
+    }
+    public SessionData GetCurrentSession()
+    {
+        return currentSession;
+    }
+    public string GetLastScene()
+    {
+        return lastScene;
+    }
     public void Modify(SessionData newData)
     {
         List<SessionData> list = GetSavedData();
@@ -101,17 +137,4 @@ public class DataManager : MonoBehaviour
 
         SaveData(list);
     }
-    public SessionData GetSessionData(string sessionName)
-    {
-        List<SessionData> list = GetSavedData();
-        
-        SessionData data = list.Find(x => x.sessionName == sessionName);
-
-        return data;
-    }
-    public SessionData GetCurrentSession()
-    {
-        return currentSession;
-    }
-
 }

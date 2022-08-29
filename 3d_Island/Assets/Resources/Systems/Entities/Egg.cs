@@ -40,7 +40,7 @@ public class Egg : Plantable
         }
         else
         {
-            UIController.instance.RepeatMessage("Rotten", this.gameObject.transform, 1f, 3f, new ConditionChecker(true));
+            UIController.instance.RepeatInGameMessage("Rotten", this.gameObject.transform, 1f, 3f, new ConditionChecker(true));
             StartCoroutine(DestroyMe(0f));
         }
     }

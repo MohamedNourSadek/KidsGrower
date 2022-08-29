@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public enum PickMode { Pick, Drop, Shake};
 
@@ -16,6 +17,8 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     [SerializeField] GameObject threeDCanvas;
     [SerializeField] GameObject gameCanvas;
     [SerializeField] GameObject inGamePanel;
+    [SerializeField] GameObject messagesArea;
+    [SerializeField] GameObject highlightMessage;
     [SerializeField] GameObject ThreeDHighlightPrefab;
     [SerializeField] GameObject progressBarPrefab;
     [SerializeField] GameObject npcUiElementPrefab;
@@ -108,7 +111,11 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
 
 
     //In Game UI
-    public void RepeatMessage(string _message, Transform _parent, float _messageTime, float _repeats, ConditionChecker _condition)
+    public void ShowUIMessage(string _message, float time, Vector3 startSize, float speed)
+    {
+        StartCoroutine(message(_message, time, startSize, speed));
+    }
+    public void RepeatInGameMessage(string _message, Transform _parent, float _messageTime, float _repeats, ConditionChecker _condition)
     {
         StartCoroutine(RepeatMessage_Coroutine(_message, _parent, _messageTime, _repeats, _condition));
     }
@@ -203,6 +210,10 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     {
         PanelsManager.OpenMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers, true);
     }
+    public void SetPanelDefault(string _menuPanelName_PlusManagerNum)
+    {
+        PanelsManager.SetDefault(_menuPanelName_PlusManagerNum, PanelsManagers);
+    }
     public void OpenMenuPanelNonExclusive(string _menuPanelName_PlusManagerNum)
     {
         PanelsManager.OpenMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers, false);
@@ -233,12 +244,35 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
 
 
     //Interal Algorithms
+    IEnumerator message(string _message, float time, Vector3 startScale, float speed)
+    {
+        var messageObj = Instantiate(highlightMessage, messagesArea.transform);
+        
+        messageObj.transform.localScale = startScale;
+
+        var Text = messageObj.GetComponent<TextMeshProUGUI>();
+
+        Text.text =  _message;
+
+        float _animationCurrentTime = time;
+
+        while(_animationCurrentTime >= 0)
+        {
+
+            Text.color = new Color(Text.color.r, Text.color.g, Text.color.b, _animationCurrentTime / time);
+
+            _animationCurrentTime -= Time.fixedDeltaTime;
+
+            messageObj.transform.localScale += speed * (new Vector3(Time.fixedDeltaTime, Time.fixedDeltaTime, Time.fixedDeltaTime));
+
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+    }
     void UpdateNextPrevious(ListPossibleDirections _directions)
     {
         previousButton.interactable = _directions.Previous;
         nextButton.interactable = _directions.Next;
     }
-
     IEnumerator TranslateUiElement(GameObject _object, Transform _parent)
     {
         while((_parent != null ) && (_object != null))

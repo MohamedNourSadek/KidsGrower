@@ -191,7 +191,7 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         var _deadNPC =  Instantiate(deadNpcAsset, this.transform.position, Quaternion.identity);
         UIController.instance.DestroyNpcUiElement(this.gameObject);
-        UIController.instance.RepeatMessage("Death!!", _deadNPC.transform, 2f, 4f, new ConditionChecker(true));
+        UIController.instance.RepeatInGameMessage("Death!!", _deadNPC.transform, 2f, 4f, new ConditionChecker(true));
         Destroy(this.gameObject);
     }
 
@@ -210,7 +210,7 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         UIController.instance.UpateNpcUiElement(this.gameObject, levelController.GetLevelLimits());
         UIController.instance.UpateNpcUiElement(this.gameObject, "Level " + levelController.GetLevel().ToString());
-        UIController.instance.RepeatMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
+        UIController.instance.RepeatInGameMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
     }
 
 
@@ -408,7 +408,7 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         float _time = 0;
         ConditionChecker _condition = new ConditionChecker(!isPicked);
-        UIController.instance.RepeatMessage("Eating", this.transform, eatTime, 15, _condition);
+        UIController.instance.RepeatInGameMessage("Eating", this.transform, eatTime, 15, _condition);
 
         while (_condition.isTrue)
         {
@@ -433,7 +433,7 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         float _time = 0;
         ConditionChecker _condition = new ConditionChecker(!isPicked);
-        UIController.instance.RepeatMessage("Sleeping", this.transform, sleepTime, 15, _condition);
+        UIController.instance.RepeatInGameMessage("Sleeping", this.transform, sleepTime, 15, _condition);
 
         //sleep
         myBody.isKinematic = true;
@@ -461,7 +461,7 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         float _time = 0;
         ConditionChecker _condition = new ConditionChecker(!isPicked);
-        UIController.instance.RepeatMessage("Laying", this.transform, layingTime, 15, _condition);
+        UIController.instance.RepeatInGameMessage("Laying", this.transform, layingTime, 15, _condition);
 
         //Laying
         myBody.isKinematic = true;

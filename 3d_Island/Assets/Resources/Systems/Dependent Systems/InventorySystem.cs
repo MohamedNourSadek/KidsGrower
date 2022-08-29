@@ -25,7 +25,7 @@ public class InventorySystem
 
             _item.GetGameObject().transform.position = new Vector3(2000, 2000, 2000);
 
-            UIController.instance.RepeatMessage(
+            UIController.instance.RepeatInGameMessage(
                 _item.GetGameObject().tag + " added to inventory",
                 myController.GetBody().transform, 0.5f, 1, new ConditionChecker(true));
         }
@@ -37,7 +37,7 @@ public class InventorySystem
         if (items.Contains(_item))
             items.Remove(_item);
 
-        UIController.instance.RepeatMessage(
+        UIController.instance.RepeatInGameMessage(
             _item.GetGameObject().tag + " removed from inventory",
                 myController.GetBody().transform, 0.5f, 1, new ConditionChecker(true));
 

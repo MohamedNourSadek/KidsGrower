@@ -12,7 +12,8 @@ public class MenuPanelItem
     [SerializeField] public string name;
     [SerializeField] public GameObject item;
     [SerializeField] public UnityEvent OnPress;
-    
+    [SerializeField] public List<modes> HiddenModes = new List<modes>();
+
     bool active;
     MenuAnimatioSettings animationSettings;
 
@@ -34,22 +35,35 @@ public class MenuPanelItem
 
     IEnumerator ActivateItem_CoRoutine(bool _state)
     {
-        if (_state)
-        {
-            item.gameObject.LeanScale(animationSettings.offScale, 0f);
-            item.gameObject.LeanScale(animationSettings.onScale, animationSettings.InAnimationTime).setEase(animationSettings.InAnimationCurve);
+        bool supressed = false;
 
-            yield return new WaitForSeconds(animationSettings.InAnimationTime);
+        foreach(modes mode in HiddenModes)
+            if(DataManager.instance.GetCurrentMode() == mode)
+                supressed = true;
+
+        if (supressed == false)
+        {
+            if (_state)
+            {
+                item.gameObject.LeanScale(animationSettings.offScale, 0f);
+                item.gameObject.LeanScale(animationSettings.onScale, animationSettings.InAnimationTime).setEase(animationSettings.InAnimationCurve);
+
+                yield return new WaitForSeconds(animationSettings.InAnimationTime);
+            }
+            else
+            {
+                item.gameObject.LeanScale(animationSettings.onScale, 0f);
+                item.transform.LeanScale(animationSettings.offScale, animationSettings.OutAnimationTime).setEase(animationSettings.OutAnimationCurve);
+
+                yield return new WaitForSeconds(animationSettings.OutAnimationTime);
+            }
+
+            active = _state;
         }
         else
         {
-            item.gameObject.LeanScale(animationSettings.onScale, 0f);
-            item.transform.LeanScale(animationSettings.offScale, animationSettings.OutAnimationTime).setEase(animationSettings.OutAnimationCurve);
-
-            yield return new WaitForSeconds(animationSettings.OutAnimationTime);
+            item.SetActive(false);
         }
-
-        active = _state;
     }
     void InvokeEvent()
     {

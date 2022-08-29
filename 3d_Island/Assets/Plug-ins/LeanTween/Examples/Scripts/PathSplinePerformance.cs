@@ -66,7 +66,7 @@ public class PathSplinePerformance : MonoBehaviour {
 
 		}
 
-		// Update avatar's position on correct track
+		// update avatar's position on correct track
 		track.place( car.transform, trackPosition );
 
 		trackPosition += Time.deltaTime * carAdd;

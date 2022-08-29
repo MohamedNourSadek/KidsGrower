@@ -47,7 +47,7 @@ public class PathSplineEndless : MonoBehaviour {
 			refreshSpline();
 		}
 
-		// Update avatar's position on correct track
+		// update avatar's position on correct track
 		track.place( car.transform, carIter );
 		carIter += carAdd * Time.deltaTime;
 

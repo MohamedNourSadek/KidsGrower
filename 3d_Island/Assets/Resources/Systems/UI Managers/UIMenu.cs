@@ -35,9 +35,8 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
         postProcessingFunctions.SetBlur(true);
         saveNameInput.onValueChanged.AddListener(SaveNameVaildator);
 
-        GetLocalSaves();
         UpdateSavesUI();
-    } 
+    }
     void OnDrawGizmos()
     {
         panelsManager.OnDrawGizmos();
@@ -52,7 +51,7 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     {
         var _time = System.DateTime.Now;
 
-        SessionData sessionData = new SessionData(saveNameInput.text, "Model 1", _time.ToString());
+        SessionData sessionData = new SessionData(saveNameInput.text, DataManager.instance.GetCurrentMode(), _time.ToString());
 
         DataManager.instance.Add(sessionData);
         
@@ -62,6 +61,7 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     public void LoadSave()
     {
         var _save = selected.GetComponent<SaveInfo>();
+        
         DataManager.instance.SetCurrentSession(_save.saveName.text);
 
         OpenGame();
@@ -78,6 +78,8 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
         }
     }
 
+
+    //UI commands
     public void OpenMenuPanel(string _menuName)
     {
         panelsManager.OpenMenuPanel(_menuName, true);
@@ -94,6 +96,14 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     {
         panelsManager.CloseMenuPanel(_menuInfo);
     }
+    public void SetLastScene(string sceneName)
+    {
+        DataManager.instance.SetLastScenen(sceneName);
+    }
+    public void SetCurrentMode(string modeName)
+    {
+        DataManager.instance.SetCurrentMode(modeName);
+    }
 
 
     //Game mangement
@@ -108,7 +118,7 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
 
 
     //internal
-    void UpdateSavesUI()
+    public void UpdateSavesUI()
     {
         ClearOldUI();
 
@@ -117,12 +127,13 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
         //Recreate them and add
         foreach (var _save in saves)
         {
-            var _saveInfo = Instantiate(savePrefab, savesObject.transform).GetComponent<SaveInfo>();
-
-            _saveInfo.saveName.text =_save.sessionName;
-            _saveInfo.date.text = _save.since;
-
-            savesUi.Add(_saveInfo.gameObject);
+            if (_save.modeData.modeName == DataManager.instance.GetCurrentMode())
+            {
+                var _saveInfo = Instantiate(savePrefab, savesObject.transform).GetComponent<SaveInfo>();
+                _saveInfo.saveName.text = _save.sessionName;
+                _saveInfo.date.text = _save.since;
+                savesUi.Add(_saveInfo.gameObject);
+            }
         }
 
         UpdateSavesButton();
@@ -207,10 +218,6 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
             createSave.interactable = false;
             inputHint.text = _saveNameVaildator;
         }
-    }
-    void GetLocalSaves()
-    {
-
     }
 }
 

@@ -27,7 +27,7 @@ public class PathBezier : MonoBehaviour {
 	
 	private float iter;
 	void Update () {
-		// Or Update Manually
+		// Or update Manually
 		//cr.place2d( sprite1.transform, iter );
 
 		iter += Time.deltaTime*0.07f;

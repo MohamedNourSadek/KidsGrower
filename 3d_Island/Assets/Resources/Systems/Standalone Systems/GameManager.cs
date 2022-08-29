@@ -45,12 +45,13 @@ public class GameManager : MonoBehaviour, IInputUser
     CustomizableObject lastdetected;
     Vector3 camCustomizingViewPos;
     Quaternion camCustomizingViewRot;
-    
+    AbstractMode modeHandler;
+
 
     void Start()
     {
         instance = this;
-
+        
         InputSystem.SubscribeUser(this);
 
         if (lockFrameRate)
@@ -72,9 +73,17 @@ public class GameManager : MonoBehaviour, IInputUser
         StartCoroutine(UpdateFrameRate());
 
         posProcessingFunctions.Initialize();
-        SetBlur(true);
 
         SpawnSaved();
+
+        SetBlur(false);
+
+        modeHandler = ModeFactory.CreateModeHandler(DataManager.instance.GetCurrentSession());
+    }
+    void Update()
+    {
+        if (modeHandler != null)
+            modeHandler.Update();
     }
     void SpawnSaved()
     {
@@ -111,6 +120,7 @@ public class GameManager : MonoBehaviour, IInputUser
         sessionData.data.harvests = Harvest_Data.GameToDate(FindObjectsOfType<Harvest>());
         sessionData.data.seeds = Seed_Data.GameToDate(FindObjectsOfType<Seed>());
         sessionData.data.player = Player_Data.GameToData(myPlayer);
+        sessionData.modeData = modeHandler.GetModeData();
 
         DataManager.instance.Modify(sessionData);
     }
@@ -150,6 +160,10 @@ public class GameManager : MonoBehaviour, IInputUser
 
         SetBlur(!state);
     }
+    public void LockPlayer(bool state)
+    {
+        myPlayer.LockPlayer(!state);
+    }
     public void SetPlaying(bool state)
     {
         SetBlur(!state);
@@ -166,7 +180,6 @@ public class GameManager : MonoBehaviour, IInputUser
             Camera.main.transform.rotation = camCustomizingViewRot;
         }
     }
-
     public void SetBlur(bool _state)
     {
         posProcessingFunctions.SetBlur(_state);

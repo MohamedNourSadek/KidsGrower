@@ -946,7 +946,7 @@ public class LTDescr
 	public static Vector3 newVect;
 
 	/**
-	* If you need a tween to happen immediately instead of waiting for the next Update call, you can force it with this method
+	* If you need a tween to happen immediately instead of waiting for the next update call, you can force it with this method
 	* 
 	* @method updateNow
 	* @return {LTDescr} LTDescr an object that distinguishes the tween

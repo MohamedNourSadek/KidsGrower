@@ -95,7 +95,12 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     {
         return playerBody;
     }
-    
+    public void LockPlayer(bool state)
+    {
+        playerBody.isKinematic = !state;
+    }
+
+
 
     ///(Movement-Input-Hand) Interface
     public void MoveInput(Vector2 _movementInput)
