@@ -23,6 +23,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     [SerializeField] GameObject progressBarPrefab;
     [SerializeField] GameObject npcUiElementPrefab;
     [SerializeField] GameObject inventoryElementPrefab;
+    [SerializeField] GameObject popUpMessage;
 
     [Header("Ui parameters")]
 
@@ -43,6 +44,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     [SerializeField] Button nextButton;
     [SerializeField] Button previousButton;
     [SerializeField] List<SliderElement> sliders = new List<SliderElement>();
+    [SerializeField] public TextMeshProUGUI countDownText;
 
     [Header("Design Only")]
     [SerializeField] Text frameRateUi;
@@ -111,6 +113,10 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
 
 
     //In Game UI
+    public UIMessage PopUpMessage()
+    {
+        return Instantiate(popUpMessage, gameCanvas.transform).GetComponent<UIMessage>();
+    }
     public void ShowUIMessage(string _message, float time, Vector3 startSize, float speed)
     {
         StartCoroutine(message(_message, time, startSize, speed));
@@ -221,6 +227,13 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     public void CloseMenuPanelNonExclusive(string _menuPanelName_PlusManagerNum)
     {
         PanelsManager.CloseMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers);
+    }
+    public void CloseAllPanels()
+    {
+        foreach(PanelsManager panel in PanelsManagers)
+        {
+            panel.CloseAll();
+        }
     }
     public void ToggleMenuPanel(string _menuInfo)
     {

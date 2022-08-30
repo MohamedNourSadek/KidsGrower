@@ -52,7 +52,6 @@ public class AdditionalMath
 
 
     //returns angle _from y axis _to 2D vector
-    
     public static float AngleFromY(Vector2 _vector)
     {
         float _angle = Mathf.Atan(_vector.x / _vector.y) * Mathf.Rad2Deg;
@@ -80,4 +79,7 @@ public class AdditionalMath
 
         return _angle;
     }
+
+
+
 }

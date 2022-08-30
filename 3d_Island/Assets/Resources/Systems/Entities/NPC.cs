@@ -11,6 +11,8 @@ enum TriggerStates { foundTarget, lostTarget, doneEating, doneLaying, doneSleepi
 
 public class NPC : Pickable, IController, IStateMachineController
 {
+    public static int NPCsCount = 0;
+
     [SerializeField] HandSystem handSystem;
     [SerializeField] DetectorSystem detector;
     [SerializeField] GroundDetector groundDetector;
@@ -72,6 +74,8 @@ public class NPC : Pickable, IController, IStateMachineController
     //Helper functions
     private void Awake()
     {
+        NPCsCount++;
+
         myAgent = GetComponent<NavMeshAgent>();
         myAgent.stoppingDistance = 0.9f * nearObjectDistance;
         detector.Initialize(nearObjectDistance);
@@ -94,6 +98,10 @@ public class NPC : Pickable, IController, IStateMachineController
         base.StartCoroutine(GrowingUp());
         base.StartCoroutine(AiContinous());
         base.StartCoroutine(AiDescrete());
+    }
+    private void OnDestroy()
+    {
+        NPCsCount--;
     }
     public void Update()
     {

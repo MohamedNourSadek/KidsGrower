@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         if (modeHandler != null)
             modeHandler.Update();
+
     }
     void SpawnSaved()
     {
@@ -260,15 +261,13 @@ public class GameManager : MonoBehaviour, IInputUser
         foreach (SliderElement slider in UIController.instance.GetSliders())
             PlayerPrefs.SetFloat(slider.saveName, slider.mySlider.value);
     }
-    
-    public void RestartLevel()
-    {
-        Save();
-        SceneManager.LoadScene(0);
-    }
     public void OpenMainMenu()
     {
         Save();
+        SceneManager.LoadSceneAsync(0);
+    }
+    public void ExitWithoutSaving()
+    {
         SceneManager.LoadSceneAsync(0);
     }
 
@@ -283,7 +282,6 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         Instantiate(eggAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
-
     public void SpawnSeed()
     {
         Instantiate(seedAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);

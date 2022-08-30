@@ -33,8 +33,6 @@ public abstract class AbstractMode
 
         OnLoad();
 
-        if (data.timeSinceStart <= startPeriod)
-            OnStart();
     }
     protected virtual void OnLoad()
     {
@@ -44,8 +42,5 @@ public abstract class AbstractMode
     protected virtual void OnStart()
     {
     }
-
-
-
 
 }

@@ -14,4 +14,5 @@ public class Mode_Data
 
     public modes modeName;
     public float timeSinceStart;
+    public bool gameStarted;
 }

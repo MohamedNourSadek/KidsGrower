@@ -87,6 +87,10 @@ public class PanelsManager
     {
         ServicesProvider.instance.StartCoroutine(CloseMenuPanel_Coroutine(_menuPanelName));
     }
+    public void CloseAll()
+    {
+        ServicesProvider.instance.StartCoroutine(CloseAll_Coroutine());
+    }
     public void ToggleMenuPanel(string _menuPanelName, bool _exculsive)
     {
         if (IsPanelActive(_menuPanelName))
@@ -108,7 +112,6 @@ public class PanelsManager
 
         return null;
     }
-    
     public string GetPanelRelativeToActive(int i)
     {
         return menuPanels[GetActivePage() + i].panalName;
@@ -179,8 +182,18 @@ public class PanelsManager
         _managers[_num].CloseMenuPanel(_menuName);
     }
 
-
-
+    IEnumerator CloseAll_Coroutine()
+    {
+        //DeactivateFirst
+        foreach (MenuPanel _menuPanel in menuPanels)
+        {
+            if (_menuPanel.IsActive())
+            {
+                float _time = _menuPanel.ActivatePanel(false);
+                yield return new WaitForSeconds(_time);
+            }
+        }
+    }
     IEnumerator OpenMenuPanel_Coroutine(string _menuPanelName, bool exculsive)
     {
         //DeactivateFirst
