@@ -61,6 +61,8 @@ public class GameManager : MonoBehaviour, IInputUser
         SetBlur(false);
 
         modeHandler = ModeFactory.CreateModeHandler(DataManager.instance.GetCurrentSession());
+
+        StartCoroutine(autoSave());
     }
     void Update()
     {
@@ -70,6 +72,14 @@ public class GameManager : MonoBehaviour, IInputUser
     }
 
 
+    IEnumerator autoSave()
+    {
+        while(true)
+        {
+            yield return new WaitForSecondsRealtime(60f);
+            Save();
+        }
+    }
     void LoadAndApply()
     {
         SessionData sessionData = DataManager.instance.GetCurrentSession();
@@ -113,9 +123,7 @@ public class GameManager : MonoBehaviour, IInputUser
         foreach (NPC npc in npcList)
             npc.aIParameters = aIParameters;
     }
-
-
-    void Save()
+    public void Save()
     {
         SessionData sessionData = DataManager.instance.GetCurrentSession();
         
@@ -130,6 +138,8 @@ public class GameManager : MonoBehaviour, IInputUser
         sessionData.aIParameters = aIParameters;
 
         DataManager.instance.Modify(sessionData);
+
+        StartCoroutine(UIController.instance.SavingUI());
     }
 
 

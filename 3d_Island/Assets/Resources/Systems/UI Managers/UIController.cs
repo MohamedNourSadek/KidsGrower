@@ -49,6 +49,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     [SerializeField] Button nextButton;
     [SerializeField] Button previousButton;
     [SerializeField] public TextMeshProUGUI countDownText;
+    [SerializeField] GameObject savingText;
 
     [Header("Design Only")]
     [SerializeField] Text frameRateUi;
@@ -299,7 +300,12 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
 
         PanelsManagers[_managerNumber].OpenMenuPanel(_targetPanel, true);
     }
-
+    public IEnumerator SavingUI()
+    {
+        savingText.SetActive(true);
+        yield return new WaitForSecondsRealtime(1f);
+        savingText.SetActive(false);
+    }
 
 
     //Interal Algorithms
