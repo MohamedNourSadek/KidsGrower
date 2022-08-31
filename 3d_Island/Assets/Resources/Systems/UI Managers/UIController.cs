@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System;
+using System.Security.Cryptography;
 
 public enum PickMode { Pick, Drop, Shake};
 
@@ -31,6 +33,9 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     [SerializeField] float buttonOffAlpha = 0.3f;
 
 
+    [Header("Ai Sliders")]
+    [SerializeField] List<AIParameterSlider> sliders = new List<AIParameterSlider>();
+
     [Header("UI Objects")]
     [SerializeField] Image pickDropButtonImage;
     [SerializeField] Image throwButtonImage;
@@ -43,7 +48,6 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     [SerializeField] GameObject designMenus;
     [SerializeField] Button nextButton;
     [SerializeField] Button previousButton;
-    [SerializeField] List<SliderElement> sliders = new List<SliderElement>();
     [SerializeField] public TextMeshProUGUI countDownText;
 
     [Header("Design Only")]
@@ -58,7 +62,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     {
         instance = this;
 
-        foreach (SliderElement slider in sliders)
+        foreach (AIParameterSlider slider in sliders)
             slider.Initialize();
 
         foreach(PanelsManager panelManager in PanelsManagers)
@@ -69,11 +73,31 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     {
         foreach (PanelsManager panelManager in PanelsManagers)
             panelManager.OnDrawGizmos();
+
+        //update sliders list to have a member for each name
+        if(sliders.Count != Enum.GetValues(typeof(AIParametersNames)).Length)
+        {
+            foreach (var parameter in Enum.GetValues(typeof(AIParametersNames)))
+            {
+                bool exists = false;
+
+                foreach(AIParameterSlider slider in sliders)
+                {
+                    if(slider.saveName == parameter.ToString())
+                    {
+                        exists = true;
+                    }
+                }
+
+                if(exists == false)
+                {
+                    sliders.Add(new AIParameterSlider() { saveName = parameter.ToString() , value = 0});
+                }
+            }
+
+        }
     }
-    public List<SliderElement> GetSliders()
-    {
-        return sliders;
-    }
+
 
 
     //UI control
@@ -109,6 +133,28 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     public void UpdateFrameRate(string _frameRate)
     {
         frameRateUi.text = _frameRate;
+    }
+    public void UpdateAISliders(List<AIParameter> aIParameters)
+    {
+        foreach(AIParameter parameter in aIParameters)
+        {
+            foreach(AIParameterSlider slider in sliders)
+            {
+                if(parameter.saveName == slider.saveName)
+                {
+                    slider.ChangeSlider(parameter.value);
+                }
+            }
+        }
+    }
+    public List<AIParameter> GetSlidersData()
+    {
+        List<AIParameter> parameters = new List<AIParameter>();
+
+        foreach (AIParameterSlider slider in sliders)
+            parameters.Add(new AIParameter() { saveName = slider.saveName, value = slider.value });
+
+        return parameters;
     }
 
 

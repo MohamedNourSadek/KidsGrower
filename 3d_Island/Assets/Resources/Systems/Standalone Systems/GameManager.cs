@@ -22,23 +22,6 @@ public class GameManager : MonoBehaviour, IInputUser
     [SerializeField] GameObject seedAsset;
     [SerializeField] NPC npcAsset;
 
-    [Header("Save Keys")]
-    public static string growTime_saveString = "growTime";
-    public static string boredTime_saveString = "boredTime";
-    public static string sleepTime_saveString = "sleepTime";
-    public static string seekPlayerProb_saveString = "seekPlayer";
-    public static string seekNpcProb_saveString = "seekNpc";
-    public static string seekTreeProb_saveString = "seekTree";
-    public static string seekBallProb_saveString = "seekBall";
-    public static string dropBallProb_saveString = "dropBall";
-    public static string throwBallOnPlayerProb_saveString = "throwBallPlayer";
-    public static string throwBallOnNpcProb_saveString = "throwBallNPC";
-    public static string punchNpcProb_saveString = "punchNPC";
-    public static string seekFruit_saveString = "seekFruit";
-    public static string seekAlter_saveString = "seekAlter";
-    public static string deathTime_saveString = "deathTime";
-
-
     public static GameManager instance;
     CustomizingState customizingState = CustomizingState.Detecting;
     bool customizing = false;
@@ -46,6 +29,7 @@ public class GameManager : MonoBehaviour, IInputUser
     Vector3 camCustomizingViewPos;
     Quaternion camCustomizingViewRot;
     AbstractMode modeHandler;
+    public List<AIParameter> aIParameters = new List<AIParameter>();
 
 
     void Start()
@@ -67,14 +51,12 @@ public class GameManager : MonoBehaviour, IInputUser
 
         camCustomizingViewPos = Camera.main.transform.position;
         camCustomizingViewRot = Camera.main.transform.rotation;
-        
-        LoadSettings();
 
         StartCoroutine(UpdateFrameRate());
 
         posProcessingFunctions.Initialize();
 
-        SpawnSaved();
+        LoadAndApply();
 
         SetBlur(false);
 
@@ -86,7 +68,9 @@ public class GameManager : MonoBehaviour, IInputUser
             modeHandler.Update();
 
     }
-    void SpawnSaved()
+
+
+    void LoadAndApply()
     {
         SessionData sessionData = DataManager.instance.GetCurrentSession();
 
@@ -109,7 +93,28 @@ public class GameManager : MonoBehaviour, IInputUser
             seed_data.SpawnWithData(seedAsset);
 
         sessionData.data.player.SpawnWithData(myPlayer.gameObject);
+
+        aIParameters = DataManager.instance.GetCurrentSession().aIParameters;
+
+        ApplyAiParametersToGame();
     }
+    void ApplyAiParametersToGame()
+    {
+        UIController.instance.UpdateAISliders(aIParameters);
+
+        //Get all NPCs (In game or asset)
+        List<NPC> npcList = new List<NPC>();
+        foreach (NPC npc in FindObjectsOfType<NPC>())
+        {
+            npcList.Add(npc);
+        }
+        npcList.Add(npcAsset.GetComponent<NPC>());
+
+        foreach (NPC npc in npcList)
+            npc.aIParameters = aIParameters;
+    }
+
+
     void Save()
     {
         SessionData sessionData = DataManager.instance.GetCurrentSession();
@@ -122,9 +127,11 @@ public class GameManager : MonoBehaviour, IInputUser
         sessionData.data.seeds = Seed_Data.GameToDate(FindObjectsOfType<Seed>());
         sessionData.data.player = Player_Data.GameToData(myPlayer);
         sessionData.modeData = modeHandler.GetModeData();
+        sessionData.aIParameters = aIParameters;
 
         DataManager.instance.Modify(sessionData);
     }
+
 
     IEnumerator UpdateFrameRate()
     {
@@ -155,6 +162,12 @@ public class GameManager : MonoBehaviour, IInputUser
 
 
     //Settings
+    public void ApplyAiSlidersData()
+    {
+        aIParameters = UIController.instance.GetSlidersData();
+
+        ApplyAiParametersToGame();
+    }
     public void SetCustomizing(bool state)
     {
         customizing = state;
@@ -184,82 +197,6 @@ public class GameManager : MonoBehaviour, IInputUser
     public void SetBlur(bool _state)
     {
         posProcessingFunctions.SetBlur(_state);
-    }
-    public void ApplySettings()
-    {
-        var _npcs = FindObjectsOfType<NPC>();
-        List<NPC> npcList = new List<NPC>();
-      
-        foreach (NPC npc in _npcs)
-        {
-            npcList.Add(npc);
-        }
-
-        //Change NPC asset first
-        foreach (SliderElement slider in UIController.instance.GetSliders())
-        {
-            if (slider.saveName == growTime_saveString)
-                npcAsset.growTime = slider.mySlider.value;
-            else if (slider.saveName == boredTime_saveString)
-                npcAsset.boredTime = slider.mySlider.value;
-            else if (slider.saveName == sleepTime_saveString)
-                npcAsset.sleepTime = slider.mySlider.value;
-            else if (slider.saveName == seekNpcProb_saveString)
-                npcAsset.seekNpcProb = slider.mySlider.value;
-            else if (slider.saveName == seekPlayerProb_saveString)
-                npcAsset.seekPlayerProb = slider.mySlider.value;
-            else if (slider.saveName == seekBallProb_saveString)
-                npcAsset.seekBallProb = slider.mySlider.value;
-            else if (slider.saveName == seekTreeProb_saveString)
-                npcAsset.seekTreeProb = slider.mySlider.value;
-            else if (slider.saveName == dropBallProb_saveString)
-                npcAsset.dropBallProb = slider.mySlider.value;
-            else if (slider.saveName == throwBallOnNpcProb_saveString)
-                npcAsset.throwBallOnNpcProb = slider.mySlider.value;
-            else if (slider.saveName == throwBallOnPlayerProb_saveString)
-                npcAsset.throwBallOnPlayerProb = slider.mySlider.value;
-            else if (slider.saveName == punchNpcProb_saveString)
-                npcAsset.punchNpcProb = slider.mySlider.value;
-            else if (slider.saveName == seekFruit_saveString)
-                npcAsset.seekFruitProb = slider.mySlider.value;
-            else if (slider.saveName == seekAlter_saveString)
-                npcAsset.seekAlterProb = slider.mySlider.value;
-            else if (slider.saveName == deathTime_saveString)
-                npcAsset.deathTime = slider.mySlider.value;
-        }
-
-        //then change the rest to its values (for optimization)
-        foreach (NPC npc in npcList)
-        {
-            npc.growTime = npcAsset.growTime;
-            npc.boredTime = npcAsset.boredTime;
-            npc.sleepTime = npcAsset.sleepTime;
-            npc.seekPlayerProb = npcAsset.seekPlayerProb;
-            npc.seekNpcProb = npcAsset.seekNpcProb;
-            npc.seekBallProb = npcAsset.seekBallProb;
-            npc.seekTreeProb = npcAsset.seekTreeProb;
-            npc.dropBallProb = npcAsset.dropBallProb;
-            npc.throwBallOnNpcProb = npcAsset.throwBallOnNpcProb;
-            npc.throwBallOnPlayerProb = npcAsset.throwBallOnPlayerProb;
-            npc.punchNpcProb = npcAsset.punchNpcProb;
-            npc.seekFruitProb = npcAsset.seekFruitProb;
-            npc.seekAlterProb = npcAsset.seekAlterProb;
-            npc.deathTime = npcAsset.deathTime;
-        }
-
-        SaveSettings();
-    }
-    public void LoadSettings()
-    {
-        foreach (SliderElement slider in UIController.instance.GetSliders())
-            slider.mySlider.value = PlayerPrefs.GetFloat(slider.saveName);
-
-        ApplySettings();
-    }
-    public void SaveSettings()
-    {
-        foreach (SliderElement slider in UIController.instance.GetSliders())
-            PlayerPrefs.SetFloat(slider.saveName, slider.mySlider.value);
     }
     public void OpenMainMenu()
     {

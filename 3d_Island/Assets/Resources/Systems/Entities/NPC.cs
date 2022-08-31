@@ -20,7 +20,6 @@ public class NPC : Pickable, IController, IStateMachineController
 
     [Header("Growing Parameters")]
     [SerializeField] LevelController levelController;
-    [SerializeField] public float growTime = 5f;
     [SerializeField] float grownBodyMultiplier = 1.35f;
     [SerializeField] float grownMassMultiplier = 1.35f;
 
@@ -35,26 +34,12 @@ public class NPC : Pickable, IController, IStateMachineController
     [SerializeField] public float pettingXP = 100f;
 
     [Header("AI Parameters")]
-    [Header("Timing Parameters")]
-    [SerializeField] public float boredTime = 30f;
-    [SerializeField] public float sleepTime = 10f;
     [SerializeField] public float layingTime = 10f;
     [SerializeField] public float eatTime = 10f;
-    [SerializeField] public float deathTime = 50f;
 
-    [Header("Probability Parameters")]
-    [SerializeField] [Range(0, 1)] public float seekPlayerProb = 0.1f;
-    [SerializeField] [Range(0, 1)] public float seekNpcProb = 0.1f;
-    [SerializeField] [Range(0, 1)] public float seekBallProb = 0.1f;
-    [SerializeField] [Range(0, 1)] public float seekTreeProb = 0.1f;
-    [SerializeField] [Range(0, 1)] public float dropBallProb = 0.1f;
-    [SerializeField] [Range(0, 1)] public float throwBallOnNpcProb = 0.1f;
-    [SerializeField] [Range(0, 1)] public float throwBallOnPlayerProb = 0.1f;
-    [SerializeField] [Range(0, 1)] public float punchNpcProb = 0.1f;
-    [SerializeField] [Range(0, 1)] public float seekFruitProb = 1f;
-    [SerializeField] [Range(0, 1)] public float seekAlterProb = 1f;
-
-
+    [Header("Saved Parameters")]
+    [SerializeField] public List<AIParameter> aIParameters = new List<AIParameter>();
+     
     [Header("References")]
     [SerializeField] AIStateMachine aiStateMachine;
     [SerializeField] GameObject model;
@@ -62,7 +47,6 @@ public class NPC : Pickable, IController, IStateMachineController
     [SerializeField] Material grownMaterial;
     [SerializeField] GameObject eggAsset;
     [SerializeField] GameObject deadNpcAsset;
-
 
     //Private data
     List<GameObject> _wantToFollow = new List<GameObject>();
@@ -166,10 +150,13 @@ public class NPC : Pickable, IController, IStateMachineController
         petting = false;
     }
 
+
     //Growing Up
     IEnumerator GrowingUp()
     {
-        while ((bornSince < growTime))
+        float growingUpTime = AIParameter.GetValue(aIParameters, AIParametersNames.GrowTime);
+
+        while ((bornSince < growingUpTime))
         {
             bornSince += Time.fixedDeltaTime;
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
@@ -178,7 +165,9 @@ public class NPC : Pickable, IController, IStateMachineController
         canLay = true;
         GrowUp();
 
-        while((bornSince < deathTime))
+        float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.DeathTime);
+
+        while ((bornSince < parameter))
         {
             bornSince += Time.fixedDeltaTime;
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
@@ -244,12 +233,14 @@ public class NPC : Pickable, IController, IStateMachineController
                 }
             }
 
-            if ((aiStateMachine.GetTimeSinceLastChange() >= boredTime))
+            float boredProb = AIParameter.GetValue(aIParameters, AIParametersNames.BoredTime);
+
+            if ((aiStateMachine.GetTimeSinceLastChange() >= boredProb))
                 aiStateMachine.SetBool(BooleanStates.tired, true);
             else
                 aiStateMachine.SetBool(BooleanStates.tired, false);
 
-            if ((aiStateMachine.GetTimeSinceLastChange() >= (boredTime/4f)) && (IsCurrentState(MovementStatus.Idel)))
+            if ((aiStateMachine.GetTimeSinceLastChange() >= (boredProb / 4f)) && (IsCurrentState(MovementStatus.Idel)))
                 aiStateMachine.SetBool(BooleanStates.bored, true);
             else
                 aiStateMachine.SetBool(BooleanStates.bored, false);
@@ -259,11 +250,15 @@ public class NPC : Pickable, IController, IStateMachineController
             {
                 if (detector.GetDetectable("Player").detectionStatus == DetectionStatus.InRange)
                 {
-                    ThinkAboutThrowing(((PlayerSystem)(detector.DetectableInRange("Player"))).gameObject, throwBallOnPlayerProb);
+                    float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.ThrowBallOnPlayerProb);
+
+                    ThinkAboutThrowing(((PlayerSystem)(detector.DetectableInRange("Player"))).gameObject, parameter);
                 }
                 if (detector.GetDetectable("NPC").detectionStatus == DetectionStatus.InRange)
                 {
-                    ThinkAboutThrowing(((NPC)(detector.DetectableInRange("NPC"))).gameObject, throwBallOnNpcProb);
+                    float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.ThrowBallOnNpcProb);
+
+                    ThinkAboutThrowing(((NPC)(detector.DetectableInRange("NPC"))).gameObject, parameter);
                 }
 
                 //No One is near
@@ -370,24 +365,42 @@ public class NPC : Pickable, IController, IStateMachineController
     void OnDetectableInRange(IDetectable _detectable)
     {
         if (_detectable.tag == "Player")
-            ThinkAboutFollowingObject(((PlayerSystem)_detectable).gameObject, seekPlayerProb);
+        {
+            float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekPlayerProb);
+            ThinkAboutFollowingObject(((PlayerSystem)_detectable).gameObject, parameter);
+        }
 
         if (_detectable.tag == ("NPC"))
-            ThinkAboutFollowingObject(((NPC)_detectable).gameObject, seekNpcProb);
+        {
+            float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekNpcProb);
+            ThinkAboutFollowingObject(((NPC)_detectable).gameObject, parameter);
+        }
 
         if (_detectable.tag == ("Ball"))
-            ThinkAboutFollowingObject(((Ball)_detectable).gameObject, seekBallProb);
+        {
+            float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekBallProb);
+            ThinkAboutFollowingObject(((Ball)_detectable).gameObject, parameter);
+        }
 
         if (_detectable.tag == ("Tree"))
-            ThinkAboutFollowingObject(((TreeSystem)_detectable).gameObject, seekTreeProb);
+        {
+            float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekTreeProb);
+            ThinkAboutFollowingObject(((TreeSystem)_detectable).gameObject, parameter);
+        }
 
         if (_detectable.tag == ("Fruit"))
             if (((Fruit)_detectable).GetComponent<Fruit>().OnGround())
-                ThinkAboutFollowingObject(((Fruit)_detectable).gameObject, seekFruitProb);
+            {
+                float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekFruitProb);
+                ThinkAboutFollowingObject(((Fruit)_detectable).gameObject, parameter);
+            }
 
         if (_detectable.tag == ("Alter"))
             if (canLay)
-                ThinkAboutFollowingObject(((FertilityAlter)_detectable).gameObject, seekAlterProb);
+            {
+                float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekAlterProb);
+                ThinkAboutFollowingObject(((FertilityAlter)_detectable).gameObject, parameter);
+            }
     }
     void OnDetectableExit(IDetectable _detectable)
     {
@@ -441,7 +454,10 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         float _time = 0;
         ConditionChecker _condition = new ConditionChecker(!isPicked);
-        UIController.instance.RepeatInGameMessage("Sleeping", this.transform, sleepTime, 15, _condition);
+
+        float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SleepTime);
+
+        UIController.instance.RepeatInGameMessage("Sleeping", this.transform, parameter, 15, _condition);
 
         //sleep
         myBody.isKinematic = true;
@@ -451,7 +467,7 @@ public class NPC : Pickable, IController, IStateMachineController
         {
             _time += Time.fixedDeltaTime;
 
-            _condition.Update((_time <= sleepTime) && IsCurrentState(MovementStatus.Sleep));
+            _condition.Update((_time <= parameter) && IsCurrentState(MovementStatus.Sleep));
 
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
@@ -517,7 +533,9 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         float _randomChance = UnityEngine.Random.Range(0f, 1f);
 
-        if ((_randomChance < seekTreeProb) && (_randomChance > 0))
+        float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekTreeProb);
+
+        if ((_randomChance < parameter) && (_randomChance > 0))
         {
             if(_tree.GotFruit() && !IsCurrentState(MovementStatus.Sleep))
                 _tree.Shake();
@@ -527,7 +545,9 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         float _randomChance = UnityEngine.Random.Range(0f, 1f);
 
-        if ((_randomChance < punchNpcProb) && (_randomChance > 0))
+        float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.PunchNpcProb);
+
+        if ((_randomChance < parameter) && (_randomChance > 0))
         {
             Vector3 _direction = (_body.transform.position - this.transform.position).normalized;
             _body.AddForce(_direction * punchForce, ForceMode.Impulse);
@@ -546,7 +566,9 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         float _randomChance = UnityEngine.Random.Range(0f, 1f);
 
-        if ((_randomChance < dropBallProb) && (_randomChance > 0))
+        float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.DropBallProb);
+
+        if ((_randomChance < parameter) && (_randomChance > 0))
         {
             handSystem.DropObject();
         }
@@ -603,13 +625,11 @@ public class NPC : Pickable, IController, IStateMachineController
             return false;
     }
 
-
     void OnDrawGizmos()
     {
         if(myAgent)
             Gizmos.DrawSphere(myAgent.destination, .2f);
     }
-
 }
 
 

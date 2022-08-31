@@ -23290,7 +23290,7 @@ MonoBehaviour:
               m_CallState: 2
             - m_Target: {fileID: 1342396216}
               m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-              m_MethodName: ApplySettings
+              m_MethodName: ApplyAiSlidersData
               m_Mode: 1
               m_Arguments:
                 m_ObjectArgument: {fileID: 0}
@@ -23618,6 +23618,63 @@ MonoBehaviour:
     type: 3}
   buttonOnAlpha: 1
   buttonOffAlpha: 0.3
+  sliders:
+  - saveName: ThrowBallOnPlayerProb
+    value: 0
+    mySlider: {fileID: 373916476}
+    valueText: {fileID: 159820337}
+  - saveName: ThrowBallOnNpcProb
+    value: 0
+    mySlider: {fileID: 1265499260}
+    valueText: {fileID: 834714597}
+  - saveName: SeekPlayerProb
+    value: 0
+    mySlider: {fileID: 533034801}
+    valueText: {fileID: 1771368994}
+  - saveName: SeekNpcProb
+    value: 0
+    mySlider: {fileID: 852370922}
+    valueText: {fileID: 748601356}
+  - saveName: SeekBallProb
+    value: 0
+    mySlider: {fileID: 1294190049}
+    valueText: {fileID: 931750384}
+  - saveName: SeekTreeProb
+    value: 0
+    mySlider: {fileID: 1605799433}
+    valueText: {fileID: 855870952}
+  - saveName: SeekFruitProb
+    value: 0
+    mySlider: {fileID: 56827037}
+    valueText: {fileID: 1600995838}
+  - saveName: SeekAlterProb
+    value: 0
+    mySlider: {fileID: 876502269}
+    valueText: {fileID: 2008921299}
+  - saveName: PunchNpcProb
+    value: 0
+    mySlider: {fileID: 542755851}
+    valueText: {fileID: 707890493}
+  - saveName: DropBallProb
+    value: 0
+    mySlider: {fileID: 493881}
+    valueText: {fileID: 1678171147}
+  - saveName: SleepTime
+    value: 0
+    mySlider: {fileID: 600966718}
+    valueText: {fileID: 193752998}
+  - saveName: BoredTime
+    value: 0
+    mySlider: {fileID: 1475703408}
+    valueText: {fileID: 554275707}
+  - saveName: DeathTime
+    value: 0
+    mySlider: {fileID: 1040433142}
+    valueText: {fileID: 315164544}
+  - saveName: GrowTime
+    value: 0
+    mySlider: {fileID: 1039968939}
+    valueText: {fileID: 1230604077}
   pickDropButtonImage: {fileID: 331646396}
   throwButtonImage: {fileID: 926304944}
   plantButtonImage: {fileID: 624918846}
@@ -23629,49 +23686,6 @@ MonoBehaviour:
   designMenus: {fileID: 732591682}
   nextButton: {fileID: 1187022637}
   previousButton: {fileID: 1685116274}
-  sliders:
-  - saveName: growTime
-    mySlider: {fileID: 1039968939}
-    valueText: {fileID: 1230604077}
-  - saveName: boredTime
-    mySlider: {fileID: 1475703408}
-    valueText: {fileID: 554275707}
-  - saveName: sleepTime
-    mySlider: {fileID: 600966718}
-    valueText: {fileID: 193752998}
-  - saveName: deathTime
-    mySlider: {fileID: 1040433142}
-    valueText: {fileID: 315164544}
-  - saveName: seekPlayer
-    mySlider: {fileID: 533034801}
-    valueText: {fileID: 1771368994}
-  - saveName: seekNpc
-    mySlider: {fileID: 852370922}
-    valueText: {fileID: 748601356}
-  - saveName: seekFruit
-    mySlider: {fileID: 56827037}
-    valueText: {fileID: 1600995838}
-  - saveName: seekAlter
-    mySlider: {fileID: 876502269}
-    valueText: {fileID: 2008921299}
-  - saveName: punchNPC
-    mySlider: {fileID: 542755851}
-    valueText: {fileID: 707890493}
-  - saveName: seekTree
-    mySlider: {fileID: 1605799433}
-    valueText: {fileID: 855870952}
-  - saveName: seekBall
-    mySlider: {fileID: 1294190049}
-    valueText: {fileID: 931750384}
-  - saveName: dropBall
-    mySlider: {fileID: 493881}
-    valueText: {fileID: 1678171147}
-  - saveName: throwBallPlayer
-    mySlider: {fileID: 1265499260}
-    valueText: {fileID: 834714597}
-  - saveName: throwBallNPC
-    mySlider: {fileID: 373916476}
-    valueText: {fileID: 159820337}
   countDownText: {fileID: 1965516117}
   frameRateUi: {fileID: 851597066}
 --- !u!1 &1804827573

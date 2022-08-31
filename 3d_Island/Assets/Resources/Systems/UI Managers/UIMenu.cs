@@ -22,6 +22,8 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     [SerializeField] TMP_InputField saveNameInput;
     [SerializeField] Button createSave;
     [SerializeField] TextMeshProUGUI inputHint;
+    [SerializeField] Slider difficultySlider;
+    [SerializeField] TextMeshProUGUI difficultyText;
 
     List<GameObject> savesUi = new List<GameObject>();
     GameObject selected;
@@ -34,6 +36,7 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
         postProcessingFunctions.Initialize();
         postProcessingFunctions.SetBlur(true);
         saveNameInput.onValueChanged.AddListener(SaveNameVaildator);
+        difficultySlider.onValueChanged.AddListener(OnDifficultySliderValueChange);
 
         UpdateSavesUI();
     }
@@ -51,7 +54,7 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     {
         var _time = System.DateTime.Now;
 
-        SessionData sessionData = new SessionData(saveNameInput.text, DataManager.instance.GetCurrentMode(), _time.ToString());
+        SessionData sessionData = new SessionData(saveNameInput.text, DataManager.instance.GetCurrentMode(), _time.ToString(), GetDifficulty());
 
         DataManager.instance.Add(sessionData);
         
@@ -137,6 +140,41 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
         }
 
         UpdateSavesButton();
+    }
+    void OnDifficultySliderValueChange(float _value)
+    {
+        if (_value >= 0f && _value <= 0.33f)
+        {
+            difficultySlider.value = 0f;
+            difficultyText.text = "Easy";
+        }
+        else if (_value > 0.33f && _value <= 0.66f)
+        {
+            difficultySlider.value = 0.5f;
+            difficultyText.text = "Medium";
+        }
+        else if(_value > 0.66f && _value <= 1f)
+        {
+            difficultySlider.value = 1f;
+            difficultyText.text = "Hard";
+        }
+    }
+    AiSet GetDifficulty()
+    {
+        if (difficultySlider.value >= 0f && difficultySlider.value <= 0.33f)
+        {
+            return AiSet.Easy;
+        }
+        else if (difficultySlider.value > 0.33f && difficultySlider.value <= 0.66f)
+        {
+            return AiSet.Medium;
+        }
+        else if (difficultySlider.value > 0.66f && difficultySlider.value <= 1f)
+        {
+            return AiSet.Hard;
+        }
+
+        return AiSet.Default;
     }
     void ClearOldUI()
     {

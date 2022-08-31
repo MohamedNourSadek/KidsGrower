@@ -42,11 +42,6 @@ public class GroundDetector
             RaycastHit _ray;
             Physics.Raycast(_body.transform.position + Vector3.up, Vector2.down, out _ray, onGroundThreshold, detectableLayers);
 
-            if (_body.tag == "NPC")
-            {
-                Debug.Log("NPC detected " + _ray.collider.tag);
-            }
-
             if ((_ray.point.magnitude > 0) && (_ray.collider.tag == tag))
                 return true;
             else

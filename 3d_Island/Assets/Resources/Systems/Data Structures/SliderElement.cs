@@ -4,19 +4,23 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [System.Serializable]
-public class SliderElement
+public class AIParameterSlider : AIParameter
 {
-    [SerializeField] public string saveName;
     [SerializeField] public Slider mySlider;
     [SerializeField] public Text valueText;
-
 
     public void Initialize()
     {
         mySlider.onValueChanged.AddListener(OnValueChanged);
     }
-    public void OnValueChanged(float value)
+    public void OnValueChanged(float _value)
     {
+        value = mySlider.value;
         valueText.text = mySlider.value.ToString();
     }
+    public void ChangeSlider(float _value)
+    {
+        mySlider.value = _value;
+    }
+
 }

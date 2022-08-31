@@ -9,6 +9,7 @@ public class UnderPopulation : AbstractMode
 
     public UnderPopulation(Mode_Data data) : base(data)
     {
+
     }
 
     protected override void OnLoad()
