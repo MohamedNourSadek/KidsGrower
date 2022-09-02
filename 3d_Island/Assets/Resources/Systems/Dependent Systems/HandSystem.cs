@@ -29,10 +29,10 @@ public class HandSystem
 
 
     //Outside Interface
-    public void Initialize(DetectorSystem _detector, IController _controller)
+    public void Initialize(DetectorSystem detector, IController controller)
     {
-        this.detector = _detector;
-        myController = _controller;
+        this.detector = detector;
+        myController = controller;
     }
     public void Update()
     { 
@@ -62,9 +62,9 @@ public class HandSystem
     {
         if ((detector.GetPickables().Count > 0) ) 
         {
-            float _speed = (detector.GetPickables()[0].GetSpeed());
+            float speed = (detector.GetPickables()[0].GetSpeed());
 
-            if (_speed <= pickSpeedThrushold)
+            if (speed <= pickSpeedThrushold)
             {
                 objectInHand = detector.GetPickables()[0];
                 objectInHand.Pick(this);
@@ -78,29 +78,29 @@ public class HandSystem
     }
     public void PetObject()
     {
-        Transform _petObject = detector.GetPickables()[0].transform;
+        Transform petObject = detector.GetPickables()[0].transform;
 
-        ConditionChecker _condition = new ConditionChecker(true);
+        ConditionChecker condition = new ConditionChecker(true);
 
-        ServicesProvider.instance.StartCoroutine(UpdatePetCondition(_condition, _petObject.gameObject.GetComponent<NPC>()));
+        ServicesProvider.instance.StartCoroutine(UpdatePetCondition(condition, petObject.gameObject.GetComponent<NPC>()));
 
 
-        UIController.instance.RepeatInGameMessage("Petting", _petObject, petTime, 5f, _condition);
+        UIController.instance.RepeatInGameMessage("Petting", petObject, petTime, 5f, condition);
 
         if ((detector.GetPickables().Count > 0))
         {
             if ((detector.GetPickables()[0].GetSpeed() <= pickSpeedThrushold))
             {
-                NPC _npc = (NPC)(detector.GetPickables()[0]);
+                NPC npc = (NPC)(detector.GetPickables()[0]);
 
                 myController.GetBody().isKinematic = true;
-                _npc.StartPetting();
+                npc.StartPetting();
 
                 isPetting = true;
 
                 canPick = false;
 
-                ServicesProvider.instance.StartCoroutine(PetObjectRoutine(_condition,_npc));
+                ServicesProvider.instance.StartCoroutine(PetObjectRoutine(condition,npc));
             }
         }
     }
@@ -114,31 +114,31 @@ public class HandSystem
 
         objectInHand = null;
     }
-    public void ThrowObject(Vector3 _target)
+    public void ThrowObject(Vector3 target)
     {
         if(objectInHand != null)
         {
             //Because Drop function removes the reference
-            var _tempReference = objectInHand;
+            var tempReference = objectInHand;
 
             DropObject();
 
-            Vector3 _direction = (_target - _tempReference.transform.position).normalized;
+            Vector3 direction = (target - tempReference.transform.position).normalized;
 
-            _tempReference.GetComponent<Rigidbody>().AddForce(_direction * throwForce, ForceMode.Impulse);
+            tempReference.GetComponent<Rigidbody>().AddForce(direction * throwForce, ForceMode.Impulse);
         }
     }
     public void PlantObject()
     {
-        Plantable _platable = objectInHand.GetComponent<Plantable>();
+        Plantable platable = objectInHand.GetComponent<Plantable>();
 
         DropObject();
 
-        Vector3 _direction = (Vector3.down + (_platable.plantDistance * myController.GetBody().transform.forward)).normalized;
-        RaycastHit _ray;
-        Physics.Raycast(myHand.transform.position, _direction, out _ray, 50, GroundDetector.GetGroundLayer());
+        Vector3 direction = (Vector3.down + (platable.plantDistance * myController.GetBody().transform.forward)).normalized;
+        RaycastHit ray;
+        Physics.Raycast(myHand.transform.position, direction, out ray, 50, GroundDetector.GetGroundLayer());
 
-        _platable.Plant(_ray.point);
+        platable.Plant(ray.point);
     }
 
 
@@ -150,9 +150,9 @@ public class HandSystem
     {
         objectInHand = null;
     }
-    public void SetObjectInHand(Pickable _obj)
+    public void SetObjectInHand(Pickable obj)
     {
-        objectInHand = _obj;
+        objectInHand = obj;
     }
 
 
@@ -170,37 +170,37 @@ public class HandSystem
 
      
     //Internal Algorithms
-    IEnumerator PetObjectRoutine(ConditionChecker _condition, NPC _npc)
+    IEnumerator PetObjectRoutine(ConditionChecker condition, NPC npc)
     {
-        while (_condition.isTrue)
+        while (condition.isTrue)
         {
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
-        if(_npc)
-            _npc.EndPetting();
+        if(npc)
+            npc.EndPetting();
 
         myController.GetBody().isKinematic = false;
         DropObject();
 
         isPetting = false;
     }
-    IEnumerator UpdatePetCondition(ConditionChecker _condition, NPC npc)
+    IEnumerator UpdatePetCondition(ConditionChecker condition, NPC npc)
     {
-        bool _isConditionTrue = true;
-        float _time = 0;
+        bool isConditionTrue = true;
+        float time = 0;
 
-        while (_isConditionTrue)
+        while (isConditionTrue)
         {
-            _condition.Update(true);
+            condition.Update(true);
 
-            _isConditionTrue = ((_time <= petTime) && (npc != null));
+            isConditionTrue = ((time <= petTime) && (npc != null));
 
-            _time += Time.fixedDeltaTime;
+            time += Time.fixedDeltaTime;
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
-        _condition.Update(false);
+        condition.Update(false);
     }
 }
 

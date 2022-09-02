@@ -23,9 +23,9 @@ public class CameraSystem
 
 
     //Interface
-    public void Initialize(GameObject _target)
+    public void Initialize(GameObject target)
     {
-        followedObject = _target;
+        followedObject = target;
         rotationFactor = new Vector2(0f, cameraHeighLimits.x);
         finalFollowedPosition = followedObject.transform.position + (Vector3.up * cameraTilt);
     }
@@ -33,10 +33,10 @@ public class CameraSystem
     {
         return controlledCamera.transform;
     }
-    public void RotateCamera(Vector2 _deltaRotation)
+    public void RotateCamera(Vector2 deltaRotation)
     {
-        rotationFactor.x += (rotationInputSensitivity.x * _deltaRotation.x);
-        rotationFactor.y = Mathf.Clamp(rotationFactor.y - (rotationInputSensitivity.y * _deltaRotation.y), cameraHeighLimits.x, cameraHeighLimits.y);
+        rotationFactor.x += (rotationInputSensitivity.x * deltaRotation.x);
+        rotationFactor.y = Mathf.Clamp(rotationFactor.y - (rotationInputSensitivity.y * deltaRotation.y), cameraHeighLimits.x, cameraHeighLimits.y);
     }
     public void Update()
     {

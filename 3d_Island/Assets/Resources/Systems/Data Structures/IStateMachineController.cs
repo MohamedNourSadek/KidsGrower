@@ -6,6 +6,6 @@ using UnityEngine;
 
 public interface IStateMachineController
 {
-    public void ActionExecution(Enum _trigger);
+    public void ActionExecution(Enum trigger);
 }
 

@@ -157,16 +157,16 @@ public class GameManager : MonoBehaviour, IInputUser
     }
     RaycastHit CastFromMouse()
     {
-        RaycastHit _hit;
+        RaycastHit hit;
 
-        Vector2 _mouse2D = InputSystem.GetMousePosition();
-        Vector3 _mousePosition = new(_mouse2D.x, _mouse2D.y, 2f);
+        Vector2 mouse2d = InputSystem.GetMousePosition();
+        Vector3 mousePosition = new(mouse2d.x, mouse2d.y, 2f);
 
-        Ray _ray = Camera.main.ScreenPointToRay(_mousePosition, Camera.MonoOrStereoscopicEye.Mono);
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition, Camera.MonoOrStereoscopicEye.Mono);
 
-        Physics.Raycast(_ray, out _hit);
+        Physics.Raycast(ray, out hit);
 
-        return _hit;
+        return hit;
     }
 
 
@@ -204,9 +204,9 @@ public class GameManager : MonoBehaviour, IInputUser
             Camera.main.transform.rotation = camCustomizingViewRot;
         }
     }
-    public void SetBlur(bool _state)
+    public void SetBlur(bool state)
     {
-        posProcessingFunctions.SetBlur(_state);
+        posProcessingFunctions.SetBlur(state);
     }
     public void OpenMainMenu()
     {
@@ -243,11 +243,11 @@ public class GameManager : MonoBehaviour, IInputUser
         {
             if ((customizingState == CustomizingState.Detecting))
             {
-                RaycastHit _hit = CastFromMouse();
+                RaycastHit hit = CastFromMouse();
 
-                if (_hit.collider.GetComponentInParent<CustomizableObject>())
+                if (hit.collider.GetComponentInParent<CustomizableObject>())
                 {
-                    lastdetected = _hit.collider.GetComponentInParent<CustomizableObject>();
+                    lastdetected = hit.collider.GetComponentInParent<CustomizableObject>();
 
                     customizingState = CustomizingState.Moving;
 
@@ -260,11 +260,11 @@ public class GameManager : MonoBehaviour, IInputUser
             }
             else if (customizingState == CustomizingState.Moving)
             {
-                RaycastHit _hit = CastFromMouse();
+                RaycastHit hit = CastFromMouse();
 
-                if (_hit.collider.gameObject.CompareTag("Ground"))
+                if (hit.collider.gameObject.CompareTag("Ground"))
                 {
-                    lastdetected.transform.position = _hit.point;
+                    lastdetected.transform.position = hit.point;
                     customizingState = CustomizingState.Detecting;
 
                     UIController.instance.CustomizeLog("", Color.white);
@@ -283,6 +283,6 @@ public class GameManager : MonoBehaviour, IInputUser
     public void ThrowInput() { }
     public void JumpInput() { }
     public void PickInput() { }
-    public void MoveInput(Vector2 _movementInput) { }
-    public void RotateInput(Vector2 _deltaRotate) { }
+    public void MoveInput(Vector2 movementInput) { }
+    public void RotateInput(Vector2 deltaRotate) { }
 }

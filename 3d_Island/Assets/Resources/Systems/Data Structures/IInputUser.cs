@@ -11,6 +11,6 @@ public interface IInputUser
     public void JumpInput();
     public void PickInput();
     public void PressInput();
-    public void MoveInput(Vector2 _movementInput);
-    public void RotateInput(Vector2 _deltaRotate);
+    public void MoveInput(Vector2 movementInput);
+    public void RotateInput(Vector2 deltaRotate);
 }

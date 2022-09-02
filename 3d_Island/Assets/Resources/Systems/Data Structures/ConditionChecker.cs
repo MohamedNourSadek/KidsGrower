@@ -6,13 +6,13 @@ public class ConditionChecker
 {
     public bool isTrue = true;
 
-    public ConditionChecker(bool _startValue)
+    public ConditionChecker(bool startValue)
     {
-        isTrue = _startValue;
+        isTrue = startValue;
     }
-    public void Update(bool _condition)
+    public void Update(bool condition)
     {
-        isTrue = _condition;
+        isTrue = condition;
     }
 }
 

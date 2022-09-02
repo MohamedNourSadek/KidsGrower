@@ -49,7 +49,7 @@ public class NPC : Pickable, IController, IStateMachineController
     [SerializeField] GameObject deadNpcAsset;
 
     //Private data
-    List<GameObject> _wantToFollow = new List<GameObject>();
+    List<GameObject> wantToFollow = new List<GameObject>();
     NavMeshAgent myAgent;
     public float bornSince = 0f;
     bool petting = false;
@@ -67,16 +67,16 @@ public class NPC : Pickable, IController, IStateMachineController
         groundDetector.Initialize();
         levelController.Initialize(OnLevelIncrease, OnXPIncrease);
 
-        MovementStatus _state = MovementStatus.Idel;
-        aiStateMachine.Initialize((Enum)_state);
+        MovementStatus state = MovementStatus.Idel;
+        aiStateMachine.Initialize((Enum)state);
         InitializeLevelUI();
 
 
-        foreach(DetectableElement _element in detector.detectableElements)
+        foreach(DetectableElement element in detector.detectableElements)
         {
-            _element.OnNear += OnDetectableNear;
-            _element.OnInRange += OnDetectableInRange;
-            _element.OnInRangeExit += OnDetectableExit;
+            element.OnNear += OnDetectableNear;
+            element.OnInRange += OnDetectableInRange;
+            element.OnInRangeExit += OnDetectableExit;
         }
 
         base.StartCoroutine(GrowingUp());
@@ -95,9 +95,9 @@ public class NPC : Pickable, IController, IStateMachineController
         if (groundDetector.IsOnWater(myBody))
             Die();
     }
-    bool GotTypeInHand(Type _type)
+    bool GotTypeInHand(Type type)
     {
-        if (handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().GetType() == _type)
+        if (handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().GetType() == type)
             return true;
         else
             return false;
@@ -124,9 +124,9 @@ public class NPC : Pickable, IController, IStateMachineController
 
         return npc_data;
     }
-    public override void Pick(HandSystem _picker)
+    public override void Pick(HandSystem picker)
     {
-        base.Pick(_picker);
+        base.Pick(picker);
         myAgent.enabled = false;
         aiStateMachine.SetBool(BooleanStates.Picked, true); 
     }
@@ -188,9 +188,9 @@ public class NPC : Pickable, IController, IStateMachineController
     }
     void Die()
     {
-        var _deadNPC =  Instantiate(deadNpcAsset, this.transform.position, Quaternion.identity);
+        var deadNPC =  Instantiate(deadNpcAsset, this.transform.position, Quaternion.identity);
         UIController.instance.DestroyNpcUiElement(this.gameObject);
-        UIController.instance.RepeatInGameMessage("Death!!", _deadNPC.transform, 2f, 4f, new ConditionChecker(true));
+        UIController.instance.RepeatInGameMessage("Death!!", deadNPC.transform, 2f, 4f, new ConditionChecker(true));
         Destroy(this.gameObject);
     }
 
@@ -222,16 +222,16 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         while (true)
         {
-            if (_wantToFollow.Count >= 1)
+            if (wantToFollow.Count >= 1)
             {
-                GameObject _obj = detector.GetHighestProp(_wantToFollow);
+                GameObject obj = detector.GetHighestProp(wantToFollow);
 
-                if (_obj != dynamicDestination)
+                if (obj != dynamicDestination)
                 {
-                    if (_obj.tag == "Tree" && _obj.GetComponent<TreeSystem>().GotFruit())
-                        SetDes(_obj);
-                    else if(_obj.tag != "Tree")
-                        SetDes(_obj);
+                    if (obj.tag == "Tree" && obj.GetComponent<TreeSystem>().GotFruit())
+                        SetDes(obj);
+                    else if(obj.tag != "Tree")
+                        SetDes(obj);
                 }
             }
 
@@ -320,21 +320,21 @@ public class NPC : Pickable, IController, IStateMachineController
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
     }
-    public void ActionExecution(Enum _action)
+    public void ActionExecution(Enum action)
     {
-        MovementStatus _state = (MovementStatus)_action;
+        MovementStatus state = (MovementStatus)action;
 
-        if (_state == MovementStatus.Explore)
+        if (state == MovementStatus.Explore)
         {
             ExplorePoint();
         }
-        else if (_state == MovementStatus.Sleep)
+        else if (state == MovementStatus.Sleep)
         {
             StartCoroutine(Sleeping());
         }
-        else if (_state == MovementStatus.Eat)
+        else if (state == MovementStatus.Eat)
         {
-            bool _willEat = false;
+            bool willEat = false;
 
             if (handSystem.GetNearest())
             {
@@ -343,107 +343,107 @@ public class NPC : Pickable, IController, IStateMachineController
                     handSystem.PickObject();
 
                     if ((Fruit)(handSystem.GetObjectInHand()))
-                        _willEat = true;
+                        willEat = true;
                 }
             }
 
             //so that if eating failed, it tells the _state machine.
-            if (_willEat)
+            if (willEat)
                 StartCoroutine(Eating((Fruit)(handSystem.GetObjectInHand())));
             else
                 aiStateMachine.SetTrigger(TriggerStates.doneEating);
 
         }
-        else if (_state == MovementStatus.Lay)
+        else if (state == MovementStatus.Lay)
         {
             StartCoroutine(Laying());
         }
-        else if (_state == MovementStatus.Ball)
+        else if (state == MovementStatus.Ball)
         {
             if ((handSystem.GetNearest()).tag == "Ball" && (handSystem.GetObjectInHand() == null))
                 handSystem.PickObject();
         }
     }
-    void OnDetectableInRange(IDetectable _detectable)
+    void OnDetectableInRange(IDetectable detectable)
     {
-        if (_detectable.tag == "Player")
+        if (detectable.tag == "Player")
         {
             float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekPlayerProb);
-            ThinkAboutFollowingObject(((PlayerSystem)_detectable).gameObject, parameter);
+            ThinkAboutFollowingObject(((PlayerSystem)detectable).gameObject, parameter);
         }
 
-        if (_detectable.tag == ("NPC"))
+        if (detectable.tag == ("NPC"))
         {
             float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekNpcProb);
-            ThinkAboutFollowingObject(((NPC)_detectable).gameObject, parameter);
+            ThinkAboutFollowingObject(((NPC)detectable).gameObject, parameter);
         }
 
-        if (_detectable.tag == ("Ball"))
+        if (detectable.tag == ("Ball"))
         {
             float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekBallProb);
-            ThinkAboutFollowingObject(((Ball)_detectable).gameObject, parameter);
+            ThinkAboutFollowingObject(((Ball)detectable).gameObject, parameter);
         }
 
-        if (_detectable.tag == ("Tree"))
+        if (detectable.tag == ("Tree"))
         {
             float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekTreeProb);
-            ThinkAboutFollowingObject(((TreeSystem)_detectable).gameObject, parameter);
+            ThinkAboutFollowingObject(((TreeSystem)detectable).gameObject, parameter);
         }
 
-        if (_detectable.tag == ("Fruit"))
-            if (((Fruit)_detectable).GetComponent<Fruit>().OnGround())
+        if (detectable.tag == ("Fruit"))
+            if (((Fruit)detectable).GetComponent<Fruit>().OnGround())
             {
                 float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekFruitProb);
-                ThinkAboutFollowingObject(((Fruit)_detectable).gameObject, parameter);
+                ThinkAboutFollowingObject(((Fruit)detectable).gameObject, parameter);
             }
 
-        if (_detectable.tag == ("Alter"))
+        if (detectable.tag == ("Alter"))
             if (canLay)
             {
                 float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekAlterProb);
-                ThinkAboutFollowingObject(((FertilityAlter)_detectable).gameObject, parameter);
+                ThinkAboutFollowingObject(((FertilityAlter)detectable).gameObject, parameter);
             }
     }
-    void OnDetectableExit(IDetectable _detectable)
+    void OnDetectableExit(IDetectable detectable)
     {
         //If the object i am following got out of range
-        if (dynamicDestination == ((MonoBehaviour)_detectable).gameObject.transform)
+        if (dynamicDestination == ((MonoBehaviour)detectable).gameObject.transform)
         {
             if (IsCurrentState(MovementStatus.Move))
                 aiStateMachine.SetTrigger(TriggerStates.lostTarget);
         }
 
-        if (_wantToFollow.Contains(_detectable.GetGameObject()))
-            _wantToFollow.Remove(_detectable.GetGameObject());
+        if (wantToFollow.Contains(detectable.GetGameObject()))
+            wantToFollow.Remove(detectable.GetGameObject());
     }
-    void OnDetectableNear(IDetectable _detectable)
+    void OnDetectableNear(IDetectable detectable)
     {
-        if (_detectable.tag == ("NPC"))
-            ThinkAboutPunchingAnNpc(((NPC)(_detectable)).myBody);
+        if (detectable.tag == ("NPC"))
+            ThinkAboutPunchingAnNpc(((NPC)(detectable)).myBody);
 
-        if (_detectable.tag == ("Tree"))
-            ThinkAboutShakingTree((TreeSystem)_detectable);
+        if (detectable.tag == ("Tree"))
+            ThinkAboutShakingTree((TreeSystem)detectable);
     }
 
 
     //Algorithms
-    IEnumerator Eating(Fruit _fruit)
+    IEnumerator Eating(Fruit fruit)
     {
-        float _time = 0;
-        ConditionChecker _condition = new ConditionChecker(!isPicked);
-        UIController.instance.RepeatInGameMessage("Eating", this.transform, eatTime, 15, _condition);
+        float time = 0;
+        ConditionChecker condition = new ConditionChecker(!isPicked);
+        UIController.instance.RepeatInGameMessage("Eating", this.transform, eatTime, 15, condition);
 
-        while (_condition.isTrue)
+        while (condition.isTrue)
         {
-            _time += Time.fixedDeltaTime;
+            time += Time.fixedDeltaTime;
 
-            bool _timeCond = (_time <= eatTime);
-            bool _fruitInHand = GotTypeInHand(typeof(Fruit));
-            bool _hasEnergy = _fruit.HasEnergy();
+            bool timeCond = (time <= eatTime);
+            bool fruitInHand = GotTypeInHand(typeof(Fruit));
+            bool hasEnergy = fruit.HasEnergy();
 
-            _condition.Update(IsCurrentState(MovementStatus.Eat) && _timeCond && _fruitInHand && _hasEnergy);
+            condition.Update(IsCurrentState(MovementStatus.Eat) && timeCond && fruitInHand && hasEnergy);
 
-            levelController.IncreaseXP(_fruit.GetEnergy());
+            levelController.IncreaseXP(fruit.GetEnergy());
 
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
@@ -454,22 +454,22 @@ public class NPC : Pickable, IController, IStateMachineController
     }
     IEnumerator Sleeping()
     {
-        float _time = 0;
-        ConditionChecker _condition = new ConditionChecker(!isPicked);
+        float time = 0;
+        ConditionChecker condition = new ConditionChecker(!isPicked);
 
         float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SleepTime);
 
-        UIController.instance.RepeatInGameMessage("Sleeping", this.transform, parameter, 15, _condition);
+        UIController.instance.RepeatInGameMessage("Sleeping", this.transform, parameter, 15, condition);
 
         //sleep
         myBody.isKinematic = true;
         myAgent.enabled = false;
 
-        while (_condition.isTrue)
+        while (condition.isTrue)
         {
-            _time += Time.fixedDeltaTime;
+            time += Time.fixedDeltaTime;
 
-            _condition.Update((_time <= parameter) && IsCurrentState(MovementStatus.Sleep));
+            condition.Update((time <= parameter) && IsCurrentState(MovementStatus.Sleep));
 
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
@@ -485,19 +485,19 @@ public class NPC : Pickable, IController, IStateMachineController
     }
     IEnumerator Laying()
     {
-        float _time = 0;
-        ConditionChecker _condition = new ConditionChecker(!isPicked);
-        UIController.instance.RepeatInGameMessage("Laying", this.transform, layingTime, 15, _condition);
+        float time = 0;
+        ConditionChecker condition = new ConditionChecker(!isPicked);
+        UIController.instance.RepeatInGameMessage("Laying", this.transform, layingTime, 15, condition);
 
         //Laying
         myBody.isKinematic = true;
         myAgent.enabled = false;
 
-        while (_condition.isTrue)
+        while (condition.isTrue)
         {
-            _time += Time.fixedDeltaTime;
+            time += Time.fixedDeltaTime;
 
-            _condition.Update((_time <= layingTime) && IsCurrentState(MovementStatus.Lay));
+            condition.Update((time <= layingTime) && IsCurrentState(MovementStatus.Lay));
 
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
@@ -510,20 +510,20 @@ public class NPC : Pickable, IController, IStateMachineController
         }
 
 
-        if (_time >= layingTime)
+        if (time >= layingTime)
         {
             canLay = false;
 
-            Egg _egg = Instantiate(eggAsset.gameObject, this.transform.position + Vector3.up, Quaternion.identity).GetComponent<Egg>();
-            _egg.SetRottenness(1f - levelController.GetLevelToLevelsRation());
+            Egg egg = Instantiate(eggAsset.gameObject, this.transform.position + Vector3.up, Quaternion.identity).GetComponent<Egg>();
+            egg.SetRottenness(1f - levelController.GetLevelToLevelsRation());
 
             aiStateMachine.SetTrigger(TriggerStates.doneLaying);
 
             //Reset the ability to lay
-            _time = 0;
-            while (_time <= layingTimeInBetween)
+            time = 0;
+            while (time <= layingTimeInBetween)
             {
-                _time += Time.fixedDeltaTime;
+                time += Time.fixedDeltaTime;
 
                 yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
             }
@@ -531,84 +531,84 @@ public class NPC : Pickable, IController, IStateMachineController
             canLay = true;
         }
     }
-    void ThinkAboutShakingTree(TreeSystem _tree)
+    void ThinkAboutShakingTree(TreeSystem tree)
     {
-        float _randomChance = UnityEngine.Random.Range(0f, 1f);
+        float randomChance = UnityEngine.Random.Range(0f, 1f);
 
         float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekTreeProb);
 
-        if ((_randomChance < parameter) && (_randomChance > 0))
+        if ((randomChance < parameter) && (randomChance > 0))
         {
-            if(_tree.GotFruit() && !IsCurrentState(MovementStatus.Sleep))
-                _tree.Shake();
+            if(tree.GotFruit() && !IsCurrentState(MovementStatus.Sleep))
+                tree.Shake();
         }
     }
-    void ThinkAboutPunchingAnNpc(Rigidbody _body)
+    void ThinkAboutPunchingAnNpc(Rigidbody body)
     {
-        float _randomChance = UnityEngine.Random.Range(0f, 1f);
+        float randomChance = UnityEngine.Random.Range(0f, 1f);
 
         float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.PunchNpcProb);
 
-        if ((_randomChance < parameter) && (_randomChance > 0))
+        if ((randomChance < parameter) && (randomChance > 0))
         {
-            Vector3 _direction = (_body.transform.position - this.transform.position).normalized;
-            _body.AddForce(_direction * punchForce, ForceMode.Impulse);
+            Vector3 direction = (body.transform.position - this.transform.position).normalized;
+            body.AddForce(direction * punchForce, ForceMode.Impulse);
         }
     }
-    void ThinkAboutThrowing(GameObject _target, float _chance)
+    void ThinkAboutThrowing(GameObject target, float chance)
     {
-        float _randomChance = UnityEngine.Random.Range(0f, 1f);
+        float randomChance = UnityEngine.Random.Range(0f, 1f);
 
-        if ((_randomChance < _chance) && (_randomChance > 0))
+        if ((randomChance < chance) && (randomChance > 0))
         {
-            handSystem.ThrowObject((_target.transform.position));
+            handSystem.ThrowObject((target.transform.position));
         }
     }
     void ThinkaboutDroppingTheBall()
     {
-        float _randomChance = UnityEngine.Random.Range(0f, 1f);
+        float randomChance = UnityEngine.Random.Range(0f, 1f);
 
         float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.DropBallProb);
 
-        if ((_randomChance < parameter) && (_randomChance > 0))
+        if ((randomChance < parameter) && (randomChance > 0))
         {
             handSystem.DropObject();
         }
     }
-    void ThinkAboutFollowingObject(GameObject _obj, float _chance)
+    void ThinkAboutFollowingObject(GameObject obj, float chance)
     {
-        float _randomChance = UnityEngine.Random.Range(0f, 1f);
+        float randomChance = UnityEngine.Random.Range(0f, 1f);
 
-        if((_randomChance < _chance) && (_randomChance > 0))
+        if((randomChance < chance) && (randomChance > 0))
         {
-            if (!_wantToFollow.Contains(_obj))
-                _wantToFollow.Add(_obj);
+            if (!wantToFollow.Contains(obj))
+                wantToFollow.Add(obj);
         }
     }
     void ExplorePoint()
     {
         deltaExploration = Vector3.zero;
-        Vector3 _destination = MapSystem.instance.GetRandomExplorationPoint();
+        Vector3 destination = MapSystem.instance.GetRandomExplorationPoint();
 
-        float _distance = (this.transform.position - myAgent.destination).magnitude;
+        float distance = (this.transform.position - myAgent.destination).magnitude;
 
-        if (_distance <= nearObjectDistance)
+        if (distance <= nearObjectDistance)
         {
-            float _x = UnityEngine.Random.Range(0f, explorationAmplitude);
-            float _z = UnityEngine.Random.Range(0f, explorationAmplitude);
+            float x = UnityEngine.Random.Range(0f, explorationAmplitude);
+            float z = UnityEngine.Random.Range(0f, explorationAmplitude);
 
-            deltaExploration = new Vector3(_x, 0, _z);
+            deltaExploration = new Vector3(x, 0, z);
         }
 
         if(myAgent.isActiveAndEnabled)
-            myAgent.destination = _destination + deltaExploration;
+            myAgent.destination = destination + deltaExploration;
 
     }
-    void SetDes(GameObject _obj)
+    void SetDes(GameObject obj)
     {
         if(myAgent.isActiveAndEnabled)
         {
-            dynamicDestination = _obj.transform;
+            dynamicDestination = obj.transform;
             myAgent.destination = dynamicDestination.position;
             aiStateMachine.SetTrigger(TriggerStates.foundTarget);
         }
@@ -619,9 +619,9 @@ public class NPC : Pickable, IController, IStateMachineController
             if (myAgent.remainingDistance <= nearObjectDistance)
                aiStateMachine.SetTrigger(TriggerStates.reached);
     }
-    bool IsCurrentState(MovementStatus _state)
+    bool IsCurrentState(MovementStatus state)
     {
-        if (((MovementStatus)aiStateMachine.GetCurrentState()) == _state)
+        if (((MovementStatus)aiStateMachine.GetCurrentState()) == state)
             return true;
         else
             return false;

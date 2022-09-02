@@ -6,9 +6,9 @@ using System;
 
 public enum DetectionStatus { None, InRange, VeryNear };
 
-public delegate void notifyInRange(IDetectable _detectable);
-public delegate void notifyInRangeExit(IDetectable _detectable);
-public delegate void notifyNear(IDetectable _detectable);
+public delegate void notifyInRange(IDetectable detectable);
+public delegate void notifyInRangeExit(IDetectable detectable);
+public delegate void notifyNear(IDetectable detectable);
 
 
 public class DetectorSystem : MonoBehaviour
@@ -44,37 +44,37 @@ public class DetectorSystem : MonoBehaviour
     public void UpdatePickables()
     {
         //Detecting near objects
-        foreach(string _pickableTag in whoCanIPick)
+        foreach(string pickableTag in whoCanIPick)
         {
-            foreach(DetectableElement _element in detectableElements)
+            foreach(DetectableElement element in detectableElements)
             {
-                if (_pickableTag.ToString() == _element.tag)
+                if (pickableTag.ToString() == element.tag)
                 {
-                    IDetectable _detectable = null;
+                    IDetectable detectable = null;
 
-                    if (_element.detectionStatus == DetectionStatus.VeryNear)
-                        _detectable = DetectableNear(_element.tag, nearObjectDistance);
+                    if (element.detectionStatus == DetectionStatus.VeryNear)
+                        detectable = DetectableNear(element.tag, nearObjectDistance);
 
-                    foreach (IDetectable detectable in _element.detectedList)
+                    foreach (IDetectable _detectable in element.detectedList)
                     {
-                        if (detectable == _detectable)
+                        if (_detectable == detectable)
                         {
-                            if (!toPick.Contains((Pickable)detectable))
+                            if (!toPick.Contains((Pickable)_detectable))
                             {
                                 if (highLightPickable)
-                                    ((Pickable)detectable).PickablilityIndicator(true);
+                                    ((Pickable)_detectable).PickablilityIndicator(true);
 
-                                toPick.Add((Pickable)detectable);
+                                toPick.Add((Pickable)_detectable);
                             }
                         }
                         else
                         {
-                            if (toPick.Contains((Pickable)detectable))
+                            if (toPick.Contains((Pickable)_detectable))
                             {
                                 if (highLightPickable)
-                                    ((Pickable)detectable).PickablilityIndicator(false);
+                                    ((Pickable)_detectable).PickablilityIndicator(false);
 
-                                toPick.Remove((Pickable)detectable);
+                                toPick.Remove((Pickable)_detectable);
                             }
                         }
                     }
@@ -87,50 +87,50 @@ public class DetectorSystem : MonoBehaviour
         if (toPick.Count > 1)
         {
             //Safty for destroyed Objects
-            List<Pickable> _newList = new();
-            foreach (Pickable _pickable in toPick)
-                if (_pickable != null)
-                    _newList.Add(_pickable);
+            List<Pickable> newList = new();
+            foreach (Pickable pickable in toPick)
+                if (pickable != null)
+                    newList.Add(pickable);
 
-            var _temp = _newList[0];
+            var temp = newList[0];
 
-            foreach (Pickable _pickable in _newList)
-                if (Distance(_pickable.gameObject) < Distance(_temp.gameObject))
-                    _temp = _pickable;
+            foreach (Pickable pickable in newList)
+                if (Distance(pickable.gameObject) < Distance(temp.gameObject))
+                    temp = pickable;
 
-            foreach (Pickable _pickable in _newList)
+            foreach (Pickable pickable in newList)
                 if (highLightPickable)
-                    _pickable.PickablilityIndicator(false);
+                    pickable.PickablilityIndicator(false);
 
             if (highLightPickable)
-                _temp.PickablilityIndicator(true);
+                temp.PickablilityIndicator(true);
 
-            _newList.Clear();
-            _newList.Add(_temp);
-            toPick = _newList;
+            newList.Clear();
+            newList.Add(temp);
+            toPick = newList;
         }
     }
     public void UpdateStates()
     {
-        foreach(DetectableElement _element in detectableElements)
+        foreach(DetectableElement element in detectableElements)
         {
-            if (((MonoBehaviour)(DetectableNear(_element.tag, nearObjectDistance))) != null)
+            if (((MonoBehaviour)(DetectableNear(element.tag, nearObjectDistance))) != null)
             {
-                if ((_element.detectionStatus != DetectionStatus.VeryNear) || _element.notifyOnlyAtFirst == false)
-                    _element.InvokeNear(DetectableNear(_element.tag, nearObjectDistance));
+                if ((element.detectionStatus != DetectionStatus.VeryNear) || element.notifyOnlyAtFirst == false)
+                    element.InvokeNear(DetectableNear(element.tag, nearObjectDistance));
 
-                _element.detectionStatus = DetectionStatus.VeryNear;
+                element.detectionStatus = DetectionStatus.VeryNear;
             }
-            else if (((MonoBehaviour)(DetectableInRange(_element.tag))) != null)
+            else if (((MonoBehaviour)(DetectableInRange(element.tag))) != null)
             {
-                if (_element.detectionStatus != DetectionStatus.InRange || _element.notifyOnlyAtFirst == false)
-                    _element.InvokeOnRange(DetectableInRange(_element.tag));
+                if (element.detectionStatus != DetectionStatus.InRange || element.notifyOnlyAtFirst == false)
+                    element.InvokeOnRange(DetectableInRange(element.tag));
 
-                _element.detectionStatus = DetectionStatus.InRange;
+                element.detectionStatus = DetectionStatus.InRange;
             }
             else
             {
-                _element.detectionStatus = DetectionStatus.None;
+                element.detectionStatus = DetectionStatus.None;
             }
         }
     }
@@ -141,44 +141,44 @@ public class DetectorSystem : MonoBehaviour
     {
         return toPick;
     }
-    public DetectableElement GetDetectable(string _tag)
+    public DetectableElement GetDetectable(string tag)
     {
-        foreach(DetectableElement _detectable in detectableElements)
-            if (_detectable.tag == _tag)
-                return _detectable;
+        foreach(DetectableElement detectable in detectableElements)
+            if (detectable.tag == tag)
+                return detectable;
 
         return null; 
     }
 
 
-    public IDetectable DetectableInRange(string _tag)
+    public IDetectable DetectableInRange(string tag)
     {
-        IDetectable _detectable = null;
+        IDetectable detectable = null;
 
-        List<IDetectable> _detectedList = GetDetectable(_tag).detectedList;
+        List<IDetectable> detectedList = GetDetectable(tag).detectedList;
 
-        if (_detectedList.Count == 1)
+        if (detectedList.Count == 1)
         {
-            _detectable = _detectedList[0];
+            detectable = detectedList[0];
         }
-        else if (_detectedList.Count > 1)
+        else if (detectedList.Count > 1)
         {
-            _detectable = _detectedList[0];
+            detectable = detectedList[0];
 
-            foreach (IDetectable detectable in _detectedList)
-                if (Distance(((MonoBehaviour)detectable).gameObject) < Distance(((MonoBehaviour)_detectable).gameObject))
-                    _detectable = detectable;
+            foreach (IDetectable _detectable in detectedList)
+                if (Distance(((MonoBehaviour)_detectable).gameObject) < Distance(((MonoBehaviour)detectable).gameObject))
+                    detectable = _detectable;
         }
 
-        return _detectable;
+        return detectable;
     }
-    public IDetectable DetectableNear(string _tag, float _range)
+    public IDetectable DetectableNear(string tag, float range)
     {
-        IDetectable _detectable = DetectableInRange(_tag);
+        IDetectable detectable = DetectableInRange(tag);
 
-        if (_detectable != null && IsNear(((MonoBehaviour)_detectable).gameObject, _range))
+        if (detectable != null && IsNear(((MonoBehaviour)detectable).gameObject, range))
         {
-            return _detectable;
+            return detectable;
         }
         else
         {
@@ -188,64 +188,64 @@ public class DetectorSystem : MonoBehaviour
 
 
     //Help functions
-    public GameObject GetHighestProp(List<GameObject> _list)
+    public GameObject GetHighestProp(List<GameObject> list)
     {
-        GameObject _highest = _list[0];
+        GameObject highest = list[0];
 
-        foreach (GameObject _obj in _list)
-            if (GetDetectable(_obj.tag).priority > GetDetectable(_highest.tag).priority)
-                _highest = _obj;
+        foreach (GameObject obj in list)
+            if (GetDetectable(obj.tag).priority > GetDetectable(highest.tag).priority)
+                highest = obj;
 
-        return _highest;
+        return highest;
     }
 
     float Distance(GameObject _object)
     {
         return (_object.transform.position - this.transform.position).magnitude;
     }
-    bool IsNear(GameObject _object, float _range)
+    bool IsNear(GameObject _object, float range)
     {
-        return Distance(_object) <= _range;
+        return Distance(_object) <= range;
     }
-    void CleanListsFromDestroyedObjects(IList _list)
+    void CleanListsFromDestroyedObjects(IList list)
     {
-        int _destroyedIndex = -1;
-        for (int i = 0; i < _list.Count; i++)
+        int destroyedIndex = -1;
+        for (int i = 0; i < list.Count; i++)
         {
-            if (((MonoBehaviour)_list[i]) == null)
-                _destroyedIndex = i;
+            if (((MonoBehaviour)list[i]) == null)
+                destroyedIndex = i;
         }
-        if (_destroyedIndex != -1)
-            _list.RemoveAt(_destroyedIndex);
+        if (destroyedIndex != -1)
+            list.RemoveAt(destroyedIndex);
     }
 
 
     //Detection functions
-    private void OnTriggerEnter(Collider _collider)
+    private void OnTriggerEnter(Collider collider)
     {
-        foreach(DetectableElement _element in detectableElements)
+        foreach(DetectableElement element in detectableElements)
         {
-            if(_collider.CompareTag(_element.tag))
+            if(collider.CompareTag(element.tag))
             {
-                IDetectable _player = _collider.GetComponentInParent<IDetectable>();
+                IDetectable player = collider.GetComponentInParent<IDetectable>();
 
-                if (_element.detectedList.Contains(_player) == false)
-                    _element.detectedList.Add(_player);
+                if (element.detectedList.Contains(player) == false)
+                    element.detectedList.Add(player);
             }
         }
     }
-    private void OnTriggerExit(Collider _collider)
+    private void OnTriggerExit(Collider collider)
     {
-        foreach (DetectableElement _element in detectableElements)
+        foreach (DetectableElement element in detectableElements)
         {
-            if (_collider.CompareTag(_element.tag))
+            if (collider.CompareTag(element.tag))
             {
-                IDetectable _detectable = _collider.GetComponentInParent<IDetectable>();
+                IDetectable detectable = collider.GetComponentInParent<IDetectable>();
 
-                if (_element.detectedList.Contains(_detectable) == true)
+                if (element.detectedList.Contains(detectable) == true)
                 {
-                    _element.detectedList.Remove(_detectable);
-                    _element.InvokeOnRangeExit(_detectable);
+                    element.detectedList.Remove(detectable);
+                    element.InvokeOnRangeExit(detectable);
                 }
             }
         }

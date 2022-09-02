@@ -31,9 +31,9 @@ public class InputSystem : MonoBehaviour
         RotateInput();
     }
 
-    public static void SubscribeUser(IInputUser _user)
+    public static void SubscribeUser(IInputUser user)
     {
-        instance.Subscribers.Add(_user);
+        instance.Subscribers.Add(user);
     }
     public static Vector2 GetMousePosition()
     {
@@ -43,60 +43,60 @@ public class InputSystem : MonoBehaviour
 
     void PickInput(InputAction.CallbackContext obj)
     {
-        foreach(IInputUser _sub in Subscribers)
-            _sub.PickInput();
+        foreach(IInputUser sub in Subscribers)
+            sub.PickInput();
     }
     void JumpInput(InputAction.CallbackContext context)
     {
-        foreach (IInputUser _sub in Subscribers)
-            _sub.JumpInput();
+        foreach (IInputUser sub in Subscribers)
+            sub.JumpInput();
     }
     void ThrowInput(InputAction.CallbackContext obj)
     {
-        foreach (IInputUser _sub in Subscribers)
-            _sub.ThrowInput();
+        foreach (IInputUser sub in Subscribers)
+            sub.ThrowInput();
     }
     void PlantInput(InputAction.CallbackContext obj)
     {
-        foreach (IInputUser _sub in Subscribers)
-            _sub.PlantInput();
+        foreach (IInputUser sub in Subscribers)
+            sub.PlantInput();
     }
     void DashInput(InputAction.CallbackContext obj)
     {
-        foreach (IInputUser _sub in Subscribers)
-            _sub.DashInput();
+        foreach (IInputUser sub in Subscribers)
+            sub.DashInput();
     }
     void PetInput(InputAction.CallbackContext obj)
     {
-        foreach (IInputUser _sub in Subscribers)
-            _sub.PetInput();
+        foreach (IInputUser sub in Subscribers)
+            sub.PetInput();
     }
     void PressInput(InputAction.CallbackContext obj)
     {
-        foreach (IInputUser _sub in Subscribers)
-            _sub.PressInput();
+        foreach (IInputUser sub in Subscribers)
+            sub.PressInput();
     }
     void MovementInput()
     {
-        Vector2 _xyAxis = inputActions.Player.Move.ReadValue<Vector2>();
+        Vector2 xyAxis = inputActions.Player.Move.ReadValue<Vector2>();
 
-        if (_xyAxis.magnitude > 0)
+        if (xyAxis.magnitude > 0)
         {
-            foreach (IInputUser _sub in Subscribers)
-                _sub.MoveInput(_xyAxis);
+            foreach (IInputUser sub in Subscribers)
+                sub.MoveInput(xyAxis);
         }
     }
     void RotateInput()
     {
-        Vector2 _deltaRotate = new Vector2();
+        Vector2 deltaRotate = new Vector2();
 
-        _deltaRotate.x = inputActions.Player.RotateX.ReadValue<float>();
-        _deltaRotate.y = inputActions.Player.RotateY.ReadValue<float>();
+        deltaRotate.x = inputActions.Player.RotateX.ReadValue<float>();
+        deltaRotate.y = inputActions.Player.RotateY.ReadValue<float>();
 
-        if (_deltaRotate.magnitude > 0)
+        if (deltaRotate.magnitude > 0)
         {
-            foreach (IInputUser _sub in Subscribers)
-                _sub.RotateInput(_deltaRotate);
+            foreach (IInputUser sub in Subscribers)
+                sub.RotateInput(deltaRotate);
         }
     }
 }

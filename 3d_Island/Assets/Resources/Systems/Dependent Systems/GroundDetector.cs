@@ -20,29 +20,27 @@ public class GroundDetector
     {
         return detectablelayers;
     }
-    public bool IsOnGroud(Rigidbody _body)
+    public bool IsOnGroud(Rigidbody body)
     {
-        return DetectGround(_body, groundTag);
+        return DetectGround(body, groundTag);
     }
-    public bool IsOnWater(Rigidbody _body)
+    public bool IsOnWater(Rigidbody body)
     {
-        return DetectGround(_body, waterTag);
+        return DetectGround(body, waterTag);
     }
     public void SetThreshold(float thrus)
     {
         onGroundThreshold = thrus;
     }
 
-    bool DetectGround(Rigidbody _body, string tag)
+    bool DetectGround(Rigidbody body, string tag)
     {
-        if (_body.isKinematic == false)
+        if (body.isKinematic == false)
         {
+            RaycastHit ray;
+            Physics.Raycast(body.transform.position + Vector3.up, Vector2.down, out ray, onGroundThreshold, detectableLayers);
 
-
-            RaycastHit _ray;
-            Physics.Raycast(_body.transform.position + Vector3.up, Vector2.down, out _ray, onGroundThreshold, detectableLayers);
-
-            if ((_ray.point.magnitude > 0) && (_ray.collider.tag == tag))
+            if ((ray.point.magnitude > 0) && (ray.collider.tag == tag))
                 return true;
             else
                 return false;

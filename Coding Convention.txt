@@ -1,6 +1,6 @@
 ClassName : class names
 
-_variableName = temp variables like arguments and loops
+_variableName : constructors and functions parameters if there's a parameter with the same name.
 variableName : Global and private variable
 
 FunctionName: Public and private functions

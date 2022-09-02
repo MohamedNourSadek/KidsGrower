@@ -164,87 +164,87 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     {
         return Instantiate(popUpMessage, gameCanvas.transform).GetComponent<UIMessage>();
     }
-    public void ShowUIMessage(string _message, float time, Vector3 startSize, float speed)
+    public void ShowUIMessage(string message, float time, Vector3 startSize, float speed)
     {
-        StartCoroutine(message(_message, time, startSize, speed));
+        StartCoroutine(this.message(message, time, startSize, speed));
     }
-    public void RepeatInGameMessage(string _message, Transform _parent, float _messageTime, float _repeats, ConditionChecker _condition)
+    public void RepeatInGameMessage(string message, Transform parent, float messageTime, float repeats, ConditionChecker condition)
     {
-        StartCoroutine(RepeatMessage_Coroutine(_message, _parent, _messageTime, _repeats, _condition));
+        StartCoroutine(RepeatMessage_Coroutine(message, parent, messageTime, repeats, condition));
     }
-    public void CreateProgressBar(GameObject _user, Vector2 _limits, Transform _parent)
+    public void CreateProgressBar(GameObject user, Vector2 limits, Transform parent)
     {
-        Slider _progressBar = Instantiate(progressBarPrefab, _parent.position, Quaternion.identity, threeDCanvas.transform).GetComponent<Slider>();
-        _progressBar.minValue = _limits.x;
-        _progressBar.maxValue = _limits.y;
+        Slider _progressBar = Instantiate(progressBarPrefab, parent.position, Quaternion.identity, threeDCanvas.transform).GetComponent<Slider>();
+        _progressBar.minValue = limits.x;
+        _progressBar.maxValue = limits.y;
 
-        slidersContainer.Add(_user, _progressBar);
+        slidersContainer.Add(user, _progressBar);
 
-        StartCoroutine(TranslateUiElement(_progressBar.gameObject, _parent));
+        StartCoroutine(TranslateUiElement(_progressBar.gameObject, parent));
     }
-    public void CreateNPCUi(GameObject _user, Vector2 _limits, Transform _parent)
+    public void CreateNPCUi(GameObject user, Vector2 limits, Transform parent)
     {
-        UIElement_NPC _npcUi = Instantiate(npcUiElementPrefab, _parent.position, Quaternion.identity, threeDCanvas.transform).GetComponent<UIElement_NPC>();
+        UIElement_NPC _npcUi = Instantiate(npcUiElementPrefab, parent.position, Quaternion.identity, threeDCanvas.transform).GetComponent<UIElement_NPC>();
        
-        _npcUi.levelSlider.minValue = _limits.x;
-        _npcUi.levelSlider.maxValue = _limits.y;
+        _npcUi.levelSlider.minValue = limits.x;
+        _npcUi.levelSlider.maxValue = limits.y;
 
-        npcUiContainer.Add(_user, _npcUi);
+        npcUiContainer.Add(user, _npcUi);
 
-        StartCoroutine(TranslateUiElement(_npcUi.gameObject, _parent));
+        StartCoroutine(TranslateUiElement(_npcUi.gameObject, parent));
     }
-    public void CreateInventoryUI(string _itemTag, UnityEngine.Events.UnityAction _onClick)
+    public void CreateInventoryUI(string itemTag, UnityEngine.Events.UnityAction onClick)
     {
         var _inventoryItem = Instantiate(inventoryElementPrefab, inGamePanel.transform).GetComponent<UiElement_Inventory>();
 
-        _inventoryItem.elementButton.onClick.AddListener(_onClick);
-        _inventoryItem.elementName.text = _itemTag;
+        _inventoryItem.elementButton.onClick.AddListener(onClick);
+        _inventoryItem.elementName.text = itemTag;
         _inventoryItem.elementNo.text = 1.ToString();
 
-        InventoryItemsContainer.Add(_itemTag, _inventoryItem);
+        InventoryItemsContainer.Add(itemTag, _inventoryItem);
     }
-    public void UpdateProgressBar(GameObject _user, float _value)
+    public void UpdateProgressBar(GameObject user, float value)
     {
-        slidersContainer[_user].value = _value;
+        slidersContainer[user].value = value;
     }
-    public void UpdateProgressBarLimits(GameObject _user, Vector3 _limits)
+    public void UpdateProgressBarLimits(GameObject user, Vector3 limits)
     {
-        slidersContainer[_user].minValue = _limits.x;
-        slidersContainer[_user].maxValue = _limits.y;
+        slidersContainer[user].minValue = limits.x;
+        slidersContainer[user].maxValue = limits.y;
     }
-    public void UpateNpcUiElement(GameObject _user, float _value)
+    public void UpateNpcUiElement(GameObject user, float value)
     {
-        npcUiContainer[_user].levelSlider.value = _value;
+        npcUiContainer[user].levelSlider.value = value;
     }
-    public void UpateNpcUiElement(GameObject _user, string _text)
+    public void UpateNpcUiElement(GameObject user, string text)
     {
-        npcUiContainer[_user].levelText.text = _text;
+        npcUiContainer[user].levelText.text = text;
     }
-    public void UpateNpcUiElement(GameObject _user, Vector3 _limits)
+    public void UpateNpcUiElement(GameObject user, Vector3 limits)
     {
-        npcUiContainer[_user].levelSlider.minValue = _limits.x;
-        npcUiContainer[_user].levelSlider.maxValue = _limits.y;
+        npcUiContainer[user].levelSlider.minValue = limits.x;
+        npcUiContainer[user].levelSlider.maxValue = limits.y;
     }
-    public void UpdateInventoryUI(string _itemTag, int _nubmer)
+    public void UpdateInventoryUI(string itemTag, int nubmer)
     {
-        InventoryItemsContainer[_itemTag].elementNo.text = _nubmer.ToString();
+        InventoryItemsContainer[itemTag].elementNo.text = nubmer.ToString();
     }
-    public void DestroyNpcUiElement(GameObject _user)
+    public void DestroyNpcUiElement(GameObject user)
     {
-        UIElement_NPC _temp = npcUiContainer[_user];
-        npcUiContainer.Remove(_user);
+        UIElement_NPC _temp = npcUiContainer[user];
+        npcUiContainer.Remove(user);
         Destroy(_temp.gameObject);
     }
-    public void DestroyProgressBar(GameObject _user)
+    public void DestroyProgressBar(GameObject user)
     {
-        Slider _temp = slidersContainer[_user];
-        slidersContainer.Remove(_user);
+        Slider _temp = slidersContainer[user];
+        slidersContainer.Remove(user);
         Destroy(_temp.gameObject);
     }
-    public void DestroyInventoryUI(string _itemTag)
+    public void DestroyInventoryUI(string itemTag)
     {
-        UiElement_Inventory _temp = InventoryItemsContainer[_itemTag];
-        InventoryItemsContainer.Remove(_itemTag);
+        UiElement_Inventory _temp = InventoryItemsContainer[itemTag];
+        InventoryItemsContainer.Remove(itemTag);
         Destroy(_temp.gameObject);
     }
     public void CustomizeLog(string text, Color color)
@@ -252,28 +252,28 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
         customizeDebugger.text = text;
         customizeDebugger.color = color;
     }
-    public bool DoesInventoryItemExists(string _itemTag)
+    public bool DoesInventoryItemExists(string itemTag)
     {
-        return (InventoryItemsContainer.ContainsKey(_itemTag));
+        return (InventoryItemsContainer.ContainsKey(itemTag));
     }
 
 
     //Control UI flow
-    public void OpenMenuPanel(string _menuPanelName_PlusManagerNum)
+    public void OpenMenuPanel(string menuPanelName_PlusManagerNum)
     {
-        PanelsManager.OpenMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers, true);
+        PanelsManager.OpenMenuPanel(menuPanelName_PlusManagerNum, PanelsManagers, true);
     }
-    public void SetPanelDefault(string _menuPanelName_PlusManagerNum)
+    public void SetPanelDefault(string menuPanelName_PlusManagerNum)
     {
-        PanelsManager.SetDefault(_menuPanelName_PlusManagerNum, PanelsManagers);
+        PanelsManager.SetDefault(menuPanelName_PlusManagerNum, PanelsManagers);
     }
-    public void OpenMenuPanelNonExclusive(string _menuPanelName_PlusManagerNum)
+    public void OpenMenuPanelNonExclusive(string menuPanelName_PlusManagerNum)
     {
-        PanelsManager.OpenMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers, false);
+        PanelsManager.OpenMenuPanel(menuPanelName_PlusManagerNum, PanelsManagers, false);
     }
-    public void CloseMenuPanelNonExclusive(string _menuPanelName_PlusManagerNum)
+    public void CloseMenuPanelNonExclusive(string menuPanelName_PlusManagerNum)
     {
-        PanelsManager.CloseMenuPanel(_menuPanelName_PlusManagerNum, PanelsManagers);
+        PanelsManager.CloseMenuPanel(menuPanelName_PlusManagerNum, PanelsManagers);
     }
     public void CloseAllPanels()
     {
@@ -282,15 +282,15 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
             panel.CloseAll();
         }
     }
-    public void ToggleMenuPanel(string _menuInfo)
+    public void ToggleMenuPanel(string menuInfo)
     {
-        PanelsManager.TogglePanel(_menuInfo, PanelsManagers, false);
+        PanelsManager.TogglePanel(menuInfo, PanelsManagers, false);
     }
-    public void ShowIncrementPage(int _incrementTimesManagerNum)
+    public void ShowIncrementPage(int incrementTimesManagerNum)
     {
-        int _managerNumber = Mathf.Abs(_incrementTimesManagerNum);
+        int _managerNumber = Mathf.Abs(incrementTimesManagerNum);
         
-        int _increment = _incrementTimesManagerNum / Mathf.Abs(_incrementTimesManagerNum);
+        int _increment = incrementTimesManagerNum / Mathf.Abs(incrementTimesManagerNum);
 
         string _targetPanel = PanelsManagers[_managerNumber].GetPanelRelativeToActive(_increment);
 
@@ -309,7 +309,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
 
 
     //Interal Algorithms
-    IEnumerator message(string _message, float time, Vector3 startScale, float speed)
+    IEnumerator message(string message, float time, Vector3 startScale, float speed)
     {
         var messageObj = Instantiate(highlightMessage, messagesArea.transform);
         
@@ -317,7 +317,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
 
         var Text = messageObj.GetComponent<TextMeshProUGUI>();
 
-        Text.text =  _message;
+        Text.text =  message;
 
         float _animationCurrentTime = time;
 
@@ -333,38 +333,38 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
     }
-    void UpdateNextPrevious(ListPossibleDirections _directions)
+    void UpdateNextPrevious(ListPossibleDirections directions)
     {
-        previousButton.interactable = _directions.Previous;
-        nextButton.interactable = _directions.Next;
+        previousButton.interactable = directions.Previous;
+        nextButton.interactable = directions.Next;
     }
-    IEnumerator TranslateUiElement(GameObject _object, Transform _parent)
+    IEnumerator TranslateUiElement(GameObject _object, Transform parent)
     {
-        while((_parent != null ) && (_object != null))
+        while((parent != null ) && (_object != null))
         {
-            _object.transform.position = _parent.transform.position + Vector3.up;
+            _object.transform.position = parent.transform.position + Vector3.up;
             yield return new WaitForSecondsRealtime(Time.deltaTime);
         }
     }
-    IEnumerator RepeatMessage_Coroutine(string _message, Transform _parent, float _messageTime, float _repeats, ConditionChecker _condition)
+    IEnumerator RepeatMessage_Coroutine(string message, Transform parent, float messageTime, float repeats, ConditionChecker condition)
     {
         float _time = 0f;
 
-        while (_condition.isTrue && _time<=_messageTime)
+        while (condition.isTrue && _time<=messageTime)
         {
-            _time += _messageTime / _repeats;
-            SpawnMessage(_message, (_parent.position + (1.5f*Vector3.up)));
-            yield return new WaitForSecondsRealtime(_messageTime / _repeats);
+            _time += messageTime / repeats;
+            SpawnMessage(message, (parent.position + (1.5f*Vector3.up)));
+            yield return new WaitForSecondsRealtime(messageTime / repeats);
         }
     }
-    void SpawnMessage(string _Text, Vector3 _position)
+    void SpawnMessage(string text, Vector3 position)
     {
-        var _gameObject = Instantiate(ThreeDHighlightPrefab, _position, Quaternion.identity, threeDCanvas.transform);
-        _gameObject.GetComponentInChildren<Text>().text = _Text;
+        var _gameObject = Instantiate(ThreeDHighlightPrefab, position, Quaternion.identity, threeDCanvas.transform);
+        _gameObject.GetComponentInChildren<Text>().text = text;
     }
-    void ChangeAlpha(Image _myImage, bool _state)
+    void ChangeAlpha(Image myImage, bool state)
     {
-        _myImage.color =  new Color(_myImage.color.r, _myImage.color.g, _myImage.color.b, _state ? buttonOnAlpha : buttonOffAlpha);
+        myImage.color =  new Color(myImage.color.r, myImage.color.g, myImage.color.b, state ? buttonOnAlpha : buttonOffAlpha);
     }
 }
 

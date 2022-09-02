@@ -19,9 +19,9 @@ public class Floating : MonoBehaviour
 
     void Animate()
     {
-        int _id = LeanTween.move(this.gameObject, initialPosition + animationKeys[animationKey], 1f / speed).setEase(animationCurve).id;
+        int id = LeanTween.move(this.gameObject, initialPosition + animationKeys[animationKey], 1f / speed).setEase(animationCurve).id;
 
-        LTDescr process = LeanTween.descr(_id);
+        LTDescr process = LeanTween.descr(id);
         process.setOnComplete(Animate);
 
         if (animationKey == animationKeys.Count - 1)

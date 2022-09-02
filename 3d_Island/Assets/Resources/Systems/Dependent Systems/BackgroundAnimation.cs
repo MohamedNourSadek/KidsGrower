@@ -42,11 +42,11 @@ public class BackgroundAnimation
         }).
         setEase(colorAnimationStyle);
 
-        int _id = LeanTween.
+        int id = LeanTween.
             move(movableBackground.gameObject, screenCenterPoint + animationkeys[currentBackgroundAnimationKey].position, 1f / speed).
             setEase(positionAnimationStyle).id;
 
-        LTDescr process = LeanTween.descr(_id);
+        LTDescr process = LeanTween.descr(id);
         process.setOnComplete(AnimateBackground);
 
 

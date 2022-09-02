@@ -13,30 +13,30 @@ public class AIStateMachine : MonoBehaviour
     float timeSinceLastAction = 0;
 
     //Interface
-    public void Initialize(Enum _states)
+    public void Initialize(Enum states)
     {
         stateMachineController = GetComponentInParent<IStateMachineController>();
         myStateMachine = GetComponent<Animator>();
 
-        foreach (var _state in Enum.GetValues(_states.GetType()))
+        foreach (var state in Enum.GetValues(states.GetType()))
         {
-            StateInfo _newState = new StateInfo();
-            _newState.stateName = _state.ToString();
-            _newState.stateHash = Animator.StringToHash(_newState.stateName);
-            _newState.state = (Enum)_state;
+            StateInfo newState = new StateInfo();
+            newState.stateName = state.ToString();
+            newState.stateHash = Animator.StringToHash(newState.stateName);
+            newState.state = (Enum)state;
 
-            myStates.Add(_newState);
+            myStates.Add(newState);
         }
 
         isInitialized = true;
     }
-    public void SetBool(Enum _boolName, bool _state)
+    public void SetBool(Enum boolName, bool state)
     {
-        myStateMachine.SetBool(_boolName.ToString(), _state);
+        myStateMachine.SetBool(boolName.ToString(), state);
     }
-    public void SetTrigger(Enum _triggerName)
+    public void SetTrigger(Enum triggerName)
     {
-        myStateMachine.SetTrigger(_triggerName.ToString());
+        myStateMachine.SetTrigger(triggerName.ToString());
     }
     public float GetTimeSinceLastChange()
     {
@@ -65,18 +65,18 @@ public class AIStateMachine : MonoBehaviour
         }
 
     }
-    void OnStateChange(Enum _triggerStats)
+    void OnStateChange(Enum triggerStats)
     {
         timeSinceLastAction = 0;
-        stateMachineController.ActionExecution(_triggerStats);
+        stateMachineController.ActionExecution(triggerStats);
     }
-    Enum GetEnumByHash(int _hash)
+    Enum GetEnumByHash(int hash)
     {
-        foreach (StateInfo _state in myStates)
+        foreach (StateInfo state in myStates)
         {
-            if(_state.stateHash == _hash)
+            if(state.stateHash == hash)
             {
-                return _state.state;
+                return state.state;
             }
         }
 

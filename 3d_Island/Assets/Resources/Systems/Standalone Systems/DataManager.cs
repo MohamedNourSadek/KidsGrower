@@ -4,6 +4,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using System.IO;
 using UnityEditor;
+using System.Text;
 
 public class DataManager : MonoBehaviour 
 {
@@ -25,7 +26,7 @@ public class DataManager : MonoBehaviour
         {
             instance = this;
             
-            path = Application.persistentDataPath + "/savedDate.json";
+            path = Application.persistentDataPath + "/savedDate.nDx";
 
             if (File.Exists(path) == false)
                 File.Create(path);
@@ -43,7 +44,80 @@ public class DataManager : MonoBehaviour
 
         string data = JsonConvert.SerializeObject(sessionsData);
 
-        File.WriteAllText(path, data);
+        File.WriteAllBytes(path, VeryBasicEncypt(data));
+    }
+    void GetData()
+    {
+        var save = File.ReadAllBytes(path);
+        
+        List<SessionData> data = JsonConvert.DeserializeObject<List<SessionData>>(VeryBasicDecrpt(save));
+
+        if (data != null)
+            dataCache = data;
+        else
+            dataCache = new List<SessionData>();
+    }
+
+    
+    Dictionary<char, char> encryption = new Dictionary<char, char>()
+    {
+        {'a','g' }, {'b','n' }, {'c','u'}, {'d','@' }, {'e','*' }, {'f','~'}, 
+        {'g','f' }, {'h','m' }, {'i','t'}, {'j','!' }, {'k','&' }, {'l',':'}, 
+        {'m','e' }, {'n','l' }, {'o','s'}, {'p','z' }, {'q','^' }, {'r','+'},
+        {'s','d' }, {'t','k' }, {'u','r'}, {'v','y' }, {'w','%' }, {'y','_'},
+        {'z','c' }, {'{','j' }, {'}','q'}, {'[','x' }, {']','$' }, {',',')'}, {' ','<'},
+        {'1','b' }, {'2','i' }, {'3','p'}, {'4','w' }, {'5','#' }, {'6','('},
+        {'7','a' }, {'8','h' }, {'9','o'}, {'.','v' }, 
+    };
+    byte[] VeryBasicEncypt(string raw)
+    {
+        string encrypted = "";
+
+        foreach(var c in raw)
+        {
+            bool found = false;
+
+            foreach(var enc in encryption)
+            {
+                if(c == enc.Key)
+                {
+                    found = true;
+                    encrypted += enc.Value;
+                }
+            }
+
+            if (found == false)
+                encrypted += c;
+        }
+
+        byte[] bytes = Encoding.ASCII.GetBytes(encrypted);
+
+        return bytes;
+    }
+    string VeryBasicDecrpt(byte[] encrypted)
+    {
+        string encryptedStr = Encoding.ASCII.GetString(encrypted);
+        string raw = "";
+
+        foreach(var c in encryptedStr)
+        {
+            bool found = false;
+
+            foreach (var enc in encryption)
+            {
+                if (c == enc.Value)
+                {
+                    found = true;
+                    raw += enc.Key;
+                }
+            }
+
+            if (found == false)
+                raw += c;
+        }
+
+
+        return raw;
     }
 
 
@@ -52,14 +126,7 @@ public class DataManager : MonoBehaviour
     {
         if(dataCache == null)
         {
-            string save = File.ReadAllText(path);
-            
-            List<SessionData> data = JsonConvert.DeserializeObject<List<SessionData>>(save);
-
-            if(data != null)
-                dataCache = data;
-            else 
-                dataCache = new List<SessionData>(); 
+            GetData();
         }
 
         return dataCache;

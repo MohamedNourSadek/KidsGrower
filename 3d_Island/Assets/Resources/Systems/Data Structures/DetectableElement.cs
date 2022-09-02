@@ -17,16 +17,16 @@ public class DetectableElement
     public event notifyInRangeExit OnInRangeExit;
     public event notifyNear OnNear;
 
-    public void InvokeOnRange(IDetectable _detectable)
+    public void InvokeOnRange(IDetectable detectable)
     {
-        OnInRange?.Invoke(_detectable);
+        OnInRange?.Invoke(detectable);
     }
-    public void InvokeOnRangeExit(IDetectable _detectable)
+    public void InvokeOnRangeExit(IDetectable detectable)
     {
-        OnInRangeExit?.Invoke(_detectable);
+        OnInRangeExit?.Invoke(detectable);
     }
-    public void InvokeNear(IDetectable _detectable)
+    public void InvokeNear(IDetectable detectable)
     {
-        OnNear?.Invoke(_detectable);
+        OnNear?.Invoke(detectable);
     }
 }
