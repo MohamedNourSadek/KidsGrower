@@ -31,7 +31,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
         movementSystem.Update();
         detector.Update();
         handSystem.Update();
-
+        
         UpdateUi();
     }
     void UpdateUi()
@@ -69,6 +69,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
         UIController.instance.DashButton_Enable(movementSystem.IsDashable());
         UIController.instance.PetButton_Enable(handSystem.canPet);
     }
+
 
 
     //Interface 

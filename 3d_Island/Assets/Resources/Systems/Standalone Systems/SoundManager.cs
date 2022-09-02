@@ -10,6 +10,9 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField] AudioData pressAudio;
 
+    [Header("FootSteps")]
+    [SerializeField] List<AudioData> walkClips = new List<AudioData>();
+
     [Header("Ambient Settings")]
     [SerializeField] List<AudioData> ambientMusic = new List<AudioData>();
     [SerializeField] float ambientInSpeed = 1f;

@@ -5,19 +5,6 @@ using System.Security.Cryptography;
 using UnityEngine;
 
 
-public enum AIParametersNames
-{
-    ThrowBallOnPlayerProb, ThrowBallOnNpcProb, SeekPlayerProb,
-    SeekNpcProb, SeekBallProb, SeekTreeProb, SeekFruitProb, SeekAlterProb,
-    PunchNpcProb, DropBallProb, SleepTime, BoredTime, DeathTime, GrowTime
-}
-
-public enum AiSet
-{ 
-    Default, Easy, Medium, Hard
-}
-
-
 [System.Serializable]
 public class AIParameter 
 {
@@ -70,23 +57,32 @@ public class AIParameter
 
     static List<float> EasyValues = new List<float>()
     {
-        0.5f, 0.5f,0.5f,
-        0.5f,0.5f,0.5f,0.5f,0.5f,
-        0.5f,0.5f,20f,100f,500f,10
+        0f, 0f,1f,
+        0f,0f,1f,1f,0.8f,
+        0f,0f,5f,20f,500f,2f
     };
 
     static List<float> Medium = new List<float>()
     {
-        0.5f, 0.5f,0.5f,
-        0.5f,0.5f,0.5f,0.5f,0.5f,
-        0.5f,0.5f,20f,100f,200f,10
+        0f, 0f,0.5f,
+        0f,0f,0.5f,0.5f,0.5f,
+        0f,0f,50f,10f,250f,50f
     };
 
     static List<float> Hard = new List<float>()
     {
-        0.5f, 0.5f,0.5f,
-        0.5f,0.5f,0.5f,0.5f,0.5f,
-        0.5f,0.5f,20f,100f,100f,10
+        0f, 0f,0f,
+        0f,0f,0f,0f,0f,
+        0f,0f,50f,10f,120f,100f
     };
-
+}
+public enum AIParametersNames
+{
+    ThrowBallOnPlayerProb, ThrowBallOnNpcProb, SeekPlayerProb,
+    SeekNpcProb, SeekBallProb, SeekTreeProb, SeekFruitProb, SeekAlterProb,
+    PunchNpcProb, DropBallProb, SleepTime, BoredTime, DeathTime, GrowTime
+}
+public enum AiSet
+{
+    Default, Easy, Medium, Hard
 }

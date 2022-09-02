@@ -82,7 +82,8 @@ public class HandSystem
 
         ConditionChecker _condition = new ConditionChecker(true);
 
-        ServicesProvider.instance.StartCoroutine(UpdatePetCondition(_condition));
+        ServicesProvider.instance.StartCoroutine(UpdatePetCondition(_condition, _petObject.gameObject.GetComponent<NPC>()));
+
 
         UIController.instance.RepeatInGameMessage("Petting", _petObject, petTime, 5f, _condition);
 
@@ -176,13 +177,15 @@ public class HandSystem
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
-        _npc.EndPetting();
+        if(_npc)
+            _npc.EndPetting();
+
         myController.GetBody().isKinematic = false;
         DropObject();
 
         isPetting = false;
     }
-    IEnumerator UpdatePetCondition(ConditionChecker _condition)
+    IEnumerator UpdatePetCondition(ConditionChecker _condition, NPC npc)
     {
         bool _isConditionTrue = true;
         float _time = 0;
@@ -191,7 +194,7 @@ public class HandSystem
         {
             _condition.Update(true);
 
-            _isConditionTrue = (_time <= petTime);
+            _isConditionTrue = ((_time <= petTime) && (npc != null));
 
             _time += Time.fixedDeltaTime;
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);

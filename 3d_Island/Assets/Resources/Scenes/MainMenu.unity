@@ -381,7 +381,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 42943357}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ad46f19fb6a985d48928046b8d2dd9f2, type: 3}
   m_Name: 
@@ -4109,6 +4109,19 @@ MonoBehaviour:
   pressAudio:
     clip: {fileID: 8300000, guid: c57bd09bb2403964e8bd7d6678746545, type: 3}
     volume: 0.8
+  walkClips:
+  - clip: {fileID: 8300000, guid: 740d7896349b3314bb8cffcecac346f5, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: b6f3a118775fb7f48971564e753fe30b, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: 25839d6b5b0f1884ca53975ad4fa3ad7, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: dbf79cf7f1de0444eb895d42c33db452, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: b1f29b8b04a5c7a43bcf7fe312e05560, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: 126daac86d05b3c46aacce58dc6fad01, type: 3}
+    volume: 1
   ambientMusic:
   - clip: {fileID: 8300000, guid: cb3a77b3dcc291c4fa582f0908cfd5f5, type: 3}
     volume: 0.25
@@ -7780,7 +7793,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2125474498}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ad46f19fb6a985d48928046b8d2dd9f2, type: 3}
   m_Name: 
@@ -10810,6 +10823,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1010647043953872369, guid: b1b6a4a4712a0364bbffc21e45491ba2,
+        type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1601693967802005805, guid: b1b6a4a4712a0364bbffc21e45491ba2,
         type: 3}
       propertyPath: m_Name
@@ -10897,6 +10915,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3571767707691462230, guid: b1b6a4a4712a0364bbffc21e45491ba2,
         type: 3}
+      propertyPath: waterUVs
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3571767707691462230, guid: b1b6a4a4712a0364bbffc21e45491ba2,
+        type: 3}
       propertyPath: waveSpeed
       value: 0
       objectReference: {fileID: 0}
@@ -10943,7 +10966,7 @@ PrefabInstance:
     - target: {fileID: 3571767707691462230, guid: b1b6a4a4712a0364bbffc21e45491ba2,
         type: 3}
       propertyPath: shoreColor.b
-      value: 0.30774808
+      value: 0.30765674
       objectReference: {fileID: 0}
     - target: {fileID: 3571767707691462230, guid: b1b6a4a4712a0364bbffc21e45491ba2,
         type: 3}
@@ -10998,7 +11021,7 @@ PrefabInstance:
     - target: {fileID: 3571767707691462230, guid: b1b6a4a4712a0364bbffc21e45491ba2,
         type: 3}
       propertyPath: shallowColor.r
-      value: 0.054320432
+      value: 0.05425699
       objectReference: {fileID: 0}
     - target: {fileID: 3571767707691462230, guid: b1b6a4a4712a0364bbffc21e45491ba2,
         type: 3}
@@ -11108,7 +11131,7 @@ PrefabInstance:
     - target: {fileID: 3571767707691462230, guid: b1b6a4a4712a0364bbffc21e45491ba2,
         type: 3}
       propertyPath: surfaceFoamColor1.r
-      value: 0.10224003
+      value: 0.10215347
       objectReference: {fileID: 0}
     - target: {fileID: 3571767707691462230, guid: b1b6a4a4712a0364bbffc21e45491ba2,
         type: 3}
@@ -11123,7 +11146,7 @@ PrefabInstance:
     - target: {fileID: 3571767707691462230, guid: b1b6a4a4712a0364bbffc21e45491ba2,
         type: 3}
       propertyPath: surfaceFoamColor2.r
-      value: 0.12715042
+      value: 0.12706384
       objectReference: {fileID: 0}
     - target: {fileID: 3571767707691462230, guid: b1b6a4a4712a0364bbffc21e45491ba2,
         type: 3}
@@ -17563,6 +17586,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 2443590158814445183}
     m_Modifications:
+    - target: {fileID: 922351516, guid: cf0b7238940c98f47ad2fbd19164e17b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 177980288045853385, guid: cf0b7238940c98f47ad2fbd19164e17b,
         type: 3}
       propertyPath: m_RootOrder
@@ -17576,7 +17603,7 @@ PrefabInstance:
     - target: {fileID: 177980288045853385, guid: cf0b7238940c98f47ad2fbd19164e17b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.06
+      value: 0.804
       objectReference: {fileID: 0}
     - target: {fileID: 177980288045853385, guid: cf0b7238940c98f47ad2fbd19164e17b,
         type: 3}

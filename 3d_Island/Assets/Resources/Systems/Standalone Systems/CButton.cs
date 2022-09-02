@@ -12,7 +12,9 @@ public class CButton : Button
     {
         base.Awake();
         cButtons.Add(this);
-        SoundManager.instance.InitializeButton(this);
+        
+        if(SoundManager.instance)
+            SoundManager.instance.InitializeButton(this);
     }
     protected override void OnDestroy()
     {

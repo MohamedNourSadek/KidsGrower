@@ -14,7 +14,6 @@ public class Fruit : Pickable
         currentEnergy = totalEnergy;
     }
 
-
     public void LoadData(Fruit_Data fruit_data)
     {
         transform.position = fruit_data.position.GetVector();

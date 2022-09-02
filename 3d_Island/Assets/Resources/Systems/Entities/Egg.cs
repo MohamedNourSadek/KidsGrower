@@ -15,13 +15,18 @@ public class Egg : Plantable
     public void LoadData(Egg_Data egg_data)
     {
         transform.position = egg_data.position.GetVector();
+        transform.rotation = egg_data.rotation.GetQuaternion();
+        rottenness = egg_data.rottenness;
+        
+        SetRottenness(rottenness);
     }
     public Egg_Data GetData()
     {
         Egg_Data egg_data = new Egg_Data();
 
         egg_data.position = new nVector3(transform.position);
-
+        egg_data.rottenness = rottenness;
+        egg_data.rotation = new nQuaternion(transform.rotation);
         return egg_data;
     }
 

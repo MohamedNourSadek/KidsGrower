@@ -322,7 +322,6 @@ MonoBehaviour:
     - 2500
     - 3000
     - 3500
-  growTime: 13.820761
   grownBodyMultiplier: 1.35
   grownMassMultiplier: 2
   nearObjectDistance: 1.25
@@ -332,21 +331,9 @@ MonoBehaviour:
   layingTimeInBetween: 10
   eatingXpPerUpdate: 1
   pettingXP: 100
-  boredTime: 15.63574
-  sleepTime: 43.48104
   layingTime: 10
   eatTime: 10
-  deathTime: 381.83154
-  seekPlayerProb: 0.68491834
-  seekNpcProb: 0.6765398
-  seekBallProb: 0.6765398
-  seekTreeProb: 1
-  dropBallProb: 0.70167565
-  throwBallOnNpcProb: 0.6891077
-  throwBallOnPlayerProb: 0.63464665
-  punchNpcProb: 0.651404
-  seekFruitProb: 0.6723506
-  seekAlterProb: 1
+  aIParameters: []
   aiStateMachine: {fileID: 5469732067356300806}
   model: {fileID: 1199720211687785357}
   bodyRenderers:
@@ -400,6 +387,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 9093430107948232183}
     m_Modifications:
     - target: {fileID: 7729608907899586416, guid: 64eb4bb042c77594089d2608caf743bb,
@@ -463,6 +451,7 @@ PrefabInstance:
       value: AI State Machine Display
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 64eb4bb042c77594089d2608caf743bb, type: 3}
 --- !u!114 &5469732067356300806 stripped
 MonoBehaviour:
@@ -487,6 +476,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 9093430107948232183}
     m_Modifications:
     - target: {fileID: 434217363216278388, guid: d682e10d1ad04fd499cd64d51ecd2485,
@@ -498,6 +488,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4410002396949848161, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.3536
+      objectReference: {fileID: 0}
+    - target: {fileID: 4410002396949848161, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.3536
+      objectReference: {fileID: 0}
+    - target: {fileID: 4410002396949848161, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.3536
       objectReference: {fileID: 0}
     - target: {fileID: 4410002396949848161, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
@@ -755,6 +760,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: d682e10d1ad04fd499cd64d51ecd2485, type: 3}
 --- !u!114 &2330463048917170657 stripped
 MonoBehaviour:
@@ -779,6 +785,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 5472757478798502974}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 1f9f9a718cb1fc74fbc1a86ddceeb115,
@@ -907,6 +914,7 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: a280808ac33f3124cb29ebe81af9395d, type: 2}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f9f9a718cb1fc74fbc1a86ddceeb115, type: 3}
 --- !u!23 &983630641518498926 stripped
 MeshRenderer:

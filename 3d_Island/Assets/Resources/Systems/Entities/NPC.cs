@@ -51,7 +51,7 @@ public class NPC : Pickable, IController, IStateMachineController
     //Private data
     List<GameObject> _wantToFollow = new List<GameObject>();
     NavMeshAgent myAgent;
-    float bornSince = 0f;
+    public float bornSince = 0f;
     bool petting = false;
     bool canLay = false;
 
@@ -110,7 +110,6 @@ public class NPC : Pickable, IController, IStateMachineController
         transform.position = npc_data.position.GetVector();
         transform.rotation = npc_data.rotation.GetQuaternion();
         bornSince = npc_data.bornSince;
-        
         levelController.IncreaseXP(npc_data.xp);
         OnXPIncrease();
     }
@@ -146,8 +145,11 @@ public class NPC : Pickable, IController, IStateMachineController
     }
     public void EndPetting()
     {
-        myBody.isKinematic = false;
-        petting = false;
+        if (myBody != null)
+        {
+            myBody.isKinematic = false;
+            petting = false;
+        }
     }
 
 
