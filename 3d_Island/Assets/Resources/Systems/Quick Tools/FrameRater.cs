@@ -6,24 +6,29 @@ using TMPro;
 
 public class FrameRater : MonoBehaviour
 {
-    static int targetFrameRate = 1000;
-
+    static int targetFrameRate = 60;
     TextMeshProUGUI frameRate;
 
     private void Awake()
     {
         Application.targetFrameRate = targetFrameRate;
-
         frameRate = GetComponent<TextMeshProUGUI>();
-        StartCoroutine(Coroutine());
     }
-    
-    IEnumerator Coroutine()
+
+    bool first = true;
+    private void Update()
     {
-        while (true)
+        if((((int)(Time.timeSinceLevelLoad * 4f))%2) != 0 )
         {
-            yield return null;
-            frameRate.text = ((int)(1f / Time.deltaTime)).ToString();
+            if (first == true)
+            {
+                first = false;
+                frameRate.text = ((int)(1f / Time.deltaTime)).ToString();
+            }
+        }
+        else
+        {
+            first = true;
         }
     }
 
