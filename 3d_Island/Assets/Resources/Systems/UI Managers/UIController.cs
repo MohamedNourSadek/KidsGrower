@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using TMPro;
 using System;
 using System.Security.Cryptography;
@@ -52,8 +51,6 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     [SerializeField] GameObject savingText;
 
     [Header("Design Only")]
-    [SerializeField] Text frameRateUi;
-
     Dictionary<GameObject, Slider> slidersContainer = new ();
     Dictionary<GameObject, UIElement_NPC> npcUiContainer = new();
     Dictionary<string, UiElement_Inventory> InventoryItemsContainer = new();
@@ -130,10 +127,6 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     public void PickDropButton_SwitchMode(PickMode _mode)
     {
         pickDropButtonImage_Text.text = _mode.ToString();
-    }
-    public void UpdateFrameRate(string _frameRate)
-    {
-        frameRateUi.text = _frameRate;
     }
     public void UpdateAISliders(List<AIParameter> aIParameters)
     {

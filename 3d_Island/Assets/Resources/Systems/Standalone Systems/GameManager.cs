@@ -1,19 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 
 public enum CustomizingState { Detecting, Moving }
 
 public class GameManager : MonoBehaviour, IInputUser
 {
-    [SerializeField] bool lockFrameRate = false;
-    [SerializeField] int frameRatelock = 60;
     [SerializeField] PostProcessingFunctions posProcessingFunctions;
 
     [Header("Game Design")]
-    [SerializeField] bool showFrameRate;
     [SerializeField] PlayerSystem myPlayer;
     [SerializeField] GameObject eggAsset;
     [SerializeField] GameObject ballAsset;
@@ -38,21 +34,11 @@ public class GameManager : MonoBehaviour, IInputUser
         
         InputSystem.SubscribeUser(this);
 
-        if (lockFrameRate)
-            Application.targetFrameRate = frameRatelock;
-        else
-            Application.targetFrameRate = 0;
-
         if (myPlayer == null)
             FindObjectOfType<PlayerSystem>();
 
-        if (!showFrameRate)
-            UIController.instance.UpdateFrameRate("");
-
         camCustomizingViewPos = Camera.main.transform.position;
         camCustomizingViewRot = Camera.main.transform.rotation;
-
-        StartCoroutine(UpdateFrameRate());
 
         posProcessingFunctions.Initialize();
 
@@ -143,18 +129,6 @@ public class GameManager : MonoBehaviour, IInputUser
     }
 
 
-    IEnumerator UpdateFrameRate()
-    {
-        while(true)
-        {
-            if (showFrameRate)
-                UIController.instance.UpdateFrameRate(((int)(1f / Time.deltaTime)).ToString());
-            else
-                UIController.instance.UpdateFrameRate("");
-
-            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime * 5f);
-        }
-    }
     RaycastHit CastFromMouse()
     {
         RaycastHit hit;
@@ -211,11 +185,11 @@ public class GameManager : MonoBehaviour, IInputUser
     public void OpenMainMenu()
     {
         Save();
-        SceneManager.LoadSceneAsync(0);
+        SceneControl.instance.LoadScene(0);
     }
     public void ExitWithoutSaving()
     {
-        SceneManager.LoadSceneAsync(0);
+        SceneControl.instance.LoadScene(0);
     }
 
 

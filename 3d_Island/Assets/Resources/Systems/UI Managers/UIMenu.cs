@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using TMPro;
-using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 
 public class UIMenu : MonoBehaviour, IPanelsManagerUser
@@ -116,7 +115,7 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     }
     public void OpenGame()
     {
-        SceneManager.LoadScene(1);
+        SceneControl.instance.LoadScene(1);
     }
 
 
