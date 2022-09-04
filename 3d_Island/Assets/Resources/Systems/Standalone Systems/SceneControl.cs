@@ -24,6 +24,8 @@ public class SceneControl : MonoBehaviour
     }
     IEnumerator LoadScene_Enum(int id)
     {
+        yield return new WaitForSecondsRealtime(1f);
+
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(id);
         asyncLoad.allowSceneActivation = false;
 

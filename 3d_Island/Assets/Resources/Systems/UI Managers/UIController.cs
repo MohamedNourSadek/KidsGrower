@@ -36,6 +36,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     [SerializeField] List<AIParameterSlider> sliders = new List<AIParameterSlider>();
 
     [Header("UI Objects")]
+    [SerializeField] NPCStatsUI npcStatsUI;
     [SerializeField] Image pickDropButtonImage;
     [SerializeField] Image throwButtonImage;
     [SerializeField] Image plantButtonImage;
@@ -178,9 +179,6 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     public void CreateNPCUi(GameObject user, Vector2 limits, Transform parent)
     {
         UIElement_NPC _npcUi = Instantiate(npcUiElementPrefab, parent.position, Quaternion.identity, threeDCanvas.transform).GetComponent<UIElement_NPC>();
-       
-        _npcUi.levelSlider.minValue = limits.x;
-        _npcUi.levelSlider.maxValue = limits.y;
 
         npcUiContainer.Add(user, _npcUi);
 
@@ -205,18 +203,9 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
         slidersContainer[user].minValue = limits.x;
         slidersContainer[user].maxValue = limits.y;
     }
-    public void UpateNpcUiElement(GameObject user, float value)
-    {
-        npcUiContainer[user].levelSlider.value = value;
-    }
     public void UpateNpcUiElement(GameObject user, string text)
     {
         npcUiContainer[user].levelText.text = text;
-    }
-    public void UpateNpcUiElement(GameObject user, Vector3 limits)
-    {
-        npcUiContainer[user].levelSlider.minValue = limits.x;
-        npcUiContainer[user].levelSlider.maxValue = limits.y;
     }
     public void UpdateInventoryUI(string itemTag, int nubmer)
     {
@@ -249,8 +238,11 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     {
         return (InventoryItemsContainer.ContainsKey(itemTag));
     }
-
-
+    public NPCStatsUI GetNPCStatsUI()
+    {
+        return npcStatsUI;
+    }
+    
     //Control UI flow
     public void OpenMenuPanel(string menuPanelName_PlusManagerNum)
     {

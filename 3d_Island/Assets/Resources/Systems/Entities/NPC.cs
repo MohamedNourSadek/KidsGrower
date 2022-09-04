@@ -193,8 +193,8 @@ public class NPC : Pickable, IController, IStateMachineController
         UIController.instance.RepeatInGameMessage("Death!!", deadNPC.transform, 2f, 4f, new ConditionChecker(true));
         Destroy(this.gameObject);
     }
-
-
+      
+     
     //UI-Level Functions
     public void InitializeLevelUI()
     {
@@ -203,13 +203,19 @@ public class NPC : Pickable, IController, IStateMachineController
     }
     public void OnXPIncrease()
     {
-        UIController.instance.UpateNpcUiElement(this.gameObject, levelController.GetXp());
     }
     public void OnLevelIncrease()
-    {
-        UIController.instance.UpateNpcUiElement(this.gameObject, levelController.GetLevelLimits());
+    {  
         UIController.instance.UpateNpcUiElement(this.gameObject, "Level " + levelController.GetLevel().ToString());
         UIController.instance.RepeatInGameMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
+    }
+    public int GetLevel()
+    {
+        return levelController.GetLevel();
+    }
+    public float GetXp()
+    {
+        return levelController.GetXp();
     }
 
 

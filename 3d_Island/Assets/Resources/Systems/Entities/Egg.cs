@@ -49,5 +49,4 @@ public class Egg : Plantable
             StartCoroutine(DestroyMe(0f));
         }
     }
-    protected override void PlantingUpdate(){}
 }

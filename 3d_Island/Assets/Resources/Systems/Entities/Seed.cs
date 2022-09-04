@@ -38,6 +38,8 @@ public class Seed : Plantable
     }
     protected override void PlantingUpdate()
     {
+        base.PlantingUpdate();
+
         if (plantedSince >= (plantTime / 1.5f))
             SetModel(2);
         else if (plantedSince >= (plantTime/2f))
@@ -45,7 +47,6 @@ public class Seed : Plantable
         else if (plantedSince >= (plantTime / 4f))
             SetModel(0);
     }
-
     void SetModel(int _level)
     {
         if(_level == 2)

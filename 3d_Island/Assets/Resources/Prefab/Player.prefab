@@ -177,6 +177,7 @@ GameObject:
   - component: {fileID: 5740668236649165371}
   - component: {fileID: 8249699284660602368}
   - component: {fileID: 9031205806068120303}
+  - component: {fileID: 6031640763324208642}
   m_Layer: 3
   m_Name: PlaceHolder Model
   m_TagString: Untagged
@@ -249,6 +250,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &6031640763324208642
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3880327486506688394}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4138950577857466467
 GameObject:
   m_ObjectHideFlags: 0
@@ -258,7 +273,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3884266283913276725}
-  - component: {fileID: 1062572249428306455}
   m_Layer: 3
   m_Name: PlaceHolder
   m_TagString: Untagged
@@ -284,20 +298,6 @@ Transform:
   m_Father: {fileID: 6949429005409692765}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &1062572249428306455
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4138950577857466467}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.31
-  m_Height: 1.13
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.52, z: 0}
 --- !u!1 &6949429004428104456
 GameObject:
   m_ObjectHideFlags: 0

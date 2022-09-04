@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 
 public enum GroundTag { Ground, Farm}
@@ -10,10 +11,17 @@ public abstract class Plantable : Pickable
     [SerializeField] public float plantTime = 10;
     [SerializeField] public float plantDistance = 1f;
     [SerializeField] List<GroundTag> allowedToPlantOn = new();
-    
+    [SerializeField] VisualEffect growingProgress;
+    [SerializeField] GameObject spawnEffectAsset;
+
+
     protected float plantedSince = 0f;
     protected bool planted = false;
 
+    private void Awake()
+    {
+        growingProgress.SetFloat("Progress", 0f);
+    }
 
     public override void Pick(HandSystem _picker)
     {
@@ -42,22 +50,25 @@ public abstract class Plantable : Pickable
     }
     protected IEnumerator Planting()
     {
-        UIController.instance.CreateProgressBar(this.gameObject, new Vector2(0f, plantTime), this.transform);
-
         while ((plantedSince < plantTime) && !isPicked)
         {
             plantedSince += Time.fixedDeltaTime;
-            UIController.instance.UpdateProgressBar(this.gameObject, plantedSince);
 
             PlantingUpdate();
 
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
+        
         if (!isPicked && (plantedSince >= plantTime))
         {
-            UIController.instance.DestroyProgressBar(this.gameObject);
+            Instantiate(spawnEffectAsset, this.transform.position, spawnEffectAsset.transform.rotation);
+
             OnPlantDone();
+        }
+        else
+        {
+            OnPlantCancel();
         }
     }
     protected IEnumerator DestroyMe(float _delay)
@@ -81,5 +92,12 @@ public abstract class Plantable : Pickable
         return false;
     }
     protected abstract void OnPlantDone(); 
-    protected abstract void PlantingUpdate(); //update while planting
+    protected virtual void OnPlantCancel()
+    {
+        growingProgress.SetFloat("Progress", 0f);
+    }
+    protected virtual void PlantingUpdate()
+    {
+        growingProgress.SetFloat("Progress", (plantedSince / plantTime));
+    }
 }

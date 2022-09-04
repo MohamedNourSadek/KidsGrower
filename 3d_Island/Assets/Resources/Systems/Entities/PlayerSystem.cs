@@ -5,6 +5,8 @@ using UnityEngine.UIElements;
 
 public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
 {
+    public static PlayerSystem instance;
+
     //Editor Fields
     [SerializeField] float nearObjectDistance = 1f;
     [SerializeField] Rigidbody playerBody;
@@ -14,7 +16,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     [SerializeField] DetectorSystem detector;
     
     InventorySystem inventorySystem;
-   
+
     //Initialization and refreshable functions
     void Awake()
     {
@@ -24,6 +26,8 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
         myCamera.Initialize(this.gameObject);
         detector.Initialize(nearObjectDistance);
         handSystem.Initialize(detector, this);
+
+        instance = this;
     }
     void FixedUpdate()
     {
@@ -127,10 +131,14 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
             else
             {
                 handSystem.PickObject();
+
+                NPCPick(true, handSystem.GetObjectInHand());
             }
         }
         else if(handSystem.canDrop)
         {
+            NPCPick(false, handSystem.GetObjectInHand());
+
             handSystem.DropObject();
         }
         else if(handSystem.detector.GetDetectable("Tree").detectionStatus == DetectionStatus.VeryNear)
@@ -140,8 +148,12 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     }
     public void ThrowInput()
     {
-        if(handSystem.canThrow)
+        if (handSystem.canThrow)
+        {
+            NPCPick(false, handSystem.GetObjectInHand());
+
             handSystem.ThrowObject(this.transform.position + (this.transform.forward));
+        }
     }
     public void PlantInput()
     {
@@ -162,5 +174,27 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     public GameObject GetGameObject()
     {
         return this.gameObject;
+    }
+
+    public void NPCPick(bool pickNotDrop, Pickable obj)
+    {
+        if (obj.tag == "NPC")
+        {
+            NPC myNpc = obj.GetComponent<NPC>();
+
+            if (pickNotDrop == true)
+            {
+                var data = UIController.instance.GetNPCStatsUI();
+
+                data.xp.text = myNpc.GetXp().ToString() + " Xp";
+                data.level.text = "Level " + myNpc.GetLevel().ToString();
+
+                UIController.instance.OpenMenuPanel("NPC Stats2");
+            }
+            else
+            {
+                UIController.instance.OpenMenuPanel("Empty2");
+            }
+        }
     }
 }
