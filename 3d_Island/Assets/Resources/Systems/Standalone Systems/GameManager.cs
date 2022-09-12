@@ -55,6 +55,12 @@ public class GameManager : MonoBehaviour, IInputUser
         if (modeHandler != null)
             modeHandler.Update();
 
+        if(Input.GetKeyDown("x"))
+        {
+            var npcs = FindObjectsOfType<NPC>();
+
+            Debug.Log(npcs.Length);
+        }
     }
 
 
@@ -69,6 +75,8 @@ public class GameManager : MonoBehaviour, IInputUser
     void LoadAndApply()
     {
         SessionData sessionData = DataManager.instance.GetCurrentSession();
+
+        Debug.Log(sessionData.data.npcs.Count);
 
         foreach(NPC_Data npc_data in  sessionData.data.npcs)
             npc_data.SpawnWithData(npcAsset.gameObject);
@@ -168,11 +176,11 @@ public class GameManager : MonoBehaviour, IInputUser
 
         if (state)
         {
-            myPlayer.gameObject.SetActive(true);
+            myPlayer.GetComponent<PlayerSystem>().enabled = true;
         }
         else
         {
-            myPlayer.gameObject.SetActive(false);
+            myPlayer.GetComponent<PlayerSystem>().enabled = false;
 
             Camera.main.transform.position = camCustomizingViewPos;
             Camera.main.transform.rotation = camCustomizingViewRot;

@@ -17,6 +17,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] List<AudioData> ambientMusic = new List<AudioData>();
     [SerializeField] float ambientInSpeed = 1f;
     [SerializeField] float startAmbientAfter = 5f;
+    [SerializeField] float timeBetweenAmbient = 5f;
 
     AudioSource ambientSource;
     int currentPlaying = 0;
@@ -43,6 +44,7 @@ public class SoundManager : MonoBehaviour
     IEnumerator PlayAmbient()
     {
         yield return new WaitForSecondsRealtime(startAmbientAfter);
+
         ReshuffleAmbientList();
 
         while (true)
@@ -69,8 +71,7 @@ public class SoundManager : MonoBehaviour
             }
             ambientSource.volume = ambientMusic[currentPlaying].volume;
 
-
-            yield return new WaitForSeconds(ambientSource.clip.length);
+            yield return new WaitForSeconds(ambientSource.clip.length + timeBetweenAmbient);
         }
     }
     void ReshuffleAmbientList()

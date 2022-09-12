@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class Seed : Plantable
 {
+    [SerializeField] float growingSpeed;
+
     [SerializeField] GameObject harvestPrefab;
+    [SerializeField] GameObject model;
 
-    [SerializeField] GameObject small;
-    [SerializeField] GameObject medium;
-    [SerializeField] GameObject final;
-
+    Vector3 initialScale;
+    private void Awake()
+    {
+        initialScale = model.transform.localScale;
+    }
 
     public void LoadData(Seed_Data seed_Data)
     {
@@ -29,7 +33,7 @@ public class Seed : Plantable
     {
         base.CancelPlant();
 
-        SetModel(0);
+        model.transform.localScale = initialScale;
     }
     protected override void OnPlantDone()
     {
@@ -40,31 +44,7 @@ public class Seed : Plantable
     {
         base.PlantingUpdate();
 
-        if (plantedSince >= (plantTime / 1.5f))
-            SetModel(2);
-        else if (plantedSince >= (plantTime/2f))
-            SetModel(1);
-        else if (plantedSince >= (plantTime / 4f))
-            SetModel(0);
-    }
-    void SetModel(int _level)
-    {
-        if(_level == 2)
-        {
-            final.SetActive(true);
-            medium.SetActive(false);
-            small.SetActive(false);
-        }
-        else if(_level == 1){
-            final.SetActive(false);
-            medium.SetActive(true);
-            small.SetActive(false);
-        }
-        else if (_level == 0)
-        {
-            final.SetActive(false);
-            medium.SetActive(false);
-            small.SetActive(true);
-        }
+        model.transform.localScale = model.transform.localScale + (growingSpeed * Time.fixedDeltaTime * new Vector3(0, 1, 0));
+
     }
 }

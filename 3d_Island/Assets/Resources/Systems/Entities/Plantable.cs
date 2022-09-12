@@ -45,7 +45,6 @@ public abstract class Plantable : Pickable
         plantedSince = 0;
         planted = false;
 
-        UIController.instance.DestroyProgressBar(this.gameObject);
         StopCoroutine(Planting());
     }
     protected IEnumerator Planting()
