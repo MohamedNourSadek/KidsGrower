@@ -4145,6 +4145,7 @@ MonoBehaviour:
     volume: 0.25
   ambientInSpeed: 0.25
   startAmbientAfter: 2
+  timeBetweenAmbient: 5
 --- !u!114 &853094731
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -122,6 +122,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     }
     public void PickInput()
     {
+
         if(handSystem.canPick)
         {
             if(InventorySystem.IsStorable(handSystem.GetNearest()))
@@ -130,7 +131,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
             }
             else
             {
-                handSystem.PickObject();
+                handSystem.PickObject();    
 
                 NPCPick(true, handSystem.GetObjectInHand());
             }
@@ -176,6 +177,17 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
         return this.gameObject;
     }
 
+    public bool GotNpcInHand()
+    {
+        if(handSystem.gotSomething && handSystem.GetObjectInHand().tag == "NPC")
+        {
+            return true;  
+        }
+        else
+        {
+            return false;
+        } 
+    }
     public void NPCPick(bool pickNotDrop, Pickable obj)
     {
         if (obj.tag == "NPC")
@@ -197,4 +209,5 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
             }
         }
     }
+
 }

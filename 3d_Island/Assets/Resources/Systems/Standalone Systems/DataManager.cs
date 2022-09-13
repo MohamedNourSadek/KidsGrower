@@ -32,6 +32,7 @@ public class DataManager : MonoBehaviour
                 File.Create(path);
             else
                 GetSavedData();
+
         }
         else
         {

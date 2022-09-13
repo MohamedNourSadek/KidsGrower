@@ -54,13 +54,6 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         if (modeHandler != null)
             modeHandler.Update();
-
-        if(Input.GetKeyDown("x"))
-        {
-            var npcs = FindObjectsOfType<NPC>();
-
-            Debug.Log(npcs.Length);
-        }
     }
 
 

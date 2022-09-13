@@ -274,7 +274,7 @@ GameObject:
   - component: {fileID: 607431845769732624}
   m_Layer: 3
   m_Name: PlaceHolder Model
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -322,7 +322,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a280808ac33f3124cb29ebe81af9395d, type: 2}
+  - {fileID: 2100000, guid: 538a8383122d24149a03360542b0a990, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 4673872490971444682}
   m_Layer: 3
   m_Name: PlaceHolder
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -391,7 +391,7 @@ GameObject:
   - component: {fileID: 7217209510144174357}
   m_Layer: 3
   m_Name: Hand (1)
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -439,7 +439,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a280808ac33f3124cb29ebe81af9395d, type: 2}
+  - {fileID: 2100000, guid: 538a8383122d24149a03360542b0a990, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -763,7 +763,7 @@ GameObject:
   - component: {fileID: 8305583769596014011}
   m_Layer: 3
   m_Name: Hand
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -811,7 +811,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a280808ac33f3124cb29ebe81af9395d, type: 2}
+  - {fileID: 2100000, guid: 538a8383122d24149a03360542b0a990, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
