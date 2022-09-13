@@ -17,24 +17,16 @@ public class NamingHouse : MonoBehaviour
                 if(playerSystem.GotNpcInHand())
                 {
                     GameManager.instance.SetPlaying(false);
-                    Debug.Log("Changing the name");
+                    UIController.instance.EditNPCStats(true);
                 }
             }
         }
-
     }
-
-    public void ExitNaming()
+    public void OnFinish()
     {
-        if (playerSystem != null)
-            GameManager.instance.SetPlaying(true);
-    }
-
-     void Update()
-    {
-        if(Input.GetKeyDown("x"))
-        {
-            ExitNaming();
-        }
+        GameManager.instance.SetPlaying(true);
+        UIController.instance.EditNPCStats(false);
+        UIController.instance.GetNPCStatsUI().name.text = UIController.instance.GetNewName();
+        playerSystem.getNPCInHand().saveName = UIController.instance.GetNewName();
     }
 }

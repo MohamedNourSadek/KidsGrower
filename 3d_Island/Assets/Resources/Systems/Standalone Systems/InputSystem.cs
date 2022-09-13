@@ -34,6 +34,7 @@ public class InputSystem : MonoBehaviour
     public static void SubscribeUser(IInputUser user)
     {
         instance.Subscribers.Add(user);
+        user.activeInput = true;
     }
     public static Vector2 GetMousePosition()
     {
@@ -44,37 +45,44 @@ public class InputSystem : MonoBehaviour
     void PickInput(InputAction.CallbackContext obj)
     {
         foreach(IInputUser sub in Subscribers)
-            sub.PickInput();
+            if(sub.activeInput)
+                sub.PickInput();
     }
     void JumpInput(InputAction.CallbackContext context)
     {
         foreach (IInputUser sub in Subscribers)
-            sub.JumpInput();
+            if (sub.activeInput)
+                sub.JumpInput();
     }
     void ThrowInput(InputAction.CallbackContext obj)
     {
         foreach (IInputUser sub in Subscribers)
-            sub.ThrowInput();
+            if (sub.activeInput)
+                sub.ThrowInput();
     }
     void PlantInput(InputAction.CallbackContext obj)
     {
         foreach (IInputUser sub in Subscribers)
-            sub.PlantInput();
+            if (sub.activeInput)
+                sub.PlantInput();
     }
     void DashInput(InputAction.CallbackContext obj)
     {
         foreach (IInputUser sub in Subscribers)
-            sub.DashInput();
+            if (sub.activeInput)
+                sub.DashInput();
     }
     void PetInput(InputAction.CallbackContext obj)
     {
         foreach (IInputUser sub in Subscribers)
-            sub.PetInput();
+            if (sub.activeInput)
+                sub.PetInput();
     }
     void PressInput(InputAction.CallbackContext obj)
     {
         foreach (IInputUser sub in Subscribers)
-            sub.PressInput();
+            if (sub.activeInput)
+                sub.PressInput();
     }
     void MovementInput()
     {
@@ -83,7 +91,8 @@ public class InputSystem : MonoBehaviour
         if (xyAxis.magnitude > 0)
         {
             foreach (IInputUser sub in Subscribers)
-                sub.MoveInput(xyAxis);
+                if (sub.activeInput)
+                    sub.MoveInput(xyAxis);
         }
     }
     void RotateInput()
@@ -96,7 +105,8 @@ public class InputSystem : MonoBehaviour
         if (deltaRotate.magnitude > 0)
         {
             foreach (IInputUser sub in Subscribers)
-                sub.RotateInput(deltaRotate);
+                if (sub.activeInput)
+                    sub.RotateInput(deltaRotate);
         }
     }
 }

@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Resources/Scenes/Loading Screen.unity
     guid: ade612a3b83c6fe48879aed02e3ce76b
   m_configObjects:
-    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 566b8eecf192ff74b8990626b873d0e7,
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 3bb86ff2eb8c97445a63448684b47be8,
       type: 2}
     com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000,
       guid: e74391683e240e24db6f9c4450fe02ca, type: 2}

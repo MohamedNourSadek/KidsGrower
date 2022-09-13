@@ -25,6 +25,7 @@ public class NPC : Pickable, IController, IStateMachineController
 
 
     [Header("Character parameters")]
+    [SerializeField] public string saveName = "Nameless";
     [SerializeField] float nearObjectDistance = 1f;
     [SerializeField] float decisionsDelay = 0.5f;
     [SerializeField] float punchForce = 120f;
@@ -47,6 +48,7 @@ public class NPC : Pickable, IController, IStateMachineController
     [SerializeField] Material grownMaterial;
     [SerializeField] GameObject eggAsset;
     [SerializeField] GameObject deadNpcAsset;
+
 
     //Private data
     List<GameObject> wantToFollow = new List<GameObject>();
@@ -107,6 +109,7 @@ public class NPC : Pickable, IController, IStateMachineController
     //Interface
     public void LoadData(NPC_Data npc_data)
     {
+        saveName = npc_data.name;
         transform.position = npc_data.position.GetVector();
         transform.rotation = npc_data.rotation.GetQuaternion();
         bornSince = npc_data.bornSince;
@@ -117,6 +120,7 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         NPC_Data npc_data = new NPC_Data();
 
+        npc_data.name = saveName;
         npc_data.position = new nVector3(transform.position);
         npc_data.rotation = new nQuaternion(transform.rotation);
         npc_data.bornSince = bornSince;

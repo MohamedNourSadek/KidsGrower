@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour, IInputUser
     AbstractMode modeHandler;
     public List<AIParameter> aIParameters = new List<AIParameter>();
 
+    public bool activeInput { get; set; }
 
     void Start()
     {
@@ -68,8 +69,6 @@ public class GameManager : MonoBehaviour, IInputUser
     void LoadAndApply()
     {
         SessionData sessionData = DataManager.instance.GetCurrentSession();
-
-        Debug.Log(sessionData.data.npcs.Count);
 
         foreach(NPC_Data npc_data in  sessionData.data.npcs)
             npc_data.SpawnWithData(npcAsset.gameObject);
@@ -167,14 +166,12 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         SetBlur(!state);
 
-        if (state)
+        myPlayer.LockPlayer(state);
+    }
+    public void SetCamera(bool state)
+    {
+        if(state == false)
         {
-            myPlayer.GetComponent<PlayerSystem>().enabled = true;
-        }
-        else
-        {
-            myPlayer.GetComponent<PlayerSystem>().enabled = false;
-
             Camera.main.transform.position = camCustomizingViewPos;
             Camera.main.transform.rotation = camCustomizingViewRot;
         }

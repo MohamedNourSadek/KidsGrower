@@ -37,6 +37,8 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
 
     [Header("UI Objects")]
     [SerializeField] NPCStatsUI npcStatsUI;
+    [SerializeField] GameObject npcStatsEdit;
+    [SerializeField] TextMeshProUGUI npcStatsName;
     [SerializeField] Image pickDropButtonImage;
     [SerializeField] Image throwButtonImage;
     [SerializeField] Image plantButtonImage;
@@ -242,7 +244,15 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     {
         return npcStatsUI;
     }
-    
+    public void EditNPCStats(bool state)
+    {
+        npcStatsEdit.SetActive(state);
+    }
+    public string GetNewName()
+    {
+        return npcStatsName.text;
+    }
+
     //Control UI flow
     public void OpenMenuPanel(string menuPanelName_PlusManagerNum)
     {

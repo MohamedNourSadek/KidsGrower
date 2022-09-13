@@ -4,6 +4,12 @@ using UnityEngine;
 
 public interface IInputUser
 {
+    public bool activeInput
+    {
+        get;
+        set;
+    }
+
     public void PetInput();
     public void DashInput();
     public void PlantInput();

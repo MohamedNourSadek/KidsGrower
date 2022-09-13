@@ -17,10 +17,14 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     
     InventorySystem inventorySystem;
 
+    public bool activeInput { get; set; }
+
+
     //Initialization and refreshable functions
     void Awake()
     {
         InputSystem.SubscribeUser(this);
+
         inventorySystem = new InventorySystem(this);
         movementSystem.Initialize(playerBody, myCamera.GetCameraTransform());
         myCamera.Initialize(this.gameObject);
@@ -102,7 +106,8 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     }
     public void LockPlayer(bool state)
     {
-        playerBody.isKinematic = !state;
+        this.enabled = state;
+        activeInput = state;
     }
 
 
@@ -188,6 +193,17 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
             return false;
         } 
     }
+    public NPC getNPCInHand()
+    {
+        if (handSystem.gotSomething && handSystem.GetObjectInHand().tag == "NPC")
+        {
+            return handSystem.GetObjectInHand().GetComponentInParent<NPC>();
+        }
+        else
+        {
+            return null;
+        }
+    }
     public void NPCPick(bool pickNotDrop, Pickable obj)
     {
         if (obj.tag == "NPC")
@@ -198,6 +214,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
             {
                 var data = UIController.instance.GetNPCStatsUI();
 
+                data.name.text = myNpc.saveName;
                 data.xp.text = myNpc.GetXp().ToString() + " Xp";
                 data.level.text = "Level " + myNpc.GetLevel().ToString();
 

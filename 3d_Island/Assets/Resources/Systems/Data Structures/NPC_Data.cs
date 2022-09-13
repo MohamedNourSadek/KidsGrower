@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NPC_Data 
 {
+    public string name = "Nameless";
     public nVector3 position = new nVector3();
     public nQuaternion rotation = new nQuaternion();
     public float bornSince = 0;
