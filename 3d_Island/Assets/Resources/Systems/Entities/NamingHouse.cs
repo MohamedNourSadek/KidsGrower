@@ -27,6 +27,6 @@ public class NamingHouse : MonoBehaviour
         GameManager.instance.SetPlaying(true);
         UIController.instance.EditNPCStats(false);
         UIController.instance.GetNPCStatsUI().name.text = UIController.instance.GetNewName();
-        playerSystem.getNPCInHand().saveName = UIController.instance.GetNewName();
+        playerSystem.getNPCInHand().ChangeName( UIController.instance.GetNewName());
     }
 }

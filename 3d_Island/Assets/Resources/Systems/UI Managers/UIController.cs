@@ -58,6 +58,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     Dictionary<GameObject, UIElement_NPC> npcUiContainer = new();
     Dictionary<string, UiElement_Inventory> InventoryItemsContainer = new();
 
+
     //Helpers
     void Awake()
     {
@@ -178,7 +179,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
 
         StartCoroutine(TranslateUiElement(_progressBar.gameObject, parent));
     }
-    public void CreateNPCUi(GameObject user, Vector2 limits, Transform parent)
+    public void CreateNPCUi(GameObject user, Transform parent)
     {
         UIElement_NPC _npcUi = Instantiate(npcUiElementPrefab, parent.position, Quaternion.identity, threeDCanvas.transform).GetComponent<UIElement_NPC>();
 

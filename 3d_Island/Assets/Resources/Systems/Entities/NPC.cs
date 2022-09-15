@@ -25,7 +25,6 @@ public class NPC : Pickable, IController, IStateMachineController
 
 
     [Header("Character parameters")]
-    [SerializeField] public string saveName = "Nameless";
     [SerializeField] float nearObjectDistance = 1f;
     [SerializeField] float decisionsDelay = 0.5f;
     [SerializeField] float punchForce = 120f;
@@ -56,6 +55,7 @@ public class NPC : Pickable, IController, IStateMachineController
     public float bornSince = 0f;
     bool petting = false;
     bool canLay = false;
+    string saveName = "Nameless";
 
     //Helper functions
     private void Awake()
@@ -71,7 +71,6 @@ public class NPC : Pickable, IController, IStateMachineController
 
         MovementStatus state = MovementStatus.Idel;
         aiStateMachine.Initialize((Enum)state);
-        InitializeLevelUI();
 
 
         foreach(DetectableElement element in detector.detectableElements)
@@ -115,6 +114,8 @@ public class NPC : Pickable, IController, IStateMachineController
         bornSince = npc_data.bornSince;
         levelController.IncreaseXP(npc_data.xp);
         OnXPIncrease();
+
+        InitializeLevelUI();
     }
     public NPC_Data GetData()
     {
@@ -202,16 +203,24 @@ public class NPC : Pickable, IController, IStateMachineController
     //UI-Level Functions
     public void InitializeLevelUI()
     {
-        UIController.instance.CreateNPCUi(this.gameObject, levelController.GetLevelLimits(), this.transform);
-        UIController.instance.UpateNpcUiElement(this.gameObject, "Level " + levelController.GetLevel().ToString());
+        UIController.instance.CreateNPCUi(this.gameObject, this.transform);
+        UIController.instance.UpateNpcUiElement(this.gameObject, saveName);
     }
     public void OnXPIncrease()
     {
     }
     public void OnLevelIncrease()
     {  
-        UIController.instance.UpateNpcUiElement(this.gameObject, "Level " + levelController.GetLevel().ToString());
         UIController.instance.RepeatInGameMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
+    }
+    public void ChangeName(string newName)
+    {
+        saveName = newName;
+        UIController.instance.UpateNpcUiElement(this.gameObject, saveName);
+    }
+    public string GetName()
+    {
+        return saveName;
     }
     public int GetLevel()
     {

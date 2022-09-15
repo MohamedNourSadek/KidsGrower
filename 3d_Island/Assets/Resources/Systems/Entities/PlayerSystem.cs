@@ -214,7 +214,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
             {
                 var data = UIController.instance.GetNPCStatsUI();
 
-                data.name.text = myNpc.saveName;
+                data.name.text = myNpc.GetName();
                 data.xp.text = myNpc.GetXp().ToString() + " Xp";
                 data.level.text = "Level " + myNpc.GetLevel().ToString();
 
