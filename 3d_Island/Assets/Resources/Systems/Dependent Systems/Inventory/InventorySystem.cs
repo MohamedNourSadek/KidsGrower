@@ -19,13 +19,13 @@ public class InventorySystem
         if (!items.Contains(item))
         {
             if (items.Count == 0)
-                UIController.instance.CreateInventoryUI(tempTag, OnButtonClick);
+                UIGame.instance.CreateInventoryUI(tempTag, OnButtonClick);
 
             items.Add(item);
 
             item.GetGameObject().transform.position = new Vector3(2000, 2000, 2000);
 
-            UIController.instance.RepeatInGameMessage(
+            UIGame.instance.ShowRepeatingMessage(
                 item.GetGameObject().tag + " added to inventory",
                 myController.GetBody().transform, 0.5f, 1, new ConditionChecker(true));
         }
@@ -37,7 +37,7 @@ public class InventorySystem
         if (items.Contains(item))
             items.Remove(item);
 
-        UIController.instance.RepeatInGameMessage(
+        UIGame.instance.ShowRepeatingMessage(
             item.GetGameObject().tag + " removed from inventory",
                 myController.GetBody().transform, 0.5f, 1, new ConditionChecker(true));
 
@@ -64,9 +64,9 @@ public class InventorySystem
     void UpdateUI()
     {
         if (items.Count == 0)
-            UIController.instance.DestroyInventoryUI(tempTag);
+            UIGame.instance.DestroyInventoryUI(tempTag);
         else if(items.Count > 0)
-            UIController.instance.UpdateInventoryUI(tempTag, items.Count);
+            UIGame.instance.UpdateInventoryUI(tempTag, items.Count);
     }
 }
 

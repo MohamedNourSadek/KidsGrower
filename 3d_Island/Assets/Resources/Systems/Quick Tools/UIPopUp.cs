@@ -4,12 +4,13 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class UIMessage : MonoBehaviour 
+public class UIPopUp : MonoBehaviour 
 {
     [SerializeField] public TextMeshProUGUI header;
     [SerializeField] public TextMeshProUGUI message;
     [SerializeField] public Button button;
     [SerializeField] MenuAnimatioSettings animationOnAwake;
+
 
     private void OnEnable()
     {

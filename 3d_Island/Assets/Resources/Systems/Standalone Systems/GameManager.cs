@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour, IInputUser
 
     public bool activeInput { get; set; }
 
+
+    //Private functions
     void Start()
     {
         instance = this;
@@ -56,8 +58,6 @@ public class GameManager : MonoBehaviour, IInputUser
         if (modeHandler != null)
             modeHandler.Update();
     }
-
-
     IEnumerator autoSave()
     {
         while(true)
@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour, IInputUser
     }
     void ApplyAiParametersToGame()
     {
-        UIController.instance.UpdateAISliders(aIParameters);
+        UIGame.instance.UpdateAISliders(aIParameters);
 
         //Get all NPCs (In game or asset)
         List<NPC> npcList = new List<NPC>();
@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour, IInputUser
         foreach (NPC npc in npcList)
             npc.aIParameters = aIParameters;
     }
-    public void Save()
+    void Save()
     {
         SessionData sessionData = DataManager.instance.GetCurrentSession();
         
@@ -125,10 +125,8 @@ public class GameManager : MonoBehaviour, IInputUser
 
         DataManager.instance.Modify(sessionData);
 
-        StartCoroutine(UIController.instance.SavingUI());
+        StartCoroutine(UIGame.instance.SavingUI());
     }
-
-
     RaycastHit CastFromMouse()
     {
         RaycastHit hit;
@@ -148,7 +146,7 @@ public class GameManager : MonoBehaviour, IInputUser
     //Settings
     public void ApplyAiSlidersData()
     {
-        aIParameters = UIController.instance.GetSlidersData();
+        aIParameters = UIGame.instance.GetSlidersData();
 
         ApplyAiParametersToGame();
     }
@@ -192,7 +190,7 @@ public class GameManager : MonoBehaviour, IInputUser
 
 
 
-    //for design Buttons
+    //For design Buttons
     public void SpawnBall()
     {
         Instantiate(ballAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
@@ -223,11 +221,11 @@ public class GameManager : MonoBehaviour, IInputUser
 
                     customizingState = CustomizingState.Moving;
 
-                    UIController.instance.CustomizeLog("Selected object: " + lastdetected.name, Color.yellow);
+                    UIGame.instance.ChangeCustomizingIndicator("Selected object: " + lastdetected.name, Color.yellow);
                 }
                 else
                 {
-                    UIController.instance.CustomizeLog("No Object Detected", Color.white);
+                    UIGame.instance.ChangeCustomizingIndicator("No Object Detected", Color.white);
                 }
             }
             else if (customizingState == CustomizingState.Moving)
@@ -239,7 +237,7 @@ public class GameManager : MonoBehaviour, IInputUser
                     lastdetected.transform.position = hit.point;
                     customizingState = CustomizingState.Detecting;
 
-                    UIController.instance.CustomizeLog("", Color.white);
+                    UIGame.instance.ChangeCustomizingIndicator("", Color.white);
                 }
                 else
                 {

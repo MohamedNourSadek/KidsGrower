@@ -17,7 +17,7 @@ public class NamingHouse : MonoBehaviour
                 if(playerSystem.GotNpcInHand())
                 {
                     GameManager.instance.SetPlaying(false);
-                    UIController.instance.EditNPCStats(true);
+                    UIGame.instance.EditNPCStats(true);
                 }
             }
         }
@@ -25,8 +25,8 @@ public class NamingHouse : MonoBehaviour
     public void OnFinish()
     {
         GameManager.instance.SetPlaying(true);
-        UIController.instance.EditNPCStats(false);
-        UIController.instance.GetNPCStatsUI().name.text = UIController.instance.GetNewName();
-        playerSystem.getNPCInHand().ChangeName( UIController.instance.GetNewName());
+        UIGame.instance.EditNPCStats(false);
+        UIGame.instance.GetNPCStatsUI().name.text = UIGame.instance.GetUiName();
+        playerSystem.getNPCInHand().ChangeName( UIGame.instance.GetUiName());
     }
 }

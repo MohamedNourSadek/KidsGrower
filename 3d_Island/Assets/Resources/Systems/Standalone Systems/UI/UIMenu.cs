@@ -8,6 +8,8 @@ using UnityEngine.EventSystems;
 
 public class UIMenu : MonoBehaviour, IPanelsManagerUser
 {
+    public static UIMenu instance;
+
     [SerializeField] PanelsManager panelsManager;
     [SerializeField] BackgroundAnimation backgroundAnimation;
     [SerializeField] PostProcessingFunctions postProcessingFunctions;
@@ -28,6 +30,12 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     GameObject selected;
     int MaxNumOfSaves = 5;
 
+
+    //private Functions
+    private void Awake()
+    {
+        instance = this;
+    }
     void Start()
     {
         backgroundAnimation.Initialize();
@@ -46,38 +54,6 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     void Update()
     {
         CheckNewSelection();
-    }
-
-
-    public void NewSave()
-    {
-        var _time = System.DateTime.Now;
-
-        SessionData sessionData = new SessionData(saveNameInput.text, DataManager.instance.GetCurrentMode(), _time.ToString(), GetDifficulty());
-
-        DataManager.instance.Add(sessionData);
-        
-        saveNameInput.text = "";
-        UpdateSavesUI();
-    }
-    public void LoadSave()
-    {
-        var _save = selected.GetComponent<SaveInfo>();
-        
-        DataManager.instance.SetCurrentSession(_save.saveName.text);
-
-        OpenGame();
-    }
-    public void DeleteSave()
-    {
-        if(selected != null && selected.GetComponent<SaveInfo>())
-        {
-            var _save = selected.GetComponent<SaveInfo>();
-
-            DataManager.instance.Remove(_save.saveName.text);
-
-            UpdateSavesUI();
-        }
     }
 
 
@@ -106,20 +82,6 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     {
         DataManager.instance.SetCurrentMode(modeName);
     }
-
-
-    //Game mangement
-    public void Quit()
-    {
-        Application.Quit();
-    }
-    public void OpenGame()
-    {
-        SceneControl.instance.LoadScene(1);
-    }
-
-
-    //internal
     public void UpdateSavesUI()
     {
         ClearOldUI();
@@ -140,6 +102,39 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
 
         UpdateSavesButton();
     }
+    public string GetSaveNameAndRefresh()
+    {
+        string save = saveNameInput.text;
+        saveNameInput.text = "";
+        return save;
+    }
+    public SaveInfo GetSelectedSave()
+    {
+        if (selected && selected.GetComponent<SaveInfo>())
+            return selected.GetComponent<SaveInfo>();
+        else
+            return null;
+    }
+    public AiSet GetDifficulty()
+    {
+        if (difficultySlider.value >= 0f && difficultySlider.value <= 0.33f)
+        {
+            return AiSet.Easy;
+        }
+        else if (difficultySlider.value > 0.33f && difficultySlider.value <= 0.66f)
+        {
+            return AiSet.Medium;
+        }
+        else if (difficultySlider.value > 0.66f && difficultySlider.value <= 1f)
+        {
+            return AiSet.Hard;
+        }
+
+        return AiSet.Default;
+    }
+
+
+    //internal
     void OnDifficultySliderValueChange(float _value)
     {
         if (_value >= 0f && _value <= 0.33f)
@@ -157,23 +152,6 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
             difficultySlider.value = 1f;
             difficultyText.text = "Hard";
         }
-    }
-    AiSet GetDifficulty()
-    {
-        if (difficultySlider.value >= 0f && difficultySlider.value <= 0.33f)
-        {
-            return AiSet.Easy;
-        }
-        else if (difficultySlider.value > 0.33f && difficultySlider.value <= 0.66f)
-        {
-            return AiSet.Medium;
-        }
-        else if (difficultySlider.value > 0.66f && difficultySlider.value <= 1f)
-        {
-            return AiSet.Hard;
-        }
-
-        return AiSet.Default;
     }
     void ClearOldUI()
     {

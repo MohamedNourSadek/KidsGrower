@@ -194,8 +194,8 @@ public class NPC : Pickable, IController, IStateMachineController
     void Die()
     {
         var deadNPC =  Instantiate(deadNpcAsset, this.transform.position, Quaternion.identity);
-        UIController.instance.DestroyNpcUiElement(this.gameObject);
-        UIController.instance.RepeatInGameMessage("Death!!", deadNPC.transform, 2f, 4f, new ConditionChecker(true));
+        UIGame.instance.DestroyNpcUiElement(this.gameObject);
+        UIGame.instance.ShowRepeatingMessage("Death!!", deadNPC.transform, 2f, 4f, new ConditionChecker(true));
         Destroy(this.gameObject);
     }
       
@@ -203,20 +203,20 @@ public class NPC : Pickable, IController, IStateMachineController
     //UI-Level Functions
     public void InitializeLevelUI()
     {
-        UIController.instance.CreateNPCUi(this.gameObject, this.transform);
-        UIController.instance.UpateNpcUiElement(this.gameObject, saveName);
+        UIGame.instance.CreateNPCUi(this.gameObject, this.transform);
+        UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
     }
     public void OnXPIncrease()
     {
     }
     public void OnLevelIncrease()
     {  
-        UIController.instance.RepeatInGameMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
+        UIGame.instance.ShowRepeatingMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
     }
     public void ChangeName(string newName)
     {
         saveName = newName;
-        UIController.instance.UpateNpcUiElement(this.gameObject, saveName);
+        UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
     }
     public string GetName()
     {
@@ -450,7 +450,7 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         float time = 0;
         ConditionChecker condition = new ConditionChecker(!isPicked);
-        UIController.instance.RepeatInGameMessage("Eating", this.transform, eatTime, 15, condition);
+        UIGame.instance.ShowRepeatingMessage("Eating", this.transform, eatTime, 15, condition);
 
         while (condition.isTrue)
         {
@@ -478,7 +478,7 @@ public class NPC : Pickable, IController, IStateMachineController
 
         float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SleepTime);
 
-        UIController.instance.RepeatInGameMessage("Sleeping", this.transform, parameter, 15, condition);
+        UIGame.instance.ShowRepeatingMessage("Sleeping", this.transform, parameter, 15, condition);
 
         //sleep
         myBody.isKinematic = true;
@@ -506,7 +506,7 @@ public class NPC : Pickable, IController, IStateMachineController
     {
         float time = 0;
         ConditionChecker condition = new ConditionChecker(!isPicked);
-        UIController.instance.RepeatInGameMessage("Laying", this.transform, layingTime, 15, condition);
+        UIGame.instance.ShowRepeatingMessage("Laying", this.transform, layingTime, 15, condition);
 
         //Laying
         myBody.isKinematic = true;

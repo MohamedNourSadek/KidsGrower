@@ -45,13 +45,13 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
     void UpdateUi()
     {
         if (handSystem.canDrop)
-            UIController.instance.PickDropButton_SwitchMode(PickMode.Drop);
+            UIGame.instance.PickDropButton_SwitchMode(PickMode.Drop);
         else if (handSystem.canPick)
-            UIController.instance.PickDropButton_SwitchMode(PickMode.Pick);
+            UIGame.instance.PickDropButton_SwitchMode(PickMode.Pick);
         else if (handSystem.detector.GetDetectable("Tree").detectionStatus == DetectionStatus.VeryNear)
-            UIController.instance.PickDropButton_SwitchMode(PickMode.Shake);
+            UIGame.instance.PickDropButton_SwitchMode(PickMode.Shake);
         else
-            UIController.instance.PickDropButton_SwitchMode(PickMode.Pick);
+            UIGame.instance.PickDropButton_SwitchMode(PickMode.Pick);
 
 
         bool _canShake = (!handSystem.canPick
@@ -59,23 +59,23 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
                        && (handSystem.detector.GetDetectable("Tree").detectionStatus == DetectionStatus.VeryNear));
 
         if (handSystem.canPick || handSystem.canDrop || _canShake)
-            UIController.instance.PickDropButton_Enable(true);
+            UIGame.instance.PickDropButton_Enable(true);
         else
-            UIController.instance.PickDropButton_Enable(false);
+            UIGame.instance.PickDropButton_Enable(false);
 
         if (handSystem.canThrow)
-            UIController.instance.ThrowButton_Enable(true);
+            UIGame.instance.ThrowButton_Enable(true);
         else
-            UIController.instance.ThrowButton_Enable(false);
+            UIGame.instance.ThrowButton_Enable(false);
 
         if (handSystem.canPlant)
-            UIController.instance.PlantButton_Enable(true);
+            UIGame.instance.PlantButton_Enable(true);
         else
-            UIController.instance.PlantButton_Enable(false);
+            UIGame.instance.PlantButton_Enable(false);
 
-        UIController.instance.JumpButton_Enable(movementSystem.IsOnGround());
-        UIController.instance.DashButton_Enable(movementSystem.IsDashable());
-        UIController.instance.PetButton_Enable(handSystem.canPet);
+        UIGame.instance.JumpButton_Enable(movementSystem.IsOnGround());
+        UIGame.instance.DashButton_Enable(movementSystem.IsDashable());
+        UIGame.instance.PetButton_Enable(handSystem.canPet);
     }
 
 
@@ -212,17 +212,17 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
 
             if (pickNotDrop == true)
             {
-                var data = UIController.instance.GetNPCStatsUI();
+                var data = UIGame.instance.GetNPCStatsUI();
 
                 data.name.text = myNpc.GetName();
                 data.xp.text = myNpc.GetXp().ToString() + " Xp";
                 data.level.text = "Level " + myNpc.GetLevel().ToString();
 
-                UIController.instance.OpenMenuPanel("NPC Stats2");
+                UIGame.instance.OpenMenuPanel("NPC Stats2");
             }
             else
             {
-                UIController.instance.OpenMenuPanel("Empty2");
+                UIGame.instance.OpenMenuPanel("Empty2");
             }
         }
     }

@@ -7,7 +7,7 @@ public abstract class AbstractMode
     static float startPeriod = 3f;
 
     protected Mode_Data data;
-    protected UIController controller;
+    protected UIGame controller;
     protected GameManager gameManager;
 
     public AbstractMode(Mode_Data data)
@@ -28,7 +28,7 @@ public abstract class AbstractMode
 
     protected virtual void Initialize()
     {
-        controller = MonoBehaviour.FindObjectOfType<UIController>();
+        controller = MonoBehaviour.FindObjectOfType<UIGame>();
         gameManager = MonoBehaviour.FindObjectOfType<GameManager>();
 
         OnLoad();

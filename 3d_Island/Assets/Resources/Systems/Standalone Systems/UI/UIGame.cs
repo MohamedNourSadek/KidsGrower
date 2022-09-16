@@ -5,12 +5,13 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using System.Security.Cryptography;
+using UnityEngine.Events;
 
 public enum PickMode { Pick, Drop, Shake};
 
-public class UIController : MonoBehaviour, IPanelsManagerUser
+public class UIGame : MonoBehaviour, IPanelsManagerUser
 {
-    public static UIController instance;
+    public static UIGame instance;
 
     [SerializeField] List<PanelsManager> PanelsManagers;
 
@@ -24,7 +25,7 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     [SerializeField] GameObject progressBarPrefab;
     [SerializeField] GameObject npcUiElementPrefab;
     [SerializeField] GameObject inventoryElementPrefab;
-    [SerializeField] GameObject popUpMessage;
+    [SerializeField] GameObject popUpMessageAsset;
 
     [Header("Ui parameters")]
 
@@ -53,10 +54,6 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     [SerializeField] public TextMeshProUGUI countDownText;
     [SerializeField] GameObject savingText;
 
-    [Header("Design Only")]
-    Dictionary<GameObject, Slider> slidersContainer = new ();
-    Dictionary<GameObject, UIElement_NPC> npcUiContainer = new();
-    Dictionary<string, UiElement_Inventory> InventoryItemsContainer = new();
 
 
     //Helpers
@@ -154,22 +151,53 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
 
         return parameters;
     }
-
-
-    //In Game UI
-    public UIMessage PopUpMessage()
+    public void ChangeCustomizingIndicator(string text, Color color)
     {
-        return Instantiate(popUpMessage, gameCanvas.transform).GetComponent<UIMessage>();
+        customizeDebugger.text = text;
+        customizeDebugger.color = color;
     }
-    public void ShowUIMessage(string message, float time, Vector3 startSize, float speed)
+    public NPCStatsUI GetNPCStatsUI()
+    {
+        return npcStatsUI;
+    }
+    public void EditNPCStats(bool state)
+    {
+        npcStatsEdit.SetActive(state);
+    }
+    public string GetUiName()
+    {
+        return npcStatsName.text;
+    }
+
+
+
+    ///////// In Game UI ///////////////
+    
+    //NonReferenced Messages (Once done, you can't access them)
+    public void ShowPopUpMessage(string header, string message, string button, UnityAction onPress)
+    {
+        UIPopUp popUpMessage = Instantiate(popUpMessageAsset, gameCanvas.transform).GetComponent<UIPopUp>();
+
+        popUpMessage.header.text = header;
+        popUpMessage.message.text = message;
+        popUpMessage.button.GetComponentInChildren<TextMeshProUGUI>().text = button;
+        popUpMessage.button.onClick.AddListener(onPress);
+    }
+    public void ShowFloatingMessage(string message, float time, Vector3 startSize, float speed)
     {
         StartCoroutine(this.message(message, time, startSize, speed));
     }
-    public void RepeatInGameMessage(string message, Transform parent, float messageTime, float repeats, ConditionChecker condition)
+    public void ShowRepeatingMessage(string message, Transform parent, float messageTime, float repeats, ConditionChecker condition)
     {
         StartCoroutine(RepeatMessage_Coroutine(message, parent, messageTime, repeats, condition));
     }
-    public void CreateProgressBar(GameObject user, Vector2 limits, Transform parent)
+
+
+    //Referenced Messages
+    
+    //Sliders
+    Dictionary<GameObject, Slider> slidersContainer = new();
+    public void ShowSlider(GameObject user, Vector2 limits, Transform parent)
     {
         Slider _progressBar = Instantiate(progressBarPrefab, parent.position, Quaternion.identity, threeDCanvas.transform).GetComponent<Slider>();
         _progressBar.minValue = limits.x;
@@ -178,24 +206,6 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
         slidersContainer.Add(user, _progressBar);
 
         StartCoroutine(TranslateUiElement(_progressBar.gameObject, parent));
-    }
-    public void CreateNPCUi(GameObject user, Transform parent)
-    {
-        UIElement_NPC _npcUi = Instantiate(npcUiElementPrefab, parent.position, Quaternion.identity, threeDCanvas.transform).GetComponent<UIElement_NPC>();
-
-        npcUiContainer.Add(user, _npcUi);
-
-        StartCoroutine(TranslateUiElement(_npcUi.gameObject, parent));
-    }
-    public void CreateInventoryUI(string itemTag, UnityEngine.Events.UnityAction onClick)
-    {
-        var _inventoryItem = Instantiate(inventoryElementPrefab, inGamePanel.transform).GetComponent<UiElement_Inventory>();
-
-        _inventoryItem.elementButton.onClick.AddListener(onClick);
-        _inventoryItem.elementName.text = itemTag;
-        _inventoryItem.elementNo.text = 1.ToString();
-
-        InventoryItemsContainer.Add(itemTag, _inventoryItem);
     }
     public void UpdateProgressBar(GameObject user, float value)
     {
@@ -206,13 +216,27 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
         slidersContainer[user].minValue = limits.x;
         slidersContainer[user].maxValue = limits.y;
     }
+    public void DestroyProgressBar(GameObject user)
+    {
+        Slider _temp = slidersContainer[user];
+        slidersContainer.Remove(user);
+        Destroy(_temp.gameObject);
+    }
+
+
+    //NPC inGame Ui
+    Dictionary<GameObject, UIElement_NPC> npcUiContainer = new();
+    public void CreateNPCUi(GameObject user, Transform parent)
+    {
+        UIElement_NPC _npcUi = Instantiate(npcUiElementPrefab, parent.position, Quaternion.identity, threeDCanvas.transform).GetComponent<UIElement_NPC>();
+
+        npcUiContainer.Add(user, _npcUi);
+
+        StartCoroutine(TranslateUiElement(_npcUi.gameObject, parent));
+    }
     public void UpateNpcUiElement(GameObject user, string text)
     {
         npcUiContainer[user].levelText.text = text;
-    }
-    public void UpdateInventoryUI(string itemTag, int nubmer)
-    {
-        InventoryItemsContainer[itemTag].elementNo.text = nubmer.ToString();
     }
     public void DestroyNpcUiElement(GameObject user)
     {
@@ -220,11 +244,23 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
         npcUiContainer.Remove(user);
         Destroy(_temp.gameObject);
     }
-    public void DestroyProgressBar(GameObject user)
+
+
+    //Inventory Ui
+    Dictionary<string, UiElement_Inventory> InventoryItemsContainer = new();
+    public void CreateInventoryUI(string itemTag, UnityAction onClick)
     {
-        Slider _temp = slidersContainer[user];
-        slidersContainer.Remove(user);
-        Destroy(_temp.gameObject);
+        var _inventoryItem = Instantiate(inventoryElementPrefab, inGamePanel.transform).GetComponent<UiElement_Inventory>();
+
+        _inventoryItem.elementButton.onClick.AddListener(onClick);
+        _inventoryItem.elementName.text = itemTag;
+        _inventoryItem.elementNo.text = 1.ToString();
+
+        InventoryItemsContainer.Add(itemTag, _inventoryItem);
+    }
+    public void UpdateInventoryUI(string itemTag, int nubmer)
+    {
+        InventoryItemsContainer[itemTag].elementNo.text = nubmer.ToString();
     }
     public void DestroyInventoryUI(string itemTag)
     {
@@ -232,27 +268,9 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
         InventoryItemsContainer.Remove(itemTag);
         Destroy(_temp.gameObject);
     }
-    public void CustomizeLog(string text, Color color)
-    {
-        customizeDebugger.text = text;
-        customizeDebugger.color = color;
-    }
-    public bool DoesInventoryItemExists(string itemTag)
-    {
-        return (InventoryItemsContainer.ContainsKey(itemTag));
-    }
-    public NPCStatsUI GetNPCStatsUI()
-    {
-        return npcStatsUI;
-    }
-    public void EditNPCStats(bool state)
-    {
-        npcStatsEdit.SetActive(state);
-    }
-    public string GetNewName()
-    {
-        return npcStatsName.text;
-    }
+    
+    ///////////////////////////////
+
 
     //Control UI flow
     public void OpenMenuPanel(string menuPanelName_PlusManagerNum)
@@ -304,7 +322,12 @@ public class UIController : MonoBehaviour, IPanelsManagerUser
     }
 
 
+
     //Interal Algorithms
+    bool DoesInventoryItemExists(string itemTag)
+    {
+        return (InventoryItemsContainer.ContainsKey(itemTag));
+    }
     IEnumerator message(string message, float time, Vector3 startScale, float speed)
     {
         var messageObj = Instantiate(highlightMessage, messagesArea.transform);

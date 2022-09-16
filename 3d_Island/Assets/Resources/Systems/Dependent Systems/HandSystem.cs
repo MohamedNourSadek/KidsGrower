@@ -85,7 +85,7 @@ public class HandSystem
         ServicesProvider.instance.StartCoroutine(UpdatePetCondition(condition, petObject.gameObject.GetComponent<NPC>()));
 
 
-        UIController.instance.RepeatInGameMessage("Petting", petObject, petTime, 5f, condition);
+        UIGame.instance.ShowRepeatingMessage("Petting", petObject, petTime, 5f, condition);
 
         if ((detector.GetPickables().Count > 0))
         {

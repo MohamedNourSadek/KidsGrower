@@ -25813,7 +25813,7 @@ MonoBehaviour:
     type: 3}
   inventoryElementPrefab: {fileID: 4326401414560191515, guid: 2084673d03dab21418273fa69d8eaa93,
     type: 3}
-  popUpMessage: {fileID: 2371582447054198831, guid: 0de8bc103d41e1040b17e4b8db8c753f,
+  popUpMessageAsset: {fileID: 2371582447054198831, guid: 0de8bc103d41e1040b17e4b8db8c753f,
     type: 3}
   buttonOnAlpha: 1
   buttonOffAlpha: 0.3
