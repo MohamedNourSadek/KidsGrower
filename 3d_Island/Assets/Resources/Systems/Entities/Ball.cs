@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ball : Pickable
+public class Ball : Pickable, ISavable
 {
-    public void LoadData(Ball_Data ball_data)
+    public void LoadData(SaveStructure saveStructure)
     {
-        transform.position = ball_data.position.GetVector();
+        Ball_Data ballData = (Ball_Data)saveStructure;
+        
+        transform.position = ballData.position.GetVector();
     }
     public Ball_Data GetData()
     {

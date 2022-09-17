@@ -71,24 +71,24 @@ public class GameManager : MonoBehaviour, IInputUser
         SessionData sessionData = DataManager.instance.GetCurrentSession();
 
         foreach(NPC_Data npc_data in  sessionData.data.npcs)
-            npc_data.SpawnWithData(npcAsset.gameObject);
+            npc_data.SpawnWithData(npcAsset.gameObject, true);
 
         foreach (Ball_Data ball_data in sessionData.data.balls)
-            ball_data.SpawnWithData(ballAsset);
+            ball_data.SpawnWithData(ballAsset, true);
 
         foreach (Egg_Data egg_data in sessionData.data.eggs)
-            egg_data.SpawnWithData(eggAsset);
+            egg_data.SpawnWithData(eggAsset, true);
 
         foreach (Fruit_Data fruit_data in sessionData.data.fruits)
-            fruit_data.SpawnWithData(fruitAsset);
+            fruit_data.SpawnWithData(fruitAsset, true);
 
         foreach (Harvest_Data harvest_Data in sessionData.data.harvests)
-            harvest_Data.SpawnWithData(harvestAsset);
+            harvest_Data.SpawnWithData(harvestAsset, true);
 
         foreach (Seed_Data seed_data in sessionData.data.seeds)
-            seed_data.SpawnWithData(seedAsset);
+            seed_data.SpawnWithData(seedAsset, true);
 
-        sessionData.data.player.SpawnWithData(myPlayer.gameObject);
+        sessionData.data.player.SpawnWithData(myPlayer.gameObject, false);
 
         aIParameters = DataManager.instance.GetCurrentSession().aIParameters;
 

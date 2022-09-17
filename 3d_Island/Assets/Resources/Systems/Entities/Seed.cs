@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Seed : Plantable
+public class Seed : Plantable, ISavable
 {
     [SerializeField] float growingSpeed;
 
@@ -15,8 +15,9 @@ public class Seed : Plantable
         initialScale = model.transform.localScale;
     }
 
-    public void LoadData(Seed_Data seed_Data)
+    public void LoadData(SaveStructure saveData)
     {
+        Seed_Data seed_Data = (Seed_Data)saveData;
         transform.position = seed_Data.position.GetVector();
     }
     public Seed_Data GetData()

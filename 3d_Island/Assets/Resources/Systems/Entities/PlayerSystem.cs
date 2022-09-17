@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
+public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser, ISavable
 {
     public static PlayerSystem instance;
 
@@ -81,8 +81,10 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser
 
 
     //Interface 
-    public void LoadData(Player_Data player_data)
+    public void LoadData(SaveStructure saveData)
     {
+        Player_Data player_data = (Player_Data)saveData;
+
         if (player_data.position.GetVector().magnitude != 0)
             transform.position = player_data.position.GetVector();
 

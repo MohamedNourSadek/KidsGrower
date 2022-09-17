@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Harvest : Pickable, IInventoryItem
+public class Harvest : Pickable, IInventoryItem, ISavable
 {
-    public void LoadData(Harvest_Data harvest_data)
+    public void LoadData(SaveStructure saveData)
     {
+        Harvest_Data harvest_data = (Harvest_Data)saveData;
+
         transform.position = harvest_data.position.GetVector();
     }
     public Harvest_Data GetData()

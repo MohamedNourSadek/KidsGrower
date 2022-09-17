@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fruit : Pickable
+public class Fruit : Pickable, ISavable
 {
     [SerializeField] int totalEnergy = 150;
     [SerializeField] GroundDetector ground;
@@ -14,8 +14,10 @@ public class Fruit : Pickable
         currentEnergy = totalEnergy;
     }
 
-    public void LoadData(Fruit_Data fruit_data)
+    public void LoadData(SaveStructure saveData)
     {
+        Fruit_Data fruit_data = (Fruit_Data)saveData;
+
         transform.position = fruit_data.position.GetVector();
     }
     public Fruit_Data GetData()

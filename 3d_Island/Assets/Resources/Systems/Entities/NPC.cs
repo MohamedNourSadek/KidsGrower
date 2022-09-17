@@ -9,7 +9,7 @@ enum BooleanStates { bored, tired, fruitNear, ballNear, alterNear, Picked }
 enum TriggerStates { foundTarget, lostTarget, doneEating, doneLaying, doneSleeping, doneBalling, reached }
 
 
-public class NPC : Pickable, IController, IStateMachineController
+public class NPC : Pickable, IController, IStateMachineController, ISavable
 {
     public static int NPCsCount = 0;
 
@@ -106,8 +106,10 @@ public class NPC : Pickable, IController, IStateMachineController
 
 
     //Interface
-    public void LoadData(NPC_Data npc_data)
+    public void LoadData(SaveStructure saveData)
     {
+        NPC_Data npc_data = (NPC_Data)saveData;
+
         saveName = npc_data.name;
         transform.position = npc_data.position.GetVector();
         transform.rotation = npc_data.rotation.GetQuaternion();

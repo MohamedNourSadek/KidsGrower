@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Egg : Plantable
+public class Egg : Plantable, ISavable
 {
     [SerializeField] NPC babyNpcPrefab;
     [SerializeField] MeshRenderer myMesh;
@@ -12,8 +12,9 @@ public class Egg : Plantable
     float rottenness = 0f;
 
 
-    public void LoadData(Egg_Data egg_data)
+    public void LoadData(SaveStructure saveData)
     {
+        Egg_Data egg_data = (Egg_Data)saveData;
         transform.position = egg_data.position.GetVector();
         transform.rotation = egg_data.rotation.GetQuaternion();
         rottenness = egg_data.rottenness;

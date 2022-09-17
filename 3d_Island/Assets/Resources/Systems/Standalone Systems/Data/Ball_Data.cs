@@ -2,14 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ball_Data
+public class Ball_Data : SaveStructure
 {
     public nVector3 position = new nVector3();
 
-    public void SpawnWithData(GameObject ballAsset)
-    {
-        ServicesProvider.Instantiate(ballAsset).GetComponent<Ball>().LoadData(this);
-    }
     public static List<Ball_Data> GameToDate(Ball[] balls)
     {
         List<Ball_Data> list = new List<Ball_Data>();
