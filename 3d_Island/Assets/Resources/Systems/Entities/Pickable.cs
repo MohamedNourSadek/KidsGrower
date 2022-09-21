@@ -52,6 +52,7 @@ public class Pickable : MonoBehaviour, IDetectable
         isPicked = true;
         myBody.isKinematic = true;
         myBody.velocity = Vector3.zero;
+        this.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
 
         this.transform.position = _picker.GetHand().position;
         this.transform.parent = _picker.GetHand();

@@ -8,6 +8,7 @@ public enum CustomizingState { Detecting, Moving }
 public class GameManager : MonoBehaviour, IInputUser
 {
     [SerializeField] PostProcessingFunctions posProcessingFunctions;
+    [SerializeField] LayerMask customizeDetectable;
 
     [Header("Game Design")]
     [SerializeField] PlayerSystem myPlayer;
@@ -31,7 +32,7 @@ public class GameManager : MonoBehaviour, IInputUser
 
 
     //Private functions
-    void Start()
+    void Awake()
     {
         instance = this;
         
@@ -136,7 +137,7 @@ public class GameManager : MonoBehaviour, IInputUser
 
         Ray ray = Camera.main.ScreenPointToRay(mousePosition, Camera.MonoOrStereoscopicEye.Mono);
 
-        Physics.Raycast(ray, out hit);
+        Physics.Raycast(ray, out hit, customizeDetectable);
 
         return hit;
     }

@@ -6,7 +6,7 @@ using TMPro;
 
 public class FrameRater : MonoBehaviour
 {
-    static int targetFrameRate = 0;
+    static int targetFrameRate = 60;
     TextMeshProUGUI frameRate;
 
     private void Awake()

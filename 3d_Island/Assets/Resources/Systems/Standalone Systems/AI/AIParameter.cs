@@ -59,7 +59,7 @@ public class AIParameter
     {
         0f, 0f,1f,
         0f,0f,1f,1f,0.8f,
-        0f,0f,5f,20f,500f,2f
+        0f,0f,5f,20f,10000f,2f
     };
 
     static List<float> Medium = new List<float>()

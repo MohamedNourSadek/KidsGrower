@@ -364,7 +364,7 @@ Transform:
   - {fileID: 6949429004428104455}
   - {fileID: 6719983127358203267}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6949429005409692764
 MonoBehaviour:
@@ -455,7 +455,7 @@ MonoBehaviour:
     distanceFromObject: 5
     cameraHeighLimits: {x: 1, y: 7}
     rotationInputSensitivity: {x: 0.025, y: 0.025}
-    delay: 0.75
+    delay: 3
     rotationSpeed: 25
     cameraTilt: -0.5
   handSystem:

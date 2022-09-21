@@ -72,13 +72,17 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
         MovementStatus state = MovementStatus.Idel;
         aiStateMachine.Initialize((Enum)state);
 
+        aIParameters = DataManager.instance.GetCurrentSession().aIParameters;
 
-        foreach(DetectableElement element in detector.detectableElements)
+        foreach (DetectableElement element in detector.detectableElements)
         {
             element.OnNear += OnDetectableNear;
             element.OnInRange += OnDetectableInRange;
             element.OnInRangeExit += OnDetectableExit;
         }
+
+        UIGame.instance.CreateNPCUi(this.gameObject, this.transform);
+        UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
 
         base.StartCoroutine(GrowingUp());
         base.StartCoroutine(AiContinous());
@@ -115,9 +119,10 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
         transform.rotation = npc_data.rotation.GetQuaternion();
         bornSince = npc_data.bornSince;
         levelController.IncreaseXP(npc_data.xp);
-        OnXPIncrease();
 
-        InitializeLevelUI();
+        UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
+
+        OnXPIncrease();
     }
     public NPC_Data GetData()
     {
@@ -198,22 +203,20 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
         var deadNPC =  Instantiate(deadNpcAsset, this.transform.position, Quaternion.identity);
         UIGame.instance.DestroyNpcUiElement(this.gameObject);
         UIGame.instance.ShowRepeatingMessage("Death!!", deadNPC.transform, 2f, 4f, new ConditionChecker(true));
+        UIGame.instance.ShowDeclare(saveName + " has Died!");
+
         Destroy(this.gameObject);
     }
       
      
     //UI-Level Functions
-    public void InitializeLevelUI()
-    {
-        UIGame.instance.CreateNPCUi(this.gameObject, this.transform);
-        UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
-    }
     public void OnXPIncrease()
     {
     }
     public void OnLevelIncrease()
     {  
         UIGame.instance.ShowRepeatingMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
+        UIGame.instance.ShowDeclare(saveName + " has Leveled Up!");
     }
     public void ChangeName(string newName)
     {

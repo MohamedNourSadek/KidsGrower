@@ -6,6 +6,7 @@ using TMPro;
 using System;
 using System.Security.Cryptography;
 using UnityEngine.Events;
+using UnityEngine.InputSystem.Controls;
 
 public enum PickMode { Pick, Drop, Shake};
 
@@ -18,6 +19,7 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     [Header("References")]
     [SerializeField] GameObject threeDCanvas;
     [SerializeField] GameObject gameCanvas;
+    [SerializeField] GameObject declarationsArea;
     [SerializeField] GameObject inGamePanel;
     [SerializeField] GameObject messagesArea;
     [SerializeField] GameObject highlightMessage;
@@ -26,6 +28,7 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     [SerializeField] GameObject npcUiElementPrefab;
     [SerializeField] GameObject inventoryElementPrefab;
     [SerializeField] GameObject popUpMessageAsset;
+    [SerializeField] GameObject touchControls;
 
     [Header("Ui parameters")]
 
@@ -53,12 +56,17 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     [SerializeField] Button previousButton;
     [SerializeField] public TextMeshProUGUI countDownText;
     [SerializeField] GameObject savingText;
+    [SerializeField] GameObject delcareUIAsset;
 
 
 
     //Helpers
     void Awake()
     {
+        if (Application.platform == RuntimePlatform.WindowsPlayer)
+            touchControls.SetActive(false);
+
+
         instance = this;
 
         foreach (AIParameterSlider slider in sliders)
@@ -191,7 +199,11 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     {
         StartCoroutine(RepeatMessage_Coroutine(message, parent, messageTime, repeats, condition));
     }
-
+    public void ShowDeclare(string message)
+    {
+        DeclarationElement element = Instantiate(delcareUIAsset, declarationsArea.transform).GetComponent<DeclarationElement>();
+        element.message.text = message;
+    }
 
     //Referenced Messages
     
@@ -240,9 +252,12 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     }
     public void DestroyNpcUiElement(GameObject user)
     {
-        UIElement_NPC _temp = npcUiContainer[user];
-        npcUiContainer.Remove(user);
-        Destroy(_temp.gameObject);
+        if (npcUiContainer.ContainsKey(user))
+        {
+            UIElement_NPC _temp = npcUiContainer[user];
+            npcUiContainer.Remove(user);
+            Destroy(_temp.gameObject);
+        }
     }
 
 
@@ -369,7 +384,7 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     {
         float _time = 0f;
 
-        while (condition.isTrue && _time<=messageTime)
+        while (condition.isTrue && _time<=messageTime && parent != null)
         {
             _time += messageTime / repeats;
             SpawnMessage(message, (parent.position + (1.5f*Vector3.up)));
