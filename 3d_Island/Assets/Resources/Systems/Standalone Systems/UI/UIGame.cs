@@ -377,7 +377,8 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
         while((parent != null ) && (_object != null))
         {
             _object.transform.position = parent.transform.position + Vector3.up;
-            yield return new WaitForSecondsRealtime(Time.deltaTime);
+
+            yield return new WaitForEndOfFrame();
         }
     }
     IEnumerator RepeatMessage_Coroutine(string message, Transform parent, float messageTime, float repeats, ConditionChecker condition)

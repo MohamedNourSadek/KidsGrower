@@ -58,7 +58,7 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
     string saveName = "Nameless";
 
     //Helper functions
-    private void Awake()
+    void Awake()
     {
         NPCsCount++;
 
@@ -88,7 +88,7 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
         base.StartCoroutine(AiContinous());
         base.StartCoroutine(AiDescrete());
     }
-    private void OnDestroy()
+    void OnDestroy()
     {
         NPCsCount--;
     }
@@ -140,12 +140,14 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
     {
         base.Pick(picker);
         myAgent.enabled = false;
-        aiStateMachine.SetBool(BooleanStates.Picked, true); 
+        aiStateMachine.SetBool(BooleanStates.Picked, true);
+        UIGame.instance.UpateNpcUiElement(this.gameObject, "");
     }
     public override void Drop()
     {
         base.Drop();
 
+        UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
         aiStateMachine.SetBool(BooleanStates.Picked, false);
     }
     public void StartPetting()
@@ -218,10 +220,12 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
         UIGame.instance.ShowRepeatingMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
         UIGame.instance.ShowDeclare(saveName + " has Leveled Up!");
     }
-    public void ChangeName(string newName)
+    public void ChangeName(string newName, bool inUi)
     {
         saveName = newName;
-        UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
+
+        if(inUi)
+            UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
     }
     public string GetName()
     {
