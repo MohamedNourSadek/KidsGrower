@@ -19,8 +19,11 @@ public class MenuPanelItem
 
     public void Initialize(MenuAnimatioSettings _animationSettings)
     {
-        if(item.GetComponentInChildren<Button>())
-            (item.GetComponentInChildren<Button>()).onClick.AddListener(InvokeEvent);
+        if(item.GetComponentInChildren<CButton>())
+        {
+            (item.GetComponentInChildren<CButton>()).onClick.AddListener(OnPress.Invoke);
+            (item.GetComponentInChildren<CButton>()).animationSettings = _animationSettings;
+        }
 
         animationSettings = _animationSettings;
     }
@@ -65,20 +68,5 @@ public class MenuPanelItem
             item.SetActive(false);
         }
     }
-    void InvokeEvent()
-    {
-        OnPress.Invoke();
-
-        ServicesProvider.instance.StartCoroutine(OnPressAnimation());
-    }
-    IEnumerator OnPressAnimation()
-    {
-        item.gameObject.LeanScale(animationSettings.onScale - animationSettings.pressedIncrementScale, animationSettings.pressedAnimationTime).setEase(animationSettings.pressedAnimationCurve);
-
-        yield return new WaitForSeconds(animationSettings.pressedAnimationTime);
-
-        item.gameObject.LeanScale(animationSettings.onScale, animationSettings.pressedAnimationTime).setEase(animationSettings.pressedAnimationCurve);
-    }
-
 }
 

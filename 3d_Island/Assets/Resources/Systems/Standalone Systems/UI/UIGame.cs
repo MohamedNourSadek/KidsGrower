@@ -4,9 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
-using System.Security.Cryptography;
 using UnityEngine.Events;
-using UnityEngine.InputSystem.Controls;
 
 public enum PickMode { Pick, Drop, Shake};
 
@@ -26,9 +24,11 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     [SerializeField] GameObject ThreeDHighlightPrefab;
     [SerializeField] GameObject progressBarPrefab;
     [SerializeField] GameObject npcUiElementPrefab;
-    [SerializeField] GameObject inventoryElementPrefab;
     [SerializeField] GameObject popUpMessageAsset;
     [SerializeField] GameObject touchControls;
+    [SerializeField] GameObject itemsParent;
+    [SerializeField] GameObject inventoryElementUIAsset;
+
 
     [Header("Ui parameters")]
 
@@ -262,31 +262,50 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
 
 
     //Inventory Ui
-    Dictionary<string, UiElement_Inventory> InventoryItemsContainer = new();
-    public void CreateInventoryUI(string itemTag, UnityAction onClick)
+    public void DisplayInventory(bool state, InventorySystem inventorySystem)
     {
-        var _inventoryItem = Instantiate(inventoryElementPrefab, inGamePanel.transform).GetComponent<UiElement_Inventory>();
+        if(state)
+        {
+            var items = itemsParent.GetComponentsInChildren<InventoryItemUI>();
 
-        _inventoryItem.elementButton.onClick.AddListener(onClick);
-        _inventoryItem.elementName.text = itemTag;
-        _inventoryItem.elementNo.text = 1.ToString();
+            foreach (var item in items)
+                Destroy(item.gameObject);
 
-        InventoryItemsContainer.Add(itemTag, _inventoryItem);
+            List<InventoryItemUI> uiElements = new List<InventoryItemUI>();
+
+            foreach(var item in inventorySystem.GetItems())
+            {
+                bool isOld = false;
+                InventoryItemUI element = new InventoryItemUI();
+
+                foreach(InventoryItemUI uiElement in uiElements)
+                {
+                    if (uiElement.itemName.text == item.GetGameObject().tag)
+                    {
+                        isOld = true;
+                        element = uiElement;
+                    }
+                }
+
+                if(isOld)
+                {
+                    element.itemNumber.text = (Int32.Parse(element.itemNumber.text) + 1).ToString();
+                }
+                else
+                {
+                    var itemUI = Instantiate(inventoryElementUIAsset, itemsParent.transform).GetComponent<InventoryItemUI>();
+                    uiElements.Add(itemUI);
+
+                    itemUI.Intialize(
+                        inventorySystem,
+                        item.GetGameObject().tag,
+                        1,
+                        itemUI.OnPress);
+                }
+
+            }
+        }
     }
-    public void UpdateInventoryUI(string itemTag, int nubmer)
-    {
-        InventoryItemsContainer[itemTag].elementNo.text = nubmer.ToString();
-    }
-    public void DestroyInventoryUI(string itemTag)
-    {
-        UiElement_Inventory _temp = InventoryItemsContainer[itemTag];
-        InventoryItemsContainer.Remove(itemTag);
-        Destroy(_temp.gameObject);
-    }
-    
-    ///////////////////////////////
-
-
     //Control UI flow
     public void OpenMenuPanel(string menuPanelName_PlusManagerNum)
     {
@@ -337,12 +356,7 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     }
 
 
-
     //Interal Algorithms
-    bool DoesInventoryItemExists(string itemTag)
-    {
-        return (InventoryItemsContainer.ContainsKey(itemTag));
-    }
     IEnumerator message(string message, float time, Vector3 startScale, float speed)
     {
         var messageObj = Instantiate(highlightMessage, messagesArea.transform);

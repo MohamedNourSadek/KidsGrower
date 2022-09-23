@@ -188,7 +188,10 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         SceneControl.instance.LoadScene(0);
     }
-
+    public void OpenInventory(bool state)
+    {
+        UIGame.instance.DisplayInventory(state, myPlayer.inventorySystem);
+    }
 
 
     //For design Buttons

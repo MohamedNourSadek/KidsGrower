@@ -18,7 +18,6 @@ public class Harvest : Pickable, IInventoryItem, ISavable
 
         return harvestData;
     }
-
     public GameObject GetGameObject()
     {
         return this.gameObject;

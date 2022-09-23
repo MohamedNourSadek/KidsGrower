@@ -15,7 +15,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     [SerializeField] HandSystem handSystem;
     [SerializeField] DetectorSystem detector;
     
-    InventorySystem inventorySystem;
+    public InventorySystem inventorySystem;
 
     public bool activeInput { get; set; }
 
@@ -129,7 +129,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public void PickInput()
     {
-
         if(handSystem.canPick)
         {
             if(InventorySystem.IsStorable(handSystem.GetNearest()))
