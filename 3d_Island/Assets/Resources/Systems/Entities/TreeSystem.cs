@@ -2,21 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeSystem : MonoBehaviour, IDetectable
+public class TreeSystem : MonoBehaviour, IDetectable, ISavable
 {
     [SerializeField] int breakForce = 50;
     [SerializeField] int breakTorque = 50;
     [SerializeField] Vector2 reSeedTime = new Vector2(0f, 1f);
-
 
     [Header("references")]
     [SerializeField] Animator animator;
     [SerializeField] GameObject branch1;
     [SerializeField] GameObject fruitAsset;
 
+    void Awake()
+    {
+        StartCoroutine(Seeding());
+    }
     public GameObject GetGameObject()
     {
         return this.gameObject;
+    }
+    public void LoadData(SaveStructure savaData)
+    {
+        Tree_Data tree = (Tree_Data)savaData;
+        transform.position = tree.position.GetVector();
+    }
+    public Tree_Data GetData()
+    {
+        Tree_Data tree_Data = new Tree_Data();
+        tree_Data.position = new nVector3(transform.position);
+        return tree_Data;
     }
 
     public bool GotFruit()
@@ -31,22 +45,19 @@ public class TreeSystem : MonoBehaviour, IDetectable
         animator.SetTrigger("Shake");
     }
 
-    void Awake()
-    {
-        StartCoroutine(Seeding());
-    }
     IEnumerator Seeding()
     {
         while(true)
         {
             float _randomTime = Random.Range(reSeedTime.x, reSeedTime.y);
 
+            yield return new WaitForSecondsRealtime(_randomTime);
+
             if (branch1.GetComponent<CharacterJoint>() == null)
             {
                 StartCoroutine(SpawnFruit(branch1));
             }
 
-            yield return new WaitForSecondsRealtime(_randomTime);
         }
     }
     IEnumerator SpawnFruit(GameObject _branch)

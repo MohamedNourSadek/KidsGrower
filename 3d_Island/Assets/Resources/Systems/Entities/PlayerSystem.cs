@@ -14,8 +14,8 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     [SerializeField] CameraSystem myCamera;
     [SerializeField] HandSystem handSystem;
     [SerializeField] DetectorSystem detector;
-    
-    public InventorySystem inventorySystem;
+
+    public InventorySystem inventorySystem = null;
 
     public bool activeInput { get; set; }
 
@@ -25,7 +25,9 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     {
         InputSystem.SubscribeUser(this);
 
-        inventorySystem = new InventorySystem(this);
+        if(inventorySystem == null)
+            inventorySystem = new InventorySystem(this);
+
         movementSystem.Initialize(playerBody, myCamera.GetCameraTransform());
         myCamera.Initialize(this.gameObject);
         detector.Initialize(nearObjectDistance);
@@ -41,6 +43,8 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         handSystem.Update();
         
         UpdateUi();
+
+
     }
     void UpdateUi()
     {
@@ -89,6 +93,10 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
             transform.position = player_data.position.GetVector();
 
         transform.rotation = player_data.rotation.GetQuaternion();
+
+        inventorySystem = new InventorySystem(this);
+
+        DeployInventory(player_data.inventoryData);
     }
     public Player_Data GetData()
     {
@@ -96,8 +104,33 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
         player_data.position = new nVector3(transform.position);
         player_data.rotation = new nQuaternion(transform.rotation);
+        player_data.inventoryData = inventorySystem.GetItems_Data();
 
         return player_data;
+    }
+
+    public void DeployInventory(List<InventoryItem_Data> data)
+    {
+        foreach(var item in data)
+        {
+            if(item.itemTag == "Harvest")
+            {
+                for (int i = 0; i < item.amount; i++)
+                {
+                    var Obj = GameManager.instance.SpawnHarvest().GetComponent<IInventoryItem>();
+                    inventorySystem.Add(Obj, false);
+                }
+            }
+            else if(item.itemTag == "Xp Boost")
+            {
+                for (int i = 0; i < item.amount; i++)
+                {
+                    var Obj = GameManager.instance.SpawnXPGiver().GetComponent<IInventoryItem>();
+                    inventorySystem.Add(Obj, false);
+                }
+            }
+        }
+
     }
 
 
@@ -133,7 +166,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         {
             if(InventorySystem.IsStorable(handSystem.GetNearest()))
             {
-                inventorySystem.Add((handSystem.GetNearest()).GetComponent<IInventoryItem>());
+                inventorySystem.Add((handSystem.GetNearest()).GetComponent<IInventoryItem>(), true);
             }
             else
             {

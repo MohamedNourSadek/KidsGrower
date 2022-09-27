@@ -16,8 +16,13 @@ public class GameManager : MonoBehaviour, IInputUser
     [SerializeField] GameObject ballAsset;
     [SerializeField] GameObject fruitAsset;
     [SerializeField] GameObject harvestAsset;
+    [SerializeField] GameObject xpGiverAsset;
     [SerializeField] GameObject seedAsset;
+    [SerializeField] GameObject treeAsset;
     [SerializeField] NPC npcAsset;
+    [SerializeField] Light mainLight;
+    [SerializeField] List<Terrain> terrains;
+
 
     public static GameManager instance;
     CustomizingState customizingState = CustomizingState.Detecting;
@@ -70,6 +75,7 @@ public class GameManager : MonoBehaviour, IInputUser
     void LoadAndApply()
     {
         SessionData sessionData = DataManager.instance.GetCurrentSession();
+        SettingsData settingsData = DataManager.instance.GetSavedData().settings;
 
         foreach(NPC_Data npc_data in  sessionData.data.npcs)
             npc_data.SpawnWithData(npcAsset.gameObject, true);
@@ -89,9 +95,30 @@ public class GameManager : MonoBehaviour, IInputUser
         foreach (Seed_Data seed_data in sessionData.data.seeds)
             seed_data.SpawnWithData(seedAsset, true);
 
+        //tree is Done differently because it exists by default
+        if(sessionData.data.trees.Count > 0)
+        {
+            var trees = FindObjectsOfType<TreeSystem>();
+
+            foreach(TreeSystem tree in trees)
+                Destroy(tree.gameObject);
+            
+            foreach (Tree_Data tree_data in sessionData.data.trees)
+                tree_data.SpawnWithData(treeAsset, true);
+        }
+            
+
         sessionData.data.player.SpawnWithData(myPlayer.gameObject, false);
 
         aIParameters = DataManager.instance.GetCurrentSession().aIParameters;
+
+        SetAmbientVolume(settingsData.ambinetVolume);
+        SetUIVolume(settingsData.uiVolume);
+        SetSFXVolume(settingsData.sfxVolume);
+        SetGrass(settingsData.grass);
+        SetShadows(settingsData.shadows);
+
+        UIGame.instance.LoadSavedUISettings(settingsData);
 
         ApplyAiParametersToGame();
     }
@@ -113,16 +140,19 @@ public class GameManager : MonoBehaviour, IInputUser
     void Save()
     {
         SessionData sessionData = DataManager.instance.GetCurrentSession();
-        
+
         sessionData.data.npcs = NPC_Data.GameToDate(FindObjectsOfType<NPC>());
         sessionData.data.balls = Ball_Data.GameToDate(FindObjectsOfType<Ball>());
         sessionData.data.eggs = Egg_Data.GameToDate(FindObjectsOfType<Egg>());
         sessionData.data.fruits = Fruit_Data.GameToDate(FindObjectsOfType<Fruit>());
         sessionData.data.harvests = Harvest_Data.GameToDate(FindObjectsOfType<Harvest>());
         sessionData.data.seeds = Seed_Data.GameToDate(FindObjectsOfType<Seed>());
+        sessionData.data.trees = Tree_Data.GameToDate(FindObjectsOfType<TreeSystem>());
         sessionData.data.player = Player_Data.GameToData(myPlayer);
         sessionData.modeData = modeHandler.GetModeData();
         sessionData.aIParameters = aIParameters;
+
+        DataManager.instance.GetSavedData().settings = UIGame.instance.GetSavedUI();
 
         DataManager.instance.Modify(sessionData);
 
@@ -192,6 +222,32 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         UIGame.instance.DisplayInventory(state, myPlayer.inventorySystem);
     }
+    public void SetSFXVolume(float volume)
+    {
+        SoundManager.instance.SetSFX(volume);
+    }
+    public void SetAmbientVolume(float volume)
+    {
+        SoundManager.instance.SetAmbient(volume);
+    }
+    public void SetUIVolume(float volume)
+    {
+        SoundManager.instance.SetUiVolume(volume);
+    }
+    public void SetGrass(bool state)
+    {
+        foreach(Terrain terrain in terrains)
+        {
+            terrain.drawTreesAndFoliage = state;
+        }
+    }
+    public void SetShadows(bool state)
+    {
+        if (state)
+            mainLight.shadows = LightShadows.Hard;
+        else
+            mainLight.shadows = LightShadows.None;
+    }
 
 
     //For design Buttons
@@ -207,7 +263,18 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         Instantiate(seedAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
+    public GameObject SpawnHarvest()
+    {
+        GameObject x =  Instantiate(harvestAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
 
+        return x;
+    }
+    public GameObject SpawnXPGiver()
+    {
+       GameObject x = Instantiate(xpGiverAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+
+        return x;
+    }
 
 
     //Input Interface

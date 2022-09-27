@@ -232,7 +232,7 @@ Transform:
   - {fileID: 6876410435036662743}
   - {fileID: 1340411068}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6876410436286045275
 MeshFilter:
@@ -350,3 +350,5 @@ MonoBehaviour:
     type: 3}
   myMesh: {fileID: 6876410436286045252}
   rottenThrusHold: 0.5
+  EggShell: {fileID: 6730443535939341463, guid: 529f2037e52cde34fa3dab422fba3daa,
+    type: 3}

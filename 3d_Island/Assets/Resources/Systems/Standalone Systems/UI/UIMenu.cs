@@ -86,7 +86,7 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     {
         ClearOldUI();
 
-        List<SessionData> saves = DataManager.instance.GetSavedData();
+        List<SessionData> saves = DataManager.instance.GetSavedData().sessions;
 
         //Recreate them and add
         foreach (var _save in saves)

@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.Audio;
+using Unity.VisualScripting;
+using UnityEngine.UIElements;
 
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
+
+    [Header("Data")]
+    [SerializeField] AudioMixerGroup ambientAudioMixer;
+    [SerializeField] AudioMixerGroup uiAudioMixer;
+    [SerializeField] AudioMixerGroup sfxAudioMixer;
 
     [SerializeField] AudioData pressAudio;
 
@@ -32,10 +40,26 @@ public class SoundManager : MonoBehaviour
         InitializeAmbientMusic();
     }
 
+    //Interface for controlling Volume
+    public void SetUiVolume(float newVolume)
+    {
+        uiAudioMixer.audioMixer.SetFloat("Volume", GetdB(newVolume));
+    }
+    public void SetAmbient(float newVolume)
+    {
+        ambientAudioMixer.audioMixer.SetFloat("Volume", GetdB(newVolume));
+    }
+    public void SetSFX(float newVolume)
+    {
+        sfxAudioMixer.audioMixer.SetFloat("Volume", GetdB(newVolume));
+    }
+
+
     //Ambient music
     void InitializeAmbientMusic()
     {
         ambientSource = this.gameObject.AddComponent<AudioSource>();
+        ambientSource.outputAudioMixerGroup = ambientAudioMixer;
         ambientSource.loop = false;
         ambientSource.playOnAwake = false;
 
@@ -97,12 +121,32 @@ public class SoundManager : MonoBehaviour
     }
     public void OnButtonPress()
     {
-        AudioSource.PlayClipAtPoint(pressAudio.clip, Camera.main.gameObject.transform.position,pressAudio.volume);
+        AudioSource source = this.gameObject.AddComponent<AudioSource>();
+        source.outputAudioMixerGroup = uiAudioMixer;
+        source.loop = false;
+        source.playOnAwake = false;
+
+        source.clip = pressAudio.clip;
+        source.volume = pressAudio.volume;
+
+        source.Play();
+
+        StartCoroutine(DestroyAfter(source, 1f));
+    }
+    IEnumerator DestroyAfter(AudioSource source, float t)
+    {
+        yield return new WaitForSecondsRealtime(t);
+        Destroy(source);
     }
 
-
-
-
-
-
+    
+    //Internal Algorithms
+    float GetdB(float volumeLinear)
+    {
+        return Mathf.Clamp((float)(20f * Math.Log10(volumeLinear)),-80f,20f);
+    }
+    float GetLinear(float volumeDB)
+    {
+        return Mathf.Pow(10f, volumeDB / 20f);
+    }
 }

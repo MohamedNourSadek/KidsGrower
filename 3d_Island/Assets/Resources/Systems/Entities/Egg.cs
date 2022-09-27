@@ -7,7 +7,7 @@ public class Egg : Plantable, ISavable
     [SerializeField] NPC babyNpcPrefab;
     [SerializeField] MeshRenderer myMesh;
     [SerializeField] float rottenThrusHold = 0.5f;
-
+    [SerializeField] GameObject EggShell;
 
     float rottenness = 0f;
 
@@ -31,7 +31,6 @@ public class Egg : Plantable, ISavable
         return egg_data;
     }
 
-
     public void SetRottenness(float _rottenness)
     {
         this.rottenness = _rottenness;
@@ -42,6 +41,8 @@ public class Egg : Plantable, ISavable
         if(rottenness <= rottenThrusHold)
         {
             Instantiate(babyNpcPrefab.gameObject, this.transform.position, babyNpcPrefab.transform.rotation);
+            Instantiate(EggShell.gameObject, this.transform.position + Vector3.up, Quaternion.identity);
+
             DestroyImmediate(this.gameObject);
         }
         else

@@ -29,7 +29,6 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     [SerializeField] GameObject itemsParent;
     [SerializeField] GameObject inventoryElementUIAsset;
 
-
     [Header("Ui parameters")]
 
     [SerializeField] float buttonOnAlpha = 1f;
@@ -57,7 +56,11 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     [SerializeField] public TextMeshProUGUI countDownText;
     [SerializeField] GameObject savingText;
     [SerializeField] GameObject delcareUIAsset;
-
+    [SerializeField] Slider sfxVolumeSlider;
+    [SerializeField] Slider ambientVolumeSlider;
+    [SerializeField] Slider uiVolumeSlider;
+    [SerializeField] Toggle shadowsToggle;
+    [SerializeField] Toggle grassToggle;
 
 
     //Helpers
@@ -65,7 +68,6 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     {
         if (Application.platform == RuntimePlatform.WindowsPlayer)
             touchControls.SetActive(false);
-
 
         instance = this;
 
@@ -75,6 +77,12 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
         foreach(PanelsManager panelManager in PanelsManagers)
             panelManager.Initialize();
 
+        sfxVolumeSlider.onValueChanged.AddListener(OnSFXVolumeChange);
+        ambientVolumeSlider.onValueChanged.AddListener(OnAmbientVolumeChange);
+        uiVolumeSlider.onValueChanged.AddListener(OnUIVolumeChange);
+
+        shadowsToggle.onValueChanged.AddListener(OnShadowsUIChange);
+        grassToggle.onValueChanged.AddListener(OnGrassUIChange);
     }
     void OnDrawGizmos()
     {
@@ -104,7 +112,28 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
 
         }
     }
+    public void LoadSavedUISettings(SettingsData data)
+    {
+        sfxVolumeSlider.value = data.sfxVolume;
+        ambientVolumeSlider.value = data.ambinetVolume;
+        uiVolumeSlider.value = data.uiVolume;
 
+        shadowsToggle.isOn = data.shadows;
+        grassToggle.isOn = data.grass;
+    }
+    public SettingsData GetSavedUI()
+    {
+        SettingsData data = new SettingsData(); 
+
+        data.uiVolume = uiVolumeSlider.value;
+        data.sfxVolume = sfxVolumeSlider.value;
+        data.ambinetVolume = ambientVolumeSlider.value;
+
+        data.shadows = shadowsToggle.isOn;
+        data.grass = grassToggle.isOn;
+
+        return data;
+    }
 
 
     //UI control
@@ -306,6 +335,8 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
             }
         }
     }
+
+
     //Control UI flow
     public void OpenMenuPanel(string menuPanelName_PlusManagerNum)
     {
@@ -355,6 +386,31 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
         savingText.SetActive(false);
     }
 
+
+    //Volume Sliders
+    void OnAmbientVolumeChange(float newVolume)
+    {
+        GameManager.instance.SetAmbientVolume(newVolume);
+    }
+    void OnSFXVolumeChange(float newVolume)
+    {
+        GameManager.instance.SetSFXVolume(newVolume);
+    }
+    void OnUIVolumeChange(float newVolume)
+    {
+        GameManager.instance.SetUIVolume(newVolume);
+    }
+    
+    
+    //Graphics Toggles
+    void OnShadowsUIChange(bool state)
+    {
+        GameManager.instance.SetShadows(state);
+    }
+    void OnGrassUIChange(bool state)
+    {
+        GameManager.instance.SetGrass(state);
+    }
 
     //Interal Algorithms
     IEnumerator message(string message, float time, Vector3 startScale, float speed)

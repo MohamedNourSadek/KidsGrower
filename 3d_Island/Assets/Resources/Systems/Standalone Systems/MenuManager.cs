@@ -4,6 +4,37 @@ using UnityEngine;
 
 public class MenuManager : MonoBehaviour
 {
+
+    private void Awake()
+    {
+        StartCoroutine(LoadData());
+    }
+    public IEnumerator LoadData()
+    {
+        yield return new WaitForSecondsRealtime(1f);
+        SettingsData settingsData = DataManager.instance.GetSavedData().settings;
+
+        SetAmbientVolume(settingsData.ambinetVolume);
+        SetUIVolume(settingsData.uiVolume);
+        SetSFXVolume(settingsData.sfxVolume);
+
+    }
+
+
+    public void SetSFXVolume(float volume)
+    {
+        SoundManager.instance.SetSFX(volume);
+    }
+    public void SetAmbientVolume(float volume)
+    {
+        SoundManager.instance.SetAmbient(volume);
+    }
+    public void SetUIVolume(float volume)
+    {
+        SoundManager.instance.SetUiVolume(volume);
+    }
+
+
     public void NewSave()
     {
         var _time = System.DateTime.Now;
@@ -38,4 +69,6 @@ public class MenuManager : MonoBehaviour
     {
         SceneControl.instance.LoadScene(1);
     }
+
+
 }

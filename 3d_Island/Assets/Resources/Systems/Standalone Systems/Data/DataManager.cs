@@ -16,7 +16,7 @@ public class DataManager : MonoBehaviour
 
     //Internal
     static string path;
-    List<SessionData> dataCache;
+    WholeData dataCache;
     SessionData currentSession;
     modes currentMode;
 
@@ -32,18 +32,17 @@ public class DataManager : MonoBehaviour
                 File.Create(path);
             else
                 GetSavedData();
-
         }
         else
         {
             Destroy(this.gameObject);
         }
     }
-    void SaveData(List<SessionData> sessionsData)
+    void SaveData(WholeData wholeData)
     {
-        dataCache = sessionsData;
+        dataCache = wholeData;
 
-        string data = JsonConvert.SerializeObject(sessionsData);
+        string data = JsonConvert.SerializeObject(wholeData);
 
         File.WriteAllText(path, Encypt(data));
     }
@@ -51,14 +50,13 @@ public class DataManager : MonoBehaviour
     {
         var save = File.ReadAllText(path);
         
-        List<SessionData> data = JsonConvert.DeserializeObject<List<SessionData>>(Decrpt(save));
+        WholeData data = JsonConvert.DeserializeObject<WholeData>(Decrpt(save));
 
         if (data != null)
             dataCache = data;
         else
-            dataCache = new List<SessionData>();
+            dataCache = new WholeData();
     }
-     
     
     string Encypt(string raw)
     {
@@ -73,7 +71,7 @@ public class DataManager : MonoBehaviour
 
 
     //Interface to access all sessions Data
-    public List<SessionData> GetSavedData()
+    public WholeData GetSavedData()
     {
         if(dataCache == null)
         {
@@ -84,26 +82,26 @@ public class DataManager : MonoBehaviour
     }
     public void Add(SessionData sessionData)
     {
-        List<SessionData> list = GetSavedData();
+        WholeData data = GetSavedData();
 
-        list.Add(sessionData);
+        data.sessions.Add(sessionData);
 
-        SaveData(list);
+        SaveData(data);
     }
     public void Remove(string sessionName)
     {
-        List<SessionData> list = GetSavedData();
-        SessionData oldData = list.Find(x => x.sessionName == sessionName);
-        list.Remove(oldData);
+        WholeData data = GetSavedData();
+        SessionData oldData = data.sessions.Find(x => x.sessionName == sessionName);
+        data.sessions.Remove(oldData);
 
-        SaveData(list);
+        SaveData(data);
     }
     public bool Contains(string sessionName)
     {
-        List<SessionData> list = GetSavedData();
+        WholeData data = GetSavedData();
 
-        if (list.Count > 0)
-            if (list.Find(x => x.sessionName == sessionName) != null)
+        if (data.sessions.Count > 0)
+            if (data.sessions.Find(x => x.sessionName == sessionName) != null)
                 return true;
             else
                 return false;
@@ -132,11 +130,11 @@ public class DataManager : MonoBehaviour
     }
     public SessionData GetSessionData(string sessionName)
     {
-        List<SessionData> list = GetSavedData();
+        WholeData data = GetSavedData();
 
-        SessionData data = list.Find(x => x.sessionName == sessionName);
+        SessionData session = data.sessions.Find(x => x.sessionName == sessionName);
 
-        return data;
+        return session;
     }
     public SessionData GetCurrentSession()
     {
@@ -148,11 +146,11 @@ public class DataManager : MonoBehaviour
     }
     public void Modify(SessionData newData)
     {
-        List<SessionData> list = GetSavedData();
-        SessionData oldData = list.Find(x => x.sessionName == newData.sessionName);
-        int i = list.IndexOf(oldData);
-        list[i] = newData;
+        WholeData data = GetSavedData();
+        SessionData oldData = data.sessions.Find(x => x.sessionName == newData.sessionName);
+        int i = data.sessions.IndexOf(oldData);
+        data.sessions[i] = newData;
 
-        SaveData(list);
+        SaveData(data);
     }
 }
