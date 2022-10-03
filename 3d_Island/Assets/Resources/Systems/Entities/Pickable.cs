@@ -19,6 +19,16 @@ public class Pickable : MonoBehaviour, IDetectable
         else
             return null;
     }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(SoundManager.instance != null && collision.relativeVelocity.magnitude >= 2f)
+        {
+            float factor = collision.relativeVelocity.magnitude / 20f;
+            SoundManager.instance.PlayHit(this.gameObject, factor);
+        }
+    }
     public float GetSpeed()
     {
         if (myBody != null)

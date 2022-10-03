@@ -11,7 +11,6 @@ public class Egg : Plantable, ISavable
 
     float rottenness = 0f;
 
-
     public void LoadData(SaveStructure saveData)
     {
         Egg_Data egg_data = (Egg_Data)saveData;
@@ -40,8 +39,12 @@ public class Egg : Plantable, ISavable
     {
         if(rottenness <= rottenThrusHold)
         {
-            Instantiate(babyNpcPrefab.gameObject, this.transform.position, babyNpcPrefab.transform.rotation);
+            GameObject npc = Instantiate(babyNpcPrefab.gameObject, this.transform.position, babyNpcPrefab.transform.rotation);
             Instantiate(EggShell.gameObject, this.transform.position + Vector3.up, Quaternion.identity);
+            
+            if(SoundManager.instance != null)
+                SoundManager.instance.PlaySpawn(npc);
+
 
             DestroyImmediate(this.gameObject);
         }
@@ -52,3 +55,4 @@ public class Egg : Plantable, ISavable
         }
     }
 }
+ 

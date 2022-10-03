@@ -21,12 +21,10 @@ public class HandSystem
     public bool canPlant; 
     public bool canPet;
      
-
     //Private Data
     Pickable objectInHand = new();
     IController myController;
     bool isPetting;
-
 
     //Outside Interface
     public void Initialize(DetectorSystem detector, IController controller)
@@ -57,7 +55,6 @@ public class HandSystem
         canPet = (detector.GetDetectable("NPC").detectionStatus == DetectionStatus.VeryNear) && (objectInHand == null) && (isPetting == false);
     }
     
-
     public void PickObject()
     {
         if ((detector.GetPickables().Count > 0) ) 
@@ -83,7 +80,6 @@ public class HandSystem
         ConditionChecker condition = new ConditionChecker(true);
 
         ServicesProvider.instance.StartCoroutine(UpdatePetCondition(condition, petObject.gameObject.GetComponent<NPC>()));
-
 
         UIGame.instance.ShowRepeatingMessage("Petting", petObject, petTime, 5f, condition);
 
@@ -179,6 +175,7 @@ public class HandSystem
 
         if(npc)
             npc.EndPetting();
+
 
         myController.GetBody().isKinematic = false;
         DropObject();

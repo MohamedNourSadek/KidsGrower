@@ -15,11 +15,15 @@ public class SoundManager : MonoBehaviour
     [SerializeField] AudioMixerGroup ambientAudioMixer;
     [SerializeField] AudioMixerGroup uiAudioMixer;
     [SerializeField] AudioMixerGroup sfxAudioMixer;
-
     [SerializeField] AudioData pressAudio;
 
-    [Header("FootSteps")]
+
+
+    [Header("Audio Data")]
     [SerializeField] List<AudioData> walkClips = new List<AudioData>();
+    [SerializeField] List<AudioData> hitClips = new List<AudioData>();
+    [SerializeField] AudioData spawn;
+    [SerializeField] AudioData treeShake;
 
     [Header("Ambient Settings")]
     [SerializeField] List<AudioData> ambientMusic = new List<AudioData>();
@@ -40,6 +44,7 @@ public class SoundManager : MonoBehaviour
         InitializeAmbientMusic();
     }
 
+    
     //Interface for controlling Volume
     public void SetUiVolume(float newVolume)
     {
@@ -53,6 +58,71 @@ public class SoundManager : MonoBehaviour
     {
         sfxAudioMixer.audioMixer.SetFloat("Volume", GetdB(newVolume));
     }
+
+
+    //Sound effects
+    public void PlayHit(GameObject sourceObj, float volume)
+    {
+        int random = UnityEngine.Random.Range(0, hitClips.Count - 1);
+        AudioSource audioSource = sourceObj.AddComponent<AudioSource>();
+
+        audioSource.outputAudioMixerGroup = sfxAudioMixer;
+        audioSource.clip = hitClips[random].clip;
+        audioSource.volume = hitClips[random].volume * volume;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 1f;
+        audioSource.rolloffMode = AudioRolloffMode.Linear;
+        audioSource.maxDistance = 20;
+        audioSource.minDistance = 0;
+
+        audioSource.Play();
+
+
+        StartCoroutine(DestoryComponent(audioSource));
+    }
+    public void PlaySpawn(GameObject sourceObj)
+    {
+        AudioSource audioSource = sourceObj.AddComponent<AudioSource>();
+
+        audioSource.outputAudioMixerGroup = sfxAudioMixer;
+        audioSource.clip = spawn.clip;
+        audioSource.volume = spawn.volume;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 1f;
+        audioSource.rolloffMode = AudioRolloffMode.Linear;
+        audioSource.maxDistance = 20;
+        audioSource.minDistance = 0;
+
+        audioSource.Play();
+
+
+        StartCoroutine(DestoryComponent(audioSource));
+    }
+    public void PlayTreeShake(GameObject sourceObj)
+    {
+        AudioSource audioSource = sourceObj.AddComponent<AudioSource>();
+
+        audioSource.outputAudioMixerGroup = sfxAudioMixer;
+        audioSource.clip = treeShake.clip;
+        audioSource.volume = treeShake.volume;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 1f;
+        audioSource.rolloffMode = AudioRolloffMode.Linear;
+        audioSource.maxDistance = 20;
+        audioSource.minDistance = 0;
+
+        audioSource.Play();
+
+        StartCoroutine(DestoryComponent(audioSource));
+    }
+
+
+    IEnumerator DestoryComponent(AudioSource source)
+    {
+        yield return new WaitForSeconds(5f);
+        Destroy(source);
+    }
+
 
 
     //Ambient music

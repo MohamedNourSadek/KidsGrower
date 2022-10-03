@@ -10,7 +10,7 @@ public class AIStateMachine : MonoBehaviour
     List<StateInfo> myStates = new List<StateInfo>();
     int currentStateHash;
     bool isInitialized = false;
-    float timeSinceLastAction = 0;
+    [SerializeField] float timeSinceLastAction = 0;
 
     //Interface
     public void Initialize(Enum states)
@@ -60,7 +60,11 @@ public class AIStateMachine : MonoBehaviour
             }
             else
             {
-                timeSinceLastAction += Time.deltaTime;
+
+                MovementStatus state = (MovementStatus)GetCurrentState();
+
+                if(state != MovementStatus.Picked)
+                    timeSinceLastAction += Time.deltaTime;
             }
         }
 

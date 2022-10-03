@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using System;
 
-enum MovementStatus { Move, Picked, Idel, Explore, Sleep, Eat, Lay, Ball };
-enum BooleanStates { bored, tired, fruitNear, ballNear, alterNear, Picked }
+enum MovementStatus { Move, Picked, Idel, Explore, Sleep, Eat, Lay, Ball, Pet };
+enum BooleanStates { bored, tired, fruitNear, ballNear, alterNear, Picked, OnGround, Pet }
 enum TriggerStates { foundTarget, lostTarget, doneEating, doneLaying, doneSleeping, doneBalling, reached }
 
 
@@ -141,6 +141,7 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
         base.Pick(picker);
         myAgent.enabled = false;
         aiStateMachine.SetBool(BooleanStates.Picked, true);
+        handSystem.DropObject();
         UIGame.instance.UpateNpcUiElement(this.gameObject, "");
     }
     public override void Drop()
@@ -152,6 +153,9 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
     }
     public void StartPetting()
     {
+        aiStateMachine.SetBool(BooleanStates.Pet, true);
+        PlayerSystem.instance.LockPlayer(false);
+
         levelController.IncreaseXP(pettingXP);
         myBody.isKinematic = true;
         myBody.velocity = Vector3.zero;
@@ -163,6 +167,9 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
         {
             myBody.isKinematic = false;
             petting = false;
+
+            aiStateMachine.SetBool(BooleanStates.Pet, false);
+            PlayerSystem.instance.LockPlayer(true);
         }
     }
 
@@ -257,8 +264,8 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
                 if (obj != dynamicDestination)
                 {
                     if (obj.tag == "Tree" && obj.GetComponent<TreeSystem>().GotFruit())
-                        SetDes(obj);
-                    else if(obj.tag != "Tree")
+                        SetDes(obj); 
+                    else if (obj.tag != "Tree")
                         SetDes(obj);
                 }
             }
@@ -295,6 +302,7 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
                 ThinkaboutDroppingTheBall();
             }
 
+            aiStateMachine.SetBool(BooleanStates.OnGround, groundDetector.IsOnGroud(this.myBody));
 
             yield return new WaitForSecondsRealtime(decisionsDelay);
         }
@@ -415,7 +423,11 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
         if (detectable.tag == ("Tree"))
         {
             float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekTreeProb);
-            ThinkAboutFollowingObject(((TreeSystem)detectable).gameObject, parameter);
+
+            if (((TreeSystem)detectable).GotFruit())
+            {
+                ThinkAboutFollowingObject(((TreeSystem)detectable).gameObject, parameter);
+            }
         }
 
         if (detectable.tag == ("Fruit"))

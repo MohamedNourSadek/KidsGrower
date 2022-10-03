@@ -43,6 +43,10 @@ public class TreeSystem : MonoBehaviour, IDetectable, ISavable
     public void Shake()
     {
         animator.SetTrigger("Shake");
+
+        if (SoundManager.instance != null)
+            SoundManager.instance.PlayTreeShake(this.gameObject);
+
     }
 
     IEnumerator Seeding()
