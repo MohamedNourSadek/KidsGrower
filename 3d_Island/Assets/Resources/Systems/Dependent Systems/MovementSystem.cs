@@ -7,11 +7,11 @@ using UnityEngine;
 public class MovementSystem
 {
 
-    [SerializeField] GroundDetector groundDetector;
+    [SerializeField] public GroundDetector groundDetector;
 
     [Header("Movement Parameters")]
     [SerializeField] float acceleration;
-    [SerializeField] float maxSpeed;
+    [SerializeField] public float maxSpeed;
     [SerializeField] float rotationSpeed;
 
     [Header("Jump Parameters")]

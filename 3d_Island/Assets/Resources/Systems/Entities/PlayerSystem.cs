@@ -10,14 +10,21 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     //Editor Fields
     [SerializeField] float nearObjectDistance = 1f;
     [SerializeField] Rigidbody playerBody;
+    [SerializeField] Animator animatior;
     [SerializeField] MovementSystem movementSystem;
     [SerializeField] CameraSystem myCamera;
     [SerializeField] HandSystem handSystem;
     [SerializeField] DetectorSystem detector;
 
+    [Header("Animator Variables")]
+    [SerializeField] Vector2 animationLerpSpeed = new Vector2(1f,1f);
+
     public InventorySystem inventorySystem = null;
 
     public bool activeInput { get; set; }
+
+    Vector2 moveAnimtion;
+    float maxHeight = 2f;
 
 
     //Initialization and refreshable functions
@@ -41,10 +48,12 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         movementSystem.Update();
         detector.Update();
         handSystem.Update();
-        
+
         UpdateUi();
-
-
+    }
+    void Update()
+    {
+        UpdateAnimationParameters();
     }
     void UpdateUi()
     {
@@ -80,6 +89,17 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         UIGame.instance.JumpButton_Enable(movementSystem.IsOnGround());
         UIGame.instance.DashButton_Enable(movementSystem.IsDashable());
         UIGame.instance.PetButton_Enable(handSystem.canPet);
+    }
+    void UpdateAnimationParameters()
+    {
+        float finalMoveX = Mathf.Clamp01((playerBody.velocity.magnitude / movementSystem.maxSpeed));
+        float finalMoveY = movementSystem.IsOnGround() ? 0f : ((movementSystem.groundDetector.DistanceFromGround(this.playerBody) / maxHeight));
+
+        moveAnimtion.x = Mathf.Lerp(moveAnimtion.x, finalMoveX, Time.fixedDeltaTime * animationLerpSpeed.x);
+        moveAnimtion.y = Mathf.Lerp(moveAnimtion.y, finalMoveY, Time.fixedDeltaTime * animationLerpSpeed.y);
+
+        animatior.SetFloat("MoveX", moveAnimtion.x);
+        animatior.SetFloat("MoveY", moveAnimtion.y);
     }
 
 
@@ -144,6 +164,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         this.enabled = state;
         activeInput = state;
     }
+
 
 
 
@@ -215,7 +236,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     {
         return this.gameObject;
     }
-
     public bool GotNpcInHand()
     {
         if(handSystem.gotSomething && handSystem.GetObjectInHand().tag == "NPC")

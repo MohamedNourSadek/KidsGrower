@@ -32,13 +32,26 @@ public class GroundDetector
     {
         onGroundThreshold = thrus;
     }
+    public float DistanceFromGround(Rigidbody body)
+    {
+        RaycastHit ray;
 
+        Physics.Raycast(body.transform.position + Vector3.up, Vector2.down, out ray, 50f, detectableLayers);
+
+        if (ray.collider.tag == groundTag)
+        {
+            return (body.transform.position - ray.point).magnitude;
+        }
+        else
+        {
+            return -1f;
+        }
+    }
     bool DetectGround(Rigidbody body, string tag)
     {
         if (body.isKinematic == false)
         {
-            RaycastHit ray;
-            Physics.Raycast(body.transform.position + Vector3.up, Vector2.down, out ray, onGroundThreshold, detectableLayers);
+            RaycastHit ray = RayCaster(body);
 
             if ((ray.point.magnitude > 0) && (ray.collider.tag == tag))
                 return true;
@@ -50,4 +63,12 @@ public class GroundDetector
             return false;
         }
     }
+    public RaycastHit RayCaster(Rigidbody body)
+    {
+        RaycastHit ray;
+        Physics.Raycast(body.transform.position + Vector3.up, Vector2.down, out ray, onGroundThreshold, detectableLayers);
+        return ray;
+    }
+
+
 }
