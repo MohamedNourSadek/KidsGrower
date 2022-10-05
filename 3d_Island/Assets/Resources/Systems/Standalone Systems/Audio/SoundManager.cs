@@ -115,6 +115,25 @@ public class SoundManager : MonoBehaviour
 
         StartCoroutine(DestoryComponent(audioSource));
     }
+    public void PlayWalk(GameObject sourceObj, float volume)
+    {
+        int random = UnityEngine.Random.Range(0, walkClips.Count - 1);
+        AudioSource audioSource = sourceObj.AddComponent<AudioSource>();
+
+        audioSource.outputAudioMixerGroup = sfxAudioMixer;
+        audioSource.clip = walkClips[random].clip;
+        audioSource.volume = walkClips[random].volume * volume;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 1f;
+        audioSource.rolloffMode = AudioRolloffMode.Linear;
+        audioSource.maxDistance = 20;
+        audioSource.minDistance = 0;
+
+        audioSource.Play();
+
+
+        StartCoroutine(DestoryComponent(audioSource));
+    }
 
 
     IEnumerator DestoryComponent(AudioSource source)

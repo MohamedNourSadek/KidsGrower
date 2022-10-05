@@ -7,13 +7,19 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 {
     public static PlayerSystem instance;
 
+    [Header("References")]
+    [SerializeField] GameObject dashVFXAsset;
+    [SerializeField] GameObject jumpVFXAsset;
+
     //Editor Fields
+    [Header("Editor")]
     [SerializeField] float nearObjectDistance = 1f;
     [SerializeField] Rigidbody playerBody;
     [SerializeField] Animator animatior;
     [SerializeField] MovementSystem movementSystem;
     [SerializeField] CameraSystem myCamera;
     [SerializeField] HandSystem handSystem;
+    [SerializeField] LegSystem legSystem;
     [SerializeField] DetectorSystem detector;
 
     [Header("Animator Variables")]
@@ -39,6 +45,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         myCamera.Initialize(this.gameObject);
         detector.Initialize(nearObjectDistance);
         handSystem.Initialize(detector, this);
+        legSystem.Initialize(this);
 
         instance = this;
     }
@@ -103,7 +110,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
 
 
-
     //Interface 
     public void LoadData(SaveStructure saveData)
     {
@@ -128,7 +134,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
         return player_data;
     }
-
     public void DeployInventory(List<InventoryItem_Data> data)
     {
         foreach(var item in data)
@@ -167,7 +172,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
 
 
-
     ///(Movement-Input-Hand) Interface
     public void MoveInput(Vector2 _movementInput)
     {
@@ -180,6 +184,8 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     public void JumpInput()
     {
         movementSystem.PreformJump();
+        Instantiate(jumpVFXAsset, transform.position, jumpVFXAsset.transform.rotation);
+
     }
     public void PickInput()
     {
@@ -223,8 +229,8 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public void DashInput()
     {
-
         movementSystem.PerformDash();
+        Instantiate(dashVFXAsset, transform.position, Quaternion.Euler(this.transform.rotation.eulerAngles));
     }
     public void PetInput()
     {
