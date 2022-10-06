@@ -50,7 +50,7 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
 
 
     //Private data
-    List<GameObject> wantToFollow = new List<GameObject>();
+    public List<GameObject> wantToFollow = new List<GameObject>();
     NavMeshAgent myAgent;
     public float bornSince = 0f;
     bool petting = false;
@@ -251,6 +251,7 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
     //AI private variables
     Vector3 deltaExploration;
     public Transform dynamicDestination;
+
 
     //AI Decision Making
     IEnumerator AiDescrete()
@@ -466,7 +467,7 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
     }
 
 
-    //Algorithms
+    //Internal Algorithms
     IEnumerator Eating(Fruit fruit)
     {
         float time = 0;

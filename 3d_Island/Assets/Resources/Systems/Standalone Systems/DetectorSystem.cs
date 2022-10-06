@@ -124,7 +124,7 @@ public class DetectorSystem : MonoBehaviour
             else if (((MonoBehaviour)(DetectableInRange(element.tag))) != null)
             {
                 if (element.detectionStatus != DetectionStatus.InRange || element.notifyOnlyAtFirst == false)
-                    element.InvokeOnRange(DetectableInRange(element.tag));
+                    element.InvokeInRange(DetectableInRange(element.tag));
 
                 element.detectionStatus = DetectionStatus.InRange;
             }
@@ -245,7 +245,7 @@ public class DetectorSystem : MonoBehaviour
                 if (element.detectedList.Contains(detectable) == true)
                 {
                     element.detectedList.Remove(detectable);
-                    element.InvokeOnRangeExit(detectable);
+                    element.InvokeInRangeExit(detectable);
                 }
             }
         }

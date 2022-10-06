@@ -17,11 +17,11 @@ public class DetectableElement
     public event notifyInRangeExit OnInRangeExit;
     public event notifyNear OnNear;
 
-    public void InvokeOnRange(IDetectable detectable)
+    public void InvokeInRange(IDetectable detectable)
     {
         OnInRange?.Invoke(detectable);
     }
-    public void InvokeOnRangeExit(IDetectable detectable)
+    public void InvokeInRangeExit(IDetectable detectable)
     {
         OnInRangeExit?.Invoke(detectable);
     }
