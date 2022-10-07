@@ -367,14 +367,14 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
             else
                 aiStateMachine.SetBool(BooleanStates.fruitNear, false);
 
-            //See if there's a near ball that is clear to eat
-            if ((detector.GetNear("Ball") == null) && handSystem.GetObjectInHand() == null)
+            //See if there's a near ball that is clear to pick
+            if ((detector.GetNear("Ball") != null) && handSystem.GetObjectInHand() == null && !((Ball)detector.GetNear("Ball")).IsPicked())
                 aiStateMachine.SetBool(BooleanStates.ballNear, true);
             else
                 aiStateMachine.SetBool(BooleanStates.ballNear, false);
 
             //see if there's a near alter
-            if ((detector.GetNear("Alter") == null) && canLay)
+            if ((detector.GetNear("Alter") != null) && canLay)
                 aiStateMachine.SetBool(BooleanStates.alterNear, true);
             else
                 aiStateMachine.SetBool(BooleanStates.alterNear, false);

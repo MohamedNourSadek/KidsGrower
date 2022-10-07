@@ -82,10 +82,13 @@ public class DetectorSystem : MonoBehaviour
             {
                 IDetectable detectedObject = collider.GetComponent<IDetectable>();
 
-                if ((detectableInRange.Contains(detectedObject)) == false)
+                if (detectedObject != null)
                 {
-                    detectableInRange.Add(detectedObject);
-                    OnInRange?.Invoke(detectedObject);
+                    if ((detectableInRange.Contains(detectedObject)) == false)
+                    {
+                        detectableInRange.Add(detectedObject);
+                        OnInRange?.Invoke(detectedObject);
+                    }
                 }
             }
         }
@@ -98,20 +101,23 @@ public class DetectorSystem : MonoBehaviour
             {
                 IDetectable detectedObject = collider.GetComponent<IDetectable>();
 
-                //Case one: if it's near and added, do nothing.
-                //Case two: if it's near and not added, add it.
-                if ((detectableNear.Contains(detectedObject) == false) && (IsNear(detectedObject.GetGameObject()) == true))
+                if (detectedObject != null)
                 {
-                    detectableNear.Add(detectedObject);
-                    OnNear?.Invoke(detectedObject);
+                    //Case one: if it's near and added, do nothing.
+                    //Case two: if it's near and not added, add it.
+                    if ((detectableNear.Contains(detectedObject) == false) && (IsNear(detectedObject.GetGameObject()) == true))
+                    {
+                        detectableNear.Add(detectedObject);
+                        OnNear?.Invoke(detectedObject);
+                    }
+                    //Case three: if it's not near, and added, remove it.
+                    else if ((detectableNear.Contains(detectedObject) == true) && (IsNear(detectedObject.GetGameObject()) == false))
+                    {
+                        detectableNear.Remove(detectedObject);
+                        OnNearExit?.Invoke(detectedObject);
+                    }
+                    //Case four: if it's not near and not added, do nothing.
                 }
-                //Case three: if it's not near, and added, remove it.
-                else if((detectableNear.Contains(detectedObject) == true) && (IsNear(detectedObject.GetGameObject()) == false))
-                {
-                    detectableNear.Remove(detectedObject);
-                    OnNearExit?.Invoke(detectedObject);
-                }
-                //Case four: if it's not near and not added, do nothing.
             }
         }
     }
