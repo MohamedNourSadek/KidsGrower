@@ -650,6 +650,8 @@ MonoBehaviour:
   myBody: {fileID: 9093430107948229129}
   holder:
     myHand: {fileID: 0}
+    highlightToPick: 0
+    pickableTags: []
     throwForce: 20
     pickSpeedThrushold: 2
     petTime: 1
@@ -660,8 +662,13 @@ MonoBehaviour:
     canThrow: 0
     canPlant: 0
     canPet: 0
+    nearPickables: []
   handSystem:
     myHand: {fileID: 446940068}
+    highlightToPick: 0
+    pickableTags:
+    - Fruit
+    - Ball
     throwForce: 80
     pickSpeedThrushold: 10
     petTime: 1
@@ -672,6 +679,7 @@ MonoBehaviour:
     canThrow: 0
     canPlant: 0
     canPet: 0
+    nearPickables: []
   detector: {fileID: 2330463048917170657}
   groundDetector:
     detectableLayers:
@@ -713,6 +721,7 @@ MonoBehaviour:
     type: 3}
   deadNpcAsset: {fileID: 9093430107948232182, guid: 455b6c927cf47db4f8b61e656005cc5d,
     type: 3}
+  wantToFollow: []
   bornSince: 0
   dynamicDestination: {fileID: 0}
 --- !u!195 &5323626491861248105
@@ -1027,6 +1036,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
+      propertyPath: detectableTags.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
       propertyPath: whoCanIPick.Array.data[0]
       value: Fruit
       objectReference: {fileID: 0}
@@ -1044,6 +1058,51 @@ PrefabInstance:
         type: 3}
       propertyPath: _whoCanIPick.Array.data[1]
       value: Ball
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[0]
+      value: Fruit
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[1]
+      value: Ball
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[2]
+      value: NPC
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[3]
+      value: Tree
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[4]
+      value: Harvest
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[5]
+      value: Seed
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[6]
+      value: Xp Boost
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[7]
+      value: Egg
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[8]
+      value: Alter
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -43,7 +44,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
         movementSystem.Initialize(playerBody, myCamera.GetCameraTransform());
         myCamera.Initialize(this.gameObject);
-        detector.Initialize(nearObjectDistance);
+        detector.Initialize(nearObjectDistance, OnDetectableInRange, OnDetectableExit, OnDetectableNear, OnDetectableNearExit);
         handSystem.Initialize(detector, this);
         legSystem.Initialize(this);
 
@@ -53,7 +54,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     {
         myCamera.Update();
         movementSystem.Update();
-        detector.Update();
         handSystem.Update();
 
         UpdateUi();
@@ -68,7 +68,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
             UIGame.instance.PickDropButton_SwitchMode(PickMode.Drop);
         else if (handSystem.canPick)
             UIGame.instance.PickDropButton_SwitchMode(PickMode.Pick);
-        else if (handSystem.detector.GetDetectable("Tree").detectionStatus == DetectionStatus.VeryNear)
+        else if (handSystem.detector.GetNear("Tree") != null)
             UIGame.instance.PickDropButton_SwitchMode(PickMode.Shake);
         else
             UIGame.instance.PickDropButton_SwitchMode(PickMode.Pick);
@@ -76,7 +76,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
         bool _canShake = (!handSystem.canPick
                        && !handSystem.canDrop
-                       && (handSystem.detector.GetDetectable("Tree").detectionStatus == DetectionStatus.VeryNear));
+                       && (handSystem.detector.GetNear("Tree") != null));
 
         if (handSystem.canPick || handSystem.canDrop || _canShake)
             UIGame.instance.PickDropButton_Enable(true);
@@ -107,6 +107,21 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
         animatior.SetFloat("MoveX", moveAnimtion.x);
         animatior.SetFloat("MoveY", moveAnimtion.y);
+    }
+
+
+    //Detector events
+    void OnDetectableInRange(IDetectable detectable)
+    {
+    }
+    void OnDetectableExit(IDetectable detectable)
+    {
+    }
+    void OnDetectableNear(IDetectable detectable)
+    {
+    }
+    void OnDetectableNearExit(IDetectable detectable)
+    {
     }
 
 
@@ -208,9 +223,9 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
             handSystem.DropObject();
         }
-        else if(handSystem.detector.GetDetectable("Tree").detectionStatus == DetectionStatus.VeryNear)
+        else if((handSystem.detector.GetNear("Tree") != null))
         {
-            ((TreeSystem)(handSystem.detector.DetectableInRange("Tree"))).Shake();
+            ((TreeSystem)(handSystem.detector.GetNear("Tree"))).Shake();
         }
     }
     public void ThrowInput()

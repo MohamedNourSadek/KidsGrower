@@ -64,7 +64,7 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
 
         myAgent = GetComponent<NavMeshAgent>();
         myAgent.stoppingDistance = 0.9f * nearObjectDistance;
-        detector.Initialize(nearObjectDistance);
+        detector.Initialize(nearObjectDistance, OnDetectableInRange,OnDetectableExit,OnDetectableNear, OnDetectableNearExit);
         handSystem.Initialize(detector, this);
         groundDetector.Initialize();
         levelController.Initialize(OnLevelIncrease, OnXPIncrease);
@@ -73,13 +73,6 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
         aiStateMachine.Initialize((Enum)state);
 
         aIParameters = DataManager.instance.GetCurrentSession().aIParameters;
-
-        foreach (DetectableElement element in detector.detectableElements)
-        {
-            element.OnNear += OnDetectableNear;
-            element.OnInRange += OnDetectableInRange;
-            element.OnInRangeExit += OnDetectableExit;
-        }
 
         UIGame.instance.CreateNPCUi(this.gameObject, this.transform);
         UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
@@ -95,7 +88,6 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
     public void Update()
     {
         handSystem.Update();
-        detector.Update();
 
         if (groundDetector.IsOnWater(myBody))
             Die();
@@ -254,109 +246,6 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
 
 
     //AI Decision Making
-    IEnumerator AiDescrete()
-    {
-        while (true)
-        {
-            if (wantToFollow.Count >= 1)
-            {
-                GameObject obj = detector.GetHighestProp(wantToFollow);
-
-                if (obj != dynamicDestination)
-                {
-                    if (obj.tag == "Tree" && obj.GetComponent<TreeSystem>().GotFruit())
-                        SetDes(obj); 
-                    else if (obj.tag != "Tree")
-                        SetDes(obj);
-                }
-            }
-
-            float boredProb = AIParameter.GetValue(aIParameters, AIParametersNames.BoredTime);
-
-            if ((aiStateMachine.GetTimeSinceLastChange() >= boredProb))
-                aiStateMachine.SetBool(BooleanStates.tired, true);
-            else
-                aiStateMachine.SetBool(BooleanStates.tired, false);
-
-            if ((aiStateMachine.GetTimeSinceLastChange() >= (boredProb / 4f)) && (IsCurrentState(MovementStatus.Idel)))
-                aiStateMachine.SetBool(BooleanStates.bored, true);
-            else
-                aiStateMachine.SetBool(BooleanStates.bored, false);
-
-            //i got a throwable object (ball).
-            if (GotTypeInHand(typeof(Ball)))
-            {
-                if (detector.GetDetectable("Player").detectionStatus == DetectionStatus.InRange)
-                {
-                    float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.ThrowBallOnPlayerProb);
-
-                    ThinkAboutThrowing(((PlayerSystem)(detector.DetectableInRange("Player"))).gameObject, parameter);
-                }
-                if (detector.GetDetectable("NPC").detectionStatus == DetectionStatus.InRange)
-                {
-                    float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.ThrowBallOnNpcProb);
-
-                    ThinkAboutThrowing(((NPC)(detector.DetectableInRange("NPC"))).gameObject, parameter);
-                }
-
-                //No One is near
-                ThinkaboutDroppingTheBall();
-            }
-
-            aiStateMachine.SetBool(BooleanStates.OnGround, groundDetector.IsOnGroud(this.myBody));
-
-            yield return new WaitForSecondsRealtime(decisionsDelay);
-        }
-    }
-    IEnumerator AiContinous()
-    {
-        while (true)
-        {
-            if (IsCurrentState(MovementStatus.Move))
-            {
-                if (dynamicDestination && myAgent.isActiveAndEnabled)
-                    myAgent.destination = dynamicDestination.position;
-
-                CheckReached();
-            }
-            else if(IsCurrentState(MovementStatus.Explore))
-            {
-                CheckReached();
-            }
-
-            //Reactivate AI only if the npc were thrown and touched the ground and not being bet
-            if (groundDetector.IsOnGroud(myBody) && !petting)
-                myAgent.enabled = true;
-            else if (petting)
-                myAgent.enabled = false;
-
-            //When the ball is dropped
-            if( (IsCurrentState(MovementStatus.Ball)) && handSystem.GetObjectInHand() == null)
-            {
-                aiStateMachine.SetTrigger(TriggerStates.doneBalling);
-            }
-
-            //See if there's a near fruit that is clear to eat
-            if ((detector.GetDetectable("Fruit").detectionStatus == DetectionStatus.VeryNear) && handSystem.GetObjectInHand() == null && !((Fruit)detector.DetectableInRange("Fruit")).IsPicked())
-                aiStateMachine.SetBool(BooleanStates.fruitNear, true);
-            else
-                aiStateMachine.SetBool(BooleanStates.fruitNear, false);
-
-            //See if there's a near ball that is clear to eat
-            if ((detector.GetDetectable("Ball").detectionStatus == DetectionStatus.VeryNear) && handSystem.GetObjectInHand() == null)
-                aiStateMachine.SetBool(BooleanStates.ballNear, true);
-            else
-                aiStateMachine.SetBool(BooleanStates.ballNear, false);
-
-            //see if there's a near alter
-            if ((detector.GetDetectable("Alter").detectionStatus == DetectionStatus.VeryNear) && canLay)
-                aiStateMachine.SetBool(BooleanStates.alterNear, true);
-            else
-                aiStateMachine.SetBool(BooleanStates.alterNear, false);
-
-            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
-        }
-    }
     public void ActionExecution(Enum action)
     {
         MovementStatus state = (MovementStatus)action;
@@ -397,8 +286,100 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
         }
         else if (state == MovementStatus.Ball)
         {
-            if ((handSystem.GetNearest()).tag == "Ball" && (handSystem.GetObjectInHand() == null))
-                handSystem.PickObject();
+            if(handSystem.GetNearest() != null)
+                if ((handSystem.GetNearest()).tag == "Ball" && (handSystem.GetObjectInHand() == null))
+                    handSystem.PickObject();
+        }
+    }
+
+    IEnumerator AiDescrete()
+    {
+        while (true)
+        {
+            float boredProb = AIParameter.GetValue(aIParameters, AIParametersNames.BoredTime);
+
+            if ((aiStateMachine.GetTimeSinceLastChange() >= boredProb))
+                aiStateMachine.SetBool(BooleanStates.tired, true);
+            else
+                aiStateMachine.SetBool(BooleanStates.tired, false);
+
+            if ((aiStateMachine.GetTimeSinceLastChange() >= (boredProb / 4f)) && (IsCurrentState(MovementStatus.Idel)))
+                aiStateMachine.SetBool(BooleanStates.bored, true);
+            else
+                aiStateMachine.SetBool(BooleanStates.bored, false);
+
+            //i got a throwable object (ball).
+            if (GotTypeInHand(typeof(Ball)))
+            {
+                if (detector.GetInRange("Player") != null)
+                {
+                    float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.ThrowBallOnPlayerProb);
+
+                    ThinkAboutThrowing(((PlayerSystem)(detector.GetInRange("Player"))).gameObject, parameter);
+                }
+                else if (detector.GetInRange("NPC") != null)
+                {
+                    float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.ThrowBallOnNpcProb);
+
+                    ThinkAboutThrowing(((NPC)(detector.GetInRange("NPC"))).gameObject, parameter);
+                }
+                else
+                {
+                    //No One is near
+                    ThinkaboutDroppingTheBall();
+                }
+            }
+
+            aiStateMachine.SetBool(BooleanStates.OnGround, groundDetector.IsOnGroud(this.myBody));
+
+            yield return new WaitForSecondsRealtime(decisionsDelay);
+        }
+    }
+    IEnumerator AiContinous()
+    {
+        while (true)
+        {
+            if (IsCurrentState(MovementStatus.Move))
+            {
+                if (dynamicDestination && myAgent.isActiveAndEnabled)
+                    myAgent.destination = dynamicDestination.position;
+
+                CheckReached();
+            }
+            else if(IsCurrentState(MovementStatus.Explore))
+            {
+                CheckReached();
+            }
+
+            //Reactivate AI only if the npc were thrown and touched the ground and not being bet
+            if (groundDetector.IsOnGroud(myBody) && !petting)
+                myAgent.enabled = true;
+            else if (petting)
+                myAgent.enabled = false;
+
+            //When the ball is dropped
+            if( (IsCurrentState(MovementStatus.Ball)) && handSystem.GetObjectInHand() == null)
+                aiStateMachine.SetTrigger(TriggerStates.doneBalling);
+
+            //See if there's a near fruit that is clear to eat
+            if ((detector.GetNear("Fruit") != null) && handSystem.GetObjectInHand() == null && !((Fruit)detector.GetNear("Fruit")).IsPicked())
+                aiStateMachine.SetBool(BooleanStates.fruitNear, true);
+            else
+                aiStateMachine.SetBool(BooleanStates.fruitNear, false);
+
+            //See if there's a near ball that is clear to eat
+            if ((detector.GetNear("Ball") == null) && handSystem.GetObjectInHand() == null)
+                aiStateMachine.SetBool(BooleanStates.ballNear, true);
+            else
+                aiStateMachine.SetBool(BooleanStates.ballNear, false);
+
+            //see if there's a near alter
+            if ((detector.GetNear("Alter") == null) && canLay)
+                aiStateMachine.SetBool(BooleanStates.alterNear, true);
+            else
+                aiStateMachine.SetBool(BooleanStates.alterNear, false);
+
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
     }
     void OnDetectableInRange(IDetectable detectable)
@@ -464,6 +445,10 @@ public class NPC : Pickable, IController, IStateMachineController, ISavable
 
         if (detectable.tag == ("Tree"))
             ThinkAboutShakingTree((TreeSystem)detectable);
+    }
+    void OnDetectableNearExit(IDetectable detectable)
+    {
+
     }
 
 
