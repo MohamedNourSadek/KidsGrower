@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -37,6 +38,7 @@ public class HandSystem
     }
     public void Update()
     {
+        detector.CleanAllListsFromDestroyed();
         UpdatePickables();
 
         if (objectInHand == null)
@@ -218,9 +220,7 @@ public class HandSystem
             foreach (string tag in pickableTags)
             {
                 if (detectable.GetGameObject().tag == tag && highlightToPick)
-                {
                     detectable.GetGameObject().GetComponent<Pickable>().PickablilityIndicator(false);
-                }
             }
         }
 
@@ -231,9 +231,7 @@ public class HandSystem
             foreach(string tag in pickableTags)
             {
                 if(detectable.GetGameObject().tag == tag)
-                {
                     targetTag = true;
-                }
             }
 
             if(targetTag)

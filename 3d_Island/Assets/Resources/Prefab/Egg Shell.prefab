@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 6209485389897225773}
   - component: {fileID: 6598981076927460165}
   m_Layer: 0
-  m_Name: Egg Shell (1)
+  m_Name: Egg Shell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -60,11 +60,10 @@ public class AIStateMachine : MonoBehaviour
             }
             else
             {
+                //MovementStatus state = (MovementStatus)GetCurrentState();
 
-                MovementStatus state = (MovementStatus)GetCurrentState();
-
-                if(state != MovementStatus.Picked)
-                    timeSinceLastAction += Time.deltaTime;
+                //if(state != MovementStatus.Picked)
+                //      timeSinceLastAction += Time.deltaTime;
             }
         }
 

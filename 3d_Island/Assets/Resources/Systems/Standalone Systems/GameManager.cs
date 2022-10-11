@@ -259,6 +259,11 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         Instantiate(eggAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
+    public Egg SpawnEgg_ReturnEgg(Vector3 position)
+    {
+        return Instantiate(eggAsset.gameObject, position, Quaternion.identity).GetComponent<Egg>();
+    }
+
     public void SpawnSeed()
     {
         Instantiate(seedAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);

@@ -19,7 +19,10 @@ public class TreeSystem : MonoBehaviour, IDetectable, ISavable
     }
     public GameObject GetGameObject()
     {
-        return this.gameObject;
+        if (this.gameObject == null)
+            return null;
+        else 
+            return this.gameObject;
     }
     public void LoadData(SaveStructure savaData)
     {

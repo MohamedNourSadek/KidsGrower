@@ -9,7 +9,7 @@ public class NPC_Data : SaveStructure
     public nQuaternion rotation = new nQuaternion();
     public float bornSince = 0;
     public float xp = 0;
-
+    public float lastLaidSince = 50000;
     public static List<NPC_Data> GameToDate(NPC[] npcs)
     {
         List<NPC_Data> list = new List<NPC_Data>(); 

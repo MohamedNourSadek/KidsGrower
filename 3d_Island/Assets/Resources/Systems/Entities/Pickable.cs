@@ -10,7 +10,7 @@ public class Pickable : MonoBehaviour, IDetectable
     [SerializeField] protected Rigidbody myBody;
 
     public HandSystem holder;
-    protected bool isPicked = false;
+    public bool isPicked = false;
 
     public Rigidbody GetBody()
     {
@@ -72,7 +72,9 @@ public class Pickable : MonoBehaviour, IDetectable
         isPicked = false;
         myBody.isKinematic = false;
 
-        holder.ClearObjectInHand();
+        if(holder != null)
+            holder.ClearObjectInHand();
+
         holder = null;
 
         this.transform.parent = null;
@@ -80,6 +82,9 @@ public class Pickable : MonoBehaviour, IDetectable
     }
     public GameObject GetGameObject()
     {
-        return this.gameObject;
+        if (this.gameObject == null)    
+            return null;
+        else 
+            return this.gameObject;
     }
 }

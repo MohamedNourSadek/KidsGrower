@@ -663,6 +663,7 @@ MonoBehaviour:
     canPlant: 0
     canPet: 0
     nearPickables: []
+  isPicked: 0
   handSystem:
     myHand: {fileID: 446940068}
     highlightToPick: 0
@@ -701,16 +702,48 @@ MonoBehaviour:
   grownBodyMultiplier: 1.35
   grownMassMultiplier: 2
   nearObjectDistance: 1.25
-  decisionsDelay: 0.5
-  punchForce: 25
-  explorationAmplitude: 10
-  layingTimeInBetween: 10
+  punchForce: 10
   eatingXpPerUpdate: 1
   pettingXP: 100
+  maxFertilityAge: 100
+  decisionsDelay: 0.5
+  betweenLaysTime: 100
+  currentAction:
+    actionName: 
+    finalProp: 0
+    isDone: 0
+    subject: {fileID: 0}
+  actions: []
   layingTime: 10
-  eatTime: 10
-  aIParameters: []
-  aiStateMachine: {fileID: 5469732067356300806}
+  aIParameters:
+  - saveName: ThrowBallOnPlayerProb
+    value: 1
+  - saveName: ThrowBallOnNpcProb
+    value: 0
+  - saveName: SeekPlayerProb
+    value: 1
+  - saveName: SeekNpcProb
+    value: 1
+  - saveName: SeekBallProb
+    value: 0
+  - saveName: SeekTreeProb
+    value: 1
+  - saveName: SeekFruitProb
+    value: 1
+  - saveName: SeekAlterProb
+    value: 1
+  - saveName: PunchNpcProb
+    value: 1
+  - saveName: DropBallProb
+    value: 0
+  - saveName: SleepTime
+    value: 5
+  - saveName: BoredTime
+    value: 20
+  - saveName: DeathTime
+    value: 10000
+  - saveName: GrowTime
+    value: 2
   model: {fileID: 1199720211687785357}
   bodyRenderers:
   - {fileID: 8305583769596014011}
@@ -721,9 +754,9 @@ MonoBehaviour:
     type: 3}
   deadNpcAsset: {fileID: 9093430107948232182, guid: 455b6c927cf47db4f8b61e656005cc5d,
     type: 3}
-  wantToFollow: []
+  myAgent: {fileID: 0}
   bornSince: 0
-  dynamicDestination: {fileID: 0}
+  lastLaidSince: 50000
 --- !u!195 &5323626491861248105
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -913,18 +946,6 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 64eb4bb042c77594089d2608caf743bb, type: 3}
---- !u!114 &5469732067356300806 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7729608907899586430, guid: 64eb4bb042c77594089d2608caf743bb,
-    type: 3}
-  m_PrefabInstance: {fileID: 2354663579864076664}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f5e567070c26654e8bb38fdcec89e8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &5469732067356300808 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7729608907899586416, guid: 64eb4bb042c77594089d2608caf743bb,
@@ -948,21 +969,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4410002396949848161, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.3536
-      objectReference: {fileID: 0}
-    - target: {fileID: 4410002396949848161, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.3536
-      objectReference: {fileID: 0}
-    - target: {fileID: 4410002396949848161, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.3536
       objectReference: {fileID: 0}
     - target: {fileID: 4410002396949848161, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
@@ -1016,257 +1022,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
-      propertyPath: update
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _highLightPickable
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: whoCanIPick.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _whoCanIPick.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableTags.Array.size
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: whoCanIPick.Array.data[0]
-      value: Fruit
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: whoCanIPick.Array.data[1]
-      value: Ball
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _whoCanIPick.Array.data[0]
-      value: Fruit
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _whoCanIPick.Array.data[1]
-      value: Ball
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableTags.Array.data[0]
-      value: Fruit
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableTags.Array.data[1]
-      value: Ball
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableTags.Array.data[2]
-      value: NPC
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableTags.Array.data[3]
-      value: Tree
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableTags.Array.data[4]
-      value: Harvest
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableTags.Array.data[5]
-      value: Seed
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableTags.Array.data[6]
-      value: Xp Boost
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableTags.Array.data[7]
-      value: Egg
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableTags.Array.data[8]
-      value: Alter
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[0].Tag
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[0].tag
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[1].Tag
-      value: NPC
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[1].tag
-      value: NPC
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[2].Tag
-      value: Ball
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[2].tag
-      value: Ball
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[3].Tag
-      value: Fruit
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[3].tag
-      value: Fruit
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[4].Tag
-      value: Egg
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[4].tag
-      value: Egg
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[5].Tag
-      value: Alter
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[5].tag
-      value: Alter
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[6].Tag
-      value: Tree
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[6].tag
-      value: Tree
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[7].Tag
-      value: Seed
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[7].tag
-      value: Seed
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[0]._priority
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[1]._priority
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[2]._priority
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[3]._priority
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[4]._priority
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[5]._priority
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: detectableElements.Array.data[6]._priority
-      value: 47
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _detectableElements.Array.data[0]._priority
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _detectableElements.Array.data[0]._notifyOnlyAtFirst
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _detectableElements.Array.data[1]._notifyOnlyAtFirst
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _detectableElements.Array.data[2]._notifyOnlyAtFirst
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _detectableElements.Array.data[3]._notifyOnlyAtFirst
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _detectableElements.Array.data[4]._notifyOnlyAtFirst
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _detectableElements.Array.data[5]._notifyOnlyAtFirst
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _detectableElements.Array.data[6]._notifyOnlyAtFirst
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
-        type: 3}
-      propertyPath: _detectableElements.Array.data[7]._notifyOnlyAtFirst
+      propertyPath: logInfo
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

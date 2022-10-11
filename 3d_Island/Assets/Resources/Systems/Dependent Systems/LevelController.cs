@@ -7,7 +7,7 @@ public delegate void levelNotify();
 public delegate void xpNotify();
 
 [System.Serializable]
-class LevelController
+public class LevelController
 {
     [SerializeField] List<float> levelsXP = new List<float>();
     
@@ -30,6 +30,10 @@ class LevelController
     public float GetLevelToLevelsRation()
     {
         return ((GetLevel() * 1f) / levelsXP.Count);
+    }
+    public int GetLevelsCount()
+    {
+        return levelsXP.Count;
     }
     public Vector2 GetLevelLimits()
     {

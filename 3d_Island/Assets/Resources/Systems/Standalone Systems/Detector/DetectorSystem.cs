@@ -11,6 +11,8 @@ public delegate void notifyNear(IDetectable detectable);
 
 public class DetectorSystem : MonoBehaviour
 {
+    [SerializeField] bool logInfo;
+
     [SerializeField] List<string> detectableTags = new List<string>();
 
     [SerializeField] List<IDetectable> detectableInRange = new List<IDetectable>();
@@ -31,10 +33,25 @@ public class DetectorSystem : MonoBehaviour
         OnInRangeExit += rangeExit;
         OnNear += near;
         OnNearExit += nearExit;
+
+        if(logInfo)
+        {
+            OnInRange += OnRangeEnterLog;
+            OnInRangeExit += OnRangeExitLog;
+            OnNear += OnNearEnterLog;
+            OnNearExit += OnNearExitLog;
+        }
     }
     void Update()
     {
         CleanAllListsFromDestroyed();
+
+        if(logInfo)
+        {
+            LogAllInRangeOnZpressed();
+            LogAllNearOnVPressed();
+        }
+
     }
 
 
@@ -82,6 +99,9 @@ public class DetectorSystem : MonoBehaviour
             {
                 IDetectable detectedObject = collider.GetComponent<IDetectable>();
 
+                if(detectedObject == null)
+                    detectedObject = collider.GetComponentInParent<IDetectable>();
+
                 if (detectedObject != null)
                 {
                     if ((detectableInRange.Contains(detectedObject)) == false)
@@ -101,7 +121,11 @@ public class DetectorSystem : MonoBehaviour
             {
                 IDetectable detectedObject = collider.GetComponent<IDetectable>();
 
-                if (detectedObject != null)
+
+                if (detectedObject == null)
+                    detectedObject = collider.GetComponentInParent<IDetectable>();
+
+                if (detectedObject != null && detectedObject.GetGameObject() != null)
                 {
                     //Case one: if it's near and added, do nothing.
                     //Case two: if it's near and not added, add it.
@@ -129,6 +153,9 @@ public class DetectorSystem : MonoBehaviour
             {
                 IDetectable detectedObject = collider.GetComponent<IDetectable>();
 
+                if (detectedObject == null)
+                    detectedObject = collider.GetComponentInParent<IDetectable>();
+
                 if (detectableInRange.Contains(detectedObject))
                 {
                     detectableInRange.Remove(detectedObject);
@@ -140,7 +167,7 @@ public class DetectorSystem : MonoBehaviour
 
 
     //Internal Functions
-    void CleanAllListsFromDestroyed()
+    public void CleanAllListsFromDestroyed()
     {
         CleanListsFromDestroyedObjects(detectableInRange);
         CleanListsFromDestroyedObjects(detectableNear);
@@ -160,11 +187,56 @@ public class DetectorSystem : MonoBehaviour
     {
         return (_object.transform.position - this.transform.position).magnitude;
     }
-    bool IsNear(GameObject _object)
+    public bool IsNear(GameObject _object)
     {
         return Distance(_object) <= nearObjectDistance;
     }
+
+
+    //Logs
+    void OnRangeEnterLog(IDetectable detectable)
+    {
+        Debug.Log(detectable.tag + " has entered");
+    }
+    void OnRangeExitLog(IDetectable detectable)
+    {
+        Debug.Log(detectable.tag + " has exited");
+    }
+    void OnNearEnterLog(IDetectable detectable)
+    {
+        Debug.Log(detectable.tag + " is near");
+    }
+    void OnNearExitLog(IDetectable detectable)
+    {
+        Debug.Log(detectable.tag + " is not near anymore");
+    }
+    void LogAllInRangeOnZpressed()
+    {
+        if (Input.GetKeyDown("z"))
+        {
+            string message = "";
+            
+            foreach (IDetectable detectable in detectableInRange)
+                message += detectable.tag + "\t";
+
+            Debug.Log(message);
+        }
+    }
+
+    void LogAllNearOnVPressed()
+    {
+        if(Input.GetKeyDown("v"))
+        {
+            string message = "";
+
+            foreach (IDetectable detectable in detectableNear)
+                message += detectable.tag + "\t";
+
+            Debug.Log(message);
+        }
+    }
 }
+
 
 
 
