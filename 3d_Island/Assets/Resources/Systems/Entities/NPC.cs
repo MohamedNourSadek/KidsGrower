@@ -258,11 +258,14 @@ public class NPC : Pickable, IController, ISavable
 
                 if (currentAction == null)
                 {
+                    yield return new WaitForFixedUpdate();
                     continue;
                 }
                 else if (currentAction.subject == null)
                 {
                     currentAction.actionName = "";
+                 
+                    yield return new WaitForFixedUpdate();
                     continue;
                 }
                 else if(handSystem.GetObjectInHand())
@@ -300,13 +303,32 @@ public class NPC : Pickable, IController, ISavable
     }
     AbstractAction ReprioritizeActions()
     {
-        AbstractAction action = actions[0];
+        CleanFaultyActions();
 
-        foreach(AbstractAction act in actions)
-            if (act.GetPriority() > action.GetPriority())
-                action = act;
-        
-        return action;
+        if (actions.Count > 0)
+        {
+            AbstractAction action = actions[0];
+
+            foreach (AbstractAction act in actions)
+                if (act.GetPriority() > action.GetPriority())
+                    action = act;
+
+            return action;
+        }
+        else
+            return new AbstractAction(this.gameObject,this);
+
+    }
+    void CleanFaultyActions()
+    {
+        List<AbstractAction> faultyActions = new List<AbstractAction>();
+
+        foreach (AbstractAction act in actions)
+            if (act == null || act.actionName == "" || act.subject == null)
+                faultyActions.Add(act);
+
+        foreach (AbstractAction act in faultyActions)
+            actions.Remove(act);
     }
 
 
@@ -328,10 +350,9 @@ public class NPC : Pickable, IController, ISavable
         }
         else if (detectable.tag == "Alter")
         {
-            float growingUpTime = AIParameter.GetValue(aIParameters, AIParametersNames.GrowTime);
             float followAlter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekAlterProb);
 
-            if ((lastLaidSince >= betweenLaysTime) && (levelController.GetLevel() >= 3) && (bornSince >= growingUpTime) && FlipACoinWithProb(followAlter))
+            if (LayCondition() && FlipACoinWithProb(followAlter))
             {
                 AddAction(detectable, ActionTypes.Follow);
                 AddAction(detectable, ActionTypes.Lay);
@@ -418,6 +439,7 @@ public class NPC : Pickable, IController, ISavable
         {
             AbstractAction newAction = AbstractAction.ActionFactory(actionType, subject.GetGameObject(), this);
             actions.Add(newAction);
+
         }
     }
     void AbortAction(IDetectable subject)
@@ -486,6 +508,14 @@ public class NPC : Pickable, IController, ISavable
             }
         }
     }
+
+
+    public bool LayCondition()
+    {
+        float growingUpTime = AIParameter.GetValue(aIParameters, AIParametersNames.GrowTime);
+
+        return (lastLaidSince >= betweenLaysTime) && (levelController.GetLevel() >= 3) && (bornSince >= growingUpTime);
+    }
     bool FlipACoinWithProb(float prob)
     {
         float random = UnityEngine.Random.Range(0f, 1f);
@@ -495,6 +525,7 @@ public class NPC : Pickable, IController, ISavable
         else
             return false;
     }
+
     void OnDrawGizmos()
     {
         if(myAgent)

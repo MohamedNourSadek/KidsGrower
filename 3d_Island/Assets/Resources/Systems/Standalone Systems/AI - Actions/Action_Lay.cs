@@ -19,48 +19,50 @@ public class Action_Lay : AbstractAction
     }
     IEnumerator Lay()
     {
-        float time = 0;
-        ConditionChecker condition = new ConditionChecker(!myAgent.isPicked);
-        UIGame.instance.ShowRepeatingMessage("Laying", myAgent.transform, myAgent.layingTime, 15, condition);
-
-        //Laying
-        myAgent.GetBody().isKinematic = true;
-        myAgent.myAgent.enabled = false;
-
-        while (condition.isTrue)
+        if (myAgent.LayCondition())
         {
-            if (base.ShouldBreak())
-                break;
+            float time = 0;
+            ConditionChecker condition = new ConditionChecker(!myAgent.isPicked);
+            UIGame.instance.ShowRepeatingMessage("Laying", myAgent.transform, myAgent.layingTime, 15, condition);
 
-            time += Time.fixedDeltaTime;
+            //Laying
+            myAgent.GetBody().isKinematic = true;
+            myAgent.myAgent.enabled = false;
+            while (condition.isTrue)
+            {
+                if (base.ShouldBreak())
+                    break;
 
-            condition.Update((time <= myAgent.layingTime));
+                time += Time.fixedDeltaTime;
 
-            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+                condition.Update((time <= myAgent.layingTime));
+
+                yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+            }
+
+            //Done
+            if (!myAgent.isPicked)
+            {
+                myAgent.myAgent.enabled = true;
+                myAgent.GetBody().isKinematic = false;
+            }
+            if (time >= myAgent.layingTime)
+            {
+                Egg egg = GameManager.instance.SpawnEgg_ReturnEgg(myAgent.transform.position + Vector3.up);
+
+                float maxFertilityAge = myAgent.maxFertilityAge;
+
+                float maxValue = myAgent.levelController.GetLevelsCount() * maxFertilityAge;
+                float currentValue = myAgent.levelController.GetLevel() * myAgent.bornSince;
+
+                egg.SetRottenness(1f - (currentValue / maxValue));
+
+                myAgent.lastLaidSince = 0f;
+            }
+
+            condition.Update(false);
         }
 
-        //Done
-        if (!myAgent.isPicked)
-        {
-            myAgent.myAgent.enabled = true;
-            myAgent.GetBody().isKinematic = false;
-        }
-
-        if (time >= myAgent.layingTime)
-        {
-            Egg egg = GameManager.instance.SpawnEgg_ReturnEgg(myAgent.transform.position + Vector3.up);
-
-            float maxFertilityAge = myAgent.maxFertilityAge;
-
-            float maxValue = myAgent.levelController.GetLevelsCount() * maxFertilityAge;
-            float currentValue = myAgent.levelController.GetLevel() * myAgent.bornSince;
-
-            egg.SetRottenness(1f - (currentValue /maxValue));
-
-            myAgent.lastLaidSince = 0f;
-        }
-
-        condition.Update(false);
         isDone = true;
 
     }
