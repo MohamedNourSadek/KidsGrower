@@ -92,7 +92,6 @@ public class AbstractAction
         finalProp = GetSubjectPriority() * priority;
         return finalProp;
     }
-
 }
 
 

@@ -293,11 +293,11 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
                 data.xp.text = myNpc.GetXp().ToString() + " Xp";
                 data.level.text = "Level " + myNpc.GetLevel().ToString();
 
-                UIGame.instance.OpenMenuPanel("NPC Stats2");
+                UIGame.instance.OpenMenuPanel("NPC Stats1");
             }
             else
             {
-                UIGame.instance.OpenMenuPanel("Empty2");
+                UIGame.instance.OpenMenuPanel("Empty1");
             }
         }
     }

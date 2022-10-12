@@ -699,6 +699,10 @@ MonoBehaviour:
     - 2500
     - 3000
     - 3500
+    - 7000
+    - 11000
+    - 14000
+    - 18000
   grownBodyMultiplier: 1.35
   grownMassMultiplier: 2
   nearObjectDistance: 1.25

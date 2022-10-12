@@ -35,7 +35,7 @@ public class NPC : Pickable, IController, ISavable
 
 
     [Header("Saved Parameters")]
-    [SerializeField] public List<AIParameter> aIParameters = new List<AIParameter>();
+    [SerializeField] public List<AIParameter> aIParameters;
 
     [Header("References")]
     [SerializeField] GameObject model;
@@ -49,9 +49,10 @@ public class NPC : Pickable, IController, ISavable
     public float lastLaidSince = 50000f;
     bool petting = false;
     string saveName = "Nameless";
+    bool dataLoaded; 
 
     //Helper functions
-    void Awake()
+    void Start()
     {
         NPCsCount++;
 
@@ -62,10 +63,11 @@ public class NPC : Pickable, IController, ISavable
         groundDetector.Initialize();
         levelController.Initialize(OnLevelIncrease, OnXPIncrease);
 
-        aIParameters = DataManager.instance.GetCurrentSession().aIParameters;
-
         UIGame.instance.CreateNPCUi(this.gameObject, this.transform);
         UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
+
+        if(!dataLoaded)
+            aIParameters = new NPC_Data(DataManager.instance.GetCurrentSession().aiSet).aIParameters;
 
         base.StartCoroutine(GrowingUp());
         base.StartCoroutine(AiContinous());
@@ -108,14 +110,15 @@ public class NPC : Pickable, IController, ISavable
         bornSince = npc_data.bornSince;
         lastLaidSince = npc_data.lastLaidSince;
         levelController.IncreaseXP(npc_data.xp);
+        aIParameters = npc_data.aIParameters;
 
-        UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
+        dataLoaded = true;
 
         OnXPIncrease();
     }
     public NPC_Data GetData()
     {
-        NPC_Data npc_data = new NPC_Data();
+        NPC_Data npc_data = new NPC_Data(DataManager.instance.GetCurrentSession().aiSet);
 
         npc_data.name = saveName;
         npc_data.position = new nVector3(transform.position);
@@ -123,6 +126,7 @@ public class NPC : Pickable, IController, ISavable
         npc_data.bornSince = bornSince;
         npc_data.xp = levelController.GetXp();
         npc_data.lastLaidSince = lastLaidSince;
+        npc_data.aIParameters = aIParameters;
 
         return npc_data;
     }

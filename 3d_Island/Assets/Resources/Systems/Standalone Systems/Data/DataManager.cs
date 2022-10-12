@@ -42,7 +42,7 @@ public class DataManager : MonoBehaviour
     {
         dataCache = wholeData;
 
-        string data = JsonConvert.SerializeObject(wholeData);
+        string data = JsonConvert.SerializeObject(wholeData,Formatting.Indented);
 
         File.WriteAllText(path, Encypt(data));
     }

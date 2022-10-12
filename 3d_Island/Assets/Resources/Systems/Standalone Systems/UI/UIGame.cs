@@ -35,9 +35,6 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     [SerializeField] float buttonOffAlpha = 0.3f;
 
 
-    [Header("Ai Sliders")]
-    [SerializeField] List<AIParameterSlider> sliders = new List<AIParameterSlider>();
-
     [Header("UI Objects")]
     [SerializeField] NPCStatsUI npcStatsUI;
     [SerializeField] GameObject npcStatsEdit;
@@ -71,9 +68,6 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
 
         instance = this;
 
-        foreach (AIParameterSlider slider in sliders)
-            slider.Initialize();
-
         foreach(PanelsManager panelManager in PanelsManagers)
             panelManager.Initialize();
 
@@ -88,29 +82,6 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     {
         foreach (PanelsManager panelManager in PanelsManagers)
             panelManager.OnDrawGizmos();
-
-        //update sliders list to have a member for each name
-        if(sliders.Count != Enum.GetValues(typeof(AIParametersNames)).Length)
-        {
-            foreach (var parameter in Enum.GetValues(typeof(AIParametersNames)))
-            {
-                bool exists = false;
-
-                foreach(AIParameterSlider slider in sliders)
-                {
-                    if(slider.saveName == parameter.ToString())
-                    {
-                        exists = true;
-                    }
-                }
-
-                if(exists == false)
-                {
-                    sliders.Add(new AIParameterSlider() { saveName = parameter.ToString() , value = 0});
-                }
-            }
-
-        }
     }
     public void LoadSavedUISettings(SettingsData data)
     {
@@ -165,28 +136,6 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     public void PickDropButton_SwitchMode(PickMode _mode)
     {
         pickDropButtonImage_Text.text = _mode.ToString();
-    }
-    public void UpdateAISliders(List<AIParameter> aIParameters)
-    {
-        foreach(AIParameter parameter in aIParameters)
-        {
-            foreach(AIParameterSlider slider in sliders)
-            {
-                if(parameter.saveName == slider.saveName)
-                {
-                    slider.ChangeSlider(parameter.value);
-                }
-            }
-        }
-    }
-    public List<AIParameter> GetSlidersData()
-    {
-        List<AIParameter> parameters = new List<AIParameter>();
-
-        foreach (AIParameterSlider slider in sliders)
-            parameters.Add(new AIParameter() { saveName = slider.saveName, value = slider.value });
-
-        return parameters;
     }
     public void ChangeCustomizingIndicator(string text, Color color)
     {

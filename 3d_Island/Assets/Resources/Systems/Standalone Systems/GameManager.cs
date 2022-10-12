@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour, IInputUser
     Vector3 camCustomizingViewPos;
     Quaternion camCustomizingViewRot;
     AbstractMode modeHandler;
-    public List<AIParameter> aIParameters = new List<AIParameter>();
 
     public bool activeInput { get; set; }
 
@@ -107,10 +106,7 @@ public class GameManager : MonoBehaviour, IInputUser
                 tree_data.SpawnWithData(treeAsset, true);
         }
             
-
         sessionData.data.player.SpawnWithData(myPlayer.gameObject, false);
-
-        aIParameters = DataManager.instance.GetCurrentSession().aIParameters;
 
         SetAmbientVolume(settingsData.ambinetVolume);
         SetUIVolume(settingsData.uiVolume);
@@ -119,23 +115,6 @@ public class GameManager : MonoBehaviour, IInputUser
         SetShadows(settingsData.shadows);
 
         UIGame.instance.LoadSavedUISettings(settingsData);
-
-        ApplyAiParametersToGame();
-    }
-    void ApplyAiParametersToGame()
-    {
-        UIGame.instance.UpdateAISliders(aIParameters);
-
-        //Get all NPCs (In game or asset)
-        List<NPC> npcList = new List<NPC>();
-        foreach (NPC npc in FindObjectsOfType<NPC>())
-        {
-            npcList.Add(npc);
-        }
-        npcList.Add(npcAsset.GetComponent<NPC>());
-
-        foreach (NPC npc in npcList)
-            npc.aIParameters = aIParameters;
     }
     void Save()
     {
@@ -150,7 +129,6 @@ public class GameManager : MonoBehaviour, IInputUser
         sessionData.data.trees = Tree_Data.GameToDate(FindObjectsOfType<TreeSystem>());
         sessionData.data.player = Player_Data.GameToData(myPlayer);
         sessionData.modeData = modeHandler.GetModeData();
-        sessionData.aIParameters = aIParameters;
 
         DataManager.instance.GetSavedData().settings = UIGame.instance.GetSavedUI();
 
@@ -175,12 +153,6 @@ public class GameManager : MonoBehaviour, IInputUser
 
 
     //Settings
-    public void ApplyAiSlidersData()
-    {
-        aIParameters = UIGame.instance.GetSlidersData();
-
-        ApplyAiParametersToGame();
-    }
     public void SetCustomizing(bool state)
     {
         customizing = state;
