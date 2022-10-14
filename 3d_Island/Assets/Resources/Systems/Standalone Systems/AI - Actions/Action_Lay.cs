@@ -19,11 +19,11 @@ public class Action_Lay : AbstractAction
     }
     IEnumerator Lay()
     {
-        if (myAgent.LayCondition())
+        if (myAgent.character.CanLay())
         {
             float time = 0;
             ConditionChecker condition = new ConditionChecker(!myAgent.isPicked);
-            UIGame.instance.ShowRepeatingMessage("Laying", myAgent.transform, myAgent.layingTime, 15, condition);
+            UIGame.instance.ShowRepeatingMessage("Laying", myAgent.transform, myAgent.character.layingTime, 15, condition);
 
             //Laying
             myAgent.GetBody().isKinematic = true;
@@ -35,7 +35,7 @@ public class Action_Lay : AbstractAction
 
                 time += Time.fixedDeltaTime;
 
-                condition.Update((time <= myAgent.layingTime));
+                condition.Update((time <= myAgent.character.layingTime));
 
                 yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
             }
@@ -46,18 +46,13 @@ public class Action_Lay : AbstractAction
                 myAgent.myAgent.enabled = true;
                 myAgent.GetBody().isKinematic = false;
             }
-            if (time >= myAgent.layingTime)
+            if (time >= myAgent.character.layingTime)
             {
                 Egg egg = GameManager.instance.SpawnEgg_ReturnEgg(myAgent.transform.position + Vector3.up);
 
-                float maxFertilityAge = myAgent.maxFertilityAge;
+                egg.SetRottenness(myAgent.character.GetFertility());
 
-                float maxValue = myAgent.levelController.GetLevelsCount() * maxFertilityAge;
-                float currentValue = myAgent.levelController.GetLevel() * myAgent.bornSince;
-
-                egg.SetRottenness(1f - (currentValue / maxValue));
-
-                myAgent.lastLaidSince = 0f;
+                myAgent.character.lastLaidSince = 0f;
             }
 
             condition.Update(false);
@@ -66,4 +61,16 @@ public class Action_Lay : AbstractAction
         isDone = true;
 
     }
+}
+
+
+public class random
+{
+    public int id;
+    public int name;
+    public int des;
+
+
+
+
 }

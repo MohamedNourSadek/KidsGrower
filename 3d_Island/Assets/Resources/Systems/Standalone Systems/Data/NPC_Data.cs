@@ -11,14 +11,8 @@ public class NPC_Data : SaveStructure
     public float bornSince = 0;
     public float xp = 0;
     public float lastLaidSince = 50000;
-    public List<AIParameter> aIParameters = new List<AIParameter>();
+    public CharacterParameters characterParameters =  new CharacterParameters();
 
-
-    public NPC_Data(AiSet set)
-    {
-        foreach (var aiName in Enum.GetValues(typeof(AIParametersNames)))
-            aIParameters.Add(new AIParameter() { saveName = aiName.ToString(), value = AIParameter.GetParameterDefaultValue(aiName.ToString(), set) });
-    }
     public static List<NPC_Data> GameToDate(NPC[] npcs)
     {
         List<NPC_Data> list = new List<NPC_Data>(); 

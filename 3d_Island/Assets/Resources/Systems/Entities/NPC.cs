@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System;
-using UnityEngine.UI;
-using Unity.VisualScripting;
 
 public class NPC : Pickable, IController, ISavable
 {
@@ -15,27 +13,22 @@ public class NPC : Pickable, IController, ISavable
     [SerializeField] GroundDetector groundDetector;
 
     [Header("Growing Parameters")]
-    [SerializeField] public LevelController levelController;
     [SerializeField] float grownBodyMultiplier = 1.35f;
     [SerializeField] float grownMassMultiplier = 1.35f;
 
     [Header("Character parameters")]
+    [Header("Dynamic")]
+    [SerializeField] public CharacterParameters character;
+    [Header("Static")]
     [SerializeField] public float nearObjectDistance = 1f;
-    [SerializeField] public float punchForce = 120f;
     [SerializeField] public float eatingXpPerUpdate = 1f;
     [SerializeField] public float pettingXP = 100f;
-    [SerializeField] public float maxFertilityAge = 250f;
     [SerializeField] float decisionsDelay = 0.5f;
-    [SerializeField] float betweenLaysTime = 50f;
+
 
     [Header("AI")]
     [SerializeField] AbstractAction currentAction;
     [SerializeField] List<AbstractAction> actions = new List<AbstractAction>();
-    [SerializeField] public float layingTime = 10f;
-
-
-    [Header("Saved Parameters")]
-    [SerializeField] public List<AIParameter> aIParameters;
 
     [Header("References")]
     [SerializeField] GameObject model;
@@ -45,11 +38,7 @@ public class NPC : Pickable, IController, ISavable
     [SerializeField] GameObject deadNpcAsset;
 
     public NavMeshAgent myAgent;
-    public float bornSince = 0f;
-    public float lastLaidSince = 50000f;
     bool petting = false;
-    string saveName = "Nameless";
-    bool dataLoaded; 
 
     //Helper functions
     void Start()
@@ -61,13 +50,10 @@ public class NPC : Pickable, IController, ISavable
         detector.Initialize(nearObjectDistance, OnDetectableInRange, OnDetectableExit, OnDetectableNear, OnDetectableNearExit);
         handSystem.Initialize(detector, this);
         groundDetector.Initialize();
-        levelController.Initialize(OnLevelIncrease, OnXPIncrease);
+        character.levelControl.Initialize(OnLevelIncrease, OnXPIncrease);
 
         UIGame.instance.CreateNPCUi(this.gameObject, this.transform);
-        UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
-
-        if(!dataLoaded)
-            aIParameters = new NPC_Data(DataManager.instance.GetCurrentSession().aiSet).aIParameters;
+        UIGame.instance.UpateNpcUiElement(this.gameObject, character.saveName);
 
         base.StartCoroutine(GrowingUp());
         base.StartCoroutine(AiContinous());
@@ -91,7 +77,6 @@ public class NPC : Pickable, IController, ISavable
             myAgent.enabled = false;
     }
 
-
     //Interface
     public bool GotTypeInHand(Type type)
     {
@@ -104,29 +89,19 @@ public class NPC : Pickable, IController, ISavable
     {
         NPC_Data npc_data = (NPC_Data)saveData;
 
-        saveName = npc_data.name;
         transform.position = npc_data.position.GetVector();
         transform.rotation = npc_data.rotation.GetQuaternion();
-        bornSince = npc_data.bornSince;
-        lastLaidSince = npc_data.lastLaidSince;
-        levelController.IncreaseXP(npc_data.xp);
-        aIParameters = npc_data.aIParameters;
-
-        dataLoaded = true;
+        character = npc_data.characterParameters;
 
         OnXPIncrease();
     }
     public NPC_Data GetData()
     {
-        NPC_Data npc_data = new NPC_Data(DataManager.instance.GetCurrentSession().aiSet);
+        NPC_Data npc_data = new NPC_Data();
 
-        npc_data.name = saveName;
         npc_data.position = new nVector3(transform.position);
         npc_data.rotation = new nQuaternion(transform.rotation);
-        npc_data.bornSince = bornSince;
-        npc_data.xp = levelController.GetXp();
-        npc_data.lastLaidSince = lastLaidSince;
-        npc_data.aIParameters = aIParameters;
+        npc_data.characterParameters = character;
 
         return npc_data;
     }
@@ -141,13 +116,13 @@ public class NPC : Pickable, IController, ISavable
     public override void Drop()
     {
         base.Drop();
-        UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
+        UIGame.instance.UpateNpcUiElement(this.gameObject, character.saveName);
     }
     public void StartPetting()
     {
         PlayerSystem.instance.LockPlayer(false);
 
-        levelController.IncreaseXP(pettingXP);
+        character.levelControl.IncreaseXP(pettingXP);
         myBody.isKinematic = true;
         myBody.velocity = Vector3.zero;
         petting = true;
@@ -167,22 +142,18 @@ public class NPC : Pickable, IController, ISavable
     //Growing Up
     IEnumerator GrowingUp()
     {
-        float growingUpTime = AIParameter.GetValue(aIParameters, AIParametersNames.GrowTime);
-
-        while ((bornSince < growingUpTime))
+        while ((character.age < character.GrowTime))
         {
-            bornSince += Time.fixedDeltaTime;
+            character.age += Time.fixedDeltaTime;
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
         GrowUp();
 
-        float parameter = AIParameter.GetValue(aIParameters, AIParametersNames.DeathTime);
-
-        while ((bornSince < parameter))
+        while ((character.age < character.DeathTime))
         {
-            bornSince += Time.fixedDeltaTime;
-            lastLaidSince += Time.fixedDeltaTime;
+            character.age += Time.fixedDeltaTime;
+            character.lastLaidSince += Time.fixedDeltaTime;
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
 
@@ -202,7 +173,7 @@ public class NPC : Pickable, IController, ISavable
         var deadNPC = Instantiate(deadNpcAsset, this.transform.position, Quaternion.identity);
         UIGame.instance.DestroyNpcUiElement(this.gameObject);
         UIGame.instance.ShowRepeatingMessage("Death!!", deadNPC.transform, 2f, 4f, new ConditionChecker(true));
-        UIGame.instance.ShowDeclare(saveName + " has Died!");
+        UIGame.instance.ShowDeclare(character.saveName + " has Died!");
 
         Destroy(this.gameObject);
     }
@@ -215,26 +186,26 @@ public class NPC : Pickable, IController, ISavable
     public void OnLevelIncrease()
     {
         UIGame.instance.ShowRepeatingMessage("Level Up", this.transform, 0.5f, 4, new ConditionChecker(true));
-        UIGame.instance.ShowDeclare(saveName + " has Leveled Up!");
+        UIGame.instance.ShowDeclare(character.saveName + " has Leveled Up!");
     }
     public void ChangeName(string newName, bool inUi)
     {
-        saveName = newName;
+        character.saveName = newName;
 
         if (inUi)
-            UIGame.instance.UpateNpcUiElement(this.gameObject, saveName);
+            UIGame.instance.UpateNpcUiElement(this.gameObject, character.saveName);
     }
     public string GetName()
     {
-        return saveName;
+        return character.saveName;
     }
     public int GetLevel()
     {
-        return levelController.GetLevel();
+        return character.levelControl.GetLevel();
     }
     public float GetXp()
     {
-        return levelController.GetXp();
+        return character.levelControl.GetXp();
     }
 
 
@@ -323,17 +294,7 @@ public class NPC : Pickable, IController, ISavable
             return new AbstractAction(this.gameObject,this);
 
     }
-    void CleanFaultyActions()
-    {
-        List<AbstractAction> faultyActions = new List<AbstractAction>();
 
-        foreach (AbstractAction act in actions)
-            if (act == null || act.actionName == "" || act.subject == null)
-                faultyActions.Add(act);
-
-        foreach (AbstractAction act in faultyActions)
-            actions.Remove(act);
-    }
 
 
     //AI - Intercepting Information
@@ -343,9 +304,7 @@ public class NPC : Pickable, IController, ISavable
         {
             if (((Fruit)detectable).OnGround())
             {
-                float followFruit = AIParameter.GetValue(aIParameters, AIParametersNames.SeekFruitProb);
-
-                if(FlipACoinWithProb(followFruit))
+                if(FlipACoinWithProb(character.SeekFruitProb))
                 {
                     AddAction(detectable, ActionTypes.Follow);
                     AddAction(detectable, ActionTypes.Eat);
@@ -354,9 +313,7 @@ public class NPC : Pickable, IController, ISavable
         }
         else if (detectable.tag == "Alter")
         {
-            float followAlter = AIParameter.GetValue(aIParameters, AIParametersNames.SeekAlterProb);
-
-            if (LayCondition() && FlipACoinWithProb(followAlter))
+            if (character.CanLay() && FlipACoinWithProb(character.SeekAlterProb))
             {
                 AddAction(detectable, ActionTypes.Follow);
                 AddAction(detectable, ActionTypes.Lay);
@@ -364,9 +321,8 @@ public class NPC : Pickable, IController, ISavable
         }
         else if (detectable.tag == "Ball")
         {
-            float followBall = AIParameter.GetValue(aIParameters, AIParametersNames.SeekBallProb);
 
-            if ((((Ball)detectable).IsPicked() == false) && FlipACoinWithProb(followBall))
+            if ((((Ball)detectable).IsPicked() == false) && FlipACoinWithProb(character.SeekBallProb))
             {
                 AddAction(detectable, ActionTypes.Follow);
                 AddAction(detectable, ActionTypes.Pick);
@@ -374,34 +330,31 @@ public class NPC : Pickable, IController, ISavable
         }
         else if ((detectable.tag == "Player"))
         {
-            float followPlayer = AIParameter.GetValue(aIParameters, AIParametersNames.SeekPlayerProb);
-            float throwAtPlayer = AIParameter.GetValue(aIParameters, AIParametersNames.ThrowBallOnPlayerProb);
-
             if ((handSystem.GetObjectInHand() != null) && (handSystem.GetObjectInHand().tag == "Ball"))
             {
-                if(FlipACoinWithProb(throwAtPlayer))
+                if(FlipACoinWithProb(character.ThrowBallOnPlayerProb))
                     AddAction(detectable, ActionTypes.Throw);
             }
             else
             {
-                if (FlipACoinWithProb(followPlayer))
+                if (FlipACoinWithProb(character.PunchProb) && FlipACoinWithProb(character.SeekPlayerProb))
+                {
                     AddAction(detectable, ActionTypes.Follow);
+                    AddAction(detectable, ActionTypes.Punch);
+                }
             }
         }
         else if ((detectable.tag == "NPC"))
         {
-            float followNPC = AIParameter.GetValue(aIParameters, AIParametersNames.SeekNpcProb);
-            float punchNPC = AIParameter.GetValue(aIParameters, AIParametersNames.PunchNpcProb);
-            float throwAtNPC = AIParameter.GetValue(aIParameters, AIParametersNames.ThrowBallOnNpcProb);
 
             if ((handSystem.GetObjectInHand() != null) && (handSystem.GetObjectInHand().tag == "Ball"))
             {
-                if (FlipACoinWithProb(throwAtNPC))
+                if (FlipACoinWithProb(character.ThrowBallOnNpcProb))
                     AddAction(detectable, ActionTypes.Throw);
             }
             else
             {
-                if (FlipACoinWithProb(punchNPC) && FlipACoinWithProb(followNPC))
+                if (FlipACoinWithProb(character.PunchProb) && FlipACoinWithProb(character.SeekNpcProb))
                 {
                     AddAction(detectable, ActionTypes.Follow);
                     AddAction(detectable, ActionTypes.Punch);
@@ -412,9 +365,7 @@ public class NPC : Pickable, IController, ISavable
         }
         else if ((detectable.tag == "Tree"))
         {
-            float followTree = AIParameter.GetValue(aIParameters, AIParametersNames.SeekTreeProb);
-
-            if (((TreeSystem)detectable).GotFruit() && FlipACoinWithProb(followTree))
+            if (((TreeSystem)detectable).GotFruit() && FlipACoinWithProb(character.SeekTreeProb))
             {
                 AddAction(detectable, ActionTypes.Follow);
                 AddAction(detectable, ActionTypes.Shake);
@@ -443,7 +394,6 @@ public class NPC : Pickable, IController, ISavable
         {
             AbstractAction newAction = AbstractAction.ActionFactory(actionType, subject.GetGameObject(), this);
             actions.Add(newAction);
-
         }
     }
     void AbortAction(IDetectable subject)
@@ -514,12 +464,8 @@ public class NPC : Pickable, IController, ISavable
     }
 
 
-    public bool LayCondition()
-    {
-        float growingUpTime = AIParameter.GetValue(aIParameters, AIParametersNames.GrowTime);
+    //Functions
 
-        return (lastLaidSince >= betweenLaysTime) && (levelController.GetLevel() >= 3) && (bornSince >= growingUpTime);
-    }
     bool FlipACoinWithProb(float prob)
     {
         float random = UnityEngine.Random.Range(0f, 1f);
@@ -529,7 +475,17 @@ public class NPC : Pickable, IController, ISavable
         else
             return false;
     }
+    void CleanFaultyActions()
+    {
+        List<AbstractAction> faultyActions = new List<AbstractAction>();
 
+        foreach (AbstractAction act in actions)
+            if (act == null || act.actionName == "" || act.subject == null)
+                faultyActions.Add(act);
+
+        foreach (AbstractAction act in faultyActions)
+            actions.Remove(act);
+    }
     void OnDrawGizmos()
     {
         if(myAgent)

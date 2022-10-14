@@ -37,6 +37,7 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
 
     [Header("UI Objects")]
     [SerializeField] NPCStatsUI npcStatsUI;
+    [SerializeField] ListAttributeUI characterAttributesUI;
     [SerializeField] GameObject npcStatsEdit;
     [SerializeField] TextMeshProUGUI npcStatsName;
     [SerializeField] Image pickDropButtonImage;
@@ -48,8 +49,6 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     [SerializeField] Text pickDropButtonImage_Text;
     [SerializeField] Text customizeDebugger;
     [SerializeField] GameObject designMenus;
-    [SerializeField] Button nextButton;
-    [SerializeField] Button previousButton;
     [SerializeField] public TextMeshProUGUI countDownText;
     [SerializeField] GameObject savingText;
     [SerializeField] GameObject delcareUIAsset;
@@ -154,11 +153,15 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     {
         return npcStatsName.text;
     }
+    public void UpdateFullNPCStats(CharacterParameters data)
+    {
+        characterAttributesUI.UpdateUI(data);
+    }
 
 
 
     ///////// In Game UI ///////////////
-    
+
     //NonReferenced Messages (Once done, you can't access them)
     public void ShowPopUpMessage(string header, string message, string button, UnityAction onPress)
     {
@@ -314,20 +317,6 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     {
         PanelsManager.TogglePanel(menuInfo, PanelsManagers, false);
     }
-    public void ShowIncrementPage(int incrementTimesManagerNum)
-    {
-        int _managerNumber = Mathf.Abs(incrementTimesManagerNum);
-        
-        int _increment = incrementTimesManagerNum / Mathf.Abs(incrementTimesManagerNum);
-
-        string _targetPanel = PanelsManagers[_managerNumber].GetPanelRelativeToActive(_increment);
-
-        var _directions = PanelsManagers[_managerNumber].GetPossibleDirection(PanelsManagers[_managerNumber].GetActivePage() + _increment);
-
-        UpdateNextPrevious(_directions);
-
-        PanelsManagers[_managerNumber].OpenMenuPanel(_targetPanel, true);
-    }
     public IEnumerator SavingUI()
     {
         savingText.SetActive(true);
@@ -385,11 +374,6 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
 
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }
-    }
-    void UpdateNextPrevious(ListPossibleDirections directions)
-    {
-        previousButton.interactable = directions.Previous;
-        nextButton.interactable = directions.Next;
     }
     IEnumerator TranslateUiElement(GameObject _object, Transform parent)
     {

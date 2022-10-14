@@ -301,5 +301,12 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
             }
         }
     }
+    public void UpdateFullStats()
+    {
+        NPC npc = ((NPC)handSystem.GetObjectInHand());
+
+        if (npc != null)
+            UIGame.instance.UpdateFullNPCStats(npc.character);
+    }
 
 }

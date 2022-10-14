@@ -39,7 +39,7 @@ public class MenuManager : MonoBehaviour
     {
         var _time = System.DateTime.Now;
 
-        SessionData sessionData = new SessionData(UIMenu.instance.GetSaveNameAndRefresh(), DataManager.instance.GetCurrentMode(), _time.ToString(), UIMenu.instance.GetDifficulty());
+        SessionData sessionData = new SessionData(UIMenu.instance.GetSaveNameAndRefresh(), DataManager.instance.GetCurrentMode(), _time.ToString());
 
         DataManager.instance.Add(sessionData);
 

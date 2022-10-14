@@ -9,11 +9,15 @@ public delegate void xpNotify();
 [System.Serializable]
 public class LevelController
 {
-    [SerializeField] List<float> levelsXP = new List<float>();
-    
-    
-    int currentLevel = 0;
-    float currentXp = 0;
+    public int currentLevel = 0;
+    public float currentXp = 0;
+
+
+    static List<float> levelsXP = new List<float>()
+    {
+        500, 1000, 1500, 2000f, 3000f, 5000f, 7500f, 15000f, 20000f, 25000f
+    };
+
     event levelNotify OnLevelChange;
     event xpNotify OnXpChange;
 
@@ -73,8 +77,6 @@ public class LevelController
         if (_oldLevel != _newLevel)
             OnLevelChange?.Invoke();
     }
-
-
     void ComputeLevel()
     {
         int _level = 0;

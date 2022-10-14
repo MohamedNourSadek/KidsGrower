@@ -21,7 +21,7 @@ public class Action_Punch : AbstractAction
     IEnumerator Punch()
     {
         Vector3 direction = (subject.transform.position - myAgent.transform.position).normalized;
-        subject.GetComponent<Rigidbody>().AddForce(direction * myAgent.punchForce, ForceMode.VelocityChange);
+        subject.GetComponent<Rigidbody>().AddForce(direction * myAgent.character.punchForce, ForceMode.VelocityChange);
         yield return new WaitForSeconds(1f);
         isDone = true;
     }

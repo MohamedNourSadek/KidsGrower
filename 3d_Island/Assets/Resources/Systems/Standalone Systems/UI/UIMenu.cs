@@ -11,7 +11,6 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     public static UIMenu instance;
 
     [SerializeField] PanelsManager panelsManager;
-    [SerializeField] BackgroundAnimation backgroundAnimation;
     [SerializeField] PostProcessingFunctions postProcessingFunctions;
 
     [Header("References")]
@@ -23,8 +22,6 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     [SerializeField] TMP_InputField saveNameInput;
     [SerializeField] Button createSave;
     [SerializeField] TextMeshProUGUI inputHint;
-    [SerializeField] Slider difficultySlider;
-    [SerializeField] TextMeshProUGUI difficultyText;
 
     List<GameObject> savesUi = new List<GameObject>();
     GameObject selected;
@@ -38,12 +35,10 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
     }
     void Start()
     {
-        backgroundAnimation.Initialize();
         panelsManager.Initialize();
         postProcessingFunctions.Initialize();
         postProcessingFunctions.SetBlur(true);
         saveNameInput.onValueChanged.AddListener(SaveNameVaildator);
-        difficultySlider.onValueChanged.AddListener(OnDifficultySliderValueChange);
 
         UpdateSavesUI();
     }
@@ -115,44 +110,9 @@ public class UIMenu : MonoBehaviour, IPanelsManagerUser
         else
             return null;
     }
-    public AiSet GetDifficulty()
-    {
-        if (difficultySlider.value >= 0f && difficultySlider.value <= 0.33f)
-        {
-            return AiSet.Easy;
-        }
-        else if (difficultySlider.value > 0.33f && difficultySlider.value <= 0.66f)
-        {
-            return AiSet.Medium;
-        }
-        else if (difficultySlider.value > 0.66f && difficultySlider.value <= 1f)
-        {
-            return AiSet.Hard;
-        }
-
-        return AiSet.Default;
-    }
 
 
     //internal
-    void OnDifficultySliderValueChange(float _value)
-    {
-        if (_value >= 0f && _value <= 0.33f)
-        {
-            difficultySlider.value = 0f;
-            difficultyText.text = "Easy";
-        }
-        else if (_value > 0.33f && _value <= 0.66f)
-        {
-            difficultySlider.value = 0.5f;
-            difficultyText.text = "Medium";
-        }
-        else if(_value > 0.66f && _value <= 1f)
-        {
-            difficultySlider.value = 1f;
-            difficultyText.text = "Hard";
-        }
-    }
     void ClearOldUI()
     {
         foreach (GameObject saveUi in savesUi)

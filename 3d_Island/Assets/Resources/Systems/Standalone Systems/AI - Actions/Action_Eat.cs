@@ -51,7 +51,7 @@ public class Action_Eat : AbstractAction
 
                 condition.Update(fruitInHand && hasEnergy);
 
-                myAgent.levelController.IncreaseXP(fruit.GetEnergy());
+                myAgent.character.levelControl.IncreaseXP(fruit.GetEnergy());
 
                 yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
             }
