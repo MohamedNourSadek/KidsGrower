@@ -281,7 +281,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public void NPCPick(bool pickNotDrop, Pickable obj)
     {
-        if (obj.tag == "NPC")
+        if (obj != null && obj.tag == "NPC")
         {
             NPC myNpc = obj.GetComponent<NPC>();
 

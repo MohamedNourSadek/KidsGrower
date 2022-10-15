@@ -689,37 +689,36 @@ MonoBehaviour:
     groundTag: Ground
     waterTag: Water
     onGroundThreshold: 1.3
-  grownBodyMultiplier: 1.35
-  grownMassMultiplier: 2
   character:
     levelControl:
       currentLevel: 0
       currentXp: 0
     saveName: Nameless
-    bornSince: 0
+    age: 0
     lastLaidSince: 0
-    ThrowBallOnPlayerProb: 0
-    ThrowBallOnNpcProb: 0
-    SeekPlayerProb: 0
-    SeekNpcProb: 0
-    SeekBallProb: 0
-    SeekTreeProb: 1
-    SeekFruitProb: 1
-    SeekAlterProb: 1
-    PunchNpcProb: 0
-    DropBallProb: 0
-    SleepTime: 20
-    BoredTime: 100
-    DeathTime: 10000
-    GrowTime: 20
+    seekAlterProb: 1
+    maxFertilityAge: 1000
+    betweenLaysTime: 5000
+    minLevelToLay: 3
+    layingTime: 10
+    seekNpcProb: 0
+    seekPlayerProb: 0
+    seekTreeProb: 1
+    seekFruitProb: 1
+    seekBallProb: 0
+    dropBallProb: 0
+    throwBallOnPlayerProb: 0
+    throwBallOnNpcProb: 0
+    punchProb: 0
+    speed: 0.75
+    punchForce: 10
+    sleepTime: 20
+    deathTime: 10000
+    growTime: 20
   nearObjectDistance: 1.25
-  punchForce: 10
   eatingXpPerUpdate: 1
   pettingXP: 100
-  maxFertilityAge: 100
   decisionsDelay: 0.5
-  betweenLaysTime: 5000
-  layingTime: 10
   currentAction:
     actionName: 
     finalProp: 0
@@ -727,11 +726,13 @@ MonoBehaviour:
     subject: {fileID: 0}
   actions: []
   model: {fileID: 1199720211687785357}
-  bodyRenderers:
-  - {fileID: 8305583769596014011}
-  - {fileID: 607431845769732624}
-  - {fileID: 7217209510144174357}
-  grownMaterial: {fileID: 2100000, guid: 538a8383122d24149a03360542b0a990, type: 2}
+  childMaterial: {fileID: 2100000, guid: 538a8383122d24149a03360542b0a990, type: 2}
+  grownMassMultiplier: 2
+  initialScale: {x: 1.5, y: 1.5, z: 1.5}
+  finalScale: {x: 2, y: 2, z: 2}
+  aggressiveColor: {r: 1, g: 0.3869257, b: 0, a: 1}
+  extrovertColor: {r: 0, g: 1, b: 0.3567233, a: 1}
+  normalColor: {r: 0, g: 0.68246466, b: 0.745283, a: 1}
   eggAsset: {fileID: 6876410436286045249, guid: 2a45eb92fac01c14d8af05a147bc6e5e,
     type: 3}
   deadNpcAsset: {fileID: 9093430107948232182, guid: 455b6c927cf47db4f8b61e656005cc5d,

@@ -27,6 +27,7 @@ public class Egg : Plantable, ISavable
         egg_data.position = new nVector3(transform.position);
         egg_data.rottenness = rottenness;
         egg_data.rotation = new nQuaternion(transform.rotation);
+
         return egg_data;
     }
 

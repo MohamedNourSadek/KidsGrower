@@ -12,10 +12,6 @@ public class NPC : Pickable, IController, ISavable
     [SerializeField] DetectorSystem detector;
     [SerializeField] GroundDetector groundDetector;
 
-    [Header("Growing Parameters")]
-    [SerializeField] float grownBodyMultiplier = 1.35f;
-    [SerializeField] float grownMassMultiplier = 1.35f;
-
     [Header("Character parameters")]
     [Header("Dynamic")]
     [SerializeField] public CharacterParameters character;
@@ -30,10 +26,17 @@ public class NPC : Pickable, IController, ISavable
     [SerializeField] AbstractAction currentAction;
     [SerializeField] List<AbstractAction> actions = new List<AbstractAction>();
 
-    [Header("References")]
+    [Header("Appearance")]
     [SerializeField] GameObject model;
-    [SerializeField] List<MeshRenderer> bodyRenderers;
-    [SerializeField] Material grownMaterial;
+    [SerializeField] Material childMaterial;
+    [SerializeField] float grownMassMultiplier = 1.35f;
+    [SerializeField] Vector3 initialScale = new Vector3(1f, 1f, 1f);
+    [SerializeField] Vector3 finalScale = new Vector3(5f, 5f, 5f);
+    [SerializeField] Color aggressiveColor = Color.red;
+    [SerializeField] Color extrovertColor = Color.red;
+    [SerializeField] Color normalColor = Color.blue;
+
+    [Header("References")]
     [SerializeField] GameObject eggAsset;
     [SerializeField] GameObject deadNpcAsset;
 
@@ -63,9 +66,10 @@ public class NPC : Pickable, IController, ISavable
     {
         NPCsCount--;
     }
-    public void Update()
+    void Update()
     {
         handSystem.Update();
+        UpdateChildAppearance();
 
         if (groundDetector.IsOnWater(myBody))
             Die();
@@ -76,6 +80,7 @@ public class NPC : Pickable, IController, ISavable
         else if (petting)
             myAgent.enabled = false;
     }
+
 
     //Interface
     public bool GotTypeInHand(Type type)
@@ -142,7 +147,7 @@ public class NPC : Pickable, IController, ISavable
     //Growing Up
     IEnumerator GrowingUp()
     {
-        while ((character.age < character.GrowTime))
+        while ((character.age < character.growTime))
         {
             character.age += Time.fixedDeltaTime;
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
@@ -150,7 +155,7 @@ public class NPC : Pickable, IController, ISavable
 
         GrowUp();
 
-        while ((character.age < character.DeathTime))
+        while ((character.age < character.deathTime))
         {
             character.age += Time.fixedDeltaTime;
             character.lastLaidSince += Time.fixedDeltaTime;
@@ -163,10 +168,6 @@ public class NPC : Pickable, IController, ISavable
     void GrowUp()
     {
         myBody.mass = grownMassMultiplier * myBody.mass;
-        model.transform.localScale = grownBodyMultiplier * model.transform.localScale;
-
-        foreach (MeshRenderer mesh in bodyRenderers)
-            mesh.material = grownMaterial;
     }
     void Die()
     {
@@ -226,7 +227,6 @@ public class NPC : Pickable, IController, ISavable
         while(true)
         {
             //Execute Actions
-
             if (currentAction.actionName == "" && actions.Count > 0 && !isPicked)
             {
                 currentAction = ReprioritizeActions();
@@ -263,7 +263,6 @@ public class NPC : Pickable, IController, ISavable
 
                 currentAction.actionName = "";
             }
-
             yield return new WaitForFixedUpdate();
         }
     }
@@ -304,7 +303,7 @@ public class NPC : Pickable, IController, ISavable
         {
             if (((Fruit)detectable).OnGround())
             {
-                if(FlipACoinWithProb(character.SeekFruitProb))
+                if(FlipACoinWithProb(character.seekFruitProb))
                 {
                     AddAction(detectable, ActionTypes.Follow);
                     AddAction(detectable, ActionTypes.Eat);
@@ -313,7 +312,7 @@ public class NPC : Pickable, IController, ISavable
         }
         else if (detectable.tag == "Alter")
         {
-            if (character.CanLay() && FlipACoinWithProb(character.SeekAlterProb))
+            if (character.CanLay() && FlipACoinWithProb(character.seekAlterProb))
             {
                 AddAction(detectable, ActionTypes.Follow);
                 AddAction(detectable, ActionTypes.Lay);
@@ -322,7 +321,7 @@ public class NPC : Pickable, IController, ISavable
         else if (detectable.tag == "Ball")
         {
 
-            if ((((Ball)detectable).IsPicked() == false) && FlipACoinWithProb(character.SeekBallProb))
+            if ((((Ball)detectable).IsPicked() == false) && FlipACoinWithProb(character.seekBallProb))
             {
                 AddAction(detectable, ActionTypes.Follow);
                 AddAction(detectable, ActionTypes.Pick);
@@ -332,12 +331,12 @@ public class NPC : Pickable, IController, ISavable
         {
             if ((handSystem.GetObjectInHand() != null) && (handSystem.GetObjectInHand().tag == "Ball"))
             {
-                if(FlipACoinWithProb(character.ThrowBallOnPlayerProb))
+                if(FlipACoinWithProb(character.throwBallOnPlayerProb))
                     AddAction(detectable, ActionTypes.Throw);
             }
             else
             {
-                if (FlipACoinWithProb(character.PunchProb) && FlipACoinWithProb(character.SeekPlayerProb))
+                if (FlipACoinWithProb(character.punchProb) && FlipACoinWithProb(character.seekPlayerProb))
                 {
                     AddAction(detectable, ActionTypes.Follow);
                     AddAction(detectable, ActionTypes.Punch);
@@ -349,12 +348,12 @@ public class NPC : Pickable, IController, ISavable
 
             if ((handSystem.GetObjectInHand() != null) && (handSystem.GetObjectInHand().tag == "Ball"))
             {
-                if (FlipACoinWithProb(character.ThrowBallOnNpcProb))
+                if (FlipACoinWithProb(character.throwBallOnNpcProb))
                     AddAction(detectable, ActionTypes.Throw);
             }
             else
             {
-                if (FlipACoinWithProb(character.PunchProb) && FlipACoinWithProb(character.SeekNpcProb))
+                if (FlipACoinWithProb(character.punchProb) && FlipACoinWithProb(character.seekNpcProb))
                 {
                     AddAction(detectable, ActionTypes.Follow);
                     AddAction(detectable, ActionTypes.Punch);
@@ -365,7 +364,7 @@ public class NPC : Pickable, IController, ISavable
         }
         else if ((detectable.tag == "Tree"))
         {
-            if (((TreeSystem)detectable).GotFruit() && FlipACoinWithProb(character.SeekTreeProb))
+            if (((TreeSystem)detectable).GotFruit() && FlipACoinWithProb(character.seekTreeProb))
             {
                 AddAction(detectable, ActionTypes.Follow);
                 AddAction(detectable, ActionTypes.Shake);
@@ -465,7 +464,14 @@ public class NPC : Pickable, IController, ISavable
 
 
     //Functions
-
+    void UpdateChildAppearance()
+    {
+        float ageFactor = character.age / character.deathTime;
+        model.transform.localScale = initialScale + (ageFactor * (finalScale-initialScale));
+        
+        Color finalColor = (aggressiveColor * extrovertColor);
+        childMaterial.color = Color.Lerp(childMaterial.color, extrovertColor, character.GetExtroversion());
+    }
     bool FlipACoinWithProb(float prob)
     {
         float random = UnityEngine.Random.Range(0f, 1f);
