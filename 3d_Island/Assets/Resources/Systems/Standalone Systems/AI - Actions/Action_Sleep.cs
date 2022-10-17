@@ -19,9 +19,11 @@ public class Action_Sleep : AbstractAction
     IEnumerator Sleep()
     {
         float time = 0;
+        float sleepTime = myAgent.character.GetSleepTime();
+
         ConditionChecker condition = new ConditionChecker(!myAgent.isPicked);
 
-        UIGame.instance.ShowRepeatingMessage("Sleeping", myAgent.transform, myAgent.character.sleepTime, 15, condition);
+        UIGame.instance.ShowRepeatingMessage("Sleeping", myAgent.transform, sleepTime, 15, condition);
 
         //sleep
         myAgent.GetBody().isKinematic = true;
@@ -33,7 +35,7 @@ public class Action_Sleep : AbstractAction
                 break;
 
             time += Time.fixedDeltaTime;
-            condition.Update((time <= myAgent.character.sleepTime) && !myAgent.isPicked && !isDone);
+            condition.Update((time <= sleepTime) && !myAgent.isPicked && !isDone);
 
             yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
         }

@@ -27,14 +27,26 @@ public class NPC : Pickable, IController, ISavable
     [SerializeField] List<AbstractAction> actions = new List<AbstractAction>();
 
     [Header("Appearance")]
-    [SerializeField] GameObject model;
-    [SerializeField] Material childMaterial;
+    [SerializeField] MeshRenderer upperBody;
+    [SerializeField] MeshRenderer face;
+    [SerializeField] MeshRenderer downBody;
+    [SerializeField] List<MeshRenderer> handsLegs;
+    [SerializeField] List<GameObject> horns;
+
+
+    [Header("Scale")]
+    [SerializeField] GameObject wholeBody;
     [SerializeField] float grownMassMultiplier = 1.35f;
     [SerializeField] Vector3 initialScale = new Vector3(1f, 1f, 1f);
     [SerializeField] Vector3 finalScale = new Vector3(5f, 5f, 5f);
-    [SerializeField] Color aggressiveColor = Color.red;
-    [SerializeField] Color extrovertColor = Color.red;
-    [SerializeField] Color normalColor = Color.blue;
+
+    [Header("Colors")]
+    [SerializeField] Color normalColor = Color.white;
+    [SerializeField] Color extrovertColor;
+    [SerializeField] Color fertilityColor;
+    [SerializeField] Color powerColor;
+    [SerializeField] Color healthColor;
+
 
     [Header("References")]
     [SerializeField] GameObject eggAsset;
@@ -70,6 +82,7 @@ public class NPC : Pickable, IController, ISavable
     {
         handSystem.Update();
         UpdateChildAppearance();
+        ApplyCharacterParameters();
 
         if (groundDetector.IsOnWater(myBody))
             Die();
@@ -303,7 +316,7 @@ public class NPC : Pickable, IController, ISavable
         {
             if (((Fruit)detectable).OnGround())
             {
-                if(FlipACoinWithProb(character.seekFruitProb))
+                if(FlipACoinWithProb(character.GetExtroversion()))
                 {
                     AddAction(detectable, ActionTypes.Follow);
                     AddAction(detectable, ActionTypes.Eat);
@@ -321,7 +334,7 @@ public class NPC : Pickable, IController, ISavable
         else if (detectable.tag == "Ball")
         {
 
-            if ((((Ball)detectable).IsPicked() == false) && FlipACoinWithProb(character.seekBallProb))
+            if ((((Ball)detectable).IsPicked() == false) && FlipACoinWithProb(character.GetExtroversion()))
             {
                 AddAction(detectable, ActionTypes.Follow);
                 AddAction(detectable, ActionTypes.Pick);
@@ -331,15 +344,16 @@ public class NPC : Pickable, IController, ISavable
         {
             if ((handSystem.GetObjectInHand() != null) && (handSystem.GetObjectInHand().tag == "Ball"))
             {
-                if(FlipACoinWithProb(character.throwBallOnPlayerProb))
+                if(FlipACoinWithProb(character.GetAggressiveness()))
                     AddAction(detectable, ActionTypes.Throw);
             }
             else
             {
-                if (FlipACoinWithProb(character.punchProb) && FlipACoinWithProb(character.seekPlayerProb))
+                if (FlipACoinWithProb(character.GetExtroversion()))
                 {
                     AddAction(detectable, ActionTypes.Follow);
-                    AddAction(detectable, ActionTypes.Punch);
+                    if (FlipACoinWithProb(character.GetAggressiveness()))
+                        AddAction(detectable, ActionTypes.Punch);
                 }
             }
         }
@@ -348,23 +362,24 @@ public class NPC : Pickable, IController, ISavable
 
             if ((handSystem.GetObjectInHand() != null) && (handSystem.GetObjectInHand().tag == "Ball"))
             {
-                if (FlipACoinWithProb(character.throwBallOnNpcProb))
+                if (FlipACoinWithProb(character.GetAggressiveness()))
                     AddAction(detectable, ActionTypes.Throw);
             }
             else
             {
-                if (FlipACoinWithProb(character.punchProb) && FlipACoinWithProb(character.seekNpcProb))
+                if (FlipACoinWithProb(character.GetExtroversion()))
                 {
                     AddAction(detectable, ActionTypes.Follow);
-                    AddAction(detectable, ActionTypes.Punch);
-                }
 
+                    if (FlipACoinWithProb(character.GetAggressiveness()))
+                        AddAction(detectable, ActionTypes.Punch);
+                }
             }
 
         }
         else if ((detectable.tag == "Tree"))
         {
-            if (((TreeSystem)detectable).GotFruit() && FlipACoinWithProb(character.seekTreeProb))
+            if (((TreeSystem)detectable).GotFruit() && FlipACoinWithProb(character.GetExtroversion()))
             {
                 AddAction(detectable, ActionTypes.Follow);
                 AddAction(detectable, ActionTypes.Shake);
@@ -467,10 +482,28 @@ public class NPC : Pickable, IController, ISavable
     void UpdateChildAppearance()
     {
         float ageFactor = character.age / character.deathTime;
-        model.transform.localScale = initialScale + (ageFactor * (finalScale-initialScale));
-        
-        Color finalColor = (aggressiveColor * extrovertColor);
-        childMaterial.color = Color.Lerp(childMaterial.color, extrovertColor, character.GetExtroversion());
+        wholeBody.transform.localScale = initialScale + (ageFactor * (finalScale-initialScale));
+
+        //face
+        face.material.color = Color.Lerp(normalColor, healthColor, character.GetHealth());
+
+        //upper
+        upperBody.material.color = Color.Lerp(normalColor, extrovertColor, character.GetExtroversion());
+
+        //down
+        downBody.material.color = Color.Lerp(normalColor, fertilityColor, character.GetFertility());
+
+        //Horns
+        foreach (GameObject obj in horns)
+            obj.transform.localScale = new Vector3(obj.transform.localScale.x, 0, obj.transform.localScale.z) + (Vector3.up * character.GetAggressiveness());
+
+        //hands and legs
+        foreach (MeshRenderer renderer in handsLegs)
+            renderer.material.color = Color.Lerp(normalColor, powerColor, character.GetPower());
+    }
+    void ApplyCharacterParameters()
+    {
+        myAgent.speed = character.GetSpeed();
     }
     bool FlipACoinWithProb(float prob)
     {
