@@ -9,8 +9,8 @@ public class Pickable : MonoBehaviour, IDetectable
     [SerializeField] protected GameObject indicatorObject;
     [SerializeField] protected Rigidbody myBody;
 
-    public HandSystem holder;
-    public bool isPicked = false;
+    [System.NonSerialized] public HandSystem holder;
+    [System.NonSerialized] public bool isPicked = false;
 
     public Rigidbody GetBody()
     {

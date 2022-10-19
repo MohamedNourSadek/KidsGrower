@@ -29,7 +29,7 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     [SerializeField] GameObject itemsParent;
     [SerializeField] GameObject inventoryElementUIAsset;
 
-    [Header("Ui parameters")]
+    [Header("UI parameters")]
 
     [SerializeField] float buttonOnAlpha = 1f;
     [SerializeField] float buttonOffAlpha = 0.3f;

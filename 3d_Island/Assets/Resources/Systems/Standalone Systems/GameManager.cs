@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour, IInputUser
     [SerializeField] NPC npcAsset;
     [SerializeField] Light mainLight;
     [SerializeField] List<Terrain> terrains;
-
+    [SerializeField] GameObject deadchild;
 
     public static GameManager instance;
     CustomizingState customizingState = CustomizingState.Detecting;
@@ -230,6 +230,10 @@ public class GameManager : MonoBehaviour, IInputUser
     public void SpawnEgg()
     {
         Instantiate(eggAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+    }
+    public GameObject SpawnDeadBody_ReturnDeadBody(Vector3 position)
+    {
+        return Instantiate(deadchild, position, Quaternion.identity);
     }
     public Egg SpawnEgg_ReturnEgg(Vector3 position)
     {

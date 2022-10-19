@@ -11,11 +11,16 @@ public class NPC : Pickable, IController, ISavable
     [SerializeField] public HandSystem handSystem;
     [SerializeField] DetectorSystem detector;
     [SerializeField] GroundDetector groundDetector;
+    [SerializeField] AppearanceControl appearanceControl;
+    [SerializeField] FacialControl facialControl;
+    [SerializeField] Animator animator;
+    [SerializeField] float animationLerpSpeed = 1f;
 
     [Header("Character parameters")]
     [Header("Dynamic")]
     [SerializeField] public CharacterParameters character;
     [Header("Static")]
+    [SerializeField] float grownMassMultiplier = 1.35f;
     [SerializeField] public float nearObjectDistance = 1f;
     [SerializeField] public float eatingXpPerUpdate = 1f;
     [SerializeField] public float pettingXP = 100f;
@@ -26,34 +31,11 @@ public class NPC : Pickable, IController, ISavable
     [SerializeField] AbstractAction currentAction;
     [SerializeField] List<AbstractAction> actions = new List<AbstractAction>();
 
-    [Header("Appearance")]
-    [SerializeField] MeshRenderer upperBody;
-    [SerializeField] MeshRenderer face;
-    [SerializeField] MeshRenderer downBody;
-    [SerializeField] List<MeshRenderer> handsLegs;
-    [SerializeField] List<GameObject> horns;
 
-
-    [Header("Scale")]
-    [SerializeField] GameObject wholeBody;
-    [SerializeField] float grownMassMultiplier = 1.35f;
-    [SerializeField] Vector3 initialScale = new Vector3(1f, 1f, 1f);
-    [SerializeField] Vector3 finalScale = new Vector3(5f, 5f, 5f);
-
-    [Header("Colors")]
-    [SerializeField] Color normalColor = Color.white;
-    [SerializeField] Color extrovertColor;
-    [SerializeField] Color fertilityColor;
-    [SerializeField] Color powerColor;
-    [SerializeField] Color healthColor;
-
-
-    [Header("References")]
-    [SerializeField] GameObject eggAsset;
-    [SerializeField] GameObject deadNpcAsset;
-
-    public NavMeshAgent myAgent;
+    //Internal
+    [System.NonSerialized] public NavMeshAgent myAgent;
     bool petting = false;
+    float moveAnimtion = 0f;
 
     //Helper functions
     void Start()
@@ -64,6 +46,8 @@ public class NPC : Pickable, IController, ISavable
         myAgent.stoppingDistance = 0.9f * nearObjectDistance;
         detector.Initialize(nearObjectDistance, OnDetectableInRange, OnDetectableExit, OnDetectableNear, OnDetectableNearExit);
         handSystem.Initialize(detector, this);
+        appearanceControl.Initialize(this);
+
         groundDetector.Initialize();
         character.levelControl.Initialize(OnLevelIncrease, OnXPIncrease);
 
@@ -81,8 +65,9 @@ public class NPC : Pickable, IController, ISavable
     void Update()
     {
         handSystem.Update();
-        UpdateChildAppearance();
+        appearanceControl.UpdateAppearance();
         ApplyCharacterParameters();
+        UpdateAnimationParameters();
 
         if (groundDetector.IsOnWater(myBody))
             Die();
@@ -184,7 +169,7 @@ public class NPC : Pickable, IController, ISavable
     }
     void Die()
     {
-        var deadNPC = Instantiate(deadNpcAsset, this.transform.position, Quaternion.identity);
+        var deadNPC = GameManager.instance.SpawnDeadBody_ReturnDeadBody(this.transform.position);
         UIGame.instance.DestroyNpcUiElement(this.gameObject);
         UIGame.instance.ShowRepeatingMessage("Death!!", deadNPC.transform, 2f, 4f, new ConditionChecker(true));
         UIGame.instance.ShowDeclare(character.saveName + " has Died!");
@@ -208,18 +193,6 @@ public class NPC : Pickable, IController, ISavable
 
         if (inUi)
             UIGame.instance.UpateNpcUiElement(this.gameObject, character.saveName);
-    }
-    public string GetName()
-    {
-        return character.saveName;
-    }
-    public int GetLevel()
-    {
-        return character.levelControl.GetLevel();
-    }
-    public float GetXp()
-    {
-        return character.levelControl.GetXp();
     }
 
 
@@ -479,27 +452,12 @@ public class NPC : Pickable, IController, ISavable
 
 
     //Functions
-    void UpdateChildAppearance()
+    void UpdateAnimationParameters()
     {
-        float ageFactor = character.age / character.deathTime;
-        wholeBody.transform.localScale = initialScale + (ageFactor * (finalScale-initialScale));
-
-        //face
-        face.material.color = Color.Lerp(normalColor, healthColor, character.GetHealth());
-
-        //upper
-        upperBody.material.color = Color.Lerp(normalColor, extrovertColor, character.GetExtroversion());
-
-        //down
-        downBody.material.color = Color.Lerp(normalColor, fertilityColor, character.GetFertility());
-
-        //Horns
-        foreach (GameObject obj in horns)
-            obj.transform.localScale = new Vector3(obj.transform.localScale.x, 0, obj.transform.localScale.z) + (Vector3.up * character.GetAggressiveness());
-
-        //hands and legs
-        foreach (MeshRenderer renderer in handsLegs)
-            renderer.material.color = Color.Lerp(normalColor, powerColor, character.GetPower());
+        Vector2 horizontalVelocity = new Vector2(myAgent.velocity.x, myAgent.velocity.z);
+        float finalMoveX = Mathf.Clamp01((horizontalVelocity.magnitude / character.maxSpeed));
+        moveAnimtion = Mathf.Lerp(moveAnimtion, finalMoveX, Time.fixedDeltaTime * animationLerpSpeed);
+        animator.SetFloat("MoveX", moveAnimtion);
     }
     void ApplyCharacterParameters()
     {
