@@ -161,14 +161,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
                     inventorySystem.Add(Obj, false);
                 }
             }
-            else if(item.itemTag == "Xp Boost")
-            {
-                for (int i = 0; i < item.amount; i++)
-                {
-                    var Obj = GameManager.instance.SpawnXPGiver().GetComponent<IInventoryItem>();
-                    inventorySystem.Add(Obj, false);
-                }
-            }
         }
 
     }
@@ -184,7 +176,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         this.enabled = state;
         activeInput = state;
     }
-
 
 
     ///(Movement-Input-Hand) Interface

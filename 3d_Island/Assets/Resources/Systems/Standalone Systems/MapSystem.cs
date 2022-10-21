@@ -19,5 +19,9 @@ public class MapSystem : MonoBehaviour
         var _randomLocation = Random.Range(0, explorationPoints.Count);
         return explorationPoints[_randomLocation].transform.position;
     }
+    public List<Transform> GetExplorationPoints()
+    {
+        return explorationPoints;
+    }
 
 }

@@ -13,4 +13,9 @@ public class GameData
     public List<Harvest_Data> harvests = new List<Harvest_Data>();
     public List<Seed_Data> seeds = new List<Seed_Data>();
     public List<Tree_Data> trees = new List<Tree_Data>();
+    public List<FertilityBoost_Data> fertilityBoosts = new List<FertilityBoost_Data>();
+    public List<ExtroversionBoost_Data> extroversionBoosts = new List<ExtroversionBoost_Data>();
+    public List<AggressivenessBoost_Data> aggressivenessBoosts = new List<AggressivenessBoost_Data>();
+    public List<PowerBoost_Data> powerboosts = new List<PowerBoost_Data>();
+    public List<HealthBoost_Data> healthboosts = new List<HealthBoost_Data>();
 }

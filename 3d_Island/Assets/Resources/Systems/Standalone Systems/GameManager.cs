@@ -16,7 +16,11 @@ public class GameManager : MonoBehaviour, IInputUser
     [SerializeField] GameObject ballAsset;
     [SerializeField] GameObject fruitAsset;
     [SerializeField] GameObject harvestAsset;
-    [SerializeField] GameObject xpGiverAsset;
+    [SerializeField] GameObject fertilityBoostAsset;
+    [SerializeField] GameObject extroversionBoostAsset;
+    [SerializeField] GameObject aggressivenessBoostAsset;
+    [SerializeField] GameObject powerBoostAsset;
+    [SerializeField] GameObject healthBoostAsset;
     [SerializeField] GameObject seedAsset;
     [SerializeField] GameObject treeAsset;
     [SerializeField] NPC npcAsset;
@@ -94,8 +98,23 @@ public class GameManager : MonoBehaviour, IInputUser
         foreach (Seed_Data seed_data in sessionData.data.seeds)
             seed_data.SpawnWithData(seedAsset, true);
 
+        foreach (FertilityBoost_Data boost in sessionData.data.fertilityBoosts)
+            boost.SpawnWithData(fertilityBoostAsset, true);
+
+        foreach(ExtroversionBoost_Data boost in sessionData.data.extroversionBoosts)
+            boost.SpawnWithData(extroversionBoostAsset, true);
+
+        foreach (AggressivenessBoost_Data boost in sessionData.data.aggressivenessBoosts)
+            boost.SpawnWithData(aggressivenessBoostAsset, true);
+
+        foreach (PowerBoost_Data boost in sessionData.data.powerboosts)
+            boost.SpawnWithData(powerBoostAsset, true);
+
+        foreach (HealthBoost_Data boost in sessionData.data.healthboosts)
+            boost.SpawnWithData(healthBoostAsset, true);
+
         //tree is Done differently because it exists by default
-        if(sessionData.data.trees.Count > 0)
+        if (sessionData.data.trees.Count > 0)
         {
             var trees = FindObjectsOfType<TreeSystem>();
 
@@ -127,6 +146,11 @@ public class GameManager : MonoBehaviour, IInputUser
         sessionData.data.harvests = Harvest_Data.GameToDate(FindObjectsOfType<Harvest>());
         sessionData.data.seeds = Seed_Data.GameToDate(FindObjectsOfType<Seed>());
         sessionData.data.trees = Tree_Data.GameToDate(FindObjectsOfType<TreeSystem>());
+        sessionData.data.fertilityBoosts = FertilityBoost_Data.GameToDate(FindObjectsOfType<FertilityBoost>());
+        sessionData.data.extroversionBoosts = ExtroversionBoost_Data.GameToDate(FindObjectsOfType<ExtroversionBoost>());
+        sessionData.data.aggressivenessBoosts = AggressivenessBoost_Data.GameToDate(FindObjectsOfType<AggressivenessBoost>());
+        sessionData.data.powerboosts = PowerBoost_Data.GameToDate(FindObjectsOfType<PowerBoost>());
+        sessionData.data.healthboosts = HealthBoost_Data.GameToDate(FindObjectsOfType<HealthBoost>());
         sessionData.data.player = Player_Data.GameToData(myPlayer);
         sessionData.modeData = modeHandler.GetModeData();
 
@@ -231,6 +255,30 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         Instantiate(eggAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
+    public void SpawnRandomBoosts()
+    {
+        var points = MapSystem.instance.GetExplorationPoints();
+
+        foreach(Transform point in points)
+        {
+            int randomBoost = UnityEngine.Random.Range(0, 5);
+
+            GameObject boost = null;
+
+            if (randomBoost == 0)
+                boost = fertilityBoostAsset;
+            else if (randomBoost == 1)
+                boost = aggressivenessBoostAsset;
+            else if (randomBoost == 2)
+                boost = healthBoostAsset;
+            else if (randomBoost == 3)
+                boost = powerBoostAsset;
+            else
+                boost = extroversionBoostAsset;
+
+            Instantiate(boost, point.position,Quaternion.identity);
+        }
+    }
     public GameObject SpawnDeadBody_ReturnDeadBody(Vector3 position)
     {
         return Instantiate(deadchild, position, Quaternion.identity);
@@ -247,12 +295,6 @@ public class GameManager : MonoBehaviour, IInputUser
     public GameObject SpawnHarvest()
     {
         GameObject x =  Instantiate(harvestAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
-
-        return x;
-    }
-    public GameObject SpawnXPGiver()
-    {
-       GameObject x = Instantiate(xpGiverAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
 
         return x;
     }

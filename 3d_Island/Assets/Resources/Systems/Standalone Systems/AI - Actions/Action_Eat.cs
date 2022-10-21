@@ -8,7 +8,6 @@ using UnityEngine;
 [System.Serializable]
 public class Action_Eat : AbstractAction
 {
-
     public Action_Eat(GameObject subject, NPC myAgent) : base(subject, myAgent)
     {
         actionName = "Eating " + subject.tag;
@@ -26,11 +25,11 @@ public class Action_Eat : AbstractAction
 
         if (myAgent.handSystem.GetNearest())
         {
-            if ((myAgent.handSystem.GetNearest()).tag == "Fruit")
+            if ((myAgent.handSystem.GetNearest()).tag == subject.tag)
             {
                 myAgent.handSystem.PickObject();
 
-                if ((Fruit)(myAgent.handSystem.GetObjectInHand()))
+                if (myAgent.GotEatableInHand())
                     willEat = true;
             }
         }
@@ -38,7 +37,7 @@ public class Action_Eat : AbstractAction
         if(willEat)
         {
             ConditionChecker condition = new ConditionChecker(!(myAgent.isPicked));
-            Fruit fruit = subject.GetComponent<Fruit>();
+            Eatable eatable = subject.GetComponent<Eatable>();
             UIGame.instance.ShowRepeatingMessage("Eating", myAgent.transform, 15, 15, condition);
 
             while (condition.isTrue)
@@ -46,16 +45,15 @@ public class Action_Eat : AbstractAction
                 if (base.ShouldBreak())
                     break;
 
-                bool fruitInHand = myAgent.GotTypeInHand(typeof(Fruit));
-                bool hasEnergy = fruit.HasEnergy();
+                bool eatableInHand = myAgent.GotEatableInHand();
+                bool hasMore = eatable.HasMore();
 
-                condition.Update(fruitInHand && hasEnergy);
+                condition.Update(eatableInHand && hasMore);
 
-                myAgent.character.levelControl.IncreaseXP(fruit.GetEnergy());
+                eatable.ApplyEffect(myAgent);
 
                 yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
             }
-
 
             myAgent.handSystem.DropObject();
 

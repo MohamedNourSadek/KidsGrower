@@ -36,7 +36,7 @@ public class NPC : Pickable, IController, ISavable
     [System.NonSerialized] public NavMeshAgent myAgent;
     bool petting = false;
     float moveAnimtion = 0f;
-
+    
     //Helper functions
     void Start()
     {
@@ -84,6 +84,13 @@ public class NPC : Pickable, IController, ISavable
     public bool GotTypeInHand(Type type)
     {
         if (handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().GetType() == type)
+            return true;
+        else
+            return false;
+    }
+    public bool GotEatableInHand()
+    {
+        if (handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().GetType().IsSubclassOf(typeof(Eatable)))
             return true;
         else
             return false;
@@ -285,9 +292,9 @@ public class NPC : Pickable, IController, ISavable
     //AI - Intercepting Information
     void OnDetectableInRange(IDetectable detectable)
     {
-        if (detectable.tag == "Fruit")
+        if (detectable.tag == "Fruit" || detectable.tag == "Boost")
         {
-            if (((Fruit)detectable).OnGround())
+            if (((Eatable)detectable).OnGround())
             {
                 if(FlipACoinWithProb(character.GetExtroversion()))
                 {

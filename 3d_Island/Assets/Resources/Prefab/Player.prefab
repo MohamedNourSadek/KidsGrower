@@ -342,7 +342,7 @@ MonoBehaviour:
     - NPC
     - Harvest
     - Seed
-    - Xp Boost
+    - Boost
     - Egg
     throwForce: 100
     pickSpeedThrushold: 50
@@ -1073,7 +1073,7 @@ PrefabInstance:
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: detectableTags.Array.data[6]
-      value: Xp Boost
+      value: Boost
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}

@@ -1389,6 +1389,7 @@ MonoBehaviour:
     pickableTags:
     - Fruit
     - Ball
+    - Boost
     throwForce: 80
     pickSpeedThrushold: 10
     petTime: 1
@@ -1462,14 +1463,17 @@ MonoBehaviour:
     age: 0
     lastLaidSince: 0
     seekAlterProb: 1
-    betweenLaysTime: 5000
+    minTimeBetweenLays: 1000
     minLevelToLay: 3
     layingTime: 10
     extroversionFactor: 0.5
-    aggressivenessFactor: 0.5
-    powerFactor: 0.5
-    maxSpeed: 5
-    maxPunchForce: 20
+    aggressivenessFactor: 0
+    powerFactor: 1
+    minSpeed: 0.5
+    maxSpeed: 2.5
+    minPunchForce: 5
+    maxPunchForce: 12
+    healthFactor: 0.5
     maxSleepTime: 40
     deathTime: 10000
     growTime: 20
@@ -1591,6 +1595,21 @@ PrefabInstance:
         type: 3}
       propertyPath: logInfo
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.size
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[7]
+      value: Boost
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[10]
+      value: B
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

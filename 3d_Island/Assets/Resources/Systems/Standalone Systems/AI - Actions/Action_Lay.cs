@@ -46,11 +46,12 @@ public class Action_Lay : AbstractAction
                 myAgent.myAgent.enabled = true;
                 myAgent.GetBody().isKinematic = false;
             }
+
             if (time >= myAgent.character.layingTime)
             {
                 Egg egg = GameManager.instance.SpawnEgg_ReturnEgg(myAgent.transform.position + Vector3.up);
 
-                egg.SetRottenness(myAgent.character.GetFertility());
+                egg.SetRottenness(1f - myAgent.character.GetFertility());
 
                 myAgent.character.lastLaidSince = 0f;
             }

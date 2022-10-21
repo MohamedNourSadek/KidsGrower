@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1622378823701921161}
   - component: {fileID: 1622378823701921159}
-  - component: {fileID: 3789673051585649508}
+  - component: {fileID: 1875157622213505640}
   m_Layer: 7
-  m_Name: XP Giver
-  m_TagString: Xp Boost
+  m_Name: Boost - Agressiveness
+  m_TagString: Boost
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,7 +51,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!114 &3789673051585649508
+--- !u!114 &1875157622213505640
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -60,23 +60,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1622378823701921160}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f15a460e20c15524689cd7ab42ee3ee2, type: 3}
+  m_Script: {fileID: 11500000, guid: b041797f0c214254aa5f940c78733410, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   indicatorObject: {fileID: 2623726617405981368}
   myBody: {fileID: 1622378823701921159}
-  holder:
-    myHand: {fileID: 0}
-    throwForce: 20
-    pickSpeedThrushold: 2
-    petTime: 1
-    detector: {fileID: 0}
-    gotSomething: 0
-    canPick: 0
-    canDrop: 0
-    canThrow: 0
-    canPlant: 0
-    canPet: 0
+  totalValue: 100
+  ground:
+    detectableLayers:
+      serializedVersion: 2
+      m_Bits: 64
+    groundTag: Ground
+    waterTag: Water
+    onGroundThreshold: 1.3
 --- !u!1 &1622378824458186171
 GameObject:
   m_ObjectHideFlags: 0
@@ -88,10 +84,10 @@ GameObject:
   - component: {fileID: 1622378824458186168}
   - component: {fileID: 1622378824458186167}
   - component: {fileID: 1622378824458186166}
-  - component: {fileID: 3324015712276492214}
+  - component: {fileID: 5513434473885335383}
   m_Layer: 7
-  m_Name: Seed_big
-  m_TagString: Seed
+  m_Name: Boost
+  m_TagString: Boost
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,7 +101,7 @@ Transform:
   m_GameObject: {fileID: 1622378824458186171}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 2, y: 4.6932, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1622378823701921161}
@@ -139,7 +135,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5fe944d26336c1f40a49a07a21966419, type: 2}
+  - {fileID: 2100000, guid: 2641baaa27b77ef499ae196dac0cb1a5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -161,8 +157,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &3324015712276492214
-SphereCollider:
+--- !u!136 &5513434473885335383
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -171,9 +167,10 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.00000023841858, z: 0}
 --- !u!1 &2623726617405981368
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,10 +182,9 @@ GameObject:
   - component: {fileID: 7201993796871108833}
   - component: {fileID: 4566053293921311062}
   - component: {fileID: 1644545416288075228}
-  - component: {fileID: 1936383022809887805}
   m_Layer: 7
   m_Name: Indicator
-  m_TagString: Seed
+  m_TagString: Boost
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -202,7 +198,7 @@ Transform:
   m_GameObject: {fileID: 2623726617405981368}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.1238, y: 2.1238, z: 2.1238}
+  m_LocalScale: {x: 2.292642, y: 5.2226386, z: 2.292642}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1622378823701921161}
@@ -258,16 +254,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &1936383022809887805
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2623726617405981368}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}

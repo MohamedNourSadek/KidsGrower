@@ -200,23 +200,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   indicatorObject: {fileID: 931315857208889071}
   myBody: {fileID: 9195431515479874469}
-  holder:
-    myHand: {fileID: 0}
-    throwForce: 20
-    pickSpeedThrushold: 2
-    petTime: 1
-    detector: {fileID: 0}
-    gotSomething: 0
-    canPick: 0
-    canDrop: 0
-    canThrow: 0
-    canPlant: 0
-    canPet: 0
-  totalEnergy: 150
+  totalValue: 150
   ground:
     detectableLayers:
       serializedVersion: 2
-      m_Bits: 80
+      m_Bits: 64
     groundTag: Ground
     waterTag: Water
     onGroundThreshold: 1.3

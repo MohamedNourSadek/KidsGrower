@@ -39,7 +39,7 @@ public abstract class AbstractMode
         gameManager.SetPlaying(true);
         gameManager.SetBlur(false);
     }
-    protected virtual void OnStart()
+    protected virtual void OnFirstStart()
     {
     }
 

@@ -11,7 +11,6 @@ public class UnderPopulation : AbstractMode
     {
 
     }
-
     protected override void OnLoad()
     {
         base.OnLoad();
@@ -20,19 +19,17 @@ public class UnderPopulation : AbstractMode
         if (!data.gameStarted)
         {
             data.timeSinceStart = 0;
-            OnStart();
+            OnFirstStart();
         }
 
         ServicesProvider.instance.StartCoroutine(EndConition());
     }
-    protected override void OnStart()
+    protected override void OnFirstStart()
     {
-        base.OnStart();
+        base.OnFirstStart();
 
         ServicesProvider.instance.StartCoroutine(StartLogic());
     }
-
-
     IEnumerator StartLogic()
     {
         UIGame.instance.countDownText.text = "";
