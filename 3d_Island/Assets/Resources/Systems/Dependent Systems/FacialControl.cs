@@ -2,19 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+public enum FacialExpressions { Idel, Smile, Angry, Blink}
+
 [System.Serializable]
 public class FacialControl
 {
-    public void Smile(float time)
+    [SerializeField] Animator animator;
+    [SerializeField] Vector2 timeBetweenBlinks = new Vector2(.25f, 2f);
+
+    public void Initialize()
     {
-        //implement
+        ServicesProvider.instance.StartCoroutine(BlinkPeriodically());  
     }
-    public void Cry(float time)
+    public void PlayExpression(FacialExpressions facial)
     {
-        //implement
+        animator.SetTrigger(facial.ToString());
     }
-    public void MakeAngryFace(float time)
+    IEnumerator BlinkPeriodically()
     {
-        //implement
+        while (true)
+        {
+            yield return new WaitForSecondsRealtime(Random.Range(timeBetweenBlinks.x, timeBetweenBlinks.y));
+            PlayExpression(FacialExpressions.Blink);
+        }
     }
+
 }

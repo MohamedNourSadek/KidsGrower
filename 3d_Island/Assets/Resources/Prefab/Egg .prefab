@@ -328,18 +328,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   indicatorObject: {fileID: 6876410435036662736}
   myBody: {fileID: 6876410436286045254}
-  holder:
-    myHand: {fileID: 0}
-    throwForce: 20
-    pickSpeedThrushold: 2
-    petTime: 1
-    detector: {fileID: 0}
-    gotSomething: 0
-    canPick: 0
-    canDrop: 0
-    canThrow: 0
-    canPlant: 0
-    canPet: 0
+  ground:
+    detectableLayers:
+      serializedVersion: 2
+      m_Bits: 64
+    groundTag: Ground
+    waterTag: Water
+    onGroundThreshold: 1.3
   plantTime: 5
   plantDistance: 1
   allowedToPlantOn: 00000000

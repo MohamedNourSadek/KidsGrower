@@ -9,12 +9,13 @@ public class NPC : Pickable, IController, ISavable
     public static int NPCsCount = 0;
 
     [SerializeField] public HandSystem handSystem;
-    [SerializeField] DetectorSystem detector;
+    [SerializeField] public DetectorSystem detector;
     [SerializeField] GroundDetector groundDetector;
     [SerializeField] AppearanceControl appearanceControl;
     [SerializeField] FacialControl facialControl;
     [SerializeField] Animator animator;
     [SerializeField] float animationLerpSpeed = 1f;
+    [SerializeField] FacialControl myFace;
 
     [Header("Character parameters")]
     [Header("Dynamic")]
@@ -47,6 +48,7 @@ public class NPC : Pickable, IController, ISavable
         detector.Initialize(nearObjectDistance, OnDetectableInRange, OnDetectableExit, OnDetectableNear, OnDetectableNearExit);
         handSystem.Initialize(detector, this);
         appearanceControl.Initialize(this);
+        myFace.Initialize();
 
         groundDetector.Initialize();
         character.levelControl.Initialize(OnLevelIncrease, OnXPIncrease);
@@ -249,10 +251,22 @@ public class NPC : Pickable, IController, ISavable
 
                 currentAction.Execute();
 
-                while (currentAction.IsDone() == false)
+                while (true)
                 {
+                    if (currentAction.isDone)
+                    {
+                        if (currentAction.followUpAction == null)
+                            break;
+                        else
+                        {
+                            currentAction = currentAction.followUpAction;
+                            currentAction.Execute();
+                        }
+                    }
+
                     yield return new WaitForFixedUpdate();
                 }
+
 
                 currentAction.actionName = "";
             }
@@ -294,21 +308,16 @@ public class NPC : Pickable, IController, ISavable
     {
         if (detectable.tag == "Fruit" || detectable.tag == "Boost")
         {
-            if (((Eatable)detectable).OnGround())
+            if(FlipACoinWithProb(character.GetExtroversion()))
             {
-                if(FlipACoinWithProb(character.GetExtroversion()))
-                {
-                    AddAction(detectable, ActionTypes.Follow);
-                    AddAction(detectable, ActionTypes.Eat);
-                }
+                AddAction(detectable, ActionTypes.Follow, ActionTypes.Eat);
             }
         }
         else if (detectable.tag == "Alter")
         {
             if (character.CanLay() && FlipACoinWithProb(character.seekAlterProb))
             {
-                AddAction(detectable, ActionTypes.Follow);
-                AddAction(detectable, ActionTypes.Lay);
+                AddAction(detectable, ActionTypes.Follow, ActionTypes.Lay);
             }
         }
         else if (detectable.tag == "Ball")
@@ -316,53 +325,36 @@ public class NPC : Pickable, IController, ISavable
 
             if ((((Ball)detectable).IsPicked() == false) && FlipACoinWithProb(character.GetExtroversion()))
             {
-                AddAction(detectable, ActionTypes.Follow);
-                AddAction(detectable, ActionTypes.Pick);
+                AddAction(detectable, ActionTypes.Follow, ActionTypes.Pick);
             }
         }
-        else if ((detectable.tag == "Player"))
+        else if ((detectable.tag == "Player") || (detectable.tag == "NPC"))
         {
             if ((handSystem.GetObjectInHand() != null) && (handSystem.GetObjectInHand().tag == "Ball"))
             {
                 if(FlipACoinWithProb(character.GetAggressiveness()))
-                    AddAction(detectable, ActionTypes.Throw);
+                    AddAction(detectable, ActionTypes.Throw, ActionTypes.Null);
             }
             else
             {
                 if (FlipACoinWithProb(character.GetExtroversion()))
                 {
-                    AddAction(detectable, ActionTypes.Follow);
                     if (FlipACoinWithProb(character.GetAggressiveness()))
-                        AddAction(detectable, ActionTypes.Punch);
+                    {
+                        AddAction(detectable, ActionTypes.Follow, ActionTypes.Punch);
+                    }
+                    else
+                    {
+                        AddAction(detectable, ActionTypes.Follow, ActionTypes.Null);
+                    }
                 }
             }
-        }
-        else if ((detectable.tag == "NPC"))
-        {
-
-            if ((handSystem.GetObjectInHand() != null) && (handSystem.GetObjectInHand().tag == "Ball"))
-            {
-                if (FlipACoinWithProb(character.GetAggressiveness()))
-                    AddAction(detectable, ActionTypes.Throw);
-            }
-            else
-            {
-                if (FlipACoinWithProb(character.GetExtroversion()))
-                {
-                    AddAction(detectable, ActionTypes.Follow);
-
-                    if (FlipACoinWithProb(character.GetAggressiveness()))
-                        AddAction(detectable, ActionTypes.Punch);
-                }
-            }
-
         }
         else if ((detectable.tag == "Tree"))
         {
             if (((TreeSystem)detectable).GotFruit() && FlipACoinWithProb(character.GetExtroversion()))
             {
-                AddAction(detectable, ActionTypes.Follow);
-                AddAction(detectable, ActionTypes.Shake);
+                AddAction(detectable, ActionTypes.Follow, ActionTypes.Shake);
             }
         }
     }
@@ -382,11 +374,18 @@ public class NPC : Pickable, IController, ISavable
 
 
     //AI - Adding/Removing Actions (Instead of a factory)
-    void AddAction(IDetectable subject, ActionTypes actionType)
+    void AddAction(IDetectable subject, ActionTypes actionType, ActionTypes followUpActionType)
     {
         if (subject != null && subject.GetGameObject() != null)
         {
             AbstractAction newAction = AbstractAction.ActionFactory(actionType, subject.GetGameObject(), this);
+
+            if (followUpActionType != ActionTypes.Null)
+            {
+                AbstractAction followUpAction = AbstractAction.ActionFactory(followUpActionType, subject.GetGameObject(), this);
+                newAction.followUpAction = followUpAction;
+            }
+
             actions.Add(newAction);
         }
     }

@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Face
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Armature
+    m_Weight: 1
+  - m_Path: Armature/Eye
+    m_Weight: 0
+  - m_Path: Armature/Eye/Eye_end
+    m_Weight: 1
+  - m_Path: Armature/Eye.001
+    m_Weight: 0
+  - m_Path: Armature/Eye.001/Eye.001_end
+    m_Weight: 1
+  - m_Path: Armature/EyeBrow
+    m_Weight: 1
+  - m_Path: Armature/EyeBrow/EyeBrow_end
+    m_Weight: 1
+  - m_Path: Armature/EyeBrow.001
+    m_Weight: 1
+  - m_Path: Armature/EyeBrow.001/EyeBrow.001_end
+    m_Weight: 1
+  - m_Path: Armature/Mouth
+    m_Weight: 1
+  - m_Path: Armature/Mouth/Mouth_end
+    m_Weight: 1
+  - m_Path: Armature/Mouth.001
+    m_Weight: 1
+  - m_Path: Armature/Mouth.001/Mouth.001_end
+    m_Weight: 1
+  - m_Path: Eye
+    m_Weight: 0
+  - m_Path: Eye.001
+    m_Weight: 0
+  - m_Path: EyeBall
+    m_Weight: 0
+  - m_Path: EyeBall.001
+    m_Weight: 0
+  - m_Path: EyeBrow
+    m_Weight: 1
+  - m_Path: EyeBrow.001
+    m_Weight: 1
+  - m_Path: Mouth
+    m_Weight: 1

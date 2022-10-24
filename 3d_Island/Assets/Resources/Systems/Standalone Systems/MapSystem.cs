@@ -9,7 +9,7 @@ public class MapSystem : MonoBehaviour
     [SerializeField] List<Transform> explorationPoints = new();
 
     public static MapSystem instance;
-    void Start()
+    void Awake()
     {
         instance = this;
     }
@@ -23,5 +23,4 @@ public class MapSystem : MonoBehaviour
     {
         return explorationPoints;
     }
-
 }

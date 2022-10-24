@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum ActionTypes {Eat, Explore,Follow, Idle, Lay, Pick, Shake, Sleep, Throw, Punch, Drop}
+public enum ActionTypes {Eat, Explore,Follow, Idle, Lay, Pick, Shake, Sleep, Throw, Punch, Drop, Null}
 
 [System.Serializable]
 public class AbstractAction
@@ -45,6 +46,8 @@ public class AbstractAction
     public bool isDone;
     public GameObject subject;
     protected NPC myAgent;
+    
+    [System.NonSerialized] public AbstractAction followUpAction;
 
     public AbstractAction(GameObject subject, NPC myAgent)
     {

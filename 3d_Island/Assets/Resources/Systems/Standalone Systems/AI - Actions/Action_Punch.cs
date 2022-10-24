@@ -12,9 +12,15 @@ public class Action_Punch : AbstractAction
 
     public override void Execute()
     {
-        base.Execute();
-
-        ServicesProvider.instance.StartCoroutine(Punch());
+        if (subject != null && myAgent.detector.IsNear(subject))
+        {
+            base.Execute();
+            ServicesProvider.instance.StartCoroutine(Punch());
+        }
+        else
+        {
+            isDone = true;
+        }
     }
 
 

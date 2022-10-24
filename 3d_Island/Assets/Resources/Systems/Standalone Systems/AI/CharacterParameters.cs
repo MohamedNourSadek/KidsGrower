@@ -19,6 +19,7 @@ public class CharacterParameters
     public float minTimeBetweenLays = 5000f;
     public float minLevelToLay = 3;
     public float layingTime = 10f;
+    public float minLayFertility = 0.5f;
 
     [Header("Extroversion")]
     public float extroversionFactor = .5f;
@@ -91,7 +92,7 @@ public class CharacterParameters
     //Dependent
     public bool CanLay()
     {
-        return GetFertility() >= (fertilityFactor/2f);
+        return GetFertility() >= (minLayFertility);
     }
     public float GetSleepTime()
     {

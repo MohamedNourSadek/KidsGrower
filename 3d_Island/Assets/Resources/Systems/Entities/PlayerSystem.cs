@@ -26,6 +26,9 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     [Header("Animator Variables")]
     [SerializeField] Vector2 animationLerpSpeed = new Vector2(1f,1f);
 
+
+    [SerializeField] FacialControl myFace;
+
     public InventorySystem inventorySystem = null;
 
     public bool activeInput { get; set; }
@@ -47,6 +50,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         detector.Initialize(nearObjectDistance, OnDetectableInRange, OnDetectableExit, OnDetectableNear, OnDetectableNearExit);
         handSystem.Initialize(detector, this);
         legSystem.Initialize(this);
+        myFace.Initialize();
 
         instance = this;
     }
@@ -57,6 +61,8 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         handSystem.Update();
 
         UpdateUi();
+
+
     }
     void Update()
     {
@@ -178,6 +184,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
 
 
+
     ///(Movement-Input-Hand) Interface
     public void MoveInput(Vector2 _movementInput)
     {
@@ -203,7 +210,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
             }
             else
             {
-                handSystem.PickObject();    
+                handSystem.PickNearestObject();    
 
                 NPCPick(true, handSystem.GetObjectInHand());
             }

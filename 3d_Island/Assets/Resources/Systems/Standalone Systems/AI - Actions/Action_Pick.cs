@@ -12,9 +12,15 @@ public class Action_Pick : AbstractAction
 
     public override void Execute()
     {
-        base.Execute();
-
-        ServicesProvider.instance.StartCoroutine(Picking());
+        if (subject != null && myAgent.detector.IsNear(subject))
+        {
+            base.Execute();
+            ServicesProvider.instance.StartCoroutine(Picking());
+        }
+        else
+        {
+            isDone = true;
+        }
     }
 
     IEnumerator Picking()

@@ -66,7 +66,7 @@ public class HandSystem
         return nearPickables;
     }
 
-    public void PickObject()
+    public void PickNearestObject()
     {
         if ((GetPickables().Count > 0) ) 
         {
@@ -75,14 +75,18 @@ public class HandSystem
             if (speed <= pickSpeedThrushold)
             {
                 objectInHand = GetPickables()[0];
-                objectInHand.Pick(this);
-
-                canPick = false;
-                canDrop = true;
-                canThrow = true;
-                gotSomething = true;
+                PickObject(objectInHand);
             }
         }
+    }
+    public void PickObject(Pickable subject)
+    {
+        subject.Pick(this);
+
+        canPick = false;
+        canDrop = true;
+        canThrow = true;
+        gotSomething = true;
     }
     public void PetObject()
     {

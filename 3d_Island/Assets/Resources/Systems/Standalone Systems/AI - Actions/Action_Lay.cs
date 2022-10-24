@@ -13,9 +13,16 @@ public class Action_Lay : AbstractAction
     }
     public override void Execute()
     {
-        base.Execute();
+        if (subject != null && myAgent.detector.IsNear(subject))
+        {       
+            base.Execute();
+            ServicesProvider.instance.StartCoroutine(Lay());
+        }
+        else
+        {
+            isDone = true;
+        }
 
-        ServicesProvider.instance.StartCoroutine(Lay());
     }
     IEnumerator Lay()
     {

@@ -15,23 +15,27 @@ public class Action_Eat : AbstractAction
     }
     public override void Execute()
     {
-        base.Execute();
+        if (subject != null && myAgent.detector.IsNear(subject))
+        {
+            base.Execute();
+            ServicesProvider.instance.StartCoroutine(Eat());
+        }
+        else
+        {
+            isDone = true;
+        }
 
-        ServicesProvider.instance.StartCoroutine(Eat());
     }
     IEnumerator Eat()
     {
         bool willEat = false;
 
-        if (myAgent.handSystem.GetNearest())
+        if (subject.GetComponent<Pickable>())
         {
-            if ((myAgent.handSystem.GetNearest()).tag == subject.tag)
-            {
-                myAgent.handSystem.PickObject();
+            myAgent.handSystem.PickObject(subject.GetComponent<Pickable>());
 
-                if (myAgent.GotEatableInHand())
-                    willEat = true;
-            }
+            if (myAgent.GotEatableInHand())
+                willEat = true;
         }
 
         if(willEat)

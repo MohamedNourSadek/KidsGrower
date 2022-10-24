@@ -11,9 +11,15 @@ public class Action_Shake : AbstractAction
     }
     public override void Execute()
     {
-        base.Execute();
-
-        ServicesProvider.instance.StartCoroutine(Shake());
+        if (subject != null && myAgent.detector.IsNear(subject))
+        {
+            base.Execute();
+            ServicesProvider.instance.StartCoroutine(Shake());
+        }
+        else
+        {
+            isDone = true;
+        }
     }
     IEnumerator Shake()
     {

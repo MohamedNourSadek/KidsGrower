@@ -8,9 +8,14 @@ public class Pickable : MonoBehaviour, IDetectable
     [Header("Objects References")]
     [SerializeField] protected GameObject indicatorObject;
     [SerializeField] protected Rigidbody myBody;
-
+    [SerializeField] GroundDetector ground;
+    
     [System.NonSerialized] public HandSystem holder;
     [System.NonSerialized] public bool isPicked = false;
+
+    int mylayer = 7;
+    int mylayerNonDetectable = 0;
+
 
     public Rigidbody GetBody()
     {
@@ -19,8 +24,19 @@ public class Pickable : MonoBehaviour, IDetectable
         else
             return null;
     }
+    private void Update()
+    {
+        if (OnGround())
+            gameObject.layer = mylayer;
+        else 
+            gameObject.layer = mylayerNonDetectable;
+    }
 
 
+    public bool OnGround()
+    {
+        return ground.IsOnGroud(myBody);
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if(SoundManager.instance != null && collision.relativeVelocity.magnitude >= 2f)

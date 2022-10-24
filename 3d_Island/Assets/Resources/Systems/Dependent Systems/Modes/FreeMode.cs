@@ -8,7 +8,6 @@ public class FreeMode : AbstractMode
     {
 
     }
-
     protected override void OnLoad()
     {
         base.OnLoad();
@@ -16,21 +15,20 @@ public class FreeMode : AbstractMode
         if (!data.gameStarted)
         {
             data.timeSinceStart = 0;
-            OnFirstStart();
+            data.gameStarted = true;
         }
 
+        ServicesProvider.instance.StartCoroutine(SpawnEveryT());
     }
-    protected override void OnFirstStart()
+    IEnumerator SpawnEveryT()
     {
-        base.OnFirstStart();
-        ServicesProvider.instance.StartCoroutine(StartLogic());
-    }
-    IEnumerator StartLogic()
-    {
-        yield return null;
+        var t = 120;
 
-        gameManager.SpawnEgg();
-        gameManager.SpawnRandomBoosts();
+        while (true)
+        {
+            gameManager.SpawnRandomBoosts();
+            yield return new WaitForSecondsRealtime(t);
+        }
     }
 }
 

@@ -259,25 +259,23 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         var points = MapSystem.instance.GetExplorationPoints();
 
-        foreach(Transform point in points)
-        {
-            int randomBoost = UnityEngine.Random.Range(0, 5);
+        int randomPoint = UnityEngine.Random.Range(0,points.Count);
+        int randomBoost = UnityEngine.Random.Range(0, 5);
 
-            GameObject boost = null;
+        GameObject boost = null;
 
-            if (randomBoost == 0)
-                boost = fertilityBoostAsset;
-            else if (randomBoost == 1)
-                boost = aggressivenessBoostAsset;
-            else if (randomBoost == 2)
-                boost = healthBoostAsset;
-            else if (randomBoost == 3)
-                boost = powerBoostAsset;
-            else
-                boost = extroversionBoostAsset;
+        if (randomBoost == 0)
+            boost = fertilityBoostAsset;
+        else if (randomBoost == 1)
+            boost = aggressivenessBoostAsset;
+        else if (randomBoost == 2)
+            boost = healthBoostAsset;
+        else if (randomBoost == 3)
+            boost = powerBoostAsset;
+        else
+            boost = extroversionBoostAsset;
 
-            Instantiate(boost, point.position,Quaternion.identity);
-        }
+        Instantiate(boost, points[randomPoint].position,Quaternion.identity);
     }
     public GameObject SpawnDeadBody_ReturnDeadBody(Vector3 position)
     {
