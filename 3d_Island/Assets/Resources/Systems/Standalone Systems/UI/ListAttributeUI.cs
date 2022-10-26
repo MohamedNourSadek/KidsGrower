@@ -17,7 +17,7 @@ public class ListAttributeUI
      
     public void UpdateUI(CharacterParameters data)
     {
-        levelNumber.text = "Level " + data.levelControl.currentLevel.ToString();
+        levelNumber.text = "Level " + data.levelControl.GetLevel().ToString();
         saveName.text = data.saveName;
         age.value.text = data.age.ToString();
 

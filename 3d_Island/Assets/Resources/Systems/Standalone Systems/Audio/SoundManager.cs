@@ -17,8 +17,6 @@ public class SoundManager : MonoBehaviour
     [SerializeField] AudioMixerGroup sfxAudioMixer;
     [SerializeField] AudioData pressAudio;
 
-
-
     [Header("Audio Data")]
     [SerializeField] List<AudioData> walkClips = new List<AudioData>();
     [SerializeField] List<AudioData> hitClips = new List<AudioData>();
@@ -136,13 +134,6 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    IEnumerator DestoryComponent(AudioSource source)
-    {
-        yield return new WaitForSeconds(5f);
-        Destroy(source);
-    }
-
-
 
     //Ambient music
     void InitializeAmbientMusic()
@@ -202,7 +193,6 @@ public class SoundManager : MonoBehaviour
     }
 
 
-
     //Button Related audio
     public void InitializeButton(CButton button)
     {
@@ -227,15 +217,16 @@ public class SoundManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(t);
         Destroy(source);
     }
+    IEnumerator DestoryComponent(AudioSource source)
+    {
+        yield return new WaitForSeconds(5f);
+        Destroy(source);
+    }
 
-    
+
     //Internal Algorithms
     float GetdB(float volumeLinear)
     {
         return Mathf.Clamp((float)(20f * Math.Log10(volumeLinear)),-80f,20f);
-    }
-    float GetLinear(float volumeDB)
-    {
-        return Mathf.Pow(10f, volumeDB / 20f);
     }
 }

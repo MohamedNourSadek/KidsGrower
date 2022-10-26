@@ -59,7 +59,7 @@ public class Action_Eat : AbstractAction
                 yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
             }
 
-            myAgent.handSystem.DropObject();
+            myAgent.handSystem.DropObjectInHand();
 
             condition.Update(false);
             isDone = true;

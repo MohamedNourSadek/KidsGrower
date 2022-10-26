@@ -8,6 +8,9 @@ public class Bird : MonoBehaviour
     [SerializeField] float speed = 2f;
     [SerializeField] float flyingHeight = 5f;
     [SerializeField] LeanTweenType animationType = LeanTweenType.easeInOutCubic;
+    
+    
+    
     private void Start()
     {
         Explore();

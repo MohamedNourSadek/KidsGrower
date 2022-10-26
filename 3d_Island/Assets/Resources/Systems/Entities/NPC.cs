@@ -83,20 +83,6 @@ public class NPC : Pickable, IController, ISavable
 
 
     //Interface
-    public bool GotTypeInHand(Type type)
-    {
-        if (handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().GetType() == type)
-            return true;
-        else
-            return false;
-    }
-    public bool GotEatableInHand()
-    {
-        if (handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().GetType().IsSubclassOf(typeof(Eatable)))
-            return true;
-        else
-            return false;
-    }
     public void LoadData(SaveStructure saveData)
     {
         NPC_Data npc_data = (NPC_Data)saveData;
@@ -121,7 +107,7 @@ public class NPC : Pickable, IController, ISavable
     {
         base.Pick(picker);
         myAgent.enabled = false;
-        handSystem.DropObject();
+        handSystem.DropObjectInHand();
         UIGame.instance.UpateNpcUiElement(this.gameObject, "");
         AbortAction(currentAction);
     }
@@ -148,6 +134,13 @@ public class NPC : Pickable, IController, ISavable
 
             PlayerSystem.instance.LockPlayer(true);
         }
+    }
+    public bool GotEatableInHand()
+    {
+        if (handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().GetType().IsSubclassOf(typeof(Eatable)))
+            return true;
+        else
+            return false;
     }
 
 

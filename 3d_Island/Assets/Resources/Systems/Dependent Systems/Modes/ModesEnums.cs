@@ -7,7 +7,6 @@ public enum modes { FreeMode, UnderPopulation}
 
 public class ModesEnums
 {
-
     public static modes GetEnumFromString(string modeName)
     {
         foreach (var mode in Enum.GetValues(typeof(modes)))

@@ -6,6 +6,16 @@ using UnityEngine;
 [System.Serializable]
 public class InventorySystem
 {
+    public static bool IsStorable(Pickable pickable)
+    {
+        if (pickable.gameObject.GetComponent<IInventoryItem>() != null)
+            return true;
+        else
+            return false;
+    }
+
+
+
     List<IInventoryItem> items = new List<IInventoryItem>();
     IController myController;
      
@@ -13,6 +23,7 @@ public class InventorySystem
     {
         myController = controller;
     } 
+
     public void Add(IInventoryItem item, bool showUI)
     {
         if (items == null)
@@ -41,18 +52,10 @@ public class InventorySystem
 
         item.GetGameObject().transform.position = myController.GetBody().transform.position;
     }
-    public static bool IsStorable(Pickable pickable)
-    {
-        if(pickable.gameObject.GetComponent<IInventoryItem>() != null)
-            return true;
-        else
-            return false;
-    }
     public List<IInventoryItem> GetItems()
     {
         return items;
     }
-
     public List<InventoryItem_Data> GetItems_Data()
     {
         List<InventoryItem_Data> items_data = new List<InventoryItem_Data>();

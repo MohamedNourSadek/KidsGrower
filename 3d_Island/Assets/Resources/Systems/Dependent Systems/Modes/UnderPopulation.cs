@@ -11,6 +11,7 @@ public class UnderPopulation : AbstractMode
     {
 
     }
+
     protected override void OnLoad()
     {
         base.OnLoad();
@@ -19,42 +20,43 @@ public class UnderPopulation : AbstractMode
         if (!data.gameStarted)
         {
             data.timeSinceStart = 0;
-            OnFirstStart();
+            OnFirstLoad();
         }
 
         ServicesProvider.instance.StartCoroutine(EndConition());
     }
-    protected override void OnFirstStart()
+    protected override void OnFirstLoad()
     {
-        base.OnFirstStart();
-
+        base.OnFirstLoad();
         ServicesProvider.instance.StartCoroutine(StartLogic());
     }
+
+
     IEnumerator StartLogic()
     {
         UIGame.instance.countDownText.text = "";
 
-        gameManager.LockPlayer(true);
+        GameManager.instance.LockPlayer(true);
 
         yield return new WaitForSeconds(1f);
 
-        controller.ShowFloatingMessage("Under Population", 1.5f ,new Vector3(1,1,1), 1f);
+        UIGame.instance.ShowFloatingMessage("Under Population", 1.5f ,new Vector3(1,1,1), 1f);
 
         yield return new WaitForSeconds(1.5f);
 
-        controller.ShowFloatingMessage("3", 1f, new Vector3(1, 1, 1), 1f);
+        UIGame.instance.ShowFloatingMessage("3", 1f, new Vector3(1, 1, 1), 1f);
         yield return new WaitForSeconds(1f);
-        controller.ShowFloatingMessage("2", 1f, new Vector3(1, 1, 1), 1f);
+        UIGame.instance.ShowFloatingMessage("2", 1f, new Vector3(1, 1, 1), 1f);
         yield return new WaitForSeconds(1f);
-        controller.ShowFloatingMessage("1", 1f, new Vector3(1, 1, 1), 1f);
+        UIGame.instance.ShowFloatingMessage("1", 1f, new Vector3(1, 1, 1), 1f);
 
-        gameManager.SpawnEgg();
+        GameManager.instance.SpawnEgg();
         data.gameStarted = true;
 
         yield return new WaitForSeconds(1f);
-        controller.ShowFloatingMessage("Go !", 1f, new Vector3(1, 1, 1), 1f);
+        UIGame.instance.ShowFloatingMessage("Go !", 1f, new Vector3(1, 1, 1), 1f);
 
-        gameManager.LockPlayer(false);
+        GameManager.instance.LockPlayer(false);
     }
     IEnumerator EndConition()
     {
@@ -72,15 +74,15 @@ public class UnderPopulation : AbstractMode
                 {
                     UIGame.instance.countDownText.text = "";
                     UIGame.instance.CloseAllPanels();
-                    gameManager.SetPlaying(false);
-                    gameManager.SetBlur(true);
+                    GameManager.instance.SetPlaying(false);
+                    GameManager.instance.SetBlur(true);
 
                     
                     UIGame.instance.ShowPopUpMessage(
                         "You've Lost !",
                         "You've Survived for " + Helpers.GetTimeFormated(data.timeSinceStart),
                         "Exit",
-                        gameManager.ExitWithoutSaving);
+                        GameManager.instance.ExitWithoutSaving);
 
                     DataManager.instance.Remove(DataManager.instance.GetCurrentSession().sessionName);
 

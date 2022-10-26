@@ -74,7 +74,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
             UIGame.instance.PickDropButton_SwitchMode(PickMode.Drop);
         else if (handSystem.canPick)
             UIGame.instance.PickDropButton_SwitchMode(PickMode.Pick);
-        else if (handSystem.detector.GetNear("Tree") != null)
+        else if (detector.GetNear("Tree") != null)
             UIGame.instance.PickDropButton_SwitchMode(PickMode.Shake);
         else
             UIGame.instance.PickDropButton_SwitchMode(PickMode.Pick);
@@ -82,7 +82,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
         bool _canShake = (!handSystem.canPick
                        && !handSystem.canDrop
-                       && (handSystem.detector.GetNear("Tree") != null));
+                       && (detector.GetNear("Tree") != null));
 
         if (handSystem.canPick || handSystem.canDrop || _canShake)
             UIGame.instance.PickDropButton_Enable(true);
@@ -170,9 +170,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         }
 
     }
-
-
-    //Hand controller Interface implementations
     public Rigidbody GetBody()
     {
         return playerBody;
@@ -182,91 +179,18 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         this.enabled = state;
         activeInput = state;
     }
-
-
-
-    ///(Movement-Input-Hand) Interface
-    public void MoveInput(Vector2 _movementInput)
-    {
-        movementSystem.PreformMove(_movementInput);
-    } 
-    public void RotateInput(Vector2 _deltaRotation)
-    {
-        myCamera.RotateCamera(_deltaRotation);
-    }
-    public void JumpInput()
-    {
-        movementSystem.PreformJump();
-        Instantiate(jumpVFXAsset, transform.position, jumpVFXAsset.transform.rotation);
-
-    }
-    public void PickInput()
-    {
-        if(handSystem.canPick)
-        {
-            if(InventorySystem.IsStorable(handSystem.GetNearest()))
-            {
-                inventorySystem.Add((handSystem.GetNearest()).GetComponent<IInventoryItem>(), true);
-            }
-            else
-            {
-                handSystem.PickNearestObject();    
-
-                NPCPick(true, handSystem.GetObjectInHand());
-            }
-        }
-        else if(handSystem.canDrop)
-        {
-            NPCPick(false, handSystem.GetObjectInHand());
-
-            handSystem.DropObject();
-        }
-        else if((handSystem.detector.GetNear("Tree") != null))
-        {
-            ((TreeSystem)(handSystem.detector.GetNear("Tree"))).Shake();
-        }
-    }
-    public void ThrowInput()
-    {
-        if (handSystem.canThrow)
-        {
-            NPCPick(false, handSystem.GetObjectInHand());
-
-            handSystem.ThrowObject(this.transform.position + (this.transform.forward));
-        }
-    }
-    public void PlantInput()
-    {
-        if (handSystem.canPlant)
-            handSystem.PlantObject();
-    }
-    public void DashInput()
-    {
-        movementSystem.PerformDash();
-        Instantiate(dashVFXAsset, transform.position, Quaternion.Euler(this.transform.rotation.eulerAngles));
-    }
-    public void PetInput()
-    {
-        if(handSystem.canPet)
-            handSystem.PetObject();
-    }
-    public void PressInput() { }
-    public GameObject GetGameObject()
-    {
-        return this.gameObject;
-    }
     public bool GotNpcInHand()
     {
-        if(handSystem.gotSomething && handSystem.GetObjectInHand().tag == "NPC")
+        if (handSystem.gotSomething && handSystem.GetObjectInHand().tag == "NPC")
         {
-            return true;  
+            return true;
         }
         else
         {
             return false;
-        } 
+        }
     }
-    public NPC getNPCInHand()
+    public NPC GetNPCInHand()
     {
         if (handSystem.gotSomething && handSystem.GetObjectInHand().tag == "NPC")
         {
@@ -305,6 +229,81 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
         if (npc != null)
             UIGame.instance.UpdateFullNPCStats(npc.character);
+    }
+    public GameObject GetGameObject()
+    {
+        return this.gameObject;
+    }
+
+
+
+    ///(Movement-Input-Hand) Interface
+    public void MoveInput(Vector2 _movementInput)
+    {
+        movementSystem.PreformMove(_movementInput);
+    } 
+    public void RotateInput(Vector2 _deltaRotation)
+    {
+        myCamera.RotateCamera(_deltaRotation);
+    }
+    public void JumpInput()
+    {
+        movementSystem.PreformJump();
+        Instantiate(jumpVFXAsset, transform.position, jumpVFXAsset.transform.rotation);
+
+    }
+    public void PickInput()
+    {
+        if(handSystem.canPick)
+        {
+            if(InventorySystem.IsStorable(handSystem.GetNearestPickable()))
+            {
+                inventorySystem.Add((handSystem.GetNearestPickable()).GetComponent<IInventoryItem>(), true);
+            }
+            else
+            {
+                handSystem.PickNearestObject();    
+
+                NPCPick(true, handSystem.GetObjectInHand());
+            }
+        }
+        else if(handSystem.canDrop)
+        {
+            NPCPick(false, handSystem.GetObjectInHand());
+
+            handSystem.DropObjectInHand();
+        }
+        else if((detector.GetNear("Tree") != null))
+        {
+            ((TreeSystem)(detector.GetNear("Tree"))).Shake();
+        }
+    }
+    public void ThrowInput()
+    {
+        if (handSystem.canThrow)
+        {
+            NPCPick(false, handSystem.GetObjectInHand());
+
+            handSystem.ThrowObjectInHand(this.transform.position + (this.transform.forward));
+        }
+    }
+    public void PlantInput()
+    {
+        if (handSystem.canPlant)
+            handSystem.PlantObjectInHand();
+    }
+    public void DashInput()
+    {
+        movementSystem.PerformDash();
+        Instantiate(dashVFXAsset, transform.position, Quaternion.Euler(this.transform.rotation.eulerAngles));
+    }
+    public void PetInput()
+    {
+        if(handSystem.canPet)
+            handSystem.PetNearestObject();
+    }
+    public void PressInput() 
+    {
     }
 
 }

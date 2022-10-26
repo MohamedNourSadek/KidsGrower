@@ -222,7 +222,6 @@ public class DetectorSystem : MonoBehaviour
             Debug.Log(message);
         }
     }
-
     void LogAllNearOnVPressed()
     {
         if(Input.GetKeyDown("v"))

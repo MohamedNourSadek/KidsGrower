@@ -42,11 +42,9 @@ public class AbstractAction
 
     public string actionName;
     protected int priority = 0;
-    [SerializeField] int finalProp;
     public bool isDone;
     public GameObject subject;
     protected NPC myAgent;
-    
     [System.NonSerialized] public AbstractAction followUpAction;
 
     public AbstractAction(GameObject subject, NPC myAgent)
@@ -54,6 +52,7 @@ public class AbstractAction
         this.subject = subject;
         this.myAgent = myAgent;
     }
+
     public virtual void Execute()
     {
     }
@@ -75,6 +74,7 @@ public class AbstractAction
 
         return false;
     }
+
     public int GetSubjectPriority()
     {
         if (subject)
@@ -92,8 +92,7 @@ public class AbstractAction
     }
     public int GetPriority()
     {
-        finalProp = GetSubjectPriority() * priority;
-        return finalProp;
+        return GetSubjectPriority() * priority; 
     }
 }
 

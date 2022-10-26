@@ -6,8 +6,8 @@ public class FreeMode : AbstractMode
 {
     public FreeMode(Mode_Data data) : base(data)
     {
-
     }
+   
     protected override void OnLoad()
     {
         base.OnLoad();
@@ -26,7 +26,7 @@ public class FreeMode : AbstractMode
 
         while (true)
         {
-            gameManager.SpawnRandomBoosts();
+            GameManager.instance.SpawnRandomBoosts();
             yield return new WaitForSecondsRealtime(t);
         }
     }

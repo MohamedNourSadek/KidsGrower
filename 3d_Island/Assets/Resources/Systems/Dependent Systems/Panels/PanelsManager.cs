@@ -79,6 +79,8 @@ public class PanelsManager
         }
     }
 
+
+
     public void OpenMenuPanel(string _menuPanelName, bool _exclusive)
     {
         ServicesProvider.instance.StartCoroutine(OpenMenuPanel_Coroutine(_menuPanelName, _exclusive));
@@ -102,55 +104,6 @@ public class PanelsManager
             OpenMenuPanel(_menuPanelName, _exculsive);
         }
     }
-    public MenuPanel GetPanel(string _menuPanelName)
-    {
-        foreach(MenuPanel _panel in menuPanels)
-        {
-            if(_panel.panalName == _menuPanelName)
-                return _panel;  
-        }
-
-        return null;
-    }
-    public string GetPanelRelativeToActive(int i)
-    {
-        return menuPanels[GetActivePage() + i].panalName;
-    }
-    public ListPossibleDirections GetPossibleDirection(int _activePage)
-    {
-        ListPossibleDirections _directions = new();
-
-        if (_activePage == 0)
-        {
-            _directions.Previous = false;
-            _directions.Next = true;
-        }
-        else if (_activePage == menuPanels.Count - 1)
-        {
-            _directions.Next = false;
-            _directions.Previous = true;
-        }
-        else
-        {
-            _directions.Previous = true;
-            _directions.Next = true;
-        }
-
-        return _directions;
-    }
-    public int GetActivePage()
-    {
-        int _activePage = 0;
-
-        for (int j = 0; j < menuPanels.Count; j++)
-        {
-            if (menuPanels[j].active)
-                _activePage = j;
-        }
-
-        return _activePage;
-    }
-
 
 
     public static void OpenMenuPanel(string _menuPanelName_PlusMangerNum, List<PanelsManager> _managers, bool _exclusive)
@@ -181,6 +134,8 @@ public class PanelsManager
 
         _managers[_num].CloseMenuPanel(_menuName);
     }
+
+
 
     IEnumerator CloseAll_Coroutine()
     {

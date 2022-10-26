@@ -4,11 +4,7 @@ using UnityEngine;
 
 public abstract class AbstractMode
 {
-    static float startPeriod = 3f;
-
     protected Mode_Data data;
-    protected UIGame controller;
-    protected GameManager gameManager;
 
     public AbstractMode(Mode_Data data)
     {
@@ -28,19 +24,14 @@ public abstract class AbstractMode
 
     protected virtual void Initialize()
     {
-        controller = MonoBehaviour.FindObjectOfType<UIGame>();
-        gameManager = MonoBehaviour.FindObjectOfType<GameManager>();
-
         OnLoad();
-
     }
     protected virtual void OnLoad()
     {
-        gameManager.SetPlaying(true);
-        gameManager.SetBlur(false);
+        GameManager.instance.SetPlaying(true);
+        GameManager.instance.SetBlur(false);
     }
-    protected virtual void OnFirstStart()
+    protected virtual void OnFirstLoad()
     {
     }
-
 }

@@ -43,9 +43,7 @@ public class CameraSystem
         TraslateCamera();
         controlledCamera.transform.LookAt(followedObject.transform.position);
     }
-
        
-    //Internal Algorithms
     void TraslateCamera()
     {
         //Lerping the object position instead of the camera, because we want the camera to move only on its circle.

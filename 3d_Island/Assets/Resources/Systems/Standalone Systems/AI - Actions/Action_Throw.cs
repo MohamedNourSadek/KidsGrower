@@ -21,7 +21,7 @@ public class Action_Throw : AbstractAction
     IEnumerator Throw()
     {
         if(myAgent.handSystem.GetObjectInHand())
-            myAgent.handSystem.ThrowObject((subject.transform.position));
+            myAgent.handSystem.ThrowObjectInHand((subject.transform.position));
 
         yield return new WaitForSeconds(1f);
 

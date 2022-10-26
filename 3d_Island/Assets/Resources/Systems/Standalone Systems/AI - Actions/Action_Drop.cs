@@ -14,7 +14,7 @@ public class Action_Drop : AbstractAction
     {
         base.Execute();
 
-        myAgent.handSystem.DropObject();
+        myAgent.handSystem.DropObjectInHand();
 
         isDone = true;
     }

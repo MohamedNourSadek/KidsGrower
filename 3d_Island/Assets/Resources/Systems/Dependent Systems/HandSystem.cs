@@ -16,7 +16,6 @@ public class HandSystem
     [SerializeField] float pickSpeedThrushold = 2f;
     [SerializeField] float petTime = 1f;
      
-    public DetectorSystem detector;
     public bool gotSomething;
     public bool canPick;
     public bool canDrop;
@@ -25,10 +24,12 @@ public class HandSystem
     public bool canPet;
 
     //Private Data
-    [SerializeField] List<Pickable> nearPickables = new List<Pickable>();
+    DetectorSystem detector;
+    List<Pickable> nearPickables = new List<Pickable>();
     Pickable objectInHand = new();
     IController myController;
     bool isPetting;
+
 
     //Outside Interface
     public void Initialize(DetectorSystem detector, IController controller)
@@ -66,6 +67,7 @@ public class HandSystem
         return nearPickables;
     }
 
+
     public void PickNearestObject()
     {
         if ((GetPickables().Count > 0) ) 
@@ -88,7 +90,7 @@ public class HandSystem
         canThrow = true;
         gotSomething = true;
     }
-    public void PetObject()
+    public void PetNearestObject()
     {
         Transform petObject = GetPickables()[0].transform;
 
@@ -115,7 +117,7 @@ public class HandSystem
             }
         }
     }
-    public void DropObject()
+    public void DropObjectInHand()
     {
         canDrop = false;
         canThrow = false;
@@ -125,25 +127,25 @@ public class HandSystem
 
         objectInHand = null;
     }
-    public void ThrowObject(Vector3 target)
+    public void ThrowObjectInHand(Vector3 throwPoint)
     {
         if(objectInHand != null)
         {
-            //Because Drop function removes the reference
-            var tempReference = objectInHand;
+            //Because Drop function removes the reference, so you have to hold a reference before dropping it.
+            var objInHandTemp = objectInHand;
 
-            DropObject();
+            DropObjectInHand();
 
-            Vector3 direction = (target - tempReference.transform.position).normalized;
+            Vector3 direction = (throwPoint - objInHandTemp.transform.position).normalized;
 
-            tempReference.GetComponent<Rigidbody>().AddForce(direction * throwForce, ForceMode.Impulse);
+            objInHandTemp.GetComponent<Rigidbody>().AddForce(direction * throwForce, ForceMode.Impulse);
         }
     }
-    public void PlantObject()
+    public void PlantObjectInHand()
     {
         Plantable platable = objectInHand.GetComponent<Plantable>();
 
-        DropObject();
+        DropObjectInHand();
 
         Vector3 direction = (Vector3.down + (platable.plantDistance * myController.GetBody().transform.forward)).normalized;
         RaycastHit ray;
@@ -151,8 +153,6 @@ public class HandSystem
 
         platable.Plant(ray.point);
     }
-
-
     public Pickable GetObjectInHand()
     {
         return objectInHand;
@@ -165,9 +165,7 @@ public class HandSystem
     {
         objectInHand = obj;
     }
-
-
-    public Pickable GetNearest()
+    public Pickable GetNearestPickable()
     {
         if (GetPickables().Count > 0)
             return GetPickables()[0];
@@ -180,6 +178,7 @@ public class HandSystem
     }
 
      
+
     //Internal Algorithms
     IEnumerator PetObjectRoutine(ConditionChecker condition, NPC npc)
     {
@@ -193,7 +192,7 @@ public class HandSystem
 
 
         myController.GetBody().isKinematic = false;
-        DropObject();
+        DropObjectInHand();
 
         isPetting = false;
     }
@@ -214,7 +213,6 @@ public class HandSystem
 
         condition.Update(false);
     }
-    
     void UpdatePickables()
     {
         nearPickables.Clear();
@@ -245,7 +243,7 @@ public class HandSystem
         }
 
         if(nearPickables.Count >= 1 && highlightToPick)
-            GetNearest().PickablilityIndicator(true);
+            GetNearestPickable().PickablilityIndicator(true);
     }
 }
 

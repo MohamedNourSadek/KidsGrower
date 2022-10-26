@@ -88,6 +88,15 @@ public class DataManager : MonoBehaviour
 
         SaveData(data);
     }
+    public void Modify(SessionData newData)
+    {
+        WholeData data = GetSavedData();
+        SessionData oldData = data.sessions.Find(x => x.sessionName == newData.sessionName);
+        int i = data.sessions.IndexOf(oldData);
+        data.sessions[i] = newData;
+
+        SaveData(data);
+    }
     public void Remove(string sessionName)
     {
         WholeData data = GetSavedData();
@@ -143,14 +152,5 @@ public class DataManager : MonoBehaviour
     public string GetLastScene()
     {
         return lastScene;
-    }
-    public void Modify(SessionData newData)
-    {
-        WholeData data = GetSavedData();
-        SessionData oldData = data.sessions.Find(x => x.sessionName == newData.sessionName);
-        int i = data.sessions.IndexOf(oldData);
-        data.sessions[i] = newData;
-
-        SaveData(data);
     }
 }
