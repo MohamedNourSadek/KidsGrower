@@ -26,8 +26,8 @@ public class FreeMode : AbstractMode
 
         while (true)
         {
-            GameManager.instance.SpawnRandomBoosts();
             yield return new WaitForSecondsRealtime(t);
+            GameManager.instance.SpawnRandomItem();
         }
     }
 }

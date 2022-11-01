@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Harvest : Pickable, IInventoryItem, ISavable
+public class Harvest : Pickable, IStorableObject, ISavable
 {
     public void LoadData(SaveStructure saveData)
     {

@@ -95,7 +95,7 @@ public class DetectorSystem : MonoBehaviour
     {
         foreach(string detectableTag in detectableTags)
         {
-            if(collider.CompareTag(detectableTag))
+            if (collider.CompareTag(detectableTag))
             {
                 IDetectable detectedObject = collider.GetComponent<IDetectable>();
 
@@ -104,6 +104,7 @@ public class DetectorSystem : MonoBehaviour
 
                 if (detectedObject != null)
                 {
+
                     if ((detectableInRange.Contains(detectedObject)) == false)
                     {
                         detectableInRange.Add(detectedObject);
@@ -161,6 +162,12 @@ public class DetectorSystem : MonoBehaviour
                     detectableInRange.Remove(detectedObject);
                     OnInRangeExit?.Invoke(detectedObject);
                 }
+
+                if(detectableNear.Contains(detectedObject))
+                {
+                    detectableNear.Remove(detectedObject);
+                    OnInRangeExit?.Invoke(detectedObject);
+                }
             }
         }
     }
@@ -172,7 +179,7 @@ public class DetectorSystem : MonoBehaviour
         CleanListsFromDestroyedObjects(detectableInRange);
         CleanListsFromDestroyedObjects(detectableNear);
     }
-    void CleanListsFromDestroyedObjects(IList list)
+    public void CleanListsFromDestroyedObjects(IList list)
     {
         int destroyedIndex = -1;
         for (int i = 0; i < list.Count; i++)

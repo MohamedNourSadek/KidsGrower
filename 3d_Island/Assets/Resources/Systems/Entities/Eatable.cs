@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Eatable : Pickable
@@ -8,12 +9,11 @@ public class Eatable : Pickable
     
     public int currentValue;
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
         currentValue = totalValue;
     }
-
-
     public int GetMore()
     {
         if (currentValue > 0f)

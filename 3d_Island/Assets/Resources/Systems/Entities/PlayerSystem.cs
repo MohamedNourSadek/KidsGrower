@@ -29,7 +29,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
     [SerializeField] FacialControl myFace;
 
-    public InventorySystem inventorySystem = null;
+    [SerializeField] public InventorySystem inventorySystem = new InventorySystem();
 
     public bool activeInput { get; set; }
 
@@ -42,8 +42,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     {
         InputSystem.SubscribeUser(this);
 
-        if(inventorySystem == null)
-            inventorySystem = new InventorySystem(this);
+        inventorySystem.Initialize(this);
 
         movementSystem.Initialize(playerBody, myCamera.GetCameraTransform());
         myCamera.Initialize(this.gameObject);
@@ -70,24 +69,33 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     void UpdateUi()
     {
-        if (handSystem.canDrop)
-            UIGame.instance.PickDropButton_SwitchMode(PickMode.Drop);
-        else if (handSystem.canPick)
-            UIGame.instance.PickDropButton_SwitchMode(PickMode.Pick);
-        else if (detector.GetNear("Tree") != null)
-            UIGame.instance.PickDropButton_SwitchMode(PickMode.Shake);
-        else
-            UIGame.instance.PickDropButton_SwitchMode(PickMode.Pick);
-
-
-        bool _canShake = (!handSystem.canPick
-                       && !handSystem.canDrop
-                       && (detector.GetNear("Tree") != null));
-
-        if (handSystem.canPick || handSystem.canDrop || _canShake)
+        //Set Interact Modes
+        if (handSystem.canStore)
+        {
+            UIGame.instance.PickDropButton_SwitchMode(PickMode.Store);
             UIGame.instance.PickDropButton_Enable(true);
+        }
+        else if (handSystem.canShake)
+        {
+            UIGame.instance.PickDropButton_SwitchMode(PickMode.Shake);
+            UIGame.instance.PickDropButton_Enable(true);
+        }
+        else if (handSystem.canPick)
+        {
+            UIGame.instance.PickDropButton_SwitchMode(PickMode.Pick);
+            UIGame.instance.PickDropButton_Enable(true);
+        }
+        else if (handSystem.gotSomethingInHand)
+        {
+            UIGame.instance.PickDropButton_SwitchMode(PickMode.Drop);
+            UIGame.instance.PickDropButton_Enable(true);
+        }
         else
+        {
+            UIGame.instance.PickDropButton_SwitchMode(PickMode._);
             UIGame.instance.PickDropButton_Enable(false);
+        }
+
 
         if (handSystem.canThrow)
             UIGame.instance.ThrowButton_Enable(true);
@@ -106,7 +114,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     void UpdateAnimationParameters()
     {
         float finalMoveX = Mathf.Clamp01((playerBody.velocity.magnitude / movementSystem.maxSpeed));
-        float finalMoveY = movementSystem.IsOnGround() ? 0f : ((movementSystem.groundDetector.DistanceFromGround(this.playerBody) / maxHeight));
+        float finalMoveY = movementSystem.IsOnGround() ? 0f : ((movementSystem.groundDetector.GetDistanceFromGround() / maxHeight));
 
         moveAnimtion.x = Mathf.Lerp(moveAnimtion.x, finalMoveX, Time.fixedDeltaTime * animationLerpSpeed.x);
         moveAnimtion.y = Mathf.Lerp(moveAnimtion.y, finalMoveY, Time.fixedDeltaTime * animationLerpSpeed.y);
@@ -125,9 +133,11 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     void OnDetectableNear(IDetectable detectable)
     {
+        handSystem.AddToPickable(detectable);
     }
     void OnDetectableNearExit(IDetectable detectable)
     {
+        handSystem.RemoveFromPickables(detectable);
     }
 
 
@@ -141,9 +151,9 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
         transform.rotation = player_data.rotation.GetQuaternion();
 
-        inventorySystem = new InventorySystem(this);
+        inventorySystem.Initialize(this);
 
-        DeployInventory(player_data.inventoryData);
+        inventorySystem.LoadInventory(player_data.inventoryData);
     }
     public Player_Data GetData()
     {
@@ -154,21 +164,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         player_data.inventoryData = inventorySystem.GetItems_Data();
 
         return player_data;
-    }
-    public void DeployInventory(List<InventoryItem_Data> data)
-    {
-        foreach(var item in data)
-        {
-            if(item.itemTag == "Harvest")
-            {
-                for (int i = 0; i < item.amount; i++)
-                {
-                    var Obj = GameManager.instance.SpawnHarvest().GetComponent<IInventoryItem>();
-                    inventorySystem.Add(Obj, false);
-                }
-            }
-        }
-
     }
     public Rigidbody GetBody()
     {
@@ -181,7 +176,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public bool GotNpcInHand()
     {
-        if (handSystem.gotSomething && handSystem.GetObjectInHand().tag == "NPC")
+        if (handSystem.gotSomethingInHand && handSystem.GetObjectInHand().tag == "NPC")
         {
             return true;
         }
@@ -192,7 +187,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public NPC GetNPCInHand()
     {
-        if (handSystem.gotSomething && handSystem.GetObjectInHand().tag == "NPC")
+        if (handSystem.gotSomethingInHand && handSystem.GetObjectInHand().tag == "NPC")
         {
             return handSystem.GetObjectInHand().GetComponentInParent<NPC>();
         }
@@ -234,7 +229,10 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     {
         return this.gameObject;
     }
-
+    public GroundDetector GetGroundDetector()
+    {
+        return movementSystem.groundDetector;
+    }
 
 
     ///(Movement-Input-Hand) Interface
@@ -254,28 +252,23 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public void PickInput()
     {
-        if(handSystem.canPick)
+        if(handSystem.canStore)
         {
-            if(InventorySystem.IsStorable(handSystem.GetNearestPickable()))
-            {
-                inventorySystem.Add((handSystem.GetNearestPickable()).GetComponent<IInventoryItem>(), true);
-            }
-            else
-            {
-                handSystem.PickNearestObject();    
-
-                NPCPick(true, handSystem.GetObjectInHand());
-            }
+            inventorySystem.Add(handSystem.GetNearestPickable().gameObject, true);
         }
-        else if(handSystem.canDrop)
-        {
-            NPCPick(false, handSystem.GetObjectInHand());
-
-            handSystem.DropObjectInHand();
-        }
-        else if((detector.GetNear("Tree") != null))
+        else if(handSystem.canShake)
         {
             ((TreeSystem)(detector.GetNear("Tree"))).Shake();
+        }
+        else if (handSystem.canPick)
+        {
+            handSystem.PickNearestObject();
+            NPCPick(true, handSystem.GetObjectInHand());
+        }
+        else if(handSystem.gotSomethingInHand)
+        {
+            NPCPick(false, handSystem.GetObjectInHand());
+            handSystem.DropObjectInHand();
         }
     }
     public void ThrowInput()
@@ -305,5 +298,4 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     public void PressInput() 
     {
     }
-
 }

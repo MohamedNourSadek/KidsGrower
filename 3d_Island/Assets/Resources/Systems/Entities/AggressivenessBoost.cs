@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AggressivenessBoost : Eatable, ISavable
+public class AggressivenessBoost : Eatable, ISavable, IStorableObject
 {
     public void LoadData(SaveStructure saveData)
     {

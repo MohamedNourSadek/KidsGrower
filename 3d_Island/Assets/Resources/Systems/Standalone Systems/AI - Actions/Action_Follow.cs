@@ -27,8 +27,8 @@ public class Action_Follow : AbstractAction
 
             distance = (myAgent.transform.position - subject.transform.position).magnitude;
             
-            if(myAgent.myAgent.isActiveAndEnabled)
-                myAgent.myAgent.SetDestination(subject.transform.position);
+            if(myAgent.navMeshAgent.isActiveAndEnabled)
+                myAgent.navMeshAgent.SetDestination(subject.transform.position);
 
             yield return new WaitForFixedUpdate();  
         }

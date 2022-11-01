@@ -136,7 +136,6 @@ public class PanelsManager
     }
 
 
-
     IEnumerator CloseAll_Coroutine()
     {
         //DeactivateFirst

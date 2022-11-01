@@ -1,97 +1,129 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
 [System.Serializable]
 public class InventorySystem
 {
+    [SerializeField] public List<InventoryItem_Data> items = new List<InventoryItem_Data>();
+    IController myController;
+     
+    public void Initialize(IController controller)
+    {
+        myController = controller;
+    }
     public static bool IsStorable(Pickable pickable)
     {
-        if (pickable.gameObject.GetComponent<IInventoryItem>() != null)
+        if (pickable.gameObject.GetComponent<IStorableObject>() != null)
             return true;
         else
             return false;
     }
 
-
-
-    List<IInventoryItem> items = new List<IInventoryItem>();
-    IController myController;
-     
-    public InventorySystem(IController controller)
+    //Interface
+    public List<InventoryItem_Data> GetItems_Data()
     {
-        myController = controller;
-    } 
-
-    public void Add(IInventoryItem item, bool showUI)
+        return items;
+    }
+    public void Add(GameObject item, bool showUI)
     {
-        if (items == null)
-            items = new List<IInventoryItem>();
-
-        if (!items.Contains(item))
-            items.Add(item);
+        string name = item.GetComponent<Pickable>().GetType().ToString();
 
         if (showUI)
             UIGame.instance.ShowRepeatingMessage(
-            item.GetGameObject().tag +
+            name +
             " added to inventory",
             myController.GetBody().transform,
             0.5f, 1, new ConditionChecker(true));
 
-        item.GetGameObject().transform.position = new Vector3(5000f, 5000f, 5000f);
+        ModifyAmount(name, 1);
+        ServicesProvider.instance.DestroyObject(item); 
     }
-    public void Remove(IInventoryItem item)
+    public void Remove(string itemName)
     {
-        if (items.Contains(item))
-            items.Remove(item);
-
         UIGame.instance.ShowRepeatingMessage(
-            item.GetGameObject().tag + " removed from inventory",
-                myController.GetBody().transform, 0.5f, 1, new ConditionChecker(true));
+            itemName + " removed from inventory",
+            myController.GetBody().transform,
+            0.5f, 1, new ConditionChecker(true));
 
-        item.GetGameObject().transform.position = myController.GetBody().transform.position;
+        ModifyAmount(itemName, -1);
+        DestroyEmpty();
+        DropInventoryItem(itemName);
     }
-    public List<IInventoryItem> GetItems()
+    public void DropInventoryItem(string item)
+    {
+        if (item == "Harvest")
+            GameManager.instance.SpawnHarvest();
+        else if (item == "Fruit")
+            GameManager.instance.SpawnFruit();
+        else if (item == "StonePack")
+            GameManager.instance.SpawnStonePack();
+        else if (item == "WoodPack")
+            GameManager.instance.SpawnWoodPack();
+        else if (item == "Seed")
+            GameManager.instance.SpawnSeed();
+        else if(item.Contains("Boost"))
+            GameManager.instance.SpawnBoost(item);
+    }
+    public void LoadInventory(List<InventoryItem_Data> data)
+    {
+        items = data;
+    }
+    public List<InventoryItem_Data> GetInventoryData()
     {
         return items;
     }
-    public List<InventoryItem_Data> GetItems_Data()
+
+    //Internal Algorithms
+    bool Exists(string tag)
     {
-        List<InventoryItem_Data> items_data = new List<InventoryItem_Data>();
-
-        foreach(IInventoryItem item in items)
+        if(items != null)
         {
-            bool alreadyExists = false;
-            InventoryItem_Data item_data = new InventoryItem_Data();
-
-            foreach(InventoryItem_Data itemData in items_data)
-            {
-                if(itemData.itemTag == item.GetGameObject().tag)
-                {
-                    alreadyExists = true;
-                    item_data = itemData;
-                }
-            }
-
-            if(alreadyExists)
-            {
-                item_data.amount++;
-            }
-            else
-            {
-                InventoryItem_Data data = new InventoryItem_Data();
-
-                data.itemTag = item.GetGameObject().tag;
-                data.amount = 1;
-
-                items_data.Add(data);
-            }
-
+            foreach (InventoryItem_Data item in items)
+                if (item.tag == tag)
+                    return true;
         }
 
-        return items_data;
+        return false;
     }
+    void ModifyAmount(string tag, int increment)
+    {
+        if (items == null)
+        {
+            items = new List<InventoryItem_Data>();
+        }
+
+        if (Exists(tag))
+        {
+            foreach (InventoryItem_Data item in items)
+            {
+                if (item.tag == tag)
+                {
+                    item.amount += increment;
+                }
+            }
+        }
+        else
+        {
+            if(increment>0)
+                items.Add(new InventoryItem_Data() { amount = 1, tag = tag});
+        }
+    }
+    void DestroyEmpty()
+    {
+        List<InventoryItem_Data> emptyItems = new List<InventoryItem_Data>();
+
+        foreach (InventoryItem_Data item in items)
+            if (item.amount == 0)
+                emptyItems.Add(item);
+
+        foreach (InventoryItem_Data emptyItem in emptyItems)
+            items.Remove(emptyItem);
+    }
+
 }
 
 

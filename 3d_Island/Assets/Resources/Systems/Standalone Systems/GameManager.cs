@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour, IInputUser
     [SerializeField] GameObject aggressivenessBoostAsset;
     [SerializeField] GameObject powerBoostAsset;
     [SerializeField] GameObject healthBoostAsset;
+    [SerializeField] GameObject woodpackAsset;
+    [SerializeField] GameObject stonepackAsset;
     [SerializeField] GameObject seedAsset;
     [SerializeField] GameObject treeAsset;
     [SerializeField] NPC npcAsset;
@@ -112,6 +114,12 @@ public class GameManager : MonoBehaviour, IInputUser
 
         foreach (HealthBoost_Data boost in sessionData.data.healthboosts)
             boost.SpawnWithData(healthBoostAsset, true);
+       
+        foreach (WoodPack_Data woodPack in sessionData.data.woodpacks)
+            woodPack.SpawnWithData(woodpackAsset, true);
+
+        foreach (StonePack_Data stonePack in sessionData.data.stonepacks)
+            stonePack.SpawnWithData(stonepackAsset, true);
 
         //tree is Done differently because it exists by default
         if (sessionData.data.trees.Count > 0)
@@ -151,6 +159,8 @@ public class GameManager : MonoBehaviour, IInputUser
         sessionData.data.aggressivenessBoosts = AggressivenessBoost_Data.GameToDate(FindObjectsOfType<AggressivenessBoost>());
         sessionData.data.powerboosts = PowerBoost_Data.GameToDate(FindObjectsOfType<PowerBoost>());
         sessionData.data.healthboosts = HealthBoost_Data.GameToDate(FindObjectsOfType<HealthBoost>());
+        sessionData.data.stonepacks = StonePack_Data.GameToDate(FindObjectsOfType<StonePack>());
+        sessionData.data.woodpacks = WoodPack_Data.GameToDate(FindObjectsOfType<WoodPack>());
         sessionData.data.player = Player_Data.GameToData(myPlayer);
         sessionData.modeData = modeHandler.GetModeData();
 
@@ -173,7 +183,6 @@ public class GameManager : MonoBehaviour, IInputUser
 
         return hit;
     }
-
 
 
     //Settings
@@ -255,27 +264,62 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         Instantiate(eggAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
-    public void SpawnRandomBoosts()
+    public void SpawnFruit()
+    {
+        Instantiate(fruitAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+    }
+    public void SpawnRandomItem()
     {
         var points = MapSystem.instance.GetExplorationPoints();
 
         int randomPoint = UnityEngine.Random.Range(0,points.Count);
-        int randomBoost = UnityEngine.Random.Range(0, 5);
+        int randomItem = UnityEngine.Random.Range(0, 7);
 
-        GameObject boost = null;
+        GameObject item = null;
 
-        if (randomBoost == 0)
-            boost = fertilityBoostAsset;
-        else if (randomBoost == 1)
+        if (randomItem == 0)
+            item = fertilityBoostAsset;
+        else if (randomItem == 1)
+            item = aggressivenessBoostAsset;
+        else if (randomItem == 2)
+            item = healthBoostAsset;
+        else if (randomItem == 3)
+            item = powerBoostAsset;
+        else if (randomItem == 4)
+            item = extroversionBoostAsset;
+        else if (randomItem == 5)
+            item = stonepackAsset;
+        else if (randomItem == 6)
+            item = woodpackAsset;
+
+        Instantiate(item, points[randomPoint].position,Quaternion.identity);
+    }
+    public void SpawnBoost(string boostType)
+    {
+        GameObject boost = powerBoostAsset;
+
+        if(boostType == "AggressivenessBoost")
+        {
             boost = aggressivenessBoostAsset;
-        else if (randomBoost == 2)
-            boost = healthBoostAsset;
-        else if (randomBoost == 3)
-            boost = powerBoostAsset;
-        else
+        }
+        else if(boostType == "ExtroversionBoost")
+        {
             boost = extroversionBoostAsset;
+        }
+        else if(boostType == "FertilityBoost")
+        {
+            boost = fertilityBoostAsset;
+        }
+        else if (boostType == "HealthBoost")
+        {
+            boost = healthBoostAsset;
+        }
+        else if (boostType == "PowerBoost")
+        {
+            boost = powerBoostAsset;
+        }
 
-        Instantiate(boost, points[randomPoint].position,Quaternion.identity);
+        Instantiate(boost.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
     public GameObject SpawnDeadBody_ReturnDeadBody(Vector3 position)
     {
@@ -285,10 +329,17 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         return Instantiate(eggAsset.gameObject, position, Quaternion.identity).GetComponent<Egg>();
     }
-
     public void SpawnSeed()
     {
         Instantiate(seedAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+    }
+    public void SpawnStonePack()
+    {
+        Instantiate(stonepackAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+    }
+    public void SpawnWoodPack()
+    {
+        Instantiate(woodpackAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
     public GameObject SpawnHarvest()
     {
@@ -297,7 +348,7 @@ public class GameManager : MonoBehaviour, IInputUser
         return x;
     }
 
-
+    
     //Input Interface
     public void PressInput()
     {

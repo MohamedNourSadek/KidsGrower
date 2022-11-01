@@ -6,7 +6,7 @@ using TMPro;
 using System;
 using UnityEngine.Events;
 
-public enum PickMode { Pick, Drop, Shake};
+public enum PickMode { Pick, Drop, Shake, Store, _};
 
 public class UIGame : MonoBehaviour, IPanelsManagerUser
 {
@@ -186,8 +186,8 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
         element.message.text = message;
     }
 
+
     //Referenced Messages
-    
     //Sliders
     Dictionary<GameObject, Slider> slidersContainer = new();
     public void ShowSlider(GameObject user, Vector2 limits, Transform parent)
@@ -252,38 +252,10 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
             foreach (var item in items)
                 Destroy(item.gameObject);
 
-            List<InventoryItemUI> uiElements = new List<InventoryItemUI>();
-
-            foreach(var item in inventorySystem.GetItems())
+            foreach(var item in inventorySystem.GetInventoryData())
             {
-                bool isOld = false;
-                InventoryItemUI element = new InventoryItemUI();
-
-                foreach(InventoryItemUI uiElement in uiElements)
-                {
-                    if (uiElement.itemName.text == item.GetGameObject().tag)
-                    {
-                        isOld = true;
-                        element = uiElement;
-                    }
-                }
-
-                if(isOld)
-                {
-                    element.itemNumber.text = (Int32.Parse(element.itemNumber.text) + 1).ToString();
-                }
-                else
-                {
-                    var itemUI = Instantiate(inventoryElementUIAsset, itemsParent.transform).GetComponent<InventoryItemUI>();
-                    uiElements.Add(itemUI);
-
-                    itemUI.Intialize(
-                        inventorySystem,
-                        item.GetGameObject().tag,
-                        1,
-                        itemUI.OnPress);
-                }
-
+                InventoryItemUI itemUI = Instantiate(inventoryElementUIAsset, itemsParent.transform).GetComponent<InventoryItemUI>();
+                itemUI.Intialize(inventorySystem,item.tag,item.amount,itemUI.OnPress);
             }
         }
     }

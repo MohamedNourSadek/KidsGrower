@@ -21,8 +21,8 @@ public class Action_Explore : AbstractAction
     {
         Vector3 destination = MapSystem.instance.GetRandomExplorationPoint();
 
-        if (myAgent.myAgent.isActiveAndEnabled)
-            myAgent.myAgent.destination = destination;
+        if (myAgent.navMeshAgent.isActiveAndEnabled)
+            myAgent.navMeshAgent.destination = destination;
 
         float distance = 50f;
 
@@ -33,8 +33,8 @@ public class Action_Explore : AbstractAction
 
             distance = (myAgent.transform.position - destination).magnitude;
 
-            if (myAgent.myAgent.isActiveAndEnabled)
-                myAgent.myAgent.SetDestination(destination);
+            if (myAgent.navMeshAgent.isActiveAndEnabled)
+                myAgent.navMeshAgent.SetDestination(destination);
 
             yield return new WaitForFixedUpdate();
         }

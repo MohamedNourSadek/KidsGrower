@@ -18,4 +18,6 @@ public class GameData
     public List<AggressivenessBoost_Data> aggressivenessBoosts = new List<AggressivenessBoost_Data>();
     public List<PowerBoost_Data> powerboosts = new List<PowerBoost_Data>();
     public List<HealthBoost_Data> healthboosts = new List<HealthBoost_Data>();
+    public List<WoodPack_Data> woodpacks = new List<WoodPack_Data>();
+    public List<StonePack_Data> stonepacks = new List<StonePack_Data>();
 }

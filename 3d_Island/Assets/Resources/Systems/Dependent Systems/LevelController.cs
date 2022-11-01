@@ -9,12 +9,12 @@ public delegate void xpNotify();
 [System.Serializable]
 public class LevelController
 {
+    public int currentLevel = 0;
+    public float currentXp = 0;
     static List<float> levelsXP = new List<float>()
     {
         500, 1000, 1500, 2000f, 3000f, 5000f, 7500f, 15000f, 20000f, 25000f
     };
-    int currentLevel = 0;
-    float currentXp = 0;
     event levelNotify OnLevelChange;
     event xpNotify OnXpChange;
 

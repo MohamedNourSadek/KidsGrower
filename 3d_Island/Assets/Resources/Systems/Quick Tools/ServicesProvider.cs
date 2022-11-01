@@ -16,12 +16,17 @@ public class ServicesProvider : MonoBehaviour
     {
         instance = this;       
     }
-
     void OnDrawGizmos()
     {
         foreach(Action action in OnGizomsEvent)
         {
             action.Invoke();
         }
+
     }
+    public void DestroyObject(GameObject gameobject)
+    {
+        Destroy(gameobject);
+    }
+
 }

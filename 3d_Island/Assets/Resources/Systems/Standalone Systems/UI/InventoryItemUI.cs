@@ -20,18 +20,9 @@ public class InventoryItemUI : MonoBehaviour
         this.inventorySystem = inventorySystem;
         myButton.onClick.AddListener(onPress);
     }
-
     public void OnPress()
     {
-        foreach(var item in inventorySystem.GetItems())
-        {
-            if(item.GetGameObject().tag == itemName.text)
-            {
-                inventorySystem.Remove(item);
-                UIGame.instance.DisplayInventory(true, inventorySystem);
-                break;
-            }    
-        }
+        inventorySystem.Remove(itemName.text);
+        UIGame.instance.DisplayInventory(true, inventorySystem);
     }
-
 }

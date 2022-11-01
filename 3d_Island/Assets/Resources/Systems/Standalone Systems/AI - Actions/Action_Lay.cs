@@ -34,7 +34,7 @@ public class Action_Lay : AbstractAction
 
             //Laying
             myAgent.GetBody().isKinematic = true;
-            myAgent.myAgent.enabled = false;
+            myAgent.navMeshAgent.enabled = false;
             while (condition.isTrue)
             {
                 if (base.ShouldBreak())
@@ -50,7 +50,7 @@ public class Action_Lay : AbstractAction
             //Done
             if (!myAgent.isPicked)
             {
-                myAgent.myAgent.enabled = true;
+                myAgent.navMeshAgent.enabled = true;
                 myAgent.GetBody().isKinematic = false;
             }
 

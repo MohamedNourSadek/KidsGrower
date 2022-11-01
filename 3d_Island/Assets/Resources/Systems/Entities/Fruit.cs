@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fruit : Eatable, ISavable
+public class Fruit : Eatable, ISavable, IStorableObject
 {
     public void LoadData(SaveStructure saveData)
     {

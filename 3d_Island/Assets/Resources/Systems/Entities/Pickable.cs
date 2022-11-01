@@ -8,7 +8,8 @@ public class Pickable : MonoBehaviour, IDetectable
     [Header("Objects References")]
     [SerializeField] protected GameObject indicatorObject;
     [SerializeField] protected Rigidbody myBody;
-    [SerializeField] GroundDetector ground;
+    [SerializeField] public GroundDetector groundDetector;
+    [SerializeField] Collider myCollider;
     
     [System.NonSerialized] public HandSystem holder;
     [System.NonSerialized] public bool isPicked = false;
@@ -16,7 +17,10 @@ public class Pickable : MonoBehaviour, IDetectable
     int mylayer = 7;
     int mylayerNonDetectable = 0;
 
-
+    public virtual void Awake()
+    {
+        groundDetector.Initialize(myBody);
+    }
     public Rigidbody GetBody()
     {
         if (myBody)
@@ -26,17 +30,13 @@ public class Pickable : MonoBehaviour, IDetectable
     }
     private void Update()
     {
-        if (OnGround())
+        if (groundDetector.IsOnLayer(GroundLayers.Ground))
             gameObject.layer = mylayer;
         else 
             gameObject.layer = mylayerNonDetectable;
     }
 
 
-    public bool OnGround()
-    {
-        return ground.IsOnGroud(myBody);
-    }
     private void OnCollisionEnter(Collision collision)
     {
         if(SoundManager.instance != null && collision.relativeVelocity.magnitude >= 2f)
@@ -74,6 +74,7 @@ public class Pickable : MonoBehaviour, IDetectable
 
         holder = _picker;
         holder.SetObjectInHand(this);
+        myCollider.enabled = false;
 
         isPicked = true;
         myBody.isKinematic = true;
@@ -87,8 +88,11 @@ public class Pickable : MonoBehaviour, IDetectable
     {
         isPicked = false;
         myBody.isKinematic = false;
+        myBody.constraints = RigidbodyConstraints.None;
 
-        if(holder != null)
+        myCollider.enabled = true;
+
+        if (holder != null)
             holder.ClearObjectInHand();
 
         holder = null;

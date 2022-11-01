@@ -12,7 +12,7 @@ public class Fruit_Data : SaveStructure
         List<Fruit_Data> list = new List<Fruit_Data>(); 
 
         foreach (Fruit fruit in fruits)
-            if(fruit.OnGround())
+            if(fruit.groundDetector.IsOnLayer(GroundLayers.Ground))
                 list.Add(fruit.GetData());
 
         return list;

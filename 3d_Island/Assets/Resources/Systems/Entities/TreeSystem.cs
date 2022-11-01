@@ -49,8 +49,8 @@ public class TreeSystem : MonoBehaviour, IDetectable, ISavable
 
         if (SoundManager.instance != null)
             SoundManager.instance.PlayTreeShake(this.gameObject);
-
     }
+
 
     IEnumerator Seeding()
     {

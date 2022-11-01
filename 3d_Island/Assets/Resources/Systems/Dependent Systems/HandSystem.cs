@@ -16,16 +16,17 @@ public class HandSystem
     [SerializeField] float pickSpeedThrushold = 2f;
     [SerializeField] float petTime = 1f;
      
-    public bool gotSomething;
+    public bool gotSomethingInHand;
+    public bool canStore;
+    public bool canShake;
     public bool canPick;
-    public bool canDrop;
     public bool canThrow;
     public bool canPlant; 
     public bool canPet;
 
     //Private Data
     DetectorSystem detector;
-    List<Pickable> nearPickables = new List<Pickable>();
+    public List<Pickable> nearPickables = new List<Pickable>();
     Pickable objectInHand = new();
     IController myController;
     bool isPetting;
@@ -40,21 +41,25 @@ public class HandSystem
     public void Update()
     {
         detector.CleanAllListsFromDestroyed();
-        UpdatePickables();
+        detector.CleanListsFromDestroyedObjects(nearPickables);
+        UpdateHighlight();
 
         if (objectInHand == null)
         {
-            canPick = GetPickables().Count > 0;
+            canPick = nearPickables.Count >= 1;
+            canStore = false;
             canThrow = false;
-            gotSomething = false;
             canPlant = false;
+            canShake = detector.GetNear("Tree") != null;
+            gotSomethingInHand = false;
         }
         else
         {
+            canStore = (nearPickables.Count >= 2) && (nearPickables[1].GetComponent<IStorableObject>() != null);
             canPick = false;
-            canDrop = true;
             canThrow = true;
-            gotSomething = true;
+            canShake = false;
+            gotSomethingInHand = true;
         }
 
         if (objectInHand && objectInHand.GetComponent<Plantable>())
@@ -62,21 +67,17 @@ public class HandSystem
 
         canPet = (detector.GetNear("NPC") != null) && (objectInHand == null) && (isPetting == false);
     }
-    public List<Pickable> GetPickables()
-    {
-        return nearPickables;
-    }
 
 
     public void PickNearestObject()
     {
-        if ((GetPickables().Count > 0) ) 
+        if ((nearPickables.Count > 0) ) 
         {
-            float speed = (GetPickables()[0].GetSpeed());
+            float speed = (GetNearestPickable().GetSpeed());
 
             if (speed <= pickSpeedThrushold)
             {
-                objectInHand = GetPickables()[0];
+                objectInHand = GetNearestPickable();
                 PickObject(objectInHand);
             }
         }
@@ -85,14 +86,12 @@ public class HandSystem
     {
         subject.Pick(this);
 
-        canPick = false;
-        canDrop = true;
         canThrow = true;
-        gotSomething = true;
+        gotSomethingInHand = true;
     }
     public void PetNearestObject()
     {
-        Transform petObject = GetPickables()[0].transform;
+        Transform petObject = nearPickables[0].transform;
 
         ConditionChecker condition = new ConditionChecker(true);
 
@@ -100,26 +99,21 @@ public class HandSystem
 
         UIGame.instance.ShowRepeatingMessage("Petting", petObject, petTime, 5f, condition);
 
-        if ((GetPickables().Count > 0))
+        if ((nearPickables.Count > 0))
         {
-            if ((GetPickables()[0].GetSpeed() <= pickSpeedThrushold))
+            if ((nearPickables[0].GetSpeed() <= pickSpeedThrushold))
             {
-                NPC npc = (NPC)(GetPickables()[0]);
-
+                NPC npc = (NPC)(nearPickables[0]);
                 myController.GetBody().isKinematic = true;
                 npc.StartPetting();
-
                 isPetting = true;
-
-                canPick = false;
-
                 ServicesProvider.instance.StartCoroutine(PetObjectRoutine(condition,npc));
             }
         }
     }
     public void DropObjectInHand()
     {
-        canDrop = false;
+        gotSomethingInHand = false;
         canThrow = false;
 
         if(objectInHand != null)
@@ -149,7 +143,7 @@ public class HandSystem
 
         Vector3 direction = (Vector3.down + (platable.plantDistance * myController.GetBody().transform.forward)).normalized;
         RaycastHit ray;
-        Physics.Raycast(myHand.transform.position, direction, out ray, 50, GroundDetector.GetGroundLayer());
+        Physics.Raycast(myHand.transform.position, direction, out ray, 50, myController.GetGroundDetector().GetGroundLayer());
 
         platable.Plant(ray.point);
     }
@@ -167,8 +161,10 @@ public class HandSystem
     }
     public Pickable GetNearestPickable()
     {
-        if (GetPickables().Count > 0)
-            return GetPickables()[0];
+        if (gotSomethingInHand && nearPickables.Count >= 2)
+            return nearPickables[1];
+        if (nearPickables.Count > 0)
+            return nearPickables[0];
         else
             return null;
     }
@@ -177,8 +173,60 @@ public class HandSystem
         return myHand.transform;
     }
 
-     
 
+    //Pickables handle
+    void UpdateHighlight()
+    {
+        if (nearPickables.Count >= 1 && highlightToPick)
+        {
+            var nearest = GetNearestPickable();
+
+            foreach (Pickable pickable in nearPickables)
+            {
+                if ((pickable == nearest) && (pickable != objectInHand) && (canPick || canStore))
+                    pickable.PickablilityIndicator(true);
+                else
+                    pickable.PickablilityIndicator(false);
+            }
+        }
+    }
+    public void AddToPickable(IDetectable detectable)
+    {
+        if (detectable.GetGameObject().GetComponent<Pickable>())
+        {
+            foreach (string tag in pickableTags)
+            {
+                if (detectable.GetGameObject().tag == tag)
+                {
+                    if (nearPickables.Contains(detectable.GetGameObject().GetComponent<Pickable>()) == false)
+                    {
+                        nearPickables.Add(detectable.GetGameObject().GetComponent<Pickable>());
+                    }
+                }
+            }
+        }
+    }
+    public void RemoveFromPickables(IDetectable detectable)
+    {
+        if (detectable.GetGameObject().GetComponent<Pickable>())
+        {
+            foreach (string tag in pickableTags)
+            {
+                if (detectable.GetGameObject().tag == tag)
+                {
+                    if (nearPickables.Contains(detectable.GetGameObject().GetComponent<Pickable>()))
+                    {
+                        nearPickables.Remove(detectable.GetGameObject().GetComponent<Pickable>());
+
+                        if (highlightToPick)
+                            detectable.GetGameObject().GetComponent<Pickable>().PickablilityIndicator(false);
+                    }
+                }
+            }
+        }
+    }
+
+    
     //Internal Algorithms
     IEnumerator PetObjectRoutine(ConditionChecker condition, NPC npc)
     {
@@ -212,38 +260,6 @@ public class HandSystem
         }
 
         condition.Update(false);
-    }
-    void UpdatePickables()
-    {
-        nearPickables.Clear();
-
-        foreach(IDetectable detectable in detector.GetInRange())
-        {
-            foreach (string tag in pickableTags)
-            {
-                if (detectable.GetGameObject().tag == tag && highlightToPick)
-                    detectable.GetGameObject().GetComponent<Pickable>().PickablilityIndicator(false);
-            }
-        }
-
-        foreach(IDetectable detectable in  detector.GetNear())
-        {
-            bool targetTag = false;
-
-            foreach(string tag in pickableTags)
-            {
-                if(detectable.GetGameObject().tag == tag)
-                    targetTag = true;
-            }
-
-            if(targetTag)
-            {
-                nearPickables.Add(detectable.GetGameObject().GetComponent<Pickable>());
-            }
-        }
-
-        if(nearPickables.Count >= 1 && highlightToPick)
-            GetNearestPickable().PickablilityIndicator(true);
     }
 }
 

@@ -191,12 +191,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6949429004428104456}
-  m_LocalRotation: {x: 0.022883154, y: 0.00985004, z: 0.9888201, w: 0.14701787}
-  m_LocalPosition: {x: -0.0003, y: 0.0045, z: 0.0031}
-  m_LocalScale: {x: 0.021545108, y: 0.021545116, z: 0.021545118}
+  m_LocalRotation: {x: -0.27848178, y: 0.39016497, z: 0.87554556, w: 0.06032541}
+  m_LocalPosition: {x: 0.0006917034, y: 0.0029274488, z: -0.0035462491}
+  m_LocalScale: {x: 0.021545108, y: 0.02154512, z: 0.021545114}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2716448787616102519}
+  m_Father: {fileID: 1614731631780959683}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6949429005409692766
@@ -235,7 +235,7 @@ Transform:
   - {fileID: 58072133524451559}
   - {fileID: 7492843682852832024}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &6949429005409692764
 MonoBehaviour:
@@ -316,9 +316,8 @@ MonoBehaviour:
       detectableLayers:
         serializedVersion: 2
         m_Bits: 80
-      groundTag: Ground
-      waterTag: Water
       onGroundThreshold: 1.3
+      initialized: 0
     acceleration: 2500
     maxSpeed: 5
     rotationSpeed: 6
@@ -345,13 +344,15 @@ MonoBehaviour:
     - Seed
     - Boost
     - Egg
+    - WoodPack
+    - StonePack
     throwForce: 100
     pickSpeedThrushold: 50
     petTime: 4
-    detector: {fileID: 0}
-    gotSomething: 0
+    gotSomethingInHand: 0
+    canStore: 0
+    canShake: 0
     canPick: 0
-    canDrop: 0
     canThrow: 0
     canPlant: 0
     canPet: 0
@@ -363,9 +364,11 @@ MonoBehaviour:
     - {fileID: 7709815819202285892}
   detector: {fileID: 2931690313484480716}
   animationLerpSpeed: {x: 25, y: 20}
-  timeBetweenBlinks: {x: 0.25, y: 2}
   myFace:
     animator: {fileID: 1494361007}
+    timeBetweenBlinks: {x: 0.25, y: 2}
+  inventorySystem:
+    items: []
 --- !u!1 &8722561649881762399
 GameObject:
   m_ObjectHideFlags: 0
@@ -804,7 +807,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -4615358540919257167, guid: 994faed702885ae4b825b754d8266084,
+    - targetCorrespondingSourceObject: {fileID: 876123604254763525, guid: 994faed702885ae4b825b754d8266084,
         type: 3}
       insertIndex: 0
       addedObject: {fileID: 6949429004428104455}
@@ -820,6 +823,12 @@ PrefabInstance:
 --- !u!4 &103837901738626079 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -7264068571656948775, guid: 994faed702885ae4b825b754d8266084,
+    type: 3}
+  m_PrefabInstance: {fileID: 1891564738519023558}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1614731631780959683 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 876123604254763525, guid: 994faed702885ae4b825b754d8266084,
     type: 3}
   m_PrefabInstance: {fileID: 1891564738519023558}
   m_PrefabAsset: {fileID: 0}
@@ -866,12 +875,6 @@ Animator:
 --- !u!4 &2146679247528908845 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 994faed702885ae4b825b754d8266084,
-    type: 3}
-  m_PrefabInstance: {fileID: 1891564738519023558}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &2716448787616102519 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -4615358540919257167, guid: 994faed702885ae4b825b754d8266084,
     type: 3}
   m_PrefabInstance: {fileID: 1891564738519023558}
   m_PrefabAsset: {fileID: 0}
@@ -1425,7 +1428,7 @@ PrefabInstance:
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: detectableTags.Array.size
-      value: 9
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
@@ -1534,8 +1537,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
+      propertyPath: detectableTags.Array.data[9]
+      value: WoodPack
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
       propertyPath: detectableElements.Array.size
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[10]
+      value: StonePack
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}

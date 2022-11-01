@@ -18,8 +18,9 @@ public abstract class Plantable : Pickable
     protected float plantedSince = 0f;
     protected bool planted = false;
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
         growingProgress.SetFloat("Progress", 0f);
     }
 
@@ -34,7 +35,7 @@ public abstract class Plantable : Pickable
     {
         isPicked = false;
         planted = true;
-        myBody.isKinematic = true;
+        myBody.constraints = RigidbodyConstraints.FreezeAll;
         myBody.transform.rotation = Quaternion.identity;
         transform.position = _plantLocation;
 

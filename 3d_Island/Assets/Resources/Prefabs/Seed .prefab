@@ -265,18 +265,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   indicatorObject: {fileID: 1156392986627540040}
   myBody: {fileID: 7058220185831580078}
-  holder:
-    myHand: {fileID: 0}
-    throwForce: 20
-    pickSpeedThrushold: 2
-    petTime: 1
-    detector: {fileID: 0}
-    gotSomething: 0
-    canPick: 0
-    canDrop: 0
-    canThrow: 0
-    canPlant: 0
-    canPet: 0
+  groundDetector:
+    detectableLayers:
+      serializedVersion: 2
+      m_Bits: 64
+    onGroundThreshold: 1.3
+    initialized: 0
+  myCollider: {fileID: 4595660525342398524}
   plantTime: 10
   plantDistance: 0
   allowedToPlantOn: 01000000

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerBoost : Eatable, ISavable
+public class PowerBoost : Eatable, ISavable, IStorableObject
 {
     public void LoadData(SaveStructure saveData)
     {

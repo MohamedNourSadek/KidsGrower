@@ -2,73 +2,63 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [System.Serializable]
 public class GroundDetector
 {
     [SerializeField] LayerMask detectableLayers;
-    [SerializeField] string groundTag = "Ground";
-    [SerializeField] string waterTag = "Water";
     [SerializeField] float onGroundThreshold = 1.3f;
 
-    public static LayerMask detectablelayers;
-    
-    public void Initialize()
+    Rigidbody myBody;
+    public bool initialized;
+
+    public void Initialize(Rigidbody body)
     {
-        detectablelayers = detectableLayers;
+        myBody = body;
+        initialized = true;
     }
-    public static LayerMask GetGroundLayer()
+    public bool IsOnLayer(GroundLayers layerTag)
     {
-        return detectablelayers;
+        if (initialized)
+        {
+            if (myBody.isKinematic == false)
+            {
+                RaycastHit ray;
+                Physics.Raycast(myBody.transform.position + Vector3.up, Vector2.down, out ray, onGroundThreshold, detectableLayers);
+
+                if ((ray.point.magnitude > 0) && (ray.collider.tag == layerTag.ToString()))
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+            return false;
     }
-    public bool IsOnGroud(Rigidbody body)
-    {
-        return DetectGround(body, groundTag);
-    }
-    public bool IsOnWater(Rigidbody body)
-    {
-        return DetectGround(body, waterTag);
-    }
-    public void SetThreshold(float thrus)
-    {
-        onGroundThreshold = thrus;
-    }
-    public float DistanceFromGround(Rigidbody body)
+    public float GetDistanceFromGround()
     {
         RaycastHit ray;
 
-        Physics.Raycast(body.transform.position + Vector3.up, Vector2.down, out ray, 50f, detectableLayers);
+        Physics.Raycast(myBody.transform.position + Vector3.up, Vector2.down, out ray, 50f, detectableLayers);
 
-        if (ray.collider.tag == groundTag)
+        if (ray.collider.tag == "Ground")
         {
-            return (body.transform.position - ray.point).magnitude;
+            return (myBody.transform.position - ray.point).magnitude;
         }
         else
         {
             return -1f;
         }
     }
-    bool DetectGround(Rigidbody body, string tag)
+    public LayerMask GetGroundLayer()
     {
-        if (body.isKinematic == false)
-        {
-            RaycastHit ray = RayCaster(body);
-
-            if ((ray.point.magnitude > 0) && (ray.collider.tag == tag))
-                return true;
-            else
-                return false;
-        }
-        else
-        {
-            return false;
-        }
+        return detectableLayers;
     }
-    public RaycastHit RayCaster(Rigidbody body)
-    {
-        RaycastHit ray;
-        Physics.Raycast(body.transform.position + Vector3.up, Vector2.down, out ray, onGroundThreshold, detectableLayers);
-        return ray;
-    }
-
-
 }
+
+
+public enum GroundLayers { Ground, Water }

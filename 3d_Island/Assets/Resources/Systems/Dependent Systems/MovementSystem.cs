@@ -31,11 +31,10 @@ public class MovementSystem
     bool dashedMidAir = false;
     
 
-
     //Interface to the controller
     public void Initialize(Rigidbody _body, Transform _lookdireciton)
     {
-        groundDetector.Initialize();
+        groundDetector.Initialize(_body);
         this.body = _body;
         lookDirection = _lookdireciton;
     }
@@ -43,7 +42,7 @@ public class MovementSystem
     {
         RotatePlayer();
 
-        onGround = groundDetector.IsOnGroud(body);
+        onGround = groundDetector.IsOnLayer(GroundLayers.Ground);
 
         if (onGround)
             dashedMidAir = false;

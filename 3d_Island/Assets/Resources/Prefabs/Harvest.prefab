@@ -65,18 +65,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   indicatorObject: {fileID: 1622378824447789318}
   myBody: {fileID: 1622378823701921159}
-  holder:
-    myHand: {fileID: 0}
-    throwForce: 20
-    pickSpeedThrushold: 2
-    petTime: 1
-    detector: {fileID: 0}
-    gotSomething: 0
-    canPick: 0
-    canDrop: 0
-    canThrow: 0
-    canPlant: 0
-    canPet: 0
+  groundDetector:
+    detectableLayers:
+      serializedVersion: 2
+      m_Bits: 64
+    onGroundThreshold: 1.3
+    initialized: 0
+  myCollider: {fileID: 1622378824458186169}
 --- !u!1 &1622378824447789318
 GameObject:
   m_ObjectHideFlags: 0

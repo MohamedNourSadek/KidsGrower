@@ -10,12 +10,12 @@ public class NPC : Pickable, IController, ISavable
 
     [SerializeField] public HandSystem handSystem;
     [SerializeField] public DetectorSystem detector;
-    [SerializeField] GroundDetector groundDetector;
     [SerializeField] AppearanceControl appearanceControl;
     [SerializeField] FacialControl facialControl;
     [SerializeField] Animator animator;
     [SerializeField] float animationLerpSpeed = 1f;
     [SerializeField] FacialControl myFace;
+    [SerializeField] AiBehaviour aiBehavior;
 
     [Header("Character parameters")]
     [Header("Dynamic")]
@@ -25,16 +25,9 @@ public class NPC : Pickable, IController, ISavable
     [SerializeField] public float nearObjectDistance = 1f;
     [SerializeField] public float eatingXpPerUpdate = 1f;
     [SerializeField] public float pettingXP = 100f;
-    [SerializeField] float decisionsDelay = 0.5f;
-
-
-    [Header("AI")]
-    [SerializeField] AbstractAction currentAction;
-    [SerializeField] List<AbstractAction> actions = new List<AbstractAction>();
-
 
     //Internal
-    [System.NonSerialized] public NavMeshAgent myAgent;
+    [System.NonSerialized] public NavMeshAgent navMeshAgent;
     bool petting = false;
     float moveAnimtion = 0f;
     
@@ -43,22 +36,21 @@ public class NPC : Pickable, IController, ISavable
     {
         NPCsCount++;
 
-        myAgent = GetComponent<NavMeshAgent>();
-        myAgent.stoppingDistance = 0.9f * nearObjectDistance;
-        detector.Initialize(nearObjectDistance, OnDetectableInRange, OnDetectableExit, OnDetectableNear, OnDetectableNearExit);
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        navMeshAgent.stoppingDistance = 0.9f * nearObjectDistance;
+        detector.Initialize(nearObjectDistance, aiBehavior.OnDetectableInRange, aiBehavior.OnDetectableExit, aiBehavior.OnDetectableNear, aiBehavior.OnDetectableNearExit);
         handSystem.Initialize(detector, this);
         appearanceControl.Initialize(this);
         myFace.Initialize();
 
-        groundDetector.Initialize();
+        groundDetector.Initialize(myBody);
         character.levelControl.Initialize(OnLevelIncrease, OnXPIncrease);
 
         UIGame.instance.CreateNPCUi(this.gameObject, this.transform);
         UIGame.instance.UpateNpcUiElement(this.gameObject, character.saveName);
 
-        base.StartCoroutine(GrowingUp());
-        base.StartCoroutine(AiContinous());
-        base.StartCoroutine(AiDescrete());
+        StartCoroutine(GrowingUp());
+        aiBehavior.Initialize(this);
     }
     void OnDestroy()
     {
@@ -71,14 +63,14 @@ public class NPC : Pickable, IController, ISavable
         ApplyCharacterParameters();
         UpdateAnimationParameters();
 
-        if (groundDetector.IsOnWater(myBody))
+        if (groundDetector.IsOnLayer(GroundLayers.Water))
             Die();
 
         //Reactivate AI only if the npc were thrown and touched the ground and not being bet
-        if (groundDetector.IsOnGroud(myBody) && !petting)
-            myAgent.enabled = true;
+        if (groundDetector.IsOnLayer(GroundLayers.Ground) && !petting)
+            navMeshAgent.enabled = true;
         else if (petting)
-            myAgent.enabled = false;
+            navMeshAgent.enabled = false;
     }
 
 
@@ -106,10 +98,10 @@ public class NPC : Pickable, IController, ISavable
     public override void Pick(HandSystem picker)
     {
         base.Pick(picker);
-        myAgent.enabled = false;
+        navMeshAgent.enabled = false;
         handSystem.DropObjectInHand();
         UIGame.instance.UpateNpcUiElement(this.gameObject, "");
-        AbortAction(currentAction);
+        aiBehavior.AbortCurrentAction();
     }
     public override void Drop()
     {
@@ -141,6 +133,10 @@ public class NPC : Pickable, IController, ISavable
             return true;
         else
             return false;
+    }
+    public GroundDetector GetGroundDetector()
+    {
+        return groundDetector;
     }
 
 
@@ -198,294 +194,17 @@ public class NPC : Pickable, IController, ISavable
     }
 
 
-    //AI
-    IEnumerator AiDescrete()
-    {
-        while(true)
-        {
-            GenerateActionIfEmptyAction();
-            
-            InturrptActionsWithLowPriority();
-
-            yield return new WaitForSecondsRealtime(decisionsDelay);
-        }
-    }
-    IEnumerator AiContinous()
-    {
-        while(true)
-        {
-            //Execute Actions
-            if (currentAction.actionName == "" && actions.Count > 0 && !isPicked)
-            {
-                currentAction = ReprioritizeActions();
-
-                if (currentAction == null)
-                {
-                    yield return new WaitForFixedUpdate();
-                    continue;
-                }
-                else if (currentAction.subject == null)
-                {
-                    currentAction.actionName = "";
-                 
-                    yield return new WaitForFixedUpdate();
-                    continue;
-                }
-                else if(handSystem.GetObjectInHand())
-                {
-                    if(((Pickable)handSystem.GetObjectInHand()) != null)
-                    {
-                        //currentAction = AbstractAction.ActionFactory(ActionTypes.Drop, handSystem.GetObjectInHand().gameObject, this);
-                    }
-                }
-
-                if(actions.Contains(currentAction))
-                    actions.Remove(currentAction);
-
-                currentAction.Execute();
-
-                while (true)
-                {
-                    if (currentAction.isDone)
-                    {
-                        if (currentAction.followUpAction == null)
-                            break;
-                        else
-                        {
-                            currentAction = currentAction.followUpAction;
-                            currentAction.Execute();
-                        }
-                    }
-
-                    yield return new WaitForFixedUpdate();
-                }
-
-
-                currentAction.actionName = "";
-            }
-            yield return new WaitForFixedUpdate();
-        }
-    }
-
-
-    //AI - Decision Making
-    void InturrptActionsWithLowPriority()
-    {
-        if (actions.Count > 0)
-            if (ReprioritizeActions().GetPriority() > currentAction.GetPriority())
-                AbortAction(currentAction);
-    }
-    AbstractAction ReprioritizeActions()
-    {
-        CleanFaultyActions();
-
-        if (actions.Count > 0)
-        {
-            AbstractAction action = actions[0];
-
-            foreach (AbstractAction act in actions)
-                if (act.GetPriority() > action.GetPriority())
-                    action = act;
-
-            return action;
-        }
-        else
-            return new AbstractAction(this.gameObject,this);
-
-    }
-
-
-
-    //AI - Intercepting Information
-    void OnDetectableInRange(IDetectable detectable)
-    {
-        if (detectable.tag == "Fruit" || detectable.tag == "Boost")
-        {
-            if(FlipACoinWithProb(character.GetExtroversion()))
-            {
-                AddAction(detectable, ActionTypes.Follow, ActionTypes.Eat);
-            }
-        }
-        else if (detectable.tag == "Alter")
-        {
-            if (character.CanLay() && FlipACoinWithProb(character.seekAlterProb))
-            {
-                AddAction(detectable, ActionTypes.Follow, ActionTypes.Lay);
-            }
-        }
-        else if (detectable.tag == "Ball")
-        {
-
-            if ((((Ball)detectable).IsPicked() == false) && FlipACoinWithProb(character.GetExtroversion()))
-            {
-                AddAction(detectable, ActionTypes.Follow, ActionTypes.Pick);
-            }
-        }
-        else if ((detectable.tag == "Player") || (detectable.tag == "NPC"))
-        {
-            if ((handSystem.GetObjectInHand() != null) && (handSystem.GetObjectInHand().tag == "Ball"))
-            {
-                if(FlipACoinWithProb(character.GetAggressiveness()))
-                    AddAction(detectable, ActionTypes.Throw, ActionTypes.Null);
-            }
-            else
-            {
-                if (FlipACoinWithProb(character.GetExtroversion()))
-                {
-                    if (FlipACoinWithProb(character.GetAggressiveness()))
-                    {
-                        AddAction(detectable, ActionTypes.Follow, ActionTypes.Punch);
-                    }
-                    else
-                    {
-                        AddAction(detectable, ActionTypes.Follow, ActionTypes.Null);
-                    }
-                }
-            }
-        }
-        else if ((detectable.tag == "Tree"))
-        {
-            if (((TreeSystem)detectable).GotFruit() && FlipACoinWithProb(character.GetExtroversion()))
-            {
-                AddAction(detectable, ActionTypes.Follow, ActionTypes.Shake);
-            }
-        }
-    }
-    void OnDetectableExit(IDetectable detectable)
-    {
-        //Only cancel if it's far away, not in your hand
-        if(detectable.GetGameObject() != null)
-            if(!detector.IsNear(detectable.GetGameObject()))
-                AbortAction(detectable);
-    }
-    void OnDetectableNear(IDetectable detectable)
-    {
-    }
-    void OnDetectableNearExit(IDetectable detectable)
-    {
-    }
-
-
-    //AI - Adding/Removing Actions (Instead of a factory)
-    void AddAction(IDetectable subject, ActionTypes actionType, ActionTypes followUpActionType)
-    {
-        if (subject != null && subject.GetGameObject() != null)
-        {
-            AbstractAction newAction = AbstractAction.ActionFactory(actionType, subject.GetGameObject(), this);
-
-            if (followUpActionType != ActionTypes.Null)
-            {
-                AbstractAction followUpAction = AbstractAction.ActionFactory(followUpActionType, subject.GetGameObject(), this);
-                newAction.followUpAction = followUpAction;
-            }
-
-            actions.Add(newAction);
-        }
-    }
-    void AbortAction(IDetectable subject)
-    {
-        if (actions.Count > 0)
-        {
-            List<AbstractAction> toRemove = new List<AbstractAction>();
-
-            foreach (AbstractAction action in actions)
-            {
-                if(action.subject != null && subject != null && subject.GetGameObject() != null)
-                    if (action.subject == subject.GetGameObject())
-                       toRemove.Add(action);
-            }
-
-            foreach (AbstractAction action in toRemove)
-            {
-                actions.Remove(action);
-                action.isDone = true;
-            }
-        }
-
-        if (currentAction.subject != null && subject != null && subject.GetGameObject() != null)
-            if (currentAction.subject == subject.GetGameObject())
-                AbortAction(currentAction);
-    }
-    void AbortAction(AbstractAction action)
-    {
-        if(action != null)
-        {
-            action.Abort();
-            action.actionName = "";
-            if (myAgent.isActiveAndEnabled)
-                myAgent.SetDestination(this.transform.position);
-        }
-
-    }
-    AbstractAction GetRandomIdleAction()
-    {
-        float randomNum = UnityEngine.Random.Range(0f, 1f);
-        AbstractAction action;
-        if (randomNum >= 0.67)
-            action = new Action_Explore(this.gameObject, this);
-        else if (randomNum >= 0.33)
-            action = new Action_Sleep(this.gameObject, this);
-        else
-            action = new Action_Idle(this.gameObject, this);
-
-        return action;
-    }
-    void GenerateActionIfEmptyAction()
-    {
-        if ((actions.Count == 0) && currentAction.actionName == "" && !isPicked)
-        {
-            if (detector.GetInRange().Count == 0 && detector.GetNear().Count == 0)
-            {
-                actions.Add(GetRandomIdleAction());
-            }
-            else
-            {
-                foreach (IDetectable detectable in detector.GetInRange())
-                    OnDetectableInRange(detectable);
-
-                foreach (IDetectable detectable in detector.GetNear())
-                    OnDetectableNear(detectable);
-            }
-        }
-    }
-
-
     //Functions
     void UpdateAnimationParameters()
     {
-        Vector2 horizontalVelocity = new Vector2(myAgent.velocity.x, myAgent.velocity.z);
+        Vector2 horizontalVelocity = new Vector2(navMeshAgent.velocity.x, navMeshAgent.velocity.z);
         float finalMoveX = Mathf.Clamp01((horizontalVelocity.magnitude / character.maxSpeed));
         moveAnimtion = Mathf.Lerp(moveAnimtion, finalMoveX, Time.fixedDeltaTime * animationLerpSpeed);
         animator.SetFloat("MoveX", moveAnimtion);
     }
     void ApplyCharacterParameters()
     {
-        myAgent.speed = character.GetSpeed();
-    }
-    bool FlipACoinWithProb(float prob)
-    {
-        float random = UnityEngine.Random.Range(0f, 1f);
-
-        if (random <= prob)
-            return true;
-        else
-            return false;
-    }
-    void CleanFaultyActions()
-    {
-        List<AbstractAction> faultyActions = new List<AbstractAction>();
-
-        foreach (AbstractAction act in actions)
-            if (act == null || act.actionName == "" || act.subject == null)
-                faultyActions.Add(act);
-
-        foreach (AbstractAction act in faultyActions)
-            actions.Remove(act);
-    }
-    void OnDrawGizmos()
-    {
-        if(myAgent)
-            Gizmos.DrawSphere(myAgent.destination, .2f);
+        navMeshAgent.speed = character.GetSpeed();
     }
 }
 

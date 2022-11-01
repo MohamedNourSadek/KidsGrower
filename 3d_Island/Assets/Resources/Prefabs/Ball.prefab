@@ -131,19 +131,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   indicatorObject: {fileID: 3679434013816477170}
   myBody: {fileID: 2756139614205274716}
-  ground:
+  groundDetector:
     detectableLayers:
       serializedVersion: 2
-      m_Bits: 0
-    groundTag: Ground
-    waterTag: Water
+      m_Bits: 64
     onGroundThreshold: 1.3
-  detectableLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  nonDetectableLayer:
-    serializedVersion: 2
-    m_Bits: 1
+    initialized: 0
+  myCollider: {fileID: 2756139614205274719}
 --- !u!1 &3679434013816477170
 GameObject:
   m_ObjectHideFlags: 0

@@ -27,7 +27,7 @@ public class Action_Sleep : AbstractAction
 
         //sleep
         myAgent.GetBody().isKinematic = true;
-        myAgent.myAgent.enabled = false;
+        myAgent.navMeshAgent.enabled = false;
 
         while (condition.isTrue)
         {
@@ -43,7 +43,7 @@ public class Action_Sleep : AbstractAction
         //Wake up
         if (!myAgent.isPicked)
         {
-            myAgent.myAgent.enabled = true;
+            myAgent.navMeshAgent.enabled = true;
             myAgent.GetBody().isKinematic = false;
         }
 
