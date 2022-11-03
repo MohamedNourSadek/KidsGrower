@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 public enum PickMode { Pick, Drop, Shake, Store, _};
 
-public class UIGame : MonoBehaviour, IPanelsManagerUser
+public class UIGame : MonoBehaviour
 {
     public static UIGame instance;
 
@@ -52,11 +52,7 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     [SerializeField] public TextMeshProUGUI countDownText;
     [SerializeField] GameObject savingText;
     [SerializeField] GameObject delcareUIAsset;
-    [SerializeField] Slider sfxVolumeSlider;
-    [SerializeField] Slider ambientVolumeSlider;
-    [SerializeField] Slider uiVolumeSlider;
-    [SerializeField] Toggle shadowsToggle;
-    [SerializeField] Toggle grassToggle;
+
 
 
     //Helpers
@@ -69,40 +65,11 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
 
         foreach(PanelsManager panelManager in PanelsManagers)
             panelManager.Initialize();
-
-        sfxVolumeSlider.onValueChanged.AddListener(OnSFXVolumeChange);
-        ambientVolumeSlider.onValueChanged.AddListener(OnAmbientVolumeChange);
-        uiVolumeSlider.onValueChanged.AddListener(OnUIVolumeChange);
-
-        shadowsToggle.onValueChanged.AddListener(OnShadowsUIChange);
-        grassToggle.onValueChanged.AddListener(OnGrassUIChange);
     }
     void OnDrawGizmos()
     {
         foreach (PanelsManager panelManager in PanelsManagers)
             panelManager.OnDrawGizmos();
-    }
-    public void LoadSavedUISettings(SettingsData data)
-    {
-        sfxVolumeSlider.value = data.sfxVolume;
-        ambientVolumeSlider.value = data.ambinetVolume;
-        uiVolumeSlider.value = data.uiVolume;
-
-        shadowsToggle.isOn = data.shadows;
-        grassToggle.isOn = data.grass;
-    }
-    public SettingsData GetSavedUI()
-    {
-        SettingsData data = new SettingsData(); 
-
-        data.uiVolume = uiVolumeSlider.value;
-        data.sfxVolume = sfxVolumeSlider.value;
-        data.ambinetVolume = ambientVolumeSlider.value;
-
-        data.shadows = shadowsToggle.isOn;
-        data.grass = grassToggle.isOn;
-
-        return data;
     }
 
 
@@ -187,6 +154,7 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
     }
 
 
+
     //Referenced Messages
     //Sliders
     Dictionary<GameObject, Slider> slidersContainer = new();
@@ -255,7 +223,7 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
             foreach(var item in inventorySystem.GetInventoryData())
             {
                 InventoryItemUI itemUI = Instantiate(inventoryElementUIAsset, itemsParent.transform).GetComponent<InventoryItemUI>();
-                itemUI.Intialize(inventorySystem,item.tag,item.amount,itemUI.OnPress);
+                itemUI.Intialize(inventorySystem, gameCanvas, item.tag,item.amount,itemUI.OnPress);
             }
         }
     }
@@ -295,32 +263,8 @@ public class UIGame : MonoBehaviour, IPanelsManagerUser
         yield return new WaitForSecondsRealtime(1f);
         savingText.SetActive(false);
     }
-
-
-    //Volume Sliders
-    void OnAmbientVolumeChange(float newVolume)
-    {
-        GameManager.instance.SetAmbientVolume(newVolume);
-    }
-    void OnSFXVolumeChange(float newVolume)
-    {
-        GameManager.instance.SetSFXVolume(newVolume);
-    }
-    void OnUIVolumeChange(float newVolume)
-    {
-        GameManager.instance.SetUIVolume(newVolume);
-    }
     
-    
-    //Graphics Toggles
-    void OnShadowsUIChange(bool state)
-    {
-        GameManager.instance.SetShadows(state);
-    }
-    void OnGrassUIChange(bool state)
-    {
-        GameManager.instance.SetGrass(state);
-    }
+
 
     //Interal Algorithms
     IEnumerator message(string message, float time, Vector3 startScale, float speed)

@@ -97,6 +97,12 @@ public class DataManager : MonoBehaviour
 
         SaveData(data);
     }
+    public void Modify(SettingsData settings)
+    {
+        var data = GetSavedData();
+        data.settings = settings;
+        SaveData(data);
+    }
     public void Remove(string sessionName)
     {
         WholeData data = GetSavedData();

@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 [System.Serializable]
 public class PanelsManager
 {
-
     [SerializeField] string name;
     [SerializeField] bool GetDefaultFromCrossScenes;
     [SerializeField] string defaultPanel;
@@ -22,7 +20,6 @@ public class PanelsManager
 
     string currentMenuPanel;
 
-
     public void Initialize()
     {
         if(GetDefaultFromCrossScenes)
@@ -31,8 +28,8 @@ public class PanelsManager
         //reset all first
         foreach (MenuPanel _panel in menuPanels)
         {
-            _panel.menuObjectl.SetActive(false);
-
+            _panel.Initialize();
+            _panel.gameObject.SetActive(false);
             if(overrideAnimations)
                 _panel.animationSettings = animationSettings;
         }
@@ -56,29 +53,15 @@ public class PanelsManager
 
             foreach (var panel in menuPanels)
             {
-                panel.menuObjectl.name = panel.panalName;
+                panel.panalName = panel.gameObject.name;
 
-                foreach (var item in panel.menuPanelItems)
+                foreach (MenuPanelItem item in panel.menuPanelItems)
                 {
-                    string name = "";
-
-                    if (item.item.GetComponentInChildren<TextMeshProUGUI>())
-                        name = item.item.GetComponentInChildren<TextMeshProUGUI>().text;
-                    else if (item.item.GetComponentInChildren<Text>())
-                        name = item.item.GetComponentInChildren<Text>().text;
-                    else if(item.item.GetComponent<Text>())
-                        name = item.item.GetComponent<Text>().text;
-                    else
-                        name = item.name;
-
-
-                    item.item.name = name;
-                    item.name = name;
+                    item.name = item.item.name;
                 }
             }
         }
     }
-
 
 
     public void OpenMenuPanel(string _menuPanelName, bool _exclusive)

@@ -260,6 +260,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  animationSettings:
+    offScale: {x: 1, y: 0, z: 0}
+    onScale: {x: 1, y: 1, z: 1}
+    InAnimationTime: 0.3
+    OutAnimationTime: 0.1
+    InAnimationCurve: 32
+    OutAnimationCurve: 32
+    pressedIncrementScale: {x: 0.1, y: 0.1, z: 0.1}
+    pressedAnimationTime: 0.1
+    pressedAnimationCurve: 32
 --- !u!114 &4551088769697022805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,8 +284,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: {fileID: 4551088769434251139}
   itemNumber: {fileID: 4551088771359307349}
-  itemIcon: {fileID: 4551088771434032368}
   myButton: {fileID: 4551088769697022802}
+  itemOptionsMenu: {fileID: 1755980016558155738, guid: 7cca30ee085a9654a846df7ae8db8df7,
+    type: 3}
 --- !u!1 &4551088771229367313
 GameObject:
   m_ObjectHideFlags: 0

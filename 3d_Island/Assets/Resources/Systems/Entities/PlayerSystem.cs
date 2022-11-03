@@ -19,7 +19,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     [SerializeField] Animator animatior;
     [SerializeField] MovementSystem movementSystem;
     [SerializeField] CameraSystem myCamera;
-    [SerializeField] HandSystem handSystem;
+    [SerializeField] public HandSystem handSystem;
     [SerializeField] LegSystem legSystem;
     [SerializeField] DetectorSystem detector;
 

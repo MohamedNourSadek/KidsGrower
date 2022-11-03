@@ -26,8 +26,6 @@ public class GameManager : MonoBehaviour, IInputUser
     [SerializeField] GameObject seedAsset;
     [SerializeField] GameObject treeAsset;
     [SerializeField] NPC npcAsset;
-    [SerializeField] Light mainLight;
-    [SerializeField] List<Terrain> terrains;
     [SerializeField] GameObject deadchild;
 
     public static GameManager instance;
@@ -80,7 +78,6 @@ public class GameManager : MonoBehaviour, IInputUser
     void LoadAndApply()
     {
         SessionData sessionData = DataManager.instance.GetCurrentSession();
-        SettingsData settingsData = DataManager.instance.GetSavedData().settings;
 
         foreach(NPC_Data npc_data in  sessionData.data.npcs)
             npc_data.SpawnWithData(npcAsset.gameObject, true);
@@ -134,16 +131,8 @@ public class GameManager : MonoBehaviour, IInputUser
         }
             
         sessionData.data.player.SpawnWithData(myPlayer.gameObject, false);
-
-        SetAmbientVolume(settingsData.ambinetVolume);
-        SetUIVolume(settingsData.uiVolume);
-        SetSFXVolume(settingsData.sfxVolume);
-        SetGrass(settingsData.grass);
-        SetShadows(settingsData.shadows);
-
-        UIGame.instance.LoadSavedUISettings(settingsData);
     }
-    void Save()
+    public void Save()
     {
         SessionData sessionData = DataManager.instance.GetCurrentSession();
 
@@ -164,10 +153,7 @@ public class GameManager : MonoBehaviour, IInputUser
         sessionData.data.player = Player_Data.GameToData(myPlayer);
         sessionData.modeData = modeHandler.GetModeData();
 
-        DataManager.instance.GetSavedData().settings = UIGame.instance.GetSavedUI();
-
         DataManager.instance.Modify(sessionData);
-
         StartCoroutine(UIGame.instance.SavingUI());
     }
     RaycastHit CastFromMouse()
@@ -227,32 +213,7 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         UIGame.instance.DisplayInventory(state, myPlayer.inventorySystem);
     }
-    public void SetSFXVolume(float volume)
-    {
-        SoundManager.instance.SetSFX(volume);
-    }
-    public void SetAmbientVolume(float volume)
-    {
-        SoundManager.instance.SetAmbient(volume);
-    }
-    public void SetUIVolume(float volume)
-    {
-        SoundManager.instance.SetUiVolume(volume);
-    }
-    public void SetGrass(bool state)
-    {
-        foreach(Terrain terrain in terrains)
-        {
-            terrain.drawTreesAndFoliage = state;
-        }
-    }
-    public void SetShadows(bool state)
-    {
-        if (state)
-            mainLight.shadows = LightShadows.Hard;
-        else
-            mainLight.shadows = LightShadows.None;
-    }
+
 
 
     //For design Buttons
@@ -263,10 +224,6 @@ public class GameManager : MonoBehaviour, IInputUser
     public void SpawnEgg()
     {
         Instantiate(eggAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
-    }
-    public void SpawnFruit()
-    {
-        Instantiate(fruitAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
     public void SpawnRandomItem()
     {
@@ -294,7 +251,7 @@ public class GameManager : MonoBehaviour, IInputUser
 
         Instantiate(item, points[randomPoint].position,Quaternion.identity);
     }
-    public void SpawnBoost(string boostType)
+    public GameObject SpawnBoost(string boostType)
     {
         GameObject boost = powerBoostAsset;
 
@@ -319,7 +276,7 @@ public class GameManager : MonoBehaviour, IInputUser
             boost = powerBoostAsset;
         }
 
-        Instantiate(boost.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+        return Instantiate(boost.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
     public GameObject SpawnDeadBody_ReturnDeadBody(Vector3 position)
     {
@@ -329,23 +286,25 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         return Instantiate(eggAsset.gameObject, position, Quaternion.identity).GetComponent<Egg>();
     }
-    public void SpawnSeed()
+    public GameObject SpawnSeed()
     {
-        Instantiate(seedAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+        return Instantiate(seedAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
-    public void SpawnStonePack()
+    public GameObject SpawnFruit()
     {
-        Instantiate(stonepackAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+        return Instantiate(fruitAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
-    public void SpawnWoodPack()
+    public GameObject SpawnStonePack()
     {
-        Instantiate(woodpackAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+        return Instantiate(stonepackAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+    }
+    public GameObject SpawnWoodPack()
+    {
+        return Instantiate(woodpackAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
     public GameObject SpawnHarvest()
     {
-        GameObject x =  Instantiate(harvestAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
-
-        return x;
+        return Instantiate(harvestAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
 
     

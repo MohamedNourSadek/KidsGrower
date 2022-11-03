@@ -10,7 +10,7 @@ public class InventorySystem
 {
     [SerializeField] public List<InventoryItem_Data> items = new List<InventoryItem_Data>();
     IController myController;
-     
+    
     public void Initialize(IController controller)
     {
         myController = controller;
@@ -23,6 +23,7 @@ public class InventorySystem
             return false;
     }
 
+    
     //Interface
     public List<InventoryItem_Data> GetItems_Data()
     {
@@ -42,7 +43,7 @@ public class InventorySystem
         ModifyAmount(name, 1);
         ServicesProvider.instance.DestroyObject(item); 
     }
-    public void Remove(string itemName)
+    public GameObject Remove(string itemName)
     {
         UIGame.instance.ShowRepeatingMessage(
             itemName + " removed from inventory",
@@ -51,22 +52,28 @@ public class InventorySystem
 
         ModifyAmount(itemName, -1);
         DestroyEmpty();
-        DropInventoryItem(itemName);
+        return SpawnInventoryItem(itemName);
     }
-    public void DropInventoryItem(string item)
+    public GameObject SpawnInventoryItem(string item)
     {
+        GameObject myObject = null;
+
         if (item == "Harvest")
-            GameManager.instance.SpawnHarvest();
+            myObject= GameManager.instance.SpawnHarvest();
         else if (item == "Fruit")
-            GameManager.instance.SpawnFruit();
+            myObject = GameManager.instance.SpawnFruit();
         else if (item == "StonePack")
-            GameManager.instance.SpawnStonePack();
+            myObject = GameManager.instance.SpawnStonePack();
         else if (item == "WoodPack")
-            GameManager.instance.SpawnWoodPack();
+            myObject = GameManager.instance.SpawnWoodPack();
         else if (item == "Seed")
-            GameManager.instance.SpawnSeed();
+            myObject = GameManager.instance.SpawnSeed();
         else if(item.Contains("Boost"))
-            GameManager.instance.SpawnBoost(item);
+            myObject = GameManager.instance.SpawnBoost(item);
+        else 
+            myObject = null;
+
+        return myObject;
     }
     public void LoadInventory(List<InventoryItem_Data> data)
     {
@@ -76,11 +83,9 @@ public class InventorySystem
     {
         return items;
     }
-
-    //Internal Algorithms
-    bool Exists(string tag)
+    public bool Exists(string tag)
     {
-        if(items != null)
+        if (items != null)
         {
             foreach (InventoryItem_Data item in items)
                 if (item.tag == tag)
@@ -89,6 +94,9 @@ public class InventorySystem
 
         return false;
     }
+
+
+    //Internal Algorithms
     void ModifyAmount(string tag, int increment)
     {
         if (items == null)
@@ -123,7 +131,6 @@ public class InventorySystem
         foreach (InventoryItem_Data emptyItem in emptyItems)
             items.Remove(emptyItem);
     }
-
 }
 
 
