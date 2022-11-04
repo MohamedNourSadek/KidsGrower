@@ -319,7 +319,11 @@ public class GameManager : MonoBehaviour, IInputUser
 
                 if (hit.collider.GetComponentInParent<CustomizableObject>())
                 {
+                    if(lastdetected != null)
+                        lastdetected.SetSelectState(false);
+
                     lastdetected = hit.collider.GetComponentInParent<CustomizableObject>();
+                    lastdetected.SetSelectState(true);
 
                     customizingState = CustomizingState.Moving;
 
@@ -328,6 +332,7 @@ public class GameManager : MonoBehaviour, IInputUser
                 else
                 {
                     UIGame.instance.ChangeCustomizingIndicator("No Object Detected", Color.white);
+                    lastdetected.SetSelectState(false);
                 }
             }
             else if (customizingState == CustomizingState.Moving)
@@ -338,8 +343,8 @@ public class GameManager : MonoBehaviour, IInputUser
                 {
                     lastdetected.transform.position = hit.point;
                     customizingState = CustomizingState.Detecting;
-
                     UIGame.instance.ChangeCustomizingIndicator("", Color.white);
+                    lastdetected.SetSelectState(false);
                 }
                 else
                 {

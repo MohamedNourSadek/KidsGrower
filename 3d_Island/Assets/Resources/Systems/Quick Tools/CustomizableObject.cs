@@ -4,5 +4,21 @@ using UnityEngine;
 
 public class CustomizableObject : MonoBehaviour
 {
-    //A script to put on object that could be customized
+    [SerializeField] GameObject normalObject;
+    [SerializeField] GameObject selectedObject;
+
+    public void SetSelectState(bool state)
+    {
+        if(state)
+        {
+            normalObject.SetActive(false);
+            selectedObject.SetActive(true);
+        }
+        else
+        {
+            normalObject.SetActive(true);
+            selectedObject.SetActive(false);
+        }
+    }
+
 }
