@@ -287,7 +287,11 @@ public class GameManager : MonoBehaviour
     }
     public GameObject SpawnWoodPack()
     {
-        return Instantiate(woodpackAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+        return SpawnWoodPack(myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5);
+    }
+    public GameObject SpawnWoodPack(Vector3 position)
+    {
+        return Instantiate(woodpackAsset.gameObject, position, Quaternion.identity);
     }
     public GameObject SpawnHarvest()
     {

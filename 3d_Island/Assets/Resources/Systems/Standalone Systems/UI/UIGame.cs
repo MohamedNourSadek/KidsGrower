@@ -6,7 +6,7 @@ using TMPro;
 using System;
 using UnityEngine.Events;
 
-public enum PickMode { Pick, Drop, Shake, Store, _};
+public enum PickMode { Pick, Drop, Shake, Tear, Store, _};
 
 public class UIGame : MonoBehaviour
 {

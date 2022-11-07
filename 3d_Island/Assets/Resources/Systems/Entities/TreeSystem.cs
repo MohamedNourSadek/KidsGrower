@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeSystem : MonoBehaviour, IDetectable, ISavable
+public class TreeSystem : Tearable, IDetectable, ISavable
 {
     [SerializeField] int breakForce = 50;
     [SerializeField] int breakTorque = 50;
@@ -29,12 +29,14 @@ public class TreeSystem : MonoBehaviour, IDetectable, ISavable
         Tree_Data tree = (Tree_Data)savaData;
         transform.position = tree.position.GetVector();
         transform.rotation = tree.rotation.GetQuaternion();
+        tearingDownCount = tree.tearDownCount;
     }
     public Tree_Data GetData()
     {
         Tree_Data tree_Data = new Tree_Data();
         tree_Data.position = new nVector3(transform.position);
         tree_Data.rotation = new nQuaternion(transform.rotation);
+        tree_Data.tearDownCount = tearingDownCount;
         return tree_Data;
     }
 
@@ -45,10 +47,9 @@ public class TreeSystem : MonoBehaviour, IDetectable, ISavable
         else
             return false;
     }
-    public void Shake()
+    public override void Shake()
     {
         animator.SetTrigger("Shake");
-
         if (SoundManager.instance != null)
             SoundManager.instance.PlayTreeShake(this.gameObject);
     }
@@ -93,5 +94,4 @@ public class TreeSystem : MonoBehaviour, IDetectable, ISavable
 
 
     }
-
 }

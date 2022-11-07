@@ -78,7 +78,15 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         }
         else if (handSystem.canShake)
         {
-            UIGame.instance.PickDropButton_SwitchMode(PickMode.Shake);
+            if (handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().tag == "Axe")
+            {
+                UIGame.instance.PickDropButton_SwitchMode(PickMode.Tear);
+            }
+            else
+            {
+                UIGame.instance.PickDropButton_SwitchMode(PickMode.Shake);
+            }
+
             UIGame.instance.PickDropButton_Enable(true);
         }
         else if (handSystem.canPick)
@@ -259,7 +267,14 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         }
         else if(handSystem.canShake)
         {
-            ((TreeSystem)(detector.GetNear("Tree"))).Shake();
+            if(handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().tag == "Axe")
+            {
+                ((TreeSystem)(detector.GetNear("Tree"))).TearDown();
+            }
+            else
+            {
+                ((TreeSystem)(detector.GetNear("Tree"))).Shake();
+            }
         }
         else if (handSystem.canPick)
         {

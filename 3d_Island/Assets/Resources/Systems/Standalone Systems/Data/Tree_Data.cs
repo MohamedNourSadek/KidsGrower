@@ -6,6 +6,7 @@ public class Tree_Data : SaveStructure
 {
     public nVector3 position = new nVector3();
     public nQuaternion rotation = new nQuaternion();
+    public int tearDownCount = 0;
 
     public static List<Tree_Data> GameToDate(TreeSystem[] trees)
     {

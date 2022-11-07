@@ -50,7 +50,7 @@ public class HandSystem
             canStore = false;
             canThrow = false;
             canPlant = false;
-            canShake = detector.GetNear("Tree") != null;
+            canShake = detector.GetNear("Tree") != null; 
             gotSomethingInHand = false;
         }
         else
@@ -58,7 +58,7 @@ public class HandSystem
             canStore = (nearPickables.Count >= 2) && (nearPickables[1].GetComponent<IStorableObject>() != null);
             canPick = false;
             canThrow = true;
-            canShake = false;
+            canShake = detector.GetNear("Tree") != null; 
             gotSomethingInHand = true;
         }
 
