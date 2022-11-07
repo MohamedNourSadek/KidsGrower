@@ -23,7 +23,6 @@ public class InventorySystem
             return false;
     }
 
-    
     //Interface
     public List<InventoryItem_Data> GetItems_Data()
     {
@@ -59,7 +58,7 @@ public class InventorySystem
         GameObject myObject = null;
 
         if (item == "Harvest")
-            myObject= GameManager.instance.SpawnHarvest();
+            myObject = GameManager.instance.SpawnHarvest();
         else if (item == "Fruit")
             myObject = GameManager.instance.SpawnFruit();
         else if (item == "StonePack")
@@ -68,9 +67,11 @@ public class InventorySystem
             myObject = GameManager.instance.SpawnWoodPack();
         else if (item == "Seed")
             myObject = GameManager.instance.SpawnSeed();
-        else if(item.Contains("Boost"))
+        else if (item.Contains("Boost"))
             myObject = GameManager.instance.SpawnBoost(item);
-        else 
+        else if (item.Contains("Axe"))
+            myObject = GameManager.instance.SpawnAxe();
+        else
             myObject = null;
 
         return myObject;

@@ -73,7 +73,6 @@ public class NPC : Pickable, IController, ISavable
             navMeshAgent.enabled = false;
     }
 
-
     //Interface
     public void LoadData(SaveStructure saveData)
     {

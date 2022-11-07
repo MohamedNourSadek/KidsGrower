@@ -34,7 +34,6 @@ public class UIGame : MonoBehaviour
     [SerializeField] float buttonOnAlpha = 1f;
     [SerializeField] float buttonOffAlpha = 0.3f;
 
-
     [Header("UI Objects")]
     [SerializeField] NPCStatsUI npcStatsUI;
     [SerializeField] ListAttributeUI characterAttributesUI;
@@ -52,7 +51,6 @@ public class UIGame : MonoBehaviour
     [SerializeField] public TextMeshProUGUI countDownText;
     [SerializeField] GameObject savingText;
     [SerializeField] GameObject delcareUIAsset;
-
 
 
     //Helpers
@@ -127,8 +125,7 @@ public class UIGame : MonoBehaviour
 
 
 
-    ///////// In Game UI ///////////////
-
+    // In Game UI
     //NonReferenced Messages (Once done, you can't access them)
     public void ShowPopUpMessage(string header, string message, string button, UnityAction onPress)
     {
@@ -152,7 +149,6 @@ public class UIGame : MonoBehaviour
         DeclarationElement element = Instantiate(delcareUIAsset, declarationsArea.transform).GetComponent<DeclarationElement>();
         element.message.text = message;
     }
-
 
 
     //Referenced Messages

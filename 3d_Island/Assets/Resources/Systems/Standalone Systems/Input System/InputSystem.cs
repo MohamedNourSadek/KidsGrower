@@ -23,8 +23,11 @@ public class InputSystem : MonoBehaviour
         inputActions.Player.Plant.performed += PlantInput;
         inputActions.Player.Dash.performed += DashInput;
         inputActions.Player.Pet.performed += PetInput;
-        inputActions.Player.Press.performed += PressInput;
+        inputActions.Player.Press.performed += PressDownInput;
+        inputActions.Player.Press.canceled += PressUpInput;
     }
+
+
     void FixedUpdate()
     {
         MovementInput();
@@ -78,11 +81,17 @@ public class InputSystem : MonoBehaviour
             if (sub.activeInput)
                 sub.PetInput();
     }
-    void PressInput(InputAction.CallbackContext obj)
+    void PressDownInput(InputAction.CallbackContext obj)
     {
         foreach (IInputUser sub in Subscribers)
             if (sub.activeInput)
-                sub.PressInput();
+                sub.PressDownInput();
+    }
+    void PressUpInput(InputAction.CallbackContext obj)
+    {
+        foreach (IInputUser sub in Subscribers)
+            if (sub.activeInput)
+                sub.PressUpInput();
     }
     void MovementInput()
     {

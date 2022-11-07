@@ -88,8 +88,6 @@ public class Pickable : MonoBehaviour, IDetectable
     {
         isPicked = false;
         myBody.isKinematic = false;
-        myBody.constraints = RigidbodyConstraints.None;
-
         myCollider.enabled = true;
 
         if (holder != null)

@@ -28,5 +28,4 @@ public class FacialControl
             PlayExpression(FacialExpressions.Blink);
         }
     }
-
 }

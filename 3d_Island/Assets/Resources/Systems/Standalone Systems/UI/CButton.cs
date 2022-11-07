@@ -28,7 +28,8 @@ public class CButton : Button
    
     void OnClickAnimation()
     {
-        StartCoroutine(OnPressAnimation());
+        if (this.IsActive())
+            StartCoroutine(OnPressAnimation());
     }
     IEnumerator OnPressAnimation()
     {

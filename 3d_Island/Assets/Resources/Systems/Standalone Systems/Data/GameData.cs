@@ -20,4 +20,6 @@ public class GameData
     public List<HealthBoost_Data> healthboosts = new List<HealthBoost_Data>();
     public List<WoodPack_Data> woodpacks = new List<WoodPack_Data>();
     public List<StonePack_Data> stonepacks = new List<StonePack_Data>();
+    public List<NamingHouse_Data> namingHouses = new List<NamingHouse_Data>();
+    public List<Axe_Data> axes = new List<Axe_Data>();
 }

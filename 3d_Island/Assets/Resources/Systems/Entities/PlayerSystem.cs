@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser, ISavable
@@ -295,7 +296,10 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         if(handSystem.canPet)
             handSystem.PetNearestObject();
     }
-    public void PressInput() 
+    public void PressDownInput()
+    {
+    }
+    public void PressUpInput()
     {
     }
 }

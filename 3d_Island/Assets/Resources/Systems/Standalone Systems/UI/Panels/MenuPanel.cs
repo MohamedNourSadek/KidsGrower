@@ -17,15 +17,20 @@ public class MenuPanel : MonoBehaviour
     {
 
     }
+    public virtual void OnActiveChange(bool _state)
+    {
+
+    }
+
     public bool IsActive()
     {
         return active;
     }
-    public float ActivatePanel(bool _state)
+    public float GetActivationTime(bool _state)
     {
         active = _state;
 
-        float _time = 0;
+        float _time;
 
         if (_state)
             _time = animationSettings.InAnimationTime;
@@ -33,9 +38,10 @@ public class MenuPanel : MonoBehaviour
             _time = animationSettings.OutAnimationTime;
 
         ServicesProvider.instance.StartCoroutine(ActivatePanel_Coroutine(_state, _time));
-
+        OnActiveChange(_state);
         return _time;
     }
+
     IEnumerator ActivatePanel_Coroutine(bool _state, float _time)
     {
         if (_state)

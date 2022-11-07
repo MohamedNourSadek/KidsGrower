@@ -235,7 +235,7 @@ Transform:
   - {fileID: 58072133524451559}
   - {fileID: 7492843682852832024}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &6949429005409692764
 MonoBehaviour:
@@ -346,6 +346,7 @@ MonoBehaviour:
     - Egg
     - WoodPack
     - StonePack
+    - Axe
     throwForce: 100
     pickSpeedThrushold: 50
     petTime: 4
@@ -1428,7 +1429,7 @@ PrefabInstance:
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: detectableTags.Array.size
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
@@ -1549,6 +1550,11 @@ PrefabInstance:
         type: 3}
       propertyPath: detectableTags.Array.data[10]
       value: StonePack
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[11]
+      value: Axe
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}

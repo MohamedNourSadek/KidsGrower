@@ -28,11 +28,13 @@ public class TreeSystem : MonoBehaviour, IDetectable, ISavable
     {
         Tree_Data tree = (Tree_Data)savaData;
         transform.position = tree.position.GetVector();
+        transform.rotation = tree.rotation.GetQuaternion();
     }
     public Tree_Data GetData()
     {
         Tree_Data tree_Data = new Tree_Data();
         tree_Data.position = new nVector3(transform.position);
+        tree_Data.rotation = new nQuaternion(transform.rotation);
         return tree_Data;
     }
 

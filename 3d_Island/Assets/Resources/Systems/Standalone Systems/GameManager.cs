@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum CustomizingState { Detecting, Moving }
+public delegate void OnNamingDone();
 
-public class GameManager : MonoBehaviour, IInputUser
+public class GameManager : MonoBehaviour
 {
     [SerializeField] PostProcessingFunctions posProcessingFunctions;
-    [SerializeField] LayerMask customizeDetectable;
 
     [Header("Game Design")]
     [SerializeField] PlayerSystem myPlayer;
@@ -25,32 +24,30 @@ public class GameManager : MonoBehaviour, IInputUser
     [SerializeField] GameObject stonepackAsset;
     [SerializeField] GameObject seedAsset;
     [SerializeField] GameObject treeAsset;
-    [SerializeField] NPC npcAsset;
+    [SerializeField] GameObject nameingHouseAsset;
+    [SerializeField] GameObject axeAsset;
     [SerializeField] GameObject deadchild;
+    [SerializeField] NPC npcAsset;
+
 
     public static GameManager instance;
-    CustomizingState customizingState = CustomizingState.Detecting;
-    bool customizing = false;
-    CustomizableObject lastdetected;
+    public event OnNamingDone OnNamingDone;
     Vector3 camCustomizingViewPos;
     Quaternion camCustomizingViewRot;
     AbstractMode modeHandler;
-
-    public bool activeInput { get; set; }
 
 
     //Private functions
     void Awake()
     {
         instance = this;
-        
-        InputSystem.SubscribeUser(this);
+
+        camCustomizingViewPos = Camera.main.transform.position;
+        camCustomizingViewRot = Camera.main.transform.rotation;
 
         if (myPlayer == null)
             FindObjectOfType<PlayerSystem>();
 
-        camCustomizingViewPos = Camera.main.transform.position;
-        camCustomizingViewRot = Camera.main.transform.rotation;
 
         posProcessingFunctions.Initialize();
 
@@ -118,6 +115,13 @@ public class GameManager : MonoBehaviour, IInputUser
         foreach (StonePack_Data stonePack in sessionData.data.stonepacks)
             stonePack.SpawnWithData(stonepackAsset, true);
 
+        foreach (NamingHouse_Data namingHouse_data in sessionData.data.namingHouses)
+            namingHouse_data.SpawnWithData(nameingHouseAsset, true);
+
+
+        foreach (Axe_Data axe_data in sessionData.data.axes)
+            axe_data.SpawnWithData(axeAsset, true);
+
         //tree is Done differently because it exists by default
         if (sessionData.data.trees.Count > 0)
         {
@@ -150,34 +154,18 @@ public class GameManager : MonoBehaviour, IInputUser
         sessionData.data.healthboosts = HealthBoost_Data.GameToDate(FindObjectsOfType<HealthBoost>());
         sessionData.data.stonepacks = StonePack_Data.GameToDate(FindObjectsOfType<StonePack>());
         sessionData.data.woodpacks = WoodPack_Data.GameToDate(FindObjectsOfType<WoodPack>());
+        sessionData.data.namingHouses = NamingHouse_Data.GameToDate(FindObjectsOfType<NamingHouse>());
+        sessionData.data.axes = Axe_Data.GameToDate(FindObjectsOfType<Axe>());
         sessionData.data.player = Player_Data.GameToData(myPlayer);
         sessionData.modeData = modeHandler.GetModeData();
+
 
         DataManager.instance.Modify(sessionData);
         StartCoroutine(UIGame.instance.SavingUI());
     }
-    RaycastHit CastFromMouse()
-    {
-        RaycastHit hit;
-
-        Vector2 mouse2d = InputSystem.GetMousePosition();
-        Vector3 mousePosition = new(mouse2d.x, mouse2d.y, 2f);
-
-        Ray ray = Camera.main.ScreenPointToRay(mousePosition, Camera.MonoOrStereoscopicEye.Mono);
-
-        Physics.Raycast(ray, out hit, customizeDetectable);
-
-        return hit;
-    }
 
 
     //Settings
-    public void SetCustomizing(bool state)
-    {
-        customizing = state;
-
-        SetBlur(!state);
-    }
     public void LockPlayer(bool state)
     {
         myPlayer.LockPlayer(!state);
@@ -213,7 +201,6 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         UIGame.instance.DisplayInventory(state, myPlayer.inventorySystem);
     }
-
 
 
     //For design Buttons
@@ -306,60 +293,17 @@ public class GameManager : MonoBehaviour, IInputUser
     {
         return Instantiate(harvestAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
-
-    
-    //Input Interface
-    public void PressInput()
+    public GameObject SpawnAxe()
     {
-        if (customizing)
-        {
-            if ((customizingState == CustomizingState.Detecting))
-            {
-                RaycastHit hit = CastFromMouse();
-
-                if (hit.collider.GetComponentInParent<CustomizableObject>())
-                {
-                    if(lastdetected != null)
-                        lastdetected.SetSelectState(false);
-
-                    lastdetected = hit.collider.GetComponentInParent<CustomizableObject>();
-                    lastdetected.SetSelectState(true);
-
-                    customizingState = CustomizingState.Moving;
-
-                    UIGame.instance.ChangeCustomizingIndicator("Selected object: " + lastdetected.name, Color.yellow);
-                }
-                else
-                {
-                    UIGame.instance.ChangeCustomizingIndicator("No Object Detected", Color.white);
-                    lastdetected.SetSelectState(false);
-                }
-            }
-            else if (customizingState == CustomizingState.Moving)
-            {
-                RaycastHit hit = CastFromMouse();
-
-                if (hit.collider.gameObject.CompareTag("Ground"))
-                {
-                    lastdetected.transform.position = hit.point;
-                    customizingState = CustomizingState.Detecting;
-                    UIGame.instance.ChangeCustomizingIndicator("", Color.white);
-                    lastdetected.SetSelectState(false);
-                }
-                else
-                {
-                    customizingState = CustomizingState.Detecting;
-                    PressInput();
-                }
-            }
-        }
+        return Instantiate(axeAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
-    public void PetInput() { }
-    public void DashInput() { }
-    public void PlantInput() { }
-    public void ThrowInput() { }
-    public void JumpInput() { }
-    public void PickInput() { }
-    public void MoveInput(Vector2 movementInput) { }
-    public void RotateInput(Vector2 deltaRotate) { }
+    public GameObject SpawnNamingHouse(Vector3 position)
+    {
+        return Instantiate(nameingHouseAsset.gameObject, position, Quaternion.identity);
+
+    }
+    public void OnNamingFinsihed()
+    {
+        OnNamingDone.Invoke();
+    }
 }

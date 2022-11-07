@@ -5,6 +5,8 @@ using UnityEngine;
 public class Tree_Data : SaveStructure
 {
     public nVector3 position = new nVector3();
+    public nQuaternion rotation = new nQuaternion();
+
     public static List<Tree_Data> GameToDate(TreeSystem[] trees)
     {
         List<Tree_Data> list = new List<Tree_Data>();

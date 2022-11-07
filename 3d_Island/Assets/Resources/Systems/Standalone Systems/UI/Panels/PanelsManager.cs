@@ -126,7 +126,7 @@ public class PanelsManager
         {
             if (_menuPanel.IsActive())
             {
-                float _time = _menuPanel.ActivatePanel(false);
+                float _time = _menuPanel.GetActivationTime(false);
                 yield return new WaitForSeconds(_time);
             }
         }
@@ -140,7 +140,7 @@ public class PanelsManager
             {
                 if (_menuPanel.IsActive() && (_menuPanel.panalName != _menuPanelName.ToString()))
                 {
-                    float _time = _menuPanel.ActivatePanel(false);
+                    float _time = _menuPanel.GetActivationTime(false);
                     yield return new WaitForSeconds(_time);
                 }
             }
@@ -151,7 +151,7 @@ public class PanelsManager
         {
             if (_menuPanel.IsActive() == false && _menuPanel.panalName == _menuPanelName.ToString())
             {
-                float _time = _menuPanel.ActivatePanel(true);
+                float _time = _menuPanel.GetActivationTime(true);
                 yield return new WaitForSeconds(_time);
             }
         }
@@ -163,7 +163,7 @@ public class PanelsManager
         {
             if (_menuPanel.IsActive() == true && _menuPanel.panalName == _menuPanelName.ToString())
             {
-                float _time = _menuPanel.ActivatePanel(false);
+                float _time = _menuPanel.GetActivationTime(false);
                 yield return new WaitForSeconds(_time);
             }
         }
