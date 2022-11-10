@@ -208,10 +208,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c206f2b1f2ace454d910ab178862f948, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 4339818863899098228}
   breakForce: 75
   breakTorque: 75
   reSeedTime: {x: 5, y: 50}
-  animator: {fileID: 4339818863899098228}
   branch1: {fileID: 4757877960643272637}
   fruitAsset: {fileID: 9195431515479874474, guid: 7401d12c23735614ebb0860b284754c2,
     type: 3}
@@ -259,10 +259,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.28
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 0
+  m_Acceleration: 0
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 0
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1

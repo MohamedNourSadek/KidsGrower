@@ -10,8 +10,9 @@ public class Seed : Plantable, ISavable
     [SerializeField] GameObject model;
 
     Vector3 initialScale;
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
         initialScale = model.transform.localScale;
     }
 

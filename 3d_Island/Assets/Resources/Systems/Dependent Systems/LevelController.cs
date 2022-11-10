@@ -9,8 +9,11 @@ public delegate void xpNotify();
 [System.Serializable]
 public class LevelController
 {
+    //Data structure that must be public to be serialzed in save game
     public int currentLevel = 0;
     public float currentXp = 0;
+
+    //private variables
     static List<float> levelsXP = new List<float>()
     {
         500, 1000, 1500, 2000f, 3000f, 5000f, 7500f, 15000f, 20000f, 25000f
@@ -24,6 +27,8 @@ public class LevelController
         OnLevelChange += _OnLevelChange;
         OnXpChange += _OnXpChange;
     }
+
+    //Interface
     public int GetLevel()
     {
         return currentLevel;

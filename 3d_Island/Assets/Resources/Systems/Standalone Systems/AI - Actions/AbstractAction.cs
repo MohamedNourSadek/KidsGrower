@@ -9,13 +9,26 @@ public enum ActionTypes {Eat, Explore,Follow, Idle, Lay, Pick, Shake, Sleep, Thr
 [System.Serializable]
 public class AbstractAction
 {
+
+    public string actionName;
+    protected int priority = 0;
+    public bool isDone;
+    public GameObject subject;
+    protected NPC myAgent;
+    [System.NonSerialized] public AbstractAction followUpAction;
+
+    public AbstractAction(GameObject subject, NPC myAgent)
+    {
+        this.subject = subject;
+        this.myAgent = myAgent;
+    }
     public static AbstractAction ActionFactory(ActionTypes action, GameObject subject, NPC agent)
     {
         switch (action)
         {
-            case(ActionTypes.Idle):
+            case (ActionTypes.Idle):
                 return new Action_Idle(subject, agent);
-            case(ActionTypes.Explore):
+            case (ActionTypes.Explore):
                 return new Action_Explore(subject, agent);
             case (ActionTypes.Follow):
                 return new Action_Follow(subject, agent);
@@ -30,7 +43,7 @@ public class AbstractAction
             case (ActionTypes.Throw):
                 return new Action_Throw(subject, agent);
             case (ActionTypes.Eat):
-                return new Action_Eat(subject,agent);
+                return new Action_Eat(subject, agent);
             case (ActionTypes.Punch):
                 return new Action_Punch(subject, agent);
             case (ActionTypes.Drop):
@@ -40,18 +53,6 @@ public class AbstractAction
         }
     }
 
-    public string actionName;
-    protected int priority = 0;
-    public bool isDone;
-    public GameObject subject;
-    protected NPC myAgent;
-    [System.NonSerialized] public AbstractAction followUpAction;
-
-    public AbstractAction(GameObject subject, NPC myAgent)
-    {
-        this.subject = subject;
-        this.myAgent = myAgent;
-    }
 
     public virtual void Execute()
     {
@@ -74,7 +75,6 @@ public class AbstractAction
 
         return false;
     }
-
     public int GetSubjectPriority()
     {
         if (subject)

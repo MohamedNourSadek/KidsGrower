@@ -9,7 +9,6 @@ public class TreeSystem : Tearable, IDetectable, ISavable
     [SerializeField] Vector2 reSeedTime = new Vector2(0f, 1f);
 
     [Header("references")]
-    [SerializeField] Animator animator;
     [SerializeField] GameObject branch1;
     [SerializeField] GameObject fruitAsset;
 
@@ -40,6 +39,7 @@ public class TreeSystem : Tearable, IDetectable, ISavable
         return tree_Data;
     }
 
+    //Interface
     public bool GotFruit()
     {
         if(branch1.GetComponent<CharacterJoint>() || branch1.GetComponent<CharacterJoint>())
@@ -47,9 +47,23 @@ public class TreeSystem : Tearable, IDetectable, ISavable
         else
             return false;
     }
-    public override void Shake()
+    public void Shake()
     {
         animator.SetTrigger("Shake");
+
+        if (SoundManager.instance != null)
+            SoundManager.instance.PlayTreeShake(this.gameObject);
+    }
+    public override void SpawnResource()
+    {
+        base.SpawnResource();
+
+        GameManager.instance.SpawnWoodPack(this.transform.position + Vector3.up);
+    }
+    public override void TearEffects()
+    {
+        base.TearEffects();
+
         if (SoundManager.instance != null)
             SoundManager.instance.PlayTreeShake(this.gameObject);
     }

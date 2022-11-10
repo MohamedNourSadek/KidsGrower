@@ -7,7 +7,7 @@ public class Mode_Data
 {
     public modes modeName;
     public float timeSinceStart;
-    public bool gameStarted;
+    public bool firstStart;
 
     public Mode_Data() { }
     public Mode_Data(modes modeName, float timeSinceStart)

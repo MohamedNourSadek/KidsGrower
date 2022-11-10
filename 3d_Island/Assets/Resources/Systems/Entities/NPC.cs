@@ -21,17 +21,17 @@ public class NPC : Pickable, IController, ISavable
     [Header("Dynamic")]
     [SerializeField] public CharacterParameters character;
     [Header("Static")]
-    [SerializeField] float grownMassMultiplier = 1.35f;
     [SerializeField] public float nearObjectDistance = 1f;
-    [SerializeField] public float eatingXpPerUpdate = 1f;
-    [SerializeField] public float pettingXP = 100f;
+    [SerializeField] float pettingXP = 100f;
+    [SerializeField] float grownMassMultiplier = 1.35f;
+
 
     //Internal
     [System.NonSerialized] public NavMeshAgent navMeshAgent;
     bool petting = false;
     float moveAnimtion = 0f;
     
-    //Helper functions
+
     void Start()
     {
         NPCsCount++;
@@ -40,7 +40,7 @@ public class NPC : Pickable, IController, ISavable
         navMeshAgent.stoppingDistance = 0.9f * nearObjectDistance;
         detector.Initialize(nearObjectDistance, aiBehavior.OnDetectableInRange, aiBehavior.OnDetectableExit, aiBehavior.OnDetectableNear, aiBehavior.OnDetectableNearExit);
         handSystem.Initialize(detector, this);
-        appearanceControl.Initialize(this);
+        appearanceControl.Initialize(this.character);
         myFace.Initialize();
 
         groundDetector.Initialize(myBody);
@@ -72,6 +72,8 @@ public class NPC : Pickable, IController, ISavable
         else if (petting)
             navMeshAgent.enabled = false;
     }
+
+
 
     //Interface
     public void LoadData(SaveStructure saveData)
@@ -193,7 +195,7 @@ public class NPC : Pickable, IController, ISavable
     }
 
 
-    //Functions
+    //Internal Algorithms
     void UpdateAnimationParameters()
     {
         Vector2 horizontalVelocity = new Vector2(navMeshAgent.velocity.x, navMeshAgent.velocity.z);

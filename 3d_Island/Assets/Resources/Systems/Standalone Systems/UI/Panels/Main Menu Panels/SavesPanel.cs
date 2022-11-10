@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -24,7 +25,16 @@ public class SavesPanel : MenuPanel
     {
         CheckNewSelection();
     }
+    public override void FillFunctions()
+    {
+        base.FillFunctions();
 
+        GetButton("Back").onClick.AddListener(new UnityAction(() => UIMenu.instance.OpenMenuPanel("Modes")));
+        GetButton("New").onClick.AddListener(new UnityAction(() => UIMenu.instance.OpenMenuPanel("Save Name Dialog")));
+        GetButton("Load").onClick.AddListener(new UnityAction(() => LoadSave()));
+        GetButton("Delete").onClick.AddListener(new UnityAction(() => DeleteSave()));
+        GetButton("Delete").onClick.AddListener(new UnityAction(() => DeleteSave()));
+    }
 
     //Interface
     public void SetLastScene(string sceneName)

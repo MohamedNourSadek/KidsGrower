@@ -21,23 +21,14 @@ public class Pickable : MonoBehaviour, IDetectable
     {
         groundDetector.Initialize(myBody);
     }
-    public Rigidbody GetBody()
-    {
-        if (myBody)
-            return myBody;
-        else
-            return null;
-    }
-    private void Update()
+    void Update()
     {
         if (groundDetector.IsOnLayer(GroundLayers.Ground))
             gameObject.layer = mylayer;
         else 
             gameObject.layer = mylayerNonDetectable;
     }
-
-
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         if(SoundManager.instance != null && collision.relativeVelocity.magnitude >= 2f)
         {
@@ -45,6 +36,9 @@ public class Pickable : MonoBehaviour, IDetectable
             SoundManager.instance.PlayHit(this.gameObject, factor);
         }
     }
+
+
+    //Interface
     public float GetSpeed()
     {
         if (myBody != null)
@@ -104,5 +98,12 @@ public class Pickable : MonoBehaviour, IDetectable
             return null;
         else 
             return this.gameObject;
+    }
+    public Rigidbody GetBody()
+    {
+        if (myBody)
+            return myBody;
+        else
+            return null;
     }
 }

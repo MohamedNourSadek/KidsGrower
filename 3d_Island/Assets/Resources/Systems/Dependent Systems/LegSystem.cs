@@ -22,5 +22,4 @@ public class LegSystem
         SoundManager.instance.PlayWalk(controller.GetBody().gameObject,walkAudioVolume);
     }
 
-
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class SaveDialogPanel : MenuPanel
@@ -9,12 +10,23 @@ public class SaveDialogPanel : MenuPanel
     [SerializeField] TMP_InputField saveNameInput;
     [SerializeField] Button createSave;
     [SerializeField] TextMeshProUGUI inputHint;
+    [SerializeField] SavesPanel savesPanel;
 
     private void Start()
     {
         saveNameInput.onValueChanged.AddListener(SaveNameVaildator);
     }
 
+    public override void FillFunctions()
+    {
+        base.FillFunctions();
+
+        GetButton("Cancel").onClick.AddListener(new UnityAction(() => UIMenu.instance.OpenMenuPanel("Game Data")));
+        
+        GetButton("Create").onClick.AddListener(new UnityAction(() => UIMenu.instance.OpenMenuPanel("Game Data")));
+        GetButton("Create").onClick.AddListener(new UnityAction(() => NewSave()));
+        GetButton("Create").onClick.AddListener(new UnityAction(() => savesPanel.UpdateSavesUI()));
+    }
     public string GetSaveNameAndRefresh()
     {
         string save = saveNameInput.text;

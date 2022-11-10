@@ -7,8 +7,12 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] PostProcessingFunctions postProcessingFunctions;
 
+    public static MenuManager instance;
+
     private void Awake()
     {
+        instance = this;
+
         postProcessingFunctions.Initialize();
         postProcessingFunctions.SetBlur(true);
     }

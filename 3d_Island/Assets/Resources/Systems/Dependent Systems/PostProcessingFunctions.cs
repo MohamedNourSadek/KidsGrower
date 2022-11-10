@@ -13,7 +13,6 @@ public class PostProcessingFunctions
 
     DepthOfField depthOfField;
 
-
     public void Initialize()
     {
         VolumeProfile profile = volume.sharedProfile;

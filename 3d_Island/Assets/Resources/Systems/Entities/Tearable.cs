@@ -4,30 +4,42 @@ using UnityEngine;
 
 public class Tearable : MonoBehaviour
 {
+    [SerializeField] protected Animator animator;
+
     protected bool tearingDown;
     protected int tearDownTime = 1;
     protected int tearingDownCount = 0;
     protected int maxTearDownCount = 3;
 
-    public virtual void Shake()
-    {
-
-    }
+    //Interface
     public void TearDown()
     {
         if (tearingDown == false)
             StartCoroutine(TearingDown());
     }
+    public virtual void TearEffects()
+    {
+        animator.SetTrigger("Shake");
+
+        if (SoundManager.instance != null)
+            SoundManager.instance.PlayRockShake(this.gameObject);
+    }
+    public virtual void SpawnResource()
+    {
+
+    }
+
+    //Algorithm
     IEnumerator TearingDown()
     {
-        Shake();
+        TearEffects();
 
         tearingDown = true;
         tearingDownCount++;
         yield return new WaitForSecondsRealtime(tearDownTime);
         tearingDown = false;
 
-        GameManager.instance.SpawnWoodPack(this.transform.position + Vector3.up);
+        SpawnResource();
 
         if (tearingDownCount >= maxTearDownCount)
             Destroy(this.gameObject);

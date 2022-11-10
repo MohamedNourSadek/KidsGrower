@@ -17,6 +17,9 @@ public class GroundDetector
         myBody = body;
         initialized = true;
     }
+
+
+    //Interface
     public bool IsOnLayer(GroundLayers layerTag)
     {
         if (initialized)

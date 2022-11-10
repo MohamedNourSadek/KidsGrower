@@ -10,12 +10,10 @@ public class Bird : MonoBehaviour
     [SerializeField] LeanTweenType animationType = LeanTweenType.easeInOutCubic;
     
     
-    
     private void Start()
     {
         Explore();
     }
-
     void Explore()
     {
         Vector3 endPoint = MapSystem.instance.GetRandomExplorationPoint() + (flyingHeight * Vector3.up);

@@ -16,10 +16,16 @@ public class FacialControl
     {
         ServicesProvider.instance.StartCoroutine(BlinkPeriodically());  
     }
+
+
+    //Interface
     public void PlayExpression(FacialExpressions facial)
     {
         animator.SetTrigger(facial.ToString());
     }
+
+
+    //Internal Algorithms
     IEnumerator BlinkPeriodically()
     {
         while (true)

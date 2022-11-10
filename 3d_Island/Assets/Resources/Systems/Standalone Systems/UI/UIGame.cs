@@ -15,8 +15,8 @@ public class UIGame : MonoBehaviour
     [SerializeField] List<PanelsManager> PanelsManagers;
 
     [Header("References")]
-    [SerializeField] GameObject threeDCanvas;
-    [SerializeField] GameObject gameCanvas;
+    [SerializeField] public GameObject threeDCanvas;
+    [SerializeField] public GameObject gameCanvas;
     [SerializeField] GameObject declarationsArea;
     [SerializeField] GameObject inGamePanel;
     [SerializeField] GameObject messagesArea;
@@ -148,36 +148,6 @@ public class UIGame : MonoBehaviour
     {
         DeclarationElement element = Instantiate(delcareUIAsset, declarationsArea.transform).GetComponent<DeclarationElement>();
         element.message.text = message;
-    }
-
-
-    //Referenced Messages
-    //Sliders
-    Dictionary<GameObject, Slider> slidersContainer = new();
-    public void ShowSlider(GameObject user, Vector2 limits, Transform parent)
-    {
-        Slider _progressBar = Instantiate(progressBarPrefab, parent.position, Quaternion.identity, threeDCanvas.transform).GetComponent<Slider>();
-        _progressBar.minValue = limits.x;
-        _progressBar.maxValue = limits.y;
-
-        slidersContainer.Add(user, _progressBar);
-
-        StartCoroutine(TranslateUiElement(_progressBar.gameObject, parent));
-    }
-    public void UpdateProgressBar(GameObject user, float value)
-    {
-        slidersContainer[user].value = value;
-    }
-    public void UpdateProgressBarLimits(GameObject user, Vector3 limits)
-    {
-        slidersContainer[user].minValue = limits.x;
-        slidersContainer[user].maxValue = limits.y;
-    }
-    public void DestroyProgressBar(GameObject user)
-    {
-        Slider _temp = slidersContainer[user];
-        slidersContainer.Remove(user);
-        Destroy(_temp.gameObject);
     }
 
 

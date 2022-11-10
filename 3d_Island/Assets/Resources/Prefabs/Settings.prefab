@@ -37,7 +37,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 959.9999, y: -688}
+  m_AnchoredPosition: {x: 959.9999, y: -688.005}
   m_SizeDelta: {x: 500, y: 168}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2904295023161046997
@@ -379,7 +379,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 959.9999, y: -392}
+  m_AnchoredPosition: {x: 959.9999, y: -392.005}
   m_SizeDelta: {x: 500, y: 168}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2904295024012936397
@@ -683,7 +683,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 959.9999, y: -540}
+  m_AnchoredPosition: {x: 959.9999, y: -540.005}
   m_SizeDelta: {x: 500, y: 168}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2904295024240831219
@@ -787,7 +787,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2904295024271790994}
-  - component: {fileID: 2904295024271790997}
+  - component: {fileID: 863700813}
   m_Layer: 5
   m_Name: Settings
   m_TagString: Untagged
@@ -817,7 +817,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -0.005126953}
   m_SizeDelta: {x: 0, y: -0.01001}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2904295024271790997
+--- !u!114 &863700813
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -826,7 +826,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2904295024271790995}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fed09e5f7f2d32d49b7bcbd62411f9ad, type: 3}
+  m_Script: {fileID: 11500000, guid: 0448e0eae14462b4c929d1b992f3fd0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   panalName: Settings
@@ -841,55 +841,19 @@ MonoBehaviour:
     item: {fileID: 2904295024012936393}
     OnPress:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: UIGame, Assembly-CSharp
-          m_MethodName: OpenMenuPanel
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Audio0
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     HiddenModes: 
   - name: Graphics
     item: {fileID: 2904295024240830735}
     OnPress:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: UIGame, Assembly-CSharp
-          m_MethodName: OpenMenuPanel
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Graphics0
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     HiddenModes: 
   - name: Back
     item: {fileID: 2904295023161046993}
     OnPress:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: UIGame, Assembly-CSharp
-          m_MethodName: OpenMenuPanel
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Main0
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     HiddenModes: 
   animationSettings:
     offScale: {x: 1, y: 0, z: 0}

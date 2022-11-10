@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject treeAsset;
     [SerializeField] GameObject nameingHouseAsset;
     [SerializeField] GameObject axeAsset;
+    [SerializeField] GameObject rockAsset;
     [SerializeField] GameObject deadchild;
     [SerializeField] NPC npcAsset;
 
@@ -118,9 +119,9 @@ public class GameManager : MonoBehaviour
         foreach (NamingHouse_Data namingHouse_data in sessionData.data.namingHouses)
             namingHouse_data.SpawnWithData(nameingHouseAsset, true);
 
-
         foreach (Axe_Data axe_data in sessionData.data.axes)
             axe_data.SpawnWithData(axeAsset, true);
+
 
         //tree is Done differently because it exists by default
         if (sessionData.data.trees.Count > 0)
@@ -133,7 +134,18 @@ public class GameManager : MonoBehaviour
             foreach (Tree_Data tree_data in sessionData.data.trees)
                 tree_data.SpawnWithData(treeAsset, true);
         }
-            
+        if (sessionData.data.rocks.Count > 0)
+        {
+            var rocks = FindObjectsOfType<Rock>();
+
+            foreach (Rock rock in rocks)
+                Destroy(rock.gameObject);
+
+            foreach (Rock_Data rock_data in sessionData.data.rocks)
+                rock_data.SpawnWithData(rockAsset, true);
+        }
+
+
         sessionData.data.player.SpawnWithData(myPlayer.gameObject, false);
     }
     public void Save()
@@ -147,6 +159,7 @@ public class GameManager : MonoBehaviour
         sessionData.data.harvests = Harvest_Data.GameToDate(FindObjectsOfType<Harvest>());
         sessionData.data.seeds = Seed_Data.GameToDate(FindObjectsOfType<Seed>());
         sessionData.data.trees = Tree_Data.GameToDate(FindObjectsOfType<TreeSystem>());
+        sessionData.data.rocks = Rock_Data.GameToDate(FindObjectsOfType<Rock>());
         sessionData.data.fertilityBoosts = FertilityBoost_Data.GameToDate(FindObjectsOfType<FertilityBoost>());
         sessionData.data.extroversionBoosts = ExtroversionBoost_Data.GameToDate(FindObjectsOfType<ExtroversionBoost>());
         sessionData.data.aggressivenessBoosts = AggressivenessBoost_Data.GameToDate(FindObjectsOfType<AggressivenessBoost>());
@@ -283,7 +296,11 @@ public class GameManager : MonoBehaviour
     }
     public GameObject SpawnStonePack()
     {
-        return Instantiate(stonepackAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+        return SpawnStonePack(myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5);
+    }
+    public GameObject SpawnStonePack(Vector3 position)
+    {
+        return Instantiate(stonepackAsset.gameObject, position, Quaternion.identity);
     }
     public GameObject SpawnWoodPack()
     {

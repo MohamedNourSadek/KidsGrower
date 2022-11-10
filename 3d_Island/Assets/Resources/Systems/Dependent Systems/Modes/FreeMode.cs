@@ -7,15 +7,15 @@ public class FreeMode : AbstractMode
     public FreeMode(Mode_Data data) : base(data)
     {
     }
-   
     protected override void OnLoad()
     {
         base.OnLoad();
 
-        if (!data.gameStarted)
+        if (!data.firstStart)
         {
             data.timeSinceStart = 0;
-            data.gameStarted = true;
+            GameManager.instance.SpawnAxe();
+            data.firstStart = true;
         }
 
         ServicesProvider.instance.StartCoroutine(SpawnEveryT());

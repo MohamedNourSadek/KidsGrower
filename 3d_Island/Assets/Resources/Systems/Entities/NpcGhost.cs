@@ -16,9 +16,9 @@ public class NpcGhost : MonoBehaviour
         destination = MapSystem.instance.GetRandomExplorationPoint();
         moving = true;
 
-        StartCoroutine(_TakeDecision());
+        StartCoroutine(TakeDecision());
     }
-    IEnumerator _TakeDecision()
+    IEnumerator TakeDecision()
     {
         while(true)
         {

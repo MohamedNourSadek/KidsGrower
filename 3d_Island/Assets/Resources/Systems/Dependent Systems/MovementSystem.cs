@@ -11,7 +11,7 @@ public class MovementSystem
 
     [Header("Movement Parameters")]
     [SerializeField] float acceleration;
-    [SerializeField] public float maxSpeed;
+    [SerializeField] float maxSpeed;
     [SerializeField] float rotationSpeed;
 
     [Header("Jump Parameters")]
@@ -31,7 +31,6 @@ public class MovementSystem
     bool dashedMidAir = false;
     
 
-    //Interface to the controller
     public void Initialize(Rigidbody _body, Transform _lookdireciton)
     {
         groundDetector.Initialize(_body);
@@ -49,6 +48,9 @@ public class MovementSystem
 
         timeSinceLastDash += Time.fixedDeltaTime;
     }
+
+
+    //Interface
     public void PreformMove(Vector2 _movementInput)
     {
         if(body.velocity.magnitude <= maxSpeed)
@@ -91,6 +93,10 @@ public class MovementSystem
     public bool IsOnGround()
     {
         return onGround;
+    }
+    public float GetSpeedRatio()
+    {
+       return Mathf.Clamp01((body.velocity.magnitude / maxSpeed));
     }
 
 

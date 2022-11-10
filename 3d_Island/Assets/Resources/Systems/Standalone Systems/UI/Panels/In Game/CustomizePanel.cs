@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
@@ -12,7 +13,8 @@ public class CustomizePanel : MenuPanel, IInputUser
 {
     [SerializeField] LayerMask customizeDetectable;
     [SerializeField] GameObject modificationMenu;
-
+    [SerializeField] GameObject creationItemPopUp;
+    
     //Ui References
     [SerializeField] List<CButton> creationItems;
     [SerializeField] GameObject creationMenu;
@@ -22,14 +24,16 @@ public class CustomizePanel : MenuPanel, IInputUser
     [SerializeField] CButton closeButton;
 
     public bool activeInput { get; set; }
-    string createItem = "";
     float modificationRelativePosition = 120;
     bool customizing = false;
     public CustomizingState customizingState = CustomizingState.Detecting;
-    CustomizableObject selectedObject;
     Quaternion originalRotation;
     Vector3 originalPosition;
     bool holdPress;
+
+    string currentItemTag = "";
+    List<RequirementData> currentBuildingRequirements = new List<RequirementData>();
+    CustomizableObject selectedObject;
 
     public override void Initialize()
     {
@@ -41,6 +45,12 @@ public class CustomizePanel : MenuPanel, IInputUser
         closeButton.onClick.AddListener(OnClosePress);
         foreach (CButton button in creationItems)
             button.onClick.AddListener(OnCreationPress);
+    }
+    public override void FillFunctions()
+    {
+        base.FillFunctions();
+
+        GetButton("Back").onClick.AddListener(new UnityAction(() => UIGame.instance.OpenMenuPanel("Main0")));
     }
     public override void OnActiveChange(bool state)
     {
@@ -104,7 +114,7 @@ public class CustomizePanel : MenuPanel, IInputUser
 
         return hit;
     }
-    void UpdateUi()
+    public void UpdateUi()
     {
         bool state = (customizingState == CustomizingState.Moving);
 
@@ -124,7 +134,11 @@ public class CustomizePanel : MenuPanel, IInputUser
         else
         {
             modificationMenu.SetActive(false);
-            creationMenu.SetActive(true);
+
+            if(customizingState != CustomizingState.Placement)
+                creationMenu.SetActive(true);
+            else
+                creationMenu.SetActive(false);
         }
     }
     void TrySelect()
@@ -152,10 +166,11 @@ public class CustomizePanel : MenuPanel, IInputUser
         {
             GameObject obj = null;
 
-            if (createItem == "Magic House")
+            if (currentItemTag == "Magic House")
                 obj = GameManager.instance.SpawnNamingHouse(hit.point);
 
             Select(obj);
+            PlayerSystem.instance.inventorySystem.ConsumeResources(currentBuildingRequirements);
 
             customizingState = CustomizingState.Selected;
             UpdateUi();
@@ -209,15 +224,26 @@ public class CustomizePanel : MenuPanel, IInputUser
     }
     void OnCreationPress()
     {
-        createItem = "Not found";
+        currentItemTag = "Not found";
+        CButton selectedButton = null;
 
-        foreach(CButton button in creationItems)
-            if(button.gameObject == EventSystem.current.currentSelectedGameObject)
-                createItem = button.gameObject.name;
+        foreach (CButton button in creationItems)
+            if (button.gameObject == EventSystem.current.currentSelectedGameObject)
+            {
+                selectedButton = button;
+                currentItemTag = button.gameObject.name;
+            }
 
-        customizingState = CustomizingState.Placement;
+        var Obj = Instantiate(creationItemPopUp, selectedButton.transform);
+        Obj.transform.parent = UIGame.instance.gameCanvas.transform;
 
-        UIGame.instance.ChangeCustomizingIndicator("Press on an empty area", Color.white);
+        currentBuildingRequirements = new List<RequirementData>()
+        {
+            new RequirementData() { itemTag = "WoodPack",  itemAmount = 2},
+            new RequirementData() { itemTag = "StonePack",  itemAmount = 2},
+        };
+
+        Obj.GetComponent<CreationItemPopUp>().Initialize(this, currentItemTag, currentBuildingRequirements);
     }
 
 

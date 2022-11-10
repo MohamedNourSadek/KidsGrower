@@ -21,14 +21,15 @@ public class CameraSystem
     Vector3 finalFollowedPosition;
     GameObject followedObject;
 
-
-    //Interface
     public void Initialize(GameObject target)
     {
         followedObject = target;
         rotationFactor = new Vector2(0f, cameraHeighLimits.x);
         finalFollowedPosition = followedObject.transform.position + (Vector3.up * cameraTilt);
     }
+
+
+    //Interface
     public Transform GetCameraTransform()
     {
         return controlledCamera.transform;
@@ -43,7 +44,9 @@ public class CameraSystem
         TraslateCamera();
         controlledCamera.transform.LookAt(followedObject.transform.position);
     }
-       
+    
+
+    //Internal algorithms
     void TraslateCamera()
     {
         //Lerping the object position instead of the camera, because we want the camera to move only on its circle.

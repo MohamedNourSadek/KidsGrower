@@ -7,7 +7,6 @@ using UnityEngine.UIElements;
 
 public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser, ISavable
 {
-    public static PlayerSystem instance;
 
     [Header("References")]
     [SerializeField] GameObject dashVFXAsset;
@@ -23,17 +22,14 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     [SerializeField] public HandSystem handSystem;
     [SerializeField] LegSystem legSystem;
     [SerializeField] DetectorSystem detector;
+    [SerializeField] FacialControl myFace;
+    [SerializeField] public InventorySystem inventorySystem = new InventorySystem();
 
     [Header("Animator Variables")]
     [SerializeField] Vector2 animationLerpSpeed = new Vector2(1f,1f);
 
-
-    [SerializeField] FacialControl myFace;
-
-    [SerializeField] public InventorySystem inventorySystem = new InventorySystem();
-
     public bool activeInput { get; set; }
-
+    public static PlayerSystem instance;
     Vector2 moveAnimtion;
     float maxHeight = 2f;
 
@@ -122,7 +118,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     void UpdateAnimationParameters()
     {
-        float finalMoveX = Mathf.Clamp01((playerBody.velocity.magnitude / movementSystem.maxSpeed));
+        float finalMoveX = movementSystem.GetSpeedRatio();
         float finalMoveY = movementSystem.IsOnGround() ? 0f : ((movementSystem.groundDetector.GetDistanceFromGround() / maxHeight));
 
         moveAnimtion.x = Mathf.Lerp(moveAnimtion.x, finalMoveX, Time.fixedDeltaTime * animationLerpSpeed.x);
@@ -162,7 +158,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
         inventorySystem.Initialize(this);
 
-        inventorySystem.LoadInventory(player_data.inventoryData);
+        inventorySystem.LoadSavedData(player_data.inventoryData);
     }
     public Player_Data GetData()
     {
@@ -170,7 +166,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
         player_data.position = new nVector3(transform.position);
         player_data.rotation = new nQuaternion(transform.rotation);
-        player_data.inventoryData = inventorySystem.GetItems_Data();
+        player_data.inventoryData = inventorySystem.GetInventoryData();
 
         return player_data;
     }
@@ -244,7 +240,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
 
 
-    ///(Movement-Input-Hand) Interface
+    //(Movement-Input-Hand) Interface
     public void MoveInput(Vector2 _movementInput)
     {
         movementSystem.PreformMove(_movementInput);
@@ -263,13 +259,16 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     {
         if(handSystem.canStore)
         {
-            inventorySystem.Add(handSystem.GetNearestPickable().gameObject, true);
+            inventorySystem.Store(handSystem.GetNearestPickable().gameObject, true);
         }
         else if(handSystem.canShake)
         {
             if(handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().tag == "Axe")
             {
-                ((TreeSystem)(detector.GetNear("Tree"))).TearDown();
+                if(((Tearable)(detector.GetNear("Tree"))))
+                    ((Tearable)(detector.GetNear("Tree"))).TearDown();
+                else
+                    ((Tearable)(detector.GetNear("Rock"))).TearDown();
             }
             else
             {

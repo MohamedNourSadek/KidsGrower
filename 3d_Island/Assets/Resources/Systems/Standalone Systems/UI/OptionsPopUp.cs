@@ -47,7 +47,7 @@ public class OptionsPopUp : MonoBehaviour
     
     void OnDropPressed()
     {
-        inventorySystem.Remove(item);
+        inventorySystem.Drop(item);
         UIGame.instance.DisplayInventory(true, inventorySystem);
     }
     void OnHandPressed()
@@ -60,11 +60,11 @@ public class OptionsPopUp : MonoBehaviour
 
             if (InventorySystem.IsStorable(inHand))
             {
-                inventorySystem.Add(inHand.gameObject, true);
+                inventorySystem.Store(inHand.gameObject, true);
             }
         }
 
-        Pickable newItem = inventorySystem.Remove(item).GetComponent<Pickable>();
+        Pickable newItem = inventorySystem.Drop(item).GetComponent<Pickable>();
         PlayerSystem.instance.handSystem.PickObject(newItem);
         UIGame.instance.DisplayInventory(true, inventorySystem);
     }

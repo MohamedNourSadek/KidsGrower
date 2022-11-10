@@ -31,8 +31,6 @@ public class HandSystem
     IController myController;
     bool isPetting;
 
-
-    //Outside Interface
     public void Initialize(DetectorSystem detector, IController controller)
     {
         this.detector = detector;
@@ -43,6 +41,7 @@ public class HandSystem
         detector.CleanAllListsFromDestroyed();
         detector.CleanListsFromDestroyedObjects(nearPickables);
         UpdateHighlight();
+        canShake = (detector.GetNear("Tree") != null) || (detector.GetNear("Rock") != null);
 
         if (objectInHand == null)
         {
@@ -50,7 +49,6 @@ public class HandSystem
             canStore = false;
             canThrow = false;
             canPlant = false;
-            canShake = detector.GetNear("Tree") != null; 
             gotSomethingInHand = false;
         }
         else
@@ -58,7 +56,6 @@ public class HandSystem
             canStore = (nearPickables.Count >= 2) && (nearPickables[1].GetComponent<IStorableObject>() != null);
             canPick = false;
             canThrow = true;
-            canShake = detector.GetNear("Tree") != null; 
             gotSomethingInHand = true;
         }
 
@@ -69,6 +66,7 @@ public class HandSystem
     }
 
 
+    ////Interface
     public void PickNearestObject()
     {
         if ((nearPickables.Count > 0) ) 
@@ -175,21 +173,6 @@ public class HandSystem
 
 
     //Pickables handle
-    void UpdateHighlight()
-    {
-        if (nearPickables.Count >= 1 && highlightToPick)
-        {
-            var nearest = GetNearestPickable();
-
-            foreach (Pickable pickable in nearPickables)
-            {
-                if ((pickable == nearest) && (pickable != objectInHand) && (canPick || canStore))
-                    pickable.PickablilityIndicator(true);
-                else
-                    pickable.PickablilityIndicator(false);
-            }
-        }
-    }
     public void AddToPickable(IDetectable detectable)
     {
         if (detectable.GetGameObject().GetComponent<Pickable>())
@@ -226,8 +209,23 @@ public class HandSystem
         }
     }
 
-    
+
     //Internal Algorithms
+    void UpdateHighlight()
+    {
+        if (nearPickables.Count >= 1 && highlightToPick)
+        {
+            var nearest = GetNearestPickable();
+
+            foreach (Pickable pickable in nearPickables)
+            {
+                if ((pickable == nearest) && (pickable != objectInHand) && (canPick || canStore))
+                    pickable.PickablilityIndicator(true);
+                else
+                    pickable.PickablilityIndicator(false);
+            }
+        }
+    }
     IEnumerator PetObjectRoutine(ConditionChecker condition, NPC npc)
     {
         while (condition.isTrue)

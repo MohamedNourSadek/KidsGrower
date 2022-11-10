@@ -1668,7 +1668,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &922351517
 Transform:
   m_ObjectHideFlags: 0
@@ -4104,6 +4104,7 @@ GameObject:
   - component: {fileID: 1871894892}
   - component: {fileID: 177980288573320708}
   - component: {fileID: 177980288573320707}
+  - component: {fileID: 2562882906873800399}
   m_Layer: 0
   m_Name: Fertility Alter
   m_TagString: Alter
@@ -4130,7 +4131,7 @@ Transform:
   - {fileID: 3894498677850062535}
   - {fileID: 922351517}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1871894892
 MonoBehaviour:
@@ -4171,6 +4172,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalObject: {fileID: 632676312494050698}
   selectedObject: {fileID: 910394275}
+--- !u!195 &2562882906873800399
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177980288045853386}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 3.66
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 5.06
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &192749969216993386
 GameObject:
   m_ObjectHideFlags: 0

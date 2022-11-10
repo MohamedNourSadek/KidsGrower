@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using Unity.VisualScripting;
+using UnityEngine.Events;
+using UnityEngine.InputSystem.Composites;
 
 [System.Serializable]
 public class MenuPanel : MonoBehaviour
@@ -12,16 +14,21 @@ public class MenuPanel : MonoBehaviour
     [SerializeField] public List<MenuPanelItem> menuPanelItems;
     [SerializeField] public MenuAnimatioSettings animationSettings;
 
+    
     public bool active;
     public virtual void Initialize()
     {
-
+        FillFunctions();
     }
+    public virtual void FillFunctions()
+    {
+    }
+
+
     public virtual void OnActiveChange(bool _state)
     {
 
     }
-
     public bool IsActive()
     {
         return active;
@@ -41,7 +48,16 @@ public class MenuPanel : MonoBehaviour
         OnActiveChange(_state);
         return _time;
     }
+    public Button GetButton(string name)
+    {
+        foreach(MenuPanelItem item in menuPanelItems)
+        {
+            if (item.name == name)
+                return item.item.GetComponent<Button>();   
+        }
 
+        return null;
+    }
     IEnumerator ActivatePanel_Coroutine(bool _state, float _time)
     {
         if (_state)

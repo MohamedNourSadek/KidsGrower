@@ -281,8 +281,19 @@ public class AiBehaviour
             AbstractAction action = actions[0];
 
             foreach (AbstractAction act in actions)
+            { 
                 if (act.GetPriority() > action.GetPriority())
+                {
                     action = act;
+                }
+                else if(act.GetPriority() == action.GetPriority())
+                {
+                    if (GetDistance(act.subject) < GetDistance(action.subject))
+                    {
+                        action = act;
+                    }
+                }
+            }
 
             return action;
         }
@@ -290,5 +301,10 @@ public class AiBehaviour
             return new AbstractAction(myAgent.gameObject, myAgent);
 
     }
+    float GetDistance(GameObject obj)
+    {
+        return (myAgent.transform.position - obj.transform.position).magnitude; 
+    }
+
 
 }
