@@ -40,6 +40,7 @@ public class HandSystem
     {
         detector.CleanAllListsFromDestroyed();
         detector.CleanListsFromDestroyedObjects(nearPickables);
+        RefreshPickables();
         UpdateHighlight();
         canShake = (detector.GetNear("Tree") != null) || (detector.GetNear("Rock") != null);
 
@@ -207,6 +208,25 @@ public class HandSystem
                 }
             }
         }
+    }
+
+    public void RefreshPickables()
+    {
+        List<Pickable> toRemove = new List<Pickable>();
+
+        foreach (Pickable detectedObject in nearPickables)
+        {
+            if (detector.GetNear().Contains(detectedObject) == false)
+            {
+                toRemove.Add(detectedObject);
+            }
+        }
+        
+        foreach (Pickable detectedObject in toRemove)
+        {
+            RemoveFromPickables(detectedObject);
+        }
+
     }
 
 

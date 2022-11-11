@@ -11,11 +11,10 @@ public class FreeMode : AbstractMode
     {
         base.OnLoad();
 
-        if (!data.firstStart)
+        if (data.firstStart == true)
         {
             data.timeSinceStart = 0;
             GameManager.instance.SpawnAxe();
-            data.firstStart = true;
         }
 
         ServicesProvider.instance.StartCoroutine(SpawnEveryT());

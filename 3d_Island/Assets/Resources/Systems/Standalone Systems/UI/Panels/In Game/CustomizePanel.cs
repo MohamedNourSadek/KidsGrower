@@ -168,8 +168,13 @@ public class CustomizePanel : MenuPanel, IInputUser
 
             if (currentItemTag == "Magic House")
                 obj = GameManager.instance.SpawnNamingHouse(hit.point);
+            else if (currentItemTag == "Crafting Bench")
+                obj = GameManager.instance.SpawnCraftingBench(hit.point);
+            else if (currentItemTag == "Cloth Creator")
+                obj = GameManager.instance.SpawnCraftingBench(hit.point);
 
             Select(obj);
+
             PlayerSystem.instance.inventorySystem.ConsumeResources(currentBuildingRequirements);
 
             customizingState = CustomizingState.Selected;
@@ -225,6 +230,7 @@ public class CustomizePanel : MenuPanel, IInputUser
     void OnCreationPress()
     {
         currentItemTag = "Not found";
+
         CButton selectedButton = null;
 
         foreach (CButton button in creationItems)
@@ -235,13 +241,35 @@ public class CustomizePanel : MenuPanel, IInputUser
             }
 
         var Obj = Instantiate(creationItemPopUp, selectedButton.transform);
+
         Obj.transform.parent = UIGame.instance.gameCanvas.transform;
 
-        currentBuildingRequirements = new List<RequirementData>()
+
+        if (currentItemTag == "Magic House")
         {
-            new RequirementData() { itemTag = "WoodPack",  itemAmount = 2},
-            new RequirementData() { itemTag = "StonePack",  itemAmount = 2},
-        };
+            currentBuildingRequirements = new List<RequirementData>()
+            {
+                new RequirementData() { itemTag = "WoodPack",  itemAmount = 2},
+                new RequirementData() { itemTag = "StonePack",  itemAmount = 2},
+            };
+        }
+        else if (currentItemTag == "Crafting Bench")
+        {
+            currentBuildingRequirements = new List<RequirementData>()
+            {
+                new RequirementData() { itemTag = "WoodPack",  itemAmount = 10},
+                new RequirementData() { itemTag = "StonePack",  itemAmount = 10},
+            };
+        }
+        else if (currentItemTag == "Cloth Creator")
+        {
+            currentBuildingRequirements = new List<RequirementData>()
+            {
+                new RequirementData() { itemTag = "WoodPack",  itemAmount = 15},
+                new RequirementData() { itemTag = "StonePack",  itemAmount = 15},
+            };
+        }
+
 
         Obj.GetComponent<CreationItemPopUp>().Initialize(this, currentItemTag, currentBuildingRequirements);
     }

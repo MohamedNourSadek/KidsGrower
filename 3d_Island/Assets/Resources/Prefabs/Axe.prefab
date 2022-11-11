@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 6505608022384769442}
   m_LocalRotation: {x: -0.49991274, y: 0.50008726, z: 0.49991274, w: 0.50008726}
   m_LocalPosition: {x: -4.247, y: 2.622, z: -11.37}
-  m_LocalScale: {x: 7.6282773, y: 5, z: 7.6282773}
+  m_LocalScale: {x: 7.6282773, y: 5, z: 10.506427}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5837580648743292536}
@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b6aa88ebfb44e44b82db74f5dcb6b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickRotation: {x: -0.27059805, y: 0.65328145, z: 0.27059805, w: -0.65328145}
   indicatorObject: {fileID: 6505608022796637378}
   myBody: {fileID: 3469287836859155945}
   groundDetector:
@@ -135,8 +136,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.06825483, y: 0.20784336, z: 0.014764838}
-  m_Center: {x: 0.011043017, y: 0.07164379, z: 0.000042741754}
+  m_Size: {x: 0.06825483, y: 0.20784336, z: 0.025663503}
+  m_Center: {x: 0.011043015, y: 0.07164381, z: 0.001361597}
 --- !u!1 &6505608022796637378
 GameObject:
   m_ObjectHideFlags: 0

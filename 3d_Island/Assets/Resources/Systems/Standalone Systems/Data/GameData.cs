@@ -21,6 +21,8 @@ public class GameData
     public List<WoodPack_Data> woodpacks = new List<WoodPack_Data>();
     public List<StonePack_Data> stonepacks = new List<StonePack_Data>();
     public List<NamingHouse_Data> namingHouses = new List<NamingHouse_Data>();
+    public List<CraftingBench_Data> craftingBenches = new List<CraftingBench_Data>();
+    public List<ClothCreator_Data> clothCreators = new List<ClothCreator_Data>();
     public List<Axe_Data> axes = new List<Axe_Data>();
     public List<Rock_Data> rocks = new List<Rock_Data>();
 }

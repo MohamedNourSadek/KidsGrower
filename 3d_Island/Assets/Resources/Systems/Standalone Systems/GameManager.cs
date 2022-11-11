@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject seedAsset;
     [SerializeField] GameObject treeAsset;
     [SerializeField] GameObject nameingHouseAsset;
+    [SerializeField] GameObject craftingBenchAsset;
+    [SerializeField] GameObject clothCreatorAsset;
     [SerializeField] GameObject axeAsset;
     [SerializeField] GameObject rockAsset;
     [SerializeField] GameObject deadchild;
@@ -49,14 +51,14 @@ public class GameManager : MonoBehaviour
         if (myPlayer == null)
             FindObjectOfType<PlayerSystem>();
 
-
         posProcessingFunctions.Initialize();
 
-        LoadAndApply();
 
         SetBlur(false);
 
         modeHandler = ModeFactory.CreateModeHandler(DataManager.instance.GetCurrentSession());
+
+        LoadAndApply();
 
         StartCoroutine(autoSave());
     }
@@ -122,29 +124,30 @@ public class GameManager : MonoBehaviour
         foreach (Axe_Data axe_data in sessionData.data.axes)
             axe_data.SpawnWithData(axeAsset, true);
 
+        foreach (CraftingBench_Data craftingBench_Data in sessionData.data.craftingBenches)
+            craftingBench_Data.SpawnWithData(craftingBenchAsset, true);
 
-        //tree is Done differently because it exists by default
-        if (sessionData.data.trees.Count > 0)
+        foreach (ClothCreator_Data clothCreator in sessionData.data.clothCreators)
+            clothCreator.SpawnWithData(clothCreatorAsset, true);
+
+        //objects that exist by default
+        if (modeHandler.GetModeData().firstStart == false)
         {
             var trees = FindObjectsOfType<TreeSystem>();
-
-            foreach(TreeSystem tree in trees)
-                Destroy(tree.gameObject);
-            
-            foreach (Tree_Data tree_data in sessionData.data.trees)
-                tree_data.SpawnWithData(treeAsset, true);
-        }
-        if (sessionData.data.rocks.Count > 0)
-        {
             var rocks = FindObjectsOfType<Rock>();
 
+            foreach (TreeSystem tree in trees)
+                Destroy(tree.gameObject);
             foreach (Rock rock in rocks)
                 Destroy(rock.gameObject);
 
+            foreach (Tree_Data tree_data in sessionData.data.trees)
+                tree_data.SpawnWithData(treeAsset, true);
             foreach (Rock_Data rock_data in sessionData.data.rocks)
                 rock_data.SpawnWithData(rockAsset, true);
         }
 
+        modeHandler.GetModeData().firstStart = false;
 
         sessionData.data.player.SpawnWithData(myPlayer.gameObject, false);
     }
@@ -168,10 +171,10 @@ public class GameManager : MonoBehaviour
         sessionData.data.stonepacks = StonePack_Data.GameToDate(FindObjectsOfType<StonePack>());
         sessionData.data.woodpacks = WoodPack_Data.GameToDate(FindObjectsOfType<WoodPack>());
         sessionData.data.namingHouses = NamingHouse_Data.GameToDate(FindObjectsOfType<NamingHouse>());
+        sessionData.data.craftingBenches = CraftingBench_Data.GameToDate(FindObjectsOfType<CraftingBench>());
         sessionData.data.axes = Axe_Data.GameToDate(FindObjectsOfType<Axe>());
         sessionData.data.player = Player_Data.GameToData(myPlayer);
         sessionData.modeData = modeHandler.GetModeData();
-
 
         DataManager.instance.Modify(sessionData);
         StartCoroutine(UIGame.instance.SavingUI());
@@ -321,6 +324,16 @@ public class GameManager : MonoBehaviour
     public GameObject SpawnNamingHouse(Vector3 position)
     {
         return Instantiate(nameingHouseAsset.gameObject, position, Quaternion.identity);
+
+    }
+    public GameObject SpawnCraftingBench(Vector3 position)
+    {
+        return Instantiate(craftingBenchAsset.gameObject, position, Quaternion.identity);
+
+    }
+    public GameObject SpawnClothCreator(Vector3 position)
+    {
+        return Instantiate(clothCreatorAsset.gameObject, position, Quaternion.identity);
 
     }
     public void OnNamingFinsihed()

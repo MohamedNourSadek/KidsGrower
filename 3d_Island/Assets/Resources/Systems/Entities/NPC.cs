@@ -63,16 +63,12 @@ public class NPC : Pickable, IController, ISavable
         ApplyCharacterParameters();
         UpdateAnimationParameters();
 
-        if (groundDetector.IsOnLayer(GroundLayers.Water))
-            Die();
-
         //Reactivate AI only if the npc were thrown and touched the ground and not being bet
-        if (groundDetector.IsOnLayer(GroundLayers.Ground) && !petting)
+        if ((groundDetector.IsOnLayer(GroundLayers.Ground) || groundDetector.IsOnLayer(GroundLayers.Water)) && !petting)
             navMeshAgent.enabled = true;
         else if (petting)
             navMeshAgent.enabled = false;
     }
-
 
 
     //Interface

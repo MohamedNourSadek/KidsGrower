@@ -72,17 +72,14 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
             UIGame.instance.PickDropButton_SwitchMode(PickMode.Store);
             UIGame.instance.PickDropButton_Enable(true);
         }
-        else if (handSystem.canShake)
+        else if(handSystem.canShake && handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().tag == "Axe")
         {
-            if (handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().tag == "Axe")
-            {
-                UIGame.instance.PickDropButton_SwitchMode(PickMode.Tear);
-            }
-            else
-            {
-                UIGame.instance.PickDropButton_SwitchMode(PickMode.Shake);
-            }
-
+            UIGame.instance.PickDropButton_SwitchMode(PickMode.Tear);
+            UIGame.instance.PickDropButton_Enable(true);
+        }
+        else if (((Tearable)(detector.GetNear("Tree"))) && handSystem.canShake)
+        {
+            UIGame.instance.PickDropButton_SwitchMode(PickMode.Shake);
             UIGame.instance.PickDropButton_Enable(true);
         }
         else if (handSystem.canPick)
@@ -261,19 +258,16 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         {
             inventorySystem.Store(handSystem.GetNearestPickable().gameObject, true);
         }
-        else if(handSystem.canShake)
+        else if(handSystem.canShake && handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().tag == "Axe")
         {
-            if(handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().tag == "Axe")
-            {
-                if(((Tearable)(detector.GetNear("Tree"))))
-                    ((Tearable)(detector.GetNear("Tree"))).TearDown();
-                else
-                    ((Tearable)(detector.GetNear("Rock"))).TearDown();
-            }
+            if(((Tearable)(detector.GetNear("Tree"))))
+                ((Tearable)(detector.GetNear("Tree"))).TearDown();
             else
-            {
-                ((TreeSystem)(detector.GetNear("Tree"))).Shake();
-            }
+                ((Tearable)(detector.GetNear("Rock"))).TearDown();
+        }
+        else if(((Tearable)(detector.GetNear("Tree"))) && handSystem.canShake)
+        {
+            ((TreeSystem)(detector.GetNear("Tree"))).Shake();
         }
         else if (handSystem.canPick)
         {
