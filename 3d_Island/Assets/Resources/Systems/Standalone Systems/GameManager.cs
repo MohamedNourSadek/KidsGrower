@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject clothCreatorAsset;
     [SerializeField] GameObject axeAsset;
     [SerializeField] GameObject rockAsset;
+    [SerializeField] GameObject hatAsset;
     [SerializeField] GameObject deadchild;
     [SerializeField] NPC npcAsset;
 
@@ -130,6 +131,9 @@ public class GameManager : MonoBehaviour
         foreach (ClothCreator_Data clothCreator in sessionData.data.clothCreators)
             clothCreator.SpawnWithData(clothCreatorAsset, true);
 
+        foreach (Hat_Data hat in sessionData.data.hats)
+            hat.SpawnWithData(hatAsset, true);
+
         //objects that exist by default
         if (modeHandler.GetModeData().firstStart == false)
         {
@@ -173,6 +177,7 @@ public class GameManager : MonoBehaviour
         sessionData.data.namingHouses = NamingHouse_Data.GameToDate(FindObjectsOfType<NamingHouse>());
         sessionData.data.craftingBenches = CraftingBench_Data.GameToDate(FindObjectsOfType<CraftingBench>());
         sessionData.data.axes = Axe_Data.GameToDate(FindObjectsOfType<Axe>());
+        sessionData.data.hats = Hat_Data.GameToDate(FindObjectsOfType<Hat>());
         sessionData.data.player = Player_Data.GameToData(myPlayer);
         sessionData.modeData = modeHandler.GetModeData();
 
@@ -297,6 +302,10 @@ public class GameManager : MonoBehaviour
     {
         return Instantiate(fruitAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
+    public GameObject SpawnTree(Vector3 position)
+    {
+        return Instantiate(treeAsset.gameObject, position, Quaternion.identity);
+    }
     public GameObject SpawnStonePack()
     {
         return SpawnStonePack(myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5);
@@ -320,6 +329,10 @@ public class GameManager : MonoBehaviour
     public GameObject SpawnAxe()
     {
         return Instantiate(axeAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+    }
+    public GameObject SpawnHat()
+    {
+        return Instantiate(hatAsset.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
     }
     public GameObject SpawnNamingHouse(Vector3 position)
     {

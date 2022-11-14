@@ -19,4 +19,17 @@ public class ClothCreator : MonoBehaviour, ISavable
 
         return clothCreator_Data;
     }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.CompareTag("Player"))
+        {
+            if (collider.GetComponentInParent<PlayerSystem>() != null)
+            {
+                GameManager.instance.SetPlaying(false);
+                GameManager.instance.SetBlur(true);
+                UIGame.instance.OpenMenuPanel("Cloth Panel0");
+            }
+        }
+    }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Events;
 
 public class CreationItemPopUp : MonoBehaviour
 {
@@ -12,23 +13,21 @@ public class CreationItemPopUp : MonoBehaviour
     [SerializeField] TextMeshProUGUI requirement;
     [SerializeField] Button create;
     [SerializeField] Button close;
+    List<RequirementData> reqs;
+    bool closeOnCreate = false;
 
-    CustomizePanel customizePanel;
-
-    public void Initialize(CustomizePanel customize, string name, List<RequirementData> requirements)
-    {
-        this.customizePanel = customize;
-        itemName.text = name;
-        requirement.text = RequirementData.GetRequirementStatementText(PlayerSystem.instance.inventorySystem, requirements);
-        create.interactable = RequirementData.IsRequirementTrue(PlayerSystem.instance.inventorySystem, requirements);
-
-        create.Select();
-    }
-
-    private void Awake()
+    public void Initialize(UnityAction OnCreatePress, string name, List<RequirementData> requirements, bool closeOnCreate)
     {
         create.onClick.AddListener(OnCreatePress);
+        create.onClick.AddListener(this.OnCreatePress);
         close.onClick.AddListener(OnClosePressed);
+
+        this.closeOnCreate = closeOnCreate;
+        itemName.text = name;
+        reqs = requirements;
+        RefreshRequirements();
+
+        create.Select();
     }
     private void Update()
     {
@@ -46,20 +45,27 @@ public class CreationItemPopUp : MonoBehaviour
         else
         {
             return false;
+
         }
 
     }
 
+
     void OnCreatePress()
     {
-        customizePanel.customizingState = CustomizingState.Placement;
-        customizePanel.UpdateUi();
-        UIGame.instance.ChangeCustomizingIndicator("Press on an empty area", Color.white);
+        RefreshRequirements();
 
-        OnClosePressed();
+        if (closeOnCreate)
+            OnClosePressed();
     }
     void OnClosePressed()
     {
         Destroy(this.gameObject);
     }
+    void RefreshRequirements()
+    {
+        requirement.text = RequirementData.GetRequirementStatementText(PlayerSystem.instance.inventorySystem, reqs);
+        create.interactable = RequirementData.IsRequirementTrue(PlayerSystem.instance.inventorySystem, reqs);
+    }
+
 }

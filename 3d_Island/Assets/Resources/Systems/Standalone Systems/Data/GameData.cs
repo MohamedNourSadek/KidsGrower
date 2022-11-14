@@ -25,4 +25,5 @@ public class GameData
     public List<ClothCreator_Data> clothCreators = new List<ClothCreator_Data>();
     public List<Axe_Data> axes = new List<Axe_Data>();
     public List<Rock_Data> rocks = new List<Rock_Data>();
+    public List<Hat_Data> hats = new List<Hat_Data>();
 }

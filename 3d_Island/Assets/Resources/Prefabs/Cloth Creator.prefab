@@ -14508,7 +14508,7 @@ GameObject:
   - component: {fileID: 8346588240212114694}
   - component: {fileID: 8346588240212114695}
   - component: {fileID: 452868724087526936}
-  - component: {fileID: 452868724087526937}
+  - component: {fileID: 8270199789062297273}
   m_Layer: 0
   m_Name: Cloth Creator
   m_TagString: Untagged
@@ -14581,7 +14581,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 0
---- !u!114 &452868724087526937
+--- !u!114 &8270199789062297273
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14590,7 +14590,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8346588240212114691}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98499e068f12dd541be5f9c8efcf35eb, type: 3}
+  m_Script: {fileID: 11500000, guid: 528c40373b872bd4db1c1969284aaa04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8367148808333812465

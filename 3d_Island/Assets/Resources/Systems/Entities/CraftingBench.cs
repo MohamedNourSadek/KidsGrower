@@ -19,4 +19,18 @@ public class CraftingBench : MonoBehaviour, ISavable
 
         return namingHouse;
     }
+
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.CompareTag("Player"))
+        {
+            if (collider.GetComponentInParent<PlayerSystem>() != null)
+            {
+                GameManager.instance.SetPlaying(false);
+                GameManager.instance.SetBlur(true);
+                UIGame.instance.OpenMenuPanel("Crafting Panel0");
+            }
+        }
+    }
 }

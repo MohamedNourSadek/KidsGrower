@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-
+[System.Serializable]
 public class InventorySystem
 {
-    List<InventoryItem_Data> items = new List<InventoryItem_Data>();
+     public List<InventoryItem_Data> items = new List<InventoryItem_Data>();
     IController myController;
     
     public void Initialize(IController controller)
@@ -88,6 +88,8 @@ public class InventorySystem
         {
             ModifyAmount(requirement.itemTag, -requirement.itemAmount);
         }
+
+        DestroyEmpty();
     }
 
 
@@ -144,6 +146,8 @@ public class InventorySystem
             myObject = GameManager.instance.SpawnBoost(item);
         else if (item.Contains("Axe"))
             myObject = GameManager.instance.SpawnAxe();
+        else if (item.Contains("Hat"))
+            myObject = GameManager.instance.SpawnHat();
         else
             myObject = null;
 
