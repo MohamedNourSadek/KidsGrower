@@ -306,6 +306,10 @@ public class GameManager : MonoBehaviour
     {
         return Instantiate(treeAsset.gameObject, position, Quaternion.identity);
     }
+    public GameObject SpawnRock(Vector3 position)
+    {
+        return Instantiate(rockAsset.gameObject, position, Quaternion.identity);
+    }
     public GameObject SpawnStonePack()
     {
         return SpawnStonePack(myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5);

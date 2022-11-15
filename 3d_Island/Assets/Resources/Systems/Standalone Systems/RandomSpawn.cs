@@ -8,7 +8,7 @@ using UnityEngine;
 public class RandomSpawn : MonoBehaviour
 {
     [SerializeField] Vector2 randomRange = new Vector2(120f, 240f);
-    private void Awake()
+    private void Awake() 
     {
         StartCoroutine(SpawnEveryT());
     }
@@ -18,27 +18,44 @@ public class RandomSpawn : MonoBehaviour
         while(true) 
         {
             float time = UnityEngine.Random.Range(randomRange.x, randomRange.y);
-
             yield return new WaitForSecondsRealtime(time);
 
-            bool exists = false;
+            BoxCaster boxCaster = ServicesProvider.instance.CreateBoxCaster(this.transform.position);
+            yield return new WaitForSeconds(1f);
+            List<GameObject> objs = boxCaster.GetObjectsInRange();
 
-            List<GameObject> objs = new List<GameObject>();
-
-            foreach(GameObject obj in objs)
+            if(ObjExists(objs) == false)
             {
-                if(obj.tag == "Tree" || obj.tag == "Rock")
+                SpawnRandomObj();
+            }
+
+            Destroy(boxCaster.gameObject);
+        }
+    }
+    bool ObjExists(List<GameObject> objs)
+    {
+        bool exists = false;
+
+        foreach (GameObject obj in objs)
+        {
+            if (obj != null)
+            {
+                if (obj.tag == "Tree" || obj.tag == "Rock")
                 {
                     exists = true;
                 }
             }
-
-            if(exists == false)
-            {
-                GameManager.instance.SpawnTree(this.transform.position);
-            }
         }
+
+        return exists;
     }
+    void SpawnRandomObj()
+    {
+        float random = UnityEngine.Random.Range(0f, 1f);
 
-
+        if (random > 0.5f)
+            GameManager.instance.SpawnRock(this.transform.position);
+        else
+            GameManager.instance.SpawnTree(this.transform.position);
+    }
 }

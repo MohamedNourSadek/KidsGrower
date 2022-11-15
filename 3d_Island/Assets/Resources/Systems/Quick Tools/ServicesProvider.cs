@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 public class ServicesProvider : MonoBehaviour
 {
+    [SerializeField] GameObject boxCaster;
+
     public static ServicesProvider instance;
 
     List<Action> OnGizomsEvent = new List<Action>();
@@ -28,5 +30,8 @@ public class ServicesProvider : MonoBehaviour
     {
         Destroy(gameobject);
     }
-
+    public BoxCaster CreateBoxCaster(Vector3 origin)
+    {
+        return Instantiate(boxCaster,origin, Quaternion.identity).GetComponent<BoxCaster>();   
+    }
 }
