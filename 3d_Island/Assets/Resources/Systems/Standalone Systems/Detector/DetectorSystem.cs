@@ -83,10 +83,43 @@ public class DetectorSystem : MonoBehaviour
         foreach (IDetectable detectable in detectableNear)
         {
             if (detectable.tag == tag)
+            {
                 detected = detectable;
+            }
         }
 
         return detected;
+    }
+    public IDetectable GetNearest()
+    {
+        if(detectableNear.Count > 1)
+        {
+            IDetectable nearest = detectableNear[0];
+
+            foreach (IDetectable detectable in detectableNear)
+            {
+                if ((detectable.GetGameObject().GetComponent<Pickable>() != null) && (detectable.GetGameObject().GetComponent<Pickable>().isPicked == true))
+                    continue;
+
+                if (Distance(detectable.GetGameObject()) < Distance(nearest.GetGameObject()))
+                {
+                    nearest = detectable;
+                }
+            }
+
+            return nearest;
+        }
+        else if(detectableNear.Count == 1)
+        {
+            if ((detectableNear[0].GetGameObject().GetComponent<Pickable>() != null) && (detectableNear[0].GetGameObject().GetComponent<Pickable>().isPicked == true))
+                return null;
+
+            return detectableNear[0];
+        }
+        else
+        {
+            return null;
+        }
     }
 
 

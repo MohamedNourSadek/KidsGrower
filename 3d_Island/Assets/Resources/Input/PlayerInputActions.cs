@@ -125,6 +125,24 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""ec09a2c8-e2ad-4882-aeef-2c606974353b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Store"",
+                    ""type"": ""Button"",
+                    ""id"": ""010d5eee-4af1-4f77-b405-e952182b854b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -457,6 +475,50 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""RotateY"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2e04514e-4c17-45a1-8ef9-038cf13f818e"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""35e965e1-c37c-423d-8ea2-f8f0787b9676"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Game pad"",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7dd9945a-cce7-467a-ab76-8b0c96f7dbf5"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Store"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f3edc514-e5e6-456b-87f7-65bfa6419f99"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Game pad"",
+                    ""action"": ""Store"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -499,6 +561,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Pet = m_Player.FindAction("Pet", throwIfNotFound: true);
         m_Player_Press = m_Player.FindAction("Press", throwIfNotFound: true);
         m_Player_Hand = m_Player.FindAction("Hand", throwIfNotFound: true);
+        m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+        m_Player_Store = m_Player.FindAction("Store", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -569,6 +633,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Pet;
     private readonly InputAction m_Player_Press;
     private readonly InputAction m_Player_Hand;
+    private readonly InputAction m_Player_Attack;
+    private readonly InputAction m_Player_Store;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -584,6 +650,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Pet => m_Wrapper.m_Player_Pet;
         public InputAction @Press => m_Wrapper.m_Player_Press;
         public InputAction @Hand => m_Wrapper.m_Player_Hand;
+        public InputAction @Attack => m_Wrapper.m_Player_Attack;
+        public InputAction @Store => m_Wrapper.m_Player_Store;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -626,6 +694,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Hand.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHand;
                 @Hand.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHand;
                 @Hand.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHand;
+                @Attack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
+                @Attack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
+                @Attack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
+                @Store.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnStore;
+                @Store.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnStore;
+                @Store.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnStore;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -663,6 +737,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Hand.started += instance.OnHand;
                 @Hand.performed += instance.OnHand;
                 @Hand.canceled += instance.OnHand;
+                @Attack.started += instance.OnAttack;
+                @Attack.performed += instance.OnAttack;
+                @Attack.canceled += instance.OnAttack;
+                @Store.started += instance.OnStore;
+                @Store.performed += instance.OnStore;
+                @Store.canceled += instance.OnStore;
             }
         }
     }
@@ -698,5 +778,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnPet(InputAction.CallbackContext context);
         void OnPress(InputAction.CallbackContext context);
         void OnHand(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
+        void OnStore(InputAction.CallbackContext context);
     }
 }

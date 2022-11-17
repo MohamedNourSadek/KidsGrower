@@ -106,7 +106,7 @@ MonoBehaviour:
     detectableLayers:
       serializedVersion: 2
       m_Bits: 64
-    onGroundThreshold: 1.3
+    onGroundThreshold: 2
     initialized: 0
   myCollider: {fileID: 6235789860767099223}
 --- !u!54 &3469287836859155945

@@ -15,5 +15,5 @@ public class Axe : Pickable, ISavable, IStorableObject, IDetectable
         axe.position = new nVector3(transform.position);
         return axe;
     }
-
 }
+

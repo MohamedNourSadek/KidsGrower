@@ -326,13 +326,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5d97d05be12de04db6766e358542815, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickRotation: {x: 0, y: 0, z: 0, w: 0}
   indicatorObject: {fileID: 6876410435036662736}
   myBody: {fileID: 6876410436286045254}
   groundDetector:
     detectableLayers:
       serializedVersion: 2
       m_Bits: 64
-    onGroundThreshold: 1.3
+    onGroundThreshold: 2
     initialized: 0
   myCollider: {fileID: 6876410436286045253}
   plantTime: 5

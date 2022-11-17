@@ -16,6 +16,8 @@ public interface IInputUser
     public void PlantInput();
     public void ThrowInput();
     public void JumpInput();
+    public void AttackInput();
+    public void StoreInput();
     public void PickInput();
     public void PressDownInput();
     public void PressUpInput();

@@ -23,6 +23,8 @@ public class InputSystem : MonoBehaviour
         inputActions.Player.Plant.performed += PlantInput;
         inputActions.Player.Dash.performed += DashInput;
         inputActions.Player.Pet.performed += PetInput;
+        inputActions.Player.Attack.performed += AttackInput;
+        inputActions.Player.Store.performed += StoreInput;
         inputActions.Player.Press.performed += PressDownInput;
         inputActions.Player.Press.canceled += PressUpInput;
     }
@@ -93,6 +95,19 @@ public class InputSystem : MonoBehaviour
             if (sub.activeInput)
                 sub.PressUpInput();
     }
+    void AttackInput(InputAction.CallbackContext obj)
+    {
+        foreach (IInputUser sub in Subscribers)
+            if (sub.activeInput)
+                sub.AttackInput();
+    }
+    void StoreInput(InputAction.CallbackContext obj)
+    {
+        foreach (IInputUser sub in Subscribers)
+            if (sub.activeInput)
+                sub.StoreInput();
+    }
+
     void MovementInput()
     {
         Vector2 xyAxis = inputActions.Player.Move.ReadValue<Vector2>();

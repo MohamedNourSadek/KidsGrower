@@ -28,6 +28,7 @@ public class NPC : Pickable, IController, ISavable
 
     //Internal
     [System.NonSerialized] public NavMeshAgent navMeshAgent;
+    AbilitySystem abilitySystem = new AbilitySystem();
     bool petting = false;
     float moveAnimtion = 0f;
     
@@ -39,10 +40,9 @@ public class NPC : Pickable, IController, ISavable
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.stoppingDistance = 0.9f * nearObjectDistance;
         detector.Initialize(nearObjectDistance, aiBehavior.OnDetectableInRange, aiBehavior.OnDetectableExit, aiBehavior.OnDetectableNear, aiBehavior.OnDetectableNearExit);
-        handSystem.Initialize(detector, this);
+        handSystem.Initialize(detector, this, abilitySystem);
         appearanceControl.Initialize(this.character);
         myFace.Initialize();
-
         groundDetector.Initialize(myBody);
         character.levelControl.Initialize(OnLevelIncrease, OnXPIncrease);
 
@@ -51,6 +51,8 @@ public class NPC : Pickable, IController, ISavable
 
         StartCoroutine(GrowingUp());
         aiBehavior.Initialize(this);
+
+        abilitySystem.Initialize(detector, handSystem, null);
     }
     void OnDestroy()
     {

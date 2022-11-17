@@ -6,7 +6,6 @@ using UnityEngine;
 [System.Serializable] 
 public class MovementSystem
 {
-
     [SerializeField] public GroundDetector groundDetector;
 
     [Header("Movement Parameters")]
@@ -20,7 +19,6 @@ public class MovementSystem
     [Header("Dash parameters")]
     [SerializeField] float dashRechargeTime;
     [SerializeField] float dashForce;
-
 
     Rigidbody body;
     Transform lookDirection;

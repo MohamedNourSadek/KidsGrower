@@ -24,6 +24,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     [SerializeField] DetectorSystem detector;
     [SerializeField] FacialControl myFace;
     [SerializeField] public InventorySystem inventorySystem = new InventorySystem();
+    [SerializeField] AbilitySystem abilitySystem;
 
     [Header("Animator Variables")]
     [SerializeField] Vector2 animationLerpSpeed = new Vector2(1f,1f);
@@ -40,13 +41,13 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         InputSystem.SubscribeUser(this);
 
         inventorySystem.Initialize(this);
-
         movementSystem.Initialize(playerBody, myCamera.GetCameraTransform());
         myCamera.Initialize(this.gameObject);
         detector.Initialize(nearObjectDistance, OnDetectableInRange, OnDetectableExit, OnDetectableNear, OnDetectableNearExit);
-        handSystem.Initialize(detector, this);
+        handSystem.Initialize(detector, this, abilitySystem);
         legSystem.Initialize(this);
         myFace.Initialize();
+        abilitySystem.Initialize(detector, handSystem, movementSystem);
 
         instance = this;
     }
@@ -63,55 +64,65 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     void Update()
     {
         UpdateAnimationParameters();
+        abilitySystem.Update(); 
     }
     void UpdateUi()
     {
         //Set Interact Modes
-        if (handSystem.canStore)
+        if (abilitySystem.canShake)
         {
-            UIGame.instance.PickDropButton_SwitchMode(PickMode.Store);
+            UIGame.instance.PickDropButton_SwitchMode(ButtonMode.Shake);
             UIGame.instance.PickDropButton_Enable(true);
         }
-        else if(handSystem.canShake && handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().tag == "Axe")
+        else if (abilitySystem.canPick)
         {
-            UIGame.instance.PickDropButton_SwitchMode(PickMode.Tear);
+            UIGame.instance.PickDropButton_SwitchMode(ButtonMode.Pick);
             UIGame.instance.PickDropButton_Enable(true);
         }
-        else if (((Tearable)(detector.GetNear("Tree"))) && handSystem.canShake)
+        else if (handSystem.GetObjectInHand() != null)
         {
-            UIGame.instance.PickDropButton_SwitchMode(PickMode.Shake);
-            UIGame.instance.PickDropButton_Enable(true);
-        }
-        else if (handSystem.canPick)
-        {
-            UIGame.instance.PickDropButton_SwitchMode(PickMode.Pick);
-            UIGame.instance.PickDropButton_Enable(true);
-        }
-        else if (handSystem.gotSomethingInHand)
-        {
-            UIGame.instance.PickDropButton_SwitchMode(PickMode.Drop);
+            UIGame.instance.PickDropButton_SwitchMode(ButtonMode.Drop);
             UIGame.instance.PickDropButton_Enable(true);
         }
         else
         {
-            UIGame.instance.PickDropButton_SwitchMode(PickMode._);
+            UIGame.instance.PickDropButton_SwitchMode(ButtonMode._);
             UIGame.instance.PickDropButton_Enable(false);
         }
 
+        if (abilitySystem.canTear)
+        {
+            UIGame.instance.AttackTearButton_SwitchMode(ButtonMode.Tear);
+            UIGame.instance.AttackTearButton_Enable(true);
+        }
+        else
+        {
+            UIGame.instance.AttackTearButton_SwitchMode(ButtonMode._);
+            UIGame.instance.AttackTearButton_Enable(false);
+        }
 
-        if (handSystem.canThrow)
+        if (abilitySystem.canStore)
+        {
+            UIGame.instance.StoreButton_Enable(true);
+        }
+        else
+        {
+            UIGame.instance.StoreButton_Enable(false);
+        }
+
+        if (abilitySystem.canThrow)
             UIGame.instance.ThrowButton_Enable(true);
         else
             UIGame.instance.ThrowButton_Enable(false);
 
-        if (handSystem.canPlant)
+        if (abilitySystem.canPlant)
             UIGame.instance.PlantButton_Enable(true);
         else
             UIGame.instance.PlantButton_Enable(false);
 
-        UIGame.instance.JumpButton_Enable(movementSystem.IsOnGround());
-        UIGame.instance.DashButton_Enable(movementSystem.IsDashable());
-        UIGame.instance.PetButton_Enable(handSystem.canPet);
+        UIGame.instance.JumpButton_Enable(abilitySystem.canJump);
+        UIGame.instance.DashButton_Enable(abilitySystem.canDash);
+        UIGame.instance.PetButton_Enable(abilitySystem.canPet);
     }
     void UpdateAnimationParameters()
     {
@@ -178,7 +189,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public bool GotNpcInHand()
     {
-        if (handSystem.gotSomethingInHand && handSystem.GetObjectInHand().tag == "NPC")
+        if (handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().tag == "NPC")
         {
             return true;
         }
@@ -189,7 +200,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public NPC GetNPCInHand()
     {
-        if (handSystem.gotSomethingInHand && handSystem.GetObjectInHand().tag == "NPC")
+        if (handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().tag == "NPC")
         {
             return handSystem.GetObjectInHand().GetComponentInParent<NPC>();
         }
@@ -248,33 +259,24 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public void JumpInput()
     {
-        movementSystem.PreformJump();
-        Instantiate(jumpVFXAsset, transform.position, jumpVFXAsset.transform.rotation);
-
+        if (abilitySystem.canJump)
+        {
+            movementSystem.PreformJump();
+            Instantiate(jumpVFXAsset, transform.position, jumpVFXAsset.transform.rotation);
+        }
     }
     public void PickInput()
     {
-        if(handSystem.canStore)
-        {
-            inventorySystem.Store(handSystem.GetNearestPickable().gameObject, true);
-        }
-        else if(handSystem.canShake && handSystem.GetObjectInHand() != null && handSystem.GetObjectInHand().tag == "Axe")
-        {
-            if(((Tearable)(detector.GetNear("Tree"))))
-                ((Tearable)(detector.GetNear("Tree"))).TearDown();
-            else
-                ((Tearable)(detector.GetNear("Rock"))).TearDown();
-        }
-        else if(((Tearable)(detector.GetNear("Tree"))) && handSystem.canShake)
+        if(abilitySystem.canShake)
         {
             ((TreeSystem)(detector.GetNear("Tree"))).Shake();
         }
-        else if (handSystem.canPick)
+        else if (abilitySystem.canPick)
         {
             handSystem.PickNearestObject();
             NPCPick(true, handSystem.GetObjectInHand());
-        }
-        else if(handSystem.gotSomethingInHand)
+        } 
+        else if(handSystem.GetObjectInHand())
         {
             NPCPick(false, handSystem.GetObjectInHand());
             handSystem.DropObjectInHand();
@@ -282,7 +284,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public void ThrowInput()
     {
-        if (handSystem.canThrow)
+        if (abilitySystem.canThrow)
         {
             NPCPick(false, handSystem.GetObjectInHand());
 
@@ -291,18 +293,36 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public void PlantInput()
     {
-        if (handSystem.canPlant)
+        if (abilitySystem.canPlant)
             handSystem.PlantObjectInHand();
     }
     public void DashInput()
     {
-        movementSystem.PerformDash();
-        Instantiate(dashVFXAsset, transform.position, Quaternion.Euler(this.transform.rotation.eulerAngles));
+        if (abilitySystem.canDash)
+        {
+            movementSystem.PerformDash();
+            Instantiate(dashVFXAsset, transform.position, Quaternion.Euler(this.transform.rotation.eulerAngles));
+        }
     }
     public void PetInput()
     {
-        if(handSystem.canPet)
+        if(abilitySystem.canPet)
             handSystem.PetNearestObject();
+    }
+    public void AttackInput()
+    {
+        if (abilitySystem.canTear)
+        {
+            if (((Tearable)(detector.GetNear("Tree"))))
+                ((Tearable)(detector.GetNear("Tree"))).TearDown();
+            else
+                ((Tearable)(detector.GetNear("Rock"))).TearDown();
+        }
+    }
+    public void StoreInput()
+    {
+        if(abilitySystem.canStore)
+            inventorySystem.Store(handSystem.GetNearestPickable().gameObject, true);
     }
     public void PressDownInput()
     {
@@ -310,4 +330,6 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     public void PressUpInput()
     {
     }
+
+
 }

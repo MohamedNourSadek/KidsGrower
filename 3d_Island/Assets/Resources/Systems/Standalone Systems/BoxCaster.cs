@@ -15,3 +15,4 @@ public class BoxCaster : MonoBehaviour
         objects.Add(other.gameObject);
     }
 }
+

@@ -15,26 +15,22 @@ public class HandSystem
     [SerializeField] float throwForce = 20f;
     [SerializeField] float pickSpeedThrushold = 2f;
     [SerializeField] float petTime = 1f;
-     
-    public bool gotSomethingInHand;
-    public bool canStore;
-    public bool canShake;
-    public bool canPick;
-    public bool canThrow;
-    public bool canPlant; 
-    public bool canPet;
+
+
+    public List<Pickable> nearPickables = new List<Pickable>();
+    public bool isPetting;
 
     //Private Data
+    AbilitySystem abilitySystem;
     DetectorSystem detector;
-    public List<Pickable> nearPickables = new List<Pickable>();
     Pickable objectInHand = new();
     IController myController;
-    bool isPetting;
 
-    public void Initialize(DetectorSystem detector, IController controller)
+    public void Initialize(DetectorSystem detector, IController controller, AbilitySystem abilitySystem)
     {
         this.detector = detector;
         myController = controller;
+        this.abilitySystem = abilitySystem; 
     }
     public void Update()
     {
@@ -42,28 +38,7 @@ public class HandSystem
         detector.CleanListsFromDestroyedObjects(nearPickables);
         RefreshPickables();
         UpdateHighlight();
-        canShake = (detector.GetNear("Tree") != null) || (detector.GetNear("Rock") != null);
-
-        if (objectInHand == null)
-        {
-            canPick = nearPickables.Count >= 1;
-            canStore = false;
-            canThrow = false;
-            canPlant = false;
-            gotSomethingInHand = false;
-        }
-        else
-        {
-            canStore = (nearPickables.Count >= 2) && (nearPickables[1].GetComponent<IStorableObject>() != null);
-            canPick = false;
-            canThrow = true;
-            gotSomethingInHand = true;
-        }
-
-        if (objectInHand && objectInHand.GetComponent<Plantable>())
-            canPlant = objectInHand.GetComponent<Plantable>().IsOnPlatingGround(this.myController.GetBody().transform.position);
-
-        canPet = (detector.GetNear("NPC") != null) && (objectInHand == null) && (isPetting == false);
+        ReprioritizePickablesOnDistance();
     }
 
 
@@ -84,9 +59,6 @@ public class HandSystem
     public void PickObject(Pickable subject)
     {
         subject.Pick(this);
-
-        canThrow = true;
-        gotSomethingInHand = true;
     }
     public void PetNearestObject()
     {
@@ -112,11 +84,11 @@ public class HandSystem
     }
     public void DropObjectInHand()
     {
-        gotSomethingInHand = false;
-        canThrow = false;
-
-        if(objectInHand != null)
+        if (objectInHand != null)
+        {
+            AddToPickable(objectInHand);
             objectInHand.Drop();
+        }
 
         objectInHand = null;
     }
@@ -160,12 +132,14 @@ public class HandSystem
     }
     public Pickable GetNearestPickable()
     {
-        if (gotSomethingInHand && nearPickables.Count >= 2)
-            return nearPickables[1];
-        if (nearPickables.Count > 0)
+        if(nearPickables.Count >= 1)
+        {
             return nearPickables[0];
+        }
         else
+        {
             return null;
+        }
     }
     public Transform GetHand()
     {
@@ -209,17 +183,15 @@ public class HandSystem
             }
         }
     }
-
     public void RefreshPickables()
     {
         List<Pickable> toRemove = new List<Pickable>();
 
         foreach (Pickable detectedObject in nearPickables)
         {
-            if (detector.GetNear().Contains(detectedObject) == false)
-            {
+            if ((detector.GetNear().Contains(detectedObject) == false) || detectedObject.isPicked)
                 toRemove.Add(detectedObject);
-            }
+
         }
         
         foreach (Pickable detectedObject in toRemove)
@@ -231,20 +203,48 @@ public class HandSystem
 
 
     //Internal Algorithms
+    void ReprioritizePickablesOnDistance()
+    {
+        if(nearPickables.Count > 0)
+        {
+            Pickable nearest = nearPickables[0];
+
+            foreach (Pickable p in nearPickables)
+            {
+                if(Distance(p.gameObject) < Distance(nearest.gameObject))
+                {
+                    nearest= p;
+                }
+            }
+
+            if (nearest != nearPickables[0])
+            {
+                Pickable temp = nearPickables[0];
+                nearPickables.Remove(temp);
+                nearPickables[0] = nearest;
+                nearPickables.Add(temp);
+            }
+        }
+
+    }
     void UpdateHighlight()
     {
         if (nearPickables.Count >= 1 && highlightToPick)
         {
-            var nearest = GetNearestPickable();
+            var nearestPickable = GetNearestPickable();
 
             foreach (Pickable pickable in nearPickables)
             {
-                if ((pickable == nearest) && (pickable != objectInHand) && (canPick || canStore))
+                if ((pickable == nearestPickable) && (abilitySystem.canPick || abilitySystem.canStore))
                     pickable.PickablilityIndicator(true);
                 else
                     pickable.PickablilityIndicator(false);
             }
         }
+    }
+    float Distance(GameObject obj)
+    {
+        return (this.myHand.transform.position - obj.transform.position).magnitude;
     }
     IEnumerator PetObjectRoutine(ConditionChecker condition, NPC npc)
     {

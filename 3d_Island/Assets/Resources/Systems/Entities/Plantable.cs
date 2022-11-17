@@ -45,6 +45,7 @@ public abstract class Plantable : Pickable
     {
         plantedSince = 0;
         planted = false;
+        myBody.constraints = RigidbodyConstraints.None;
 
         StopCoroutine(Planting());
     }

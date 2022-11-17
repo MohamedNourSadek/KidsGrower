@@ -261,6 +261,8 @@ public class CustomizePanel : MenuPanel, IInputUser, ICreator
     public void ThrowInput() { }
     public void JumpInput() { }
     public void PickInput() { }
+    public void AttackInput(){ }
+    public void StoreInput() { }
     public void MoveInput(Vector2 movementInput) { }
     public void RotateInput(Vector2 deltaRotate) { }
 }

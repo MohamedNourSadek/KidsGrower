@@ -6,7 +6,7 @@ using TMPro;
 using System;
 using UnityEngine.Events;
 
-public enum PickMode { Pick, Drop, Shake, Tear, Store, _};
+public enum ButtonMode { Pick, Drop, Shake, Tear, Store,Attack, _};
 
 public class UIGame : MonoBehaviour
 {
@@ -41,11 +41,14 @@ public class UIGame : MonoBehaviour
     [SerializeField] TextMeshProUGUI npcStatsName;
     [SerializeField] Image pickDropButtonImage;
     [SerializeField] Image throwButtonImage;
+    [SerializeField] Image attackButtonImage;
+    [SerializeField] Image storeButtonImage;
     [SerializeField] Image plantButtonImage;
     [SerializeField] Image jumpButtonImage;
     [SerializeField] Image dashButtonImage;
     [SerializeField] Image petButtonImage;
     [SerializeField] Text pickDropButtonImage_Text;
+    [SerializeField] Text attackButtonButtonImage_Text;
     [SerializeField] Text customizeDebugger;
     [SerializeField] GameObject designMenus;
     [SerializeField] public TextMeshProUGUI countDownText;
@@ -76,6 +79,14 @@ public class UIGame : MonoBehaviour
     {
         ChangeAlpha(pickDropButtonImage, _state);
     }
+    public void AttackTearButton_Enable(bool _state)
+    {
+        ChangeAlpha(attackButtonImage, _state);
+    }
+    public void StoreButton_Enable(bool _state)
+    {
+        ChangeAlpha(storeButtonImage, _state);
+    }
     public void ThrowButton_Enable(bool _state)
     {
         ChangeAlpha(throwButtonImage, _state);
@@ -97,9 +108,13 @@ public class UIGame : MonoBehaviour
     {
         ChangeAlpha(petButtonImage, _state);
     }
-    public void PickDropButton_SwitchMode(PickMode _mode)
+    public void PickDropButton_SwitchMode(ButtonMode _mode)
     {
         pickDropButtonImage_Text.text = _mode.ToString();
+    }
+    public void AttackTearButton_SwitchMode(ButtonMode _mode)
+    {
+        attackButtonButtonImage_Text.text = _mode.ToString();
     }
     public void ChangeCustomizingIndicator(string text, Color color)
     {
