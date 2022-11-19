@@ -235,7 +235,7 @@ Transform:
   - {fileID: 58072133524451559}
   - {fileID: 7492843682852832024}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &6949429005409692764
 MonoBehaviour:
@@ -308,7 +308,7 @@ MonoBehaviour:
     type: 3}
   jumpVFXAsset: {fileID: 3496857520669077041, guid: 6b875ac7145de654982824ca23942967,
     type: 3}
-  nearObjectDistance: 1
+  nearObjectDistance: 2
   playerBody: {fileID: 6949429005409692763}
   animatior: {fileID: 8066649476919143765}
   movementSystem:
@@ -347,29 +347,36 @@ MonoBehaviour:
     - WoodPack
     - StonePack
     - Axe
+    - Hat
+    - Sword
     throwForce: 100
     pickSpeedThrushold: 50
     petTime: 4
-    gotSomethingInHand: 0
-    canStore: 0
-    canShake: 0
-    canPick: 0
-    canThrow: 0
-    canPlant: 0
-    canPet: 0
     nearPickables: []
+    isPetting: 0
   legSystem:
     walkAudioVolume: 0.5
     legs:
     - {fileID: 4235190602617550598}
     - {fileID: 7709815819202285892}
   detector: {fileID: 2931690313484480716}
-  animationLerpSpeed: {x: 25, y: 20}
   myFace:
     animator: {fileID: 1494361007}
     timeBetweenBlinks: {x: 0.25, y: 2}
   inventorySystem:
     items: []
+  abilitySystem:
+    canStore: 0
+    canShake: 0
+    canPick: 0
+    canThrow: 0
+    canPlant: 0
+    canPet: 0
+    canTear: 0
+    canJump: 0
+    canDash: 0
+    canDress: 0
+  animationLerpSpeed: {x: 25, y: 20}
 --- !u!1 &8722561649881762399
 GameObject:
   m_ObjectHideFlags: 0
@@ -1429,7 +1436,7 @@ PrefabInstance:
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: detectableTags.Array.size
-      value: 13
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
@@ -1560,6 +1567,16 @@ PrefabInstance:
         type: 3}
       propertyPath: detectableTags.Array.data[12]
       value: Rock
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[13]
+      value: Hat
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[14]
+      value: Sword
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}

@@ -148,6 +148,8 @@ public class InventorySystem
             myObject = GameManager.instance.SpawnAxe();
         else if (item.Contains("Hat"))
             myObject = GameManager.instance.SpawnHat();
+        else if (item.Contains("Sword"))
+            myObject = GameManager.instance.SpawnSword();
         else
             myObject = null;
 

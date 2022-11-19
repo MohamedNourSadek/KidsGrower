@@ -10,7 +10,7 @@ public class NPC : Pickable, IController, ISavable
 
     [SerializeField] public HandSystem handSystem;
     [SerializeField] public DetectorSystem detector;
-    [SerializeField] AppearanceControl appearanceControl;
+    [SerializeField] public AppearanceControl appearanceControl;
     [SerializeField] FacialControl facialControl;
     [SerializeField] Animator animator;
     [SerializeField] float animationLerpSpeed = 1f;
@@ -82,6 +82,19 @@ public class NPC : Pickable, IController, ISavable
         transform.rotation = npc_data.rotation.GetQuaternion();
         character = npc_data.characterParameters;
 
+        if (npc_data.gotHat)
+        {
+            var hat = GameManager.instance.SpawnHat().GetComponent<Hat>();
+            hat.transform.position = appearanceControl.hatPosition.transform.position;
+            hat.transform.parent = appearanceControl.hatPosition.transform;
+            hat.transform.rotation = hat.GetComponent<Hat>().pickRotation;
+            hat.GetBody().isKinematic = true;
+            hat.isWorn = true;
+
+
+            appearanceControl.hat = hat.gameObject;
+        }
+
         OnXPIncrease();
     }
     public NPC_Data GetData()
@@ -91,6 +104,7 @@ public class NPC : Pickable, IController, ISavable
         npc_data.position = new nVector3(transform.position);
         npc_data.rotation = new nQuaternion(transform.rotation);
         npc_data.characterParameters = character;
+        npc_data.gotHat = appearanceControl.hat != null ? true : false;
 
         return npc_data;
     }

@@ -12,7 +12,8 @@ public class NPC_Data : SaveStructure
     public float xp = 0;
     public float lastLaidSince = 50000;
     public CharacterParameters characterParameters =  new CharacterParameters();
-
+    public bool gotHat = false;
+    
     public static List<NPC_Data> GameToDate(NPC[] npcs)
     {
         List<NPC_Data> list = new List<NPC_Data>(); 

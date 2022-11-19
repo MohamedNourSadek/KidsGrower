@@ -15,6 +15,7 @@ public class AbilitySystem
     public bool canTear;
     public bool canJump;
     public bool canDash;
+    public bool canDress;
 
     DetectorSystem detector;
     HandSystem hand;

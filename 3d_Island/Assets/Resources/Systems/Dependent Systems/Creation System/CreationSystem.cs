@@ -38,6 +38,8 @@ public class CreationSystem
             obj = GameManager.instance.SpawnAxe();
         else if (selectedButton.name == "Hat")
             obj = GameManager.instance.SpawnHat();
+        else if (selectedButton.name == "Sword")
+            obj = GameManager.instance.SpawnSword();
 
         ConsumeResources();
 
@@ -101,6 +103,14 @@ public class CreationSystem
             };
         }
         else if (selectedButton.name == "Hat")
+        {
+            requirements = new List<RequirementData>()
+            {
+                new RequirementData() { itemTag = "WoodPack",  itemAmount = 1},
+                new RequirementData() { itemTag = "StonePack",  itemAmount = 1},
+            };
+        }
+        else if(selectedButton.name == "Sword")
         {
             requirements = new List<RequirementData>()
             {

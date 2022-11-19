@@ -7,6 +7,12 @@ using UnityEngine.TextCore.Text;
 [System.Serializable]
 public class AppearanceControl 
 {
+    [Header("Cloth Positions")]
+    [SerializeField] public GameObject hatPosition;
+
+    [Header("Cloth")]
+    [SerializeField] public GameObject hat;
+
     [Header("Appearance")]
     [SerializeField] SkinnedMeshRenderer upperBody;
     [SerializeField] SkinnedMeshRenderer face;
@@ -54,5 +60,15 @@ public class AppearanceControl
         //hands and legs
         foreach (SkinnedMeshRenderer renderer in handsLegs)
             renderer.material.color = Color.Lerp(normalColor, powerColor, character.GetPower());
+    }
+
+    public void DropHat()
+    {
+        if(hat != null)
+        {
+            ServicesProvider.instance.DestroyObject(hat);
+            hat = null;
+            GameManager.instance.SpawnHat();
+        }
     }
 }

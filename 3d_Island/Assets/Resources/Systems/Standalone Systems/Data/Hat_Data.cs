@@ -12,7 +12,8 @@ public class Hat_Data : SaveStructure
         List<Hat_Data> list = new List<Hat_Data>();
 
         foreach (Hat hat in hats)
-            list.Add(hat.GetData());
+            if(hat.isWorn == false)
+                list.Add(hat.GetData());
 
         return list;
     }

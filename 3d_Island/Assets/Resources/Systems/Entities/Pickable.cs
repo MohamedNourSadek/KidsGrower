@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class Pickable : MonoBehaviour, IDetectable
 {
-    [SerializeField] Quaternion pickRotation;
+    [SerializeField] public Quaternion pickRotation;
 
     [Header("Objects References")]
     [SerializeField] protected GameObject indicatorObject;
     [SerializeField] protected Rigidbody myBody;
     [SerializeField] public GroundDetector groundDetector;
-    [SerializeField] Collider myCollider;
+    [SerializeField] public Collider myCollider;
     
     [System.NonSerialized] public HandSystem holder;
     [System.NonSerialized] public bool isPicked = false;

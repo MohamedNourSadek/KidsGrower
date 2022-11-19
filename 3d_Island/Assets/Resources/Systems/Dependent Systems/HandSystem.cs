@@ -39,6 +39,7 @@ public class HandSystem
         RefreshPickables();
         UpdateHighlight();
         ReprioritizePickablesOnDistance();
+        DressingItemHighlight();
     }
 
 
@@ -89,6 +90,15 @@ public class HandSystem
             AddToPickable(objectInHand);
             objectInHand.Drop();
         }
+
+        objectInHand = null;
+    }
+    public void ConfirmDress()
+    {
+        detector.GetNear("NPC").GetGameObject().GetComponent<NPC>().appearanceControl.hat = objectInHand.gameObject;
+
+        objectInHand.GetComponent<Hat>().isWorn = true;
+        objectInHand.PickablilityIndicator(false);
 
         objectInHand = null;
     }
@@ -240,6 +250,39 @@ public class HandSystem
                 else
                     pickable.PickablilityIndicator(false);
             }
+        }
+    }
+    void DressingItemHighlight()
+    {
+        if (objectInHand != null && objectInHand.tag == "Hat")
+        {
+            if (detector.GetNear("NPC") != null)
+            {
+                NPC nearNPC = detector.GetNear("NPC").GetGameObject().GetComponent<NPC>();
+
+                if (nearNPC.appearanceControl.hat == null)
+                {
+                    objectInHand.PickablilityIndicator(true);
+
+                    objectInHand.transform.parent = nearNPC.appearanceControl.hatPosition.transform;
+                    objectInHand.transform.position = nearNPC.appearanceControl.hatPosition.transform.position;
+                    objectInHand.transform.rotation = objectInHand.pickRotation;
+                    abilitySystem.canDress = true; 
+                }
+            }
+            else
+            {
+                objectInHand.PickablilityIndicator(false);
+                objectInHand.transform.parent = myHand.transform;
+                objectInHand.transform.rotation = objectInHand.pickRotation;
+                objectInHand.transform.position = myHand.transform.position;
+
+                abilitySystem.canDress = false;
+            }
+        }
+        else
+        {
+            abilitySystem.canDress = false;
         }
     }
     float Distance(GameObject obj)

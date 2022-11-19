@@ -69,7 +69,12 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     void UpdateUi()
     {
         //Set Interact Modes
-        if (abilitySystem.canShake)
+        if(abilitySystem.canDress)
+        {
+            UIGame.instance.PickDropButton_SwitchMode(ButtonMode.Dress);
+            UIGame.instance.PickDropButton_Enable(true);
+        }
+        else if (abilitySystem.canShake)
         {
             UIGame.instance.PickDropButton_SwitchMode(ButtonMode.Shake);
             UIGame.instance.PickDropButton_Enable(true);
@@ -267,7 +272,11 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public void PickInput()
     {
-        if(abilitySystem.canShake)
+        if(abilitySystem.canDress)
+        {
+            handSystem.ConfirmDress();
+        }
+        else if(abilitySystem.canShake)
         {
             ((TreeSystem)(detector.GetNear("Tree"))).Shake();
         }
@@ -330,6 +339,4 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     public void PressUpInput()
     {
     }
-
-
 }

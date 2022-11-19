@@ -197,6 +197,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1418945903225259382
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6228118897960458926}
+  m_Layer: 3
+  m_Name: Hat Position
+  m_TagString: NPC
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6228118897960458926
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418945903225259382}
+  m_LocalRotation: {x: 0.5035128, y: -0.49646237, z: -0.49646237, w: 0.50351286}
+  m_LocalPosition: {x: -0.0008, y: 0.0012, z: 0.0097}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4883865229214283235}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: -179.837, z: 0}
 --- !u!1 &1694792582106390344
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,6 +557,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 712a8d445cd51b64a8a09c7df30b2bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickRotation: {x: 0, y: 0, z: 0, w: 0}
   indicatorObject: {fileID: 8375963496269692211}
   myBody: {fileID: 9093430107948229129}
   groundDetector:
@@ -545,16 +577,11 @@ MonoBehaviour:
     throwForce: 80
     pickSpeedThrushold: 10
     petTime: 1
-    gotSomethingInHand: 0
-    canStore: 0
-    canShake: 0
-    canPick: 0
-    canThrow: 0
-    canPlant: 0
-    canPet: 0
     nearPickables: []
+    isPetting: 0
   detector: {fileID: 2330463048917170657}
   appearanceControl:
+    hatPosition: {fileID: 1418945903225259382}
     upperBody: {fileID: 1941834119684992950}
     face: {fileID: 355115784178928883}
     downBody:
@@ -613,10 +640,9 @@ MonoBehaviour:
     maxSleepTime: 40
     deathTime: 10000
     growTime: 20
-  grownMassMultiplier: 2
   nearObjectDistance: 1.25
-  eatingXpPerUpdate: 1
   pettingXP: 100
+  grownMassMultiplier: 2
 --- !u!195 &5323626491861248105
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1369,6 +1395,10 @@ PrefabInstance:
         type: 3}
       insertIndex: 0
       addedObject: {fileID: 4453434696709578184}
+    - targetCorrespondingSourceObject: {fileID: -5477749408508380018, guid: 96fad1143b5bf3a45ab850aef24189f5,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6228118897960458926}
     - targetCorrespondingSourceObject: {fileID: -5477749408508380018, guid: 96fad1143b5bf3a45ab850aef24189f5,
         type: 3}
       insertIndex: -1
