@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject swordAsset;
     [SerializeField] GameObject rockAsset;
     [SerializeField] GameObject hatAsset;
+    [SerializeField] GameObject regularZombieAsset;
     [SerializeField] GameObject deadchild;
     [SerializeField] NPC npcAsset;
 
@@ -138,6 +139,9 @@ public class GameManager : MonoBehaviour
         foreach (Sword_Data sword in sessionData.data.swords)
             sword.SpawnWithData(swordAsset, true);
 
+        foreach (Zombie_Data zombie in sessionData.data.zombies)
+            zombie.SpawnWithData(regularZombieAsset, true);
+
         //objects that exist by default
         if (modeHandler.GetModeData().firstStart == false)
         {
@@ -158,6 +162,7 @@ public class GameManager : MonoBehaviour
         modeHandler.GetModeData().firstStart = false;
 
         sessionData.data.player.SpawnWithData(myPlayer.gameObject, false);
+        DayNightControl.instance.factor = sessionData.DayNightFactor;
     }
     public void Save()
     {
@@ -185,7 +190,9 @@ public class GameManager : MonoBehaviour
         sessionData.data.swords = Sword_Data.GameToDate(FindObjectsOfType<Sword>());
         sessionData.data.hats = Hat_Data.GameToDate(FindObjectsOfType<Hat>());
         sessionData.data.player = Player_Data.GameToData(myPlayer);
+        sessionData.data.zombies = Zombie_Data.GameToDate(FindObjectsOfType<RegularZombie>());
         sessionData.modeData = modeHandler.GetModeData();
+        sessionData.DayNightFactor = DayNightControl.instance.factor;
 
         DataManager.instance.Modify(sessionData);
         StartCoroutine(UIGame.instance.SavingUI());
@@ -267,30 +274,11 @@ public class GameManager : MonoBehaviour
     }
     public GameObject SpawnBoost(string boostType)
     {
-        GameObject boost = powerBoostAsset;
-
-        if(boostType == "AggressivenessBoost")
-        {
-            boost = aggressivenessBoostAsset;
-        }
-        else if(boostType == "ExtroversionBoost")
-        {
-            boost = extroversionBoostAsset;
-        }
-        else if(boostType == "FertilityBoost")
-        {
-            boost = fertilityBoostAsset;
-        }
-        else if (boostType == "HealthBoost")
-        {
-            boost = healthBoostAsset;
-        }
-        else if (boostType == "PowerBoost")
-        {
-            boost = powerBoostAsset;
-        }
-
-        return Instantiate(boost.gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+        return Instantiate(GetBoost(boostType).gameObject, myPlayer.transform.position + myPlayer.transform.forward * 2f + Vector3.up * 5, Quaternion.identity);
+    }
+    public GameObject SpawnBoost(string boostType, Vector3 position)
+    {
+        return Instantiate(GetBoost(boostType).gameObject, position, Quaternion.identity);
     }
     public GameObject SpawnDeadBody_ReturnDeadBody(Vector3 position)
     {
@@ -363,8 +351,39 @@ public class GameManager : MonoBehaviour
         return Instantiate(clothCreatorAsset.gameObject, position, Quaternion.identity);
 
     }
+    public GameObject SpawnRegularZombie(Vector3 position)
+    {
+        return Instantiate(regularZombieAsset.gameObject, position, Quaternion.identity);
+    }
     public void OnNamingFinsihed()
     {
         OnNamingDone.Invoke();
+    }
+    GameObject GetBoost(string boostType)
+    {
+        GameObject boost = powerBoostAsset;
+
+        if (boostType == "AggressivenessBoost")
+        {
+            boost = aggressivenessBoostAsset;
+        }
+        else if (boostType == "ExtroversionBoost")
+        {
+            boost = extroversionBoostAsset;
+        }
+        else if (boostType == "FertilityBoost")
+        {
+            boost = fertilityBoostAsset;
+        }
+        else if (boostType == "HealthBoost")
+        {
+            boost = healthBoostAsset;
+        }
+        else if (boostType == "PowerBoost")
+        {
+            boost = powerBoostAsset;
+        }
+
+        return boost;
     }
 }

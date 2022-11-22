@@ -385,7 +385,7 @@ Transform:
   - {fileID: 2826339844490803758}
   - {fileID: 4595324894445768432}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &966537358822224074
 Animator:
@@ -420,6 +420,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
+  flyingHeight: 5
+  animationType: 7
+  body: {fileID: 1175329143917860799}
 --- !u!1 &5845733156622477473
 GameObject:
   m_ObjectHideFlags: 0

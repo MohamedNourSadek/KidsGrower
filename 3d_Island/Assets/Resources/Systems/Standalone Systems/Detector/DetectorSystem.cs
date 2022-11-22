@@ -121,6 +121,31 @@ public class DetectorSystem : MonoBehaviour
             return null;
         }
     }
+    public IDetectable GetNearestInRange()
+    {
+        if (detectableInRange.Count > 1)
+        {
+            IDetectable nearest = detectableInRange[0];
+
+            foreach (IDetectable detectable in detectableInRange)
+            {
+                if (Distance(detectable.GetGameObject()) < Distance(nearest.GetGameObject()))
+                {
+                    nearest = detectable;
+                }
+            }
+
+            return nearest;
+        }
+        else if(detectableInRange.Count == 1)
+        {
+            return detectableInRange[0];
+        }
+        else
+        {
+            return null;
+        }
+    }
 
 
     //Notifications

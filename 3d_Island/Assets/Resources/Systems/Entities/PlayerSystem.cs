@@ -95,7 +95,12 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
             UIGame.instance.PickDropButton_Enable(false);
         }
 
-        if (abilitySystem.canTear)
+        if(abilitySystem.canAttack)
+        {
+            UIGame.instance.AttackTearButton_SwitchMode(ButtonMode.Attack);
+            UIGame.instance.AttackTearButton_Enable(true);
+        }
+        else if (abilitySystem.canTear)
         {
             UIGame.instance.AttackTearButton_SwitchMode(ButtonMode.Tear);
             UIGame.instance.AttackTearButton_Enable(true);
@@ -320,7 +325,12 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public void AttackInput()
     {
-        if (abilitySystem.canTear)
+        if(abilitySystem.canAttack)
+        {
+            if (((Zombie)(detector.GetNear("Zombie"))))
+                ((Zombie)(detector.GetNear("Zombie"))).GetAttacked(((Sword)handSystem.GetObjectInHand()).damage); 
+        }
+        else if (abilitySystem.canTear)
         {
             if (((Tearable)(detector.GetNear("Tree"))))
                 ((Tearable)(detector.GetNear("Tree"))).TearDown();

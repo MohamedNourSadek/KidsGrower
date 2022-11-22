@@ -25,7 +25,6 @@ public class NPC : Pickable, IController, ISavable
     [SerializeField] float pettingXP = 100f;
     [SerializeField] float grownMassMultiplier = 1.35f;
 
-
     //Internal
     [System.NonSerialized] public NavMeshAgent navMeshAgent;
     AbilitySystem abilitySystem = new AbilitySystem();

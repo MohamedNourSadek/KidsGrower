@@ -16,6 +16,7 @@ public class AbilitySystem
     public bool canJump;
     public bool canDash;
     public bool canDress;
+    public bool canAttack;
 
     DetectorSystem detector;
     HandSystem hand;
@@ -32,6 +33,8 @@ public class AbilitySystem
     public void Update()
     {
         canShake = (detector.GetNear("Tree") != null);
+
+        canAttack = (detector.GetNear("Zombie") != null) && (hand.GetObjectInHand() != null) && hand.GetObjectInHand().tag == "Sword";
 
         canTear = ((detector.GetNear("Tree") != null) || (detector.GetNear("Rock") != null)) && (hand.GetObjectInHand() != null) && hand.GetObjectInHand().tag == "Axe";
 

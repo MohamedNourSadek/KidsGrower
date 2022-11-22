@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Sword : Pickable, ISavable, IStorableObject, IDetectable
 {
+    public int damage = 10;
+
     public void LoadData(SaveStructure saveData)
     {
         Sword_Data sword = (Sword_Data)saveData;

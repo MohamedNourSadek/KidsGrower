@@ -8,7 +8,7 @@ public class Bird : MonoBehaviour
     [SerializeField] float speed = 2f;
     [SerializeField] float flyingHeight = 5f;
     [SerializeField] LeanTweenType animationType = LeanTweenType.easeInOutCubic;
-    
+    [SerializeField] GameObject body;
     
     private void Start()
     {
@@ -27,5 +27,18 @@ public class Bird : MonoBehaviour
         LTDescr process = LeanTween.descr(i);
 
         process.setOnComplete(Explore);
+
+        if(DayNightControl.instance != null )
+        {
+            if(DayNightControl.instance.GetDayNightFactor() >= 0.7f)
+            {
+                body.SetActive(true);
+            }
+            else
+            {
+                body.SetActive(false);
+            }
+        }
+
     }
 }

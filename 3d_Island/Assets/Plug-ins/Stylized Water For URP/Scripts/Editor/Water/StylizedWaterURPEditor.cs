@@ -36,7 +36,7 @@ namespace StylizedWater
         private const string underwaterShaderName = "Stylized Water Underwater";
 
         #region Colors and Transparency
-        SerializedProperty useColorGradient, colorGradient,
+        public SerializedProperty useColorGradient, colorGradient,
                            shallowColor, deepColor, colorDepth,
                            horizonColor, horizonDistance;
         SerializedProperty waveColor;
@@ -47,7 +47,7 @@ namespace StylizedWater
         #endregion
         
         #region Intersection Effects
-        SerializedProperty intersectionFoamBlend, intersectionWaterBlend, intersectionFoamColor, intersectionFoamDirection, intersectionFoamScale, intersectionFoamSpeed,
+        public SerializedProperty intersectionFoamBlend, intersectionWaterBlend, intersectionFoamColor, intersectionFoamDirection, intersectionFoamScale, intersectionFoamSpeed,
         intersectionFoamCutoff, intersectionFoamDistortion,
         intersectionFoamTexture, intersectionFoamDepth, foamMovement;
         SerializedProperty shoreStrength;

@@ -235,7 +235,7 @@ Transform:
   - {fileID: 58072133524451559}
   - {fileID: 7492843682852832024}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &6949429005409692764
 MonoBehaviour:
@@ -376,6 +376,7 @@ MonoBehaviour:
     canJump: 0
     canDash: 0
     canDress: 0
+    canAttack: 0
   animationLerpSpeed: {x: 25, y: 20}
 --- !u!1 &8722561649881762399
 GameObject:
@@ -1436,7 +1437,7 @@ PrefabInstance:
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
       propertyPath: detectableTags.Array.size
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}
@@ -1577,6 +1578,11 @@ PrefabInstance:
         type: 3}
       propertyPath: detectableTags.Array.data[14]
       value: Sword
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
+        type: 3}
+      propertyPath: detectableTags.Array.data[15]
+      value: Zombie
       objectReference: {fileID: 0}
     - target: {fileID: 5250669480810313006, guid: d682e10d1ad04fd499cd64d51ecd2485,
         type: 3}

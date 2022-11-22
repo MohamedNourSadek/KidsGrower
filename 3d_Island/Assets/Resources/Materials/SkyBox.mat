@@ -96,7 +96,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 0
-    - _AtmosphereThickness: 0.52
+    - _AtmosphereThickness: 0.22
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -109,7 +109,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _Exposure: 2.64
+    - _Exposure: 5.2
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
