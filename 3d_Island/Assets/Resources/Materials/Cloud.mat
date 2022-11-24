@@ -98,7 +98,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Intensity: 0.000002273712
+    - _Intensity: 0.0007846546
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005

@@ -23,6 +23,13 @@ public class Fruit : Eatable, ISavable, IStorableObject
     {
         base.ApplyEffect(holder);
 
-        holder.character.levelControl.IncreaseXP(GetMore());
+        int value = GetMore();
+
+        holder.character.levelControl.IncreaseXP(value);
+
+        if(holder.character.healthControl.currentHealth < holder.character.healthControl.maxHealth)
+        {
+            holder.character.healthControl.currentHealth += value;
+        }
     }
 }

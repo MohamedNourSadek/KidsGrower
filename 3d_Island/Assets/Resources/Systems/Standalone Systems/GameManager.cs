@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
         foreach (PowerBoost_Data boost in sessionData.data.powerboosts)
             boost.SpawnWithData(powerBoostAsset, true);
 
-        foreach (HealthBoost_Data boost in sessionData.data.healthboosts)
+        foreach (FitnessBoost_Data boost in sessionData.data.healthboosts)
             boost.SpawnWithData(healthBoostAsset, true);
        
         foreach (WoodPack_Data woodPack in sessionData.data.woodpacks)
@@ -180,7 +180,7 @@ public class GameManager : MonoBehaviour
         sessionData.data.extroversionBoosts = ExtroversionBoost_Data.GameToDate(FindObjectsOfType<ExtroversionBoost>());
         sessionData.data.aggressivenessBoosts = AggressivenessBoost_Data.GameToDate(FindObjectsOfType<AggressivenessBoost>());
         sessionData.data.powerboosts = PowerBoost_Data.GameToDate(FindObjectsOfType<PowerBoost>());
-        sessionData.data.healthboosts = HealthBoost_Data.GameToDate(FindObjectsOfType<HealthBoost>());
+        sessionData.data.healthboosts = FitnessBoost_Data.GameToDate(FindObjectsOfType<FitnessBoost>());
         sessionData.data.stonepacks = StonePack_Data.GameToDate(FindObjectsOfType<StonePack>());
         sessionData.data.woodpacks = WoodPack_Data.GameToDate(FindObjectsOfType<WoodPack>());
         sessionData.data.namingHouses = NamingHouse_Data.GameToDate(FindObjectsOfType<NamingHouse>());

@@ -34,8 +34,9 @@ public class CharacterParameters
     public float minPunchForce = 2;
     public float maxPunchForce = 20;
 
-    [Header("Health")]
-    public float healthFactor = 0f;
+    [Header("Fitness")]
+    public HealthControl healthControl = new HealthControl();
+    public float fitness = 0f;
     public float maxSleepTime = 40f;
     public float deathTime = 10000f;
     public float growTime = 20f;
@@ -47,23 +48,23 @@ public class CharacterParameters
         float levelFactor = Mathf.Clamp01(1f - (levelControl.GetLevel() / levelControl.GetLevelsCount()));
         float historyFactor = Mathf.Clamp01(lastLaidSince / minTimeBetweenLays);
 
-        return Mathf.Clamp01(levelFactor * fertilityFactor * GetHealth() * historyFactor);
+        return Mathf.Clamp01(levelFactor * fertilityFactor * GetFitness() * historyFactor);
     }
     public float GetExtroversion()
     {
-        return extroversionFactor;
+        return Mathf.Clamp01(extroversionFactor);
     }
     public float GetAggressiveness()
     {
-        return aggressivenessFactor;
+        return Mathf.Clamp01(aggressivenessFactor);
     }
     public float GetPower()
     {
-        return powerFactor * GetHealth();
+        return Mathf.Clamp01(powerFactor * GetFitness());
     }
-    public float GetHealth()
+    public float GetFitness()
     {
-        // Health equation 
+        // Fitness equation 
         //
         //     (X1/2, Y1)
         //         *
@@ -75,16 +76,16 @@ public class CharacterParameters
 
         // y =  (-4*Y1/X1^2) x^2 + (4*Y1/X1) x
         // X1 = Max Age = Death time
-        // Y1 = Max health
+        // Y1 = Max fitness
         // x = age
-        // y = health
+        // y = fitness
 
-        float firstTerm = (-4 * (healthFactor / Mathf.Pow(deathTime, 2))) * Mathf.Pow(age,2);
-        float secondTerm = (4 * (healthFactor / deathTime)) * age;
+        float firstTerm = (-4 * (this.fitness / Mathf.Pow(deathTime, 2))) * Mathf.Pow(age, 2);
+        float secondTerm = (4 * (this.fitness / deathTime)) * age;
 
-        float health = firstTerm + secondTerm;
+        float fitness = firstTerm + secondTerm;
 
-        return health;
+        return Mathf.Clamp01(fitness);
     }
 
 
@@ -96,7 +97,7 @@ public class CharacterParameters
     }
     public float GetSleepTime()
     {
-        return maxSleepTime * GetHealth();
+        return maxSleepTime * GetFitness();
     }
     public float GetSpeed()
     {

@@ -308,7 +308,33 @@ MonoBehaviour:
     type: 3}
   jumpVFXAsset: {fileID: 3496857520669077041, guid: 6b875ac7145de654982824ca23942967,
     type: 3}
-  nearObjectDistance: 2
+  healthControl:
+    DestroyOnDeath: 0
+    currentHealth: 30
+    MaxHealth: 30
+  inventorySystem:
+    items: []
+  handSystem:
+    myHand: {fileID: 6949429004428104456}
+    highlightToPick: 1
+    pickableTags:
+    - Fruit
+    - Ball
+    - NPC
+    - Harvest
+    - Seed
+    - Boost
+    - Egg
+    - WoodPack
+    - StonePack
+    - Axe
+    - Hat
+    - Sword
+    throwForce: 100
+    pickSpeedThrushold: 50
+    petTime: 4
+    nearPickables: []
+    isPetting: 0
   playerBody: {fileID: 6949429005409692763}
   animatior: {fileID: 8066649476919143765}
   movementSystem:
@@ -333,27 +359,6 @@ MonoBehaviour:
     delay: 3
     rotationSpeed: 25
     cameraTilt: -0.5
-  handSystem:
-    myHand: {fileID: 6949429004428104456}
-    highlightToPick: 1
-    pickableTags:
-    - Fruit
-    - Ball
-    - NPC
-    - Harvest
-    - Seed
-    - Boost
-    - Egg
-    - WoodPack
-    - StonePack
-    - Axe
-    - Hat
-    - Sword
-    throwForce: 100
-    pickSpeedThrushold: 50
-    petTime: 4
-    nearPickables: []
-    isPetting: 0
   legSystem:
     walkAudioVolume: 0.5
     legs:
@@ -363,8 +368,6 @@ MonoBehaviour:
   myFace:
     animator: {fileID: 1494361007}
     timeBetweenBlinks: {x: 0.25, y: 2}
-  inventorySystem:
-    items: []
   abilitySystem:
     canStore: 0
     canShake: 0
@@ -377,6 +380,8 @@ MonoBehaviour:
     canDash: 0
     canDress: 0
     canAttack: 0
+  nearObjectDistance: 2
+  shakingTime: 1
   animationLerpSpeed: {x: 25, y: 20}
 --- !u!1 &8722561649881762399
 GameObject:

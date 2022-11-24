@@ -11,34 +11,40 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     [Header("References")]
     [SerializeField] GameObject dashVFXAsset;
     [SerializeField] GameObject jumpVFXAsset;
+    [SerializeField] GameObject myModel;
 
     //Editor Fields
     [Header("Editor")]
-    [SerializeField] float nearObjectDistance = 1f;
+    [SerializeField] public HealthControl healthControl;
+    [SerializeField] public InventorySystem inventorySystem = new InventorySystem();
+    [SerializeField] public HandSystem handSystem;
     [SerializeField] Rigidbody playerBody;
     [SerializeField] Animator animatior;
     [SerializeField] MovementSystem movementSystem;
     [SerializeField] CameraSystem myCamera;
-    [SerializeField] public HandSystem handSystem;
     [SerializeField] LegSystem legSystem;
     [SerializeField] DetectorSystem detector;
     [SerializeField] FacialControl myFace;
-    [SerializeField] public InventorySystem inventorySystem = new InventorySystem();
     [SerializeField] AbilitySystem abilitySystem;
-
-    [Header("Animator Variables")]
+    [SerializeField] float nearObjectDistance = 1f;
+    [SerializeField] float shakingTime = 1f;
     [SerializeField] Vector2 animationLerpSpeed = new Vector2(1f,1f);
 
-    public bool activeInput { get; set; }
     public static PlayerSystem instance;
+    public bool activeInput { get; set; }
     Vector2 moveAnimtion;
     float maxHeight = 2f;
+    bool shaking;
+    bool attacking;
 
 
     //Initialization and refreshable functions
     void Awake()
     {
         InputSystem.SubscribeUser(this);
+
+        healthControl.Initialize(this.gameObject);
+        healthControl.OnDeath += Respawn;
 
         inventorySystem.Initialize(this);
         movementSystem.Initialize(playerBody, myCamera.GetCameraTransform());
@@ -65,9 +71,16 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     {
         UpdateAnimationParameters();
         abilitySystem.Update(); 
+
+        if(Input.GetKeyDown("x"))
+        {
+            healthControl.GetAttacked(15, this.transform);
+        }
     }
     void UpdateUi()
     {
+        healthControl.Update();
+
         //Set Interact Modes
         if(abilitySystem.canDress)
         {
@@ -126,7 +139,15 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
             UIGame.instance.ThrowButton_Enable(false);
 
         if (abilitySystem.canPlant)
+        {
+            UIGame.instance.PlantEatButton_SwitchMode(ButtonMode.Plant);
             UIGame.instance.PlantButton_Enable(true);
+        }
+        else if (abilitySystem.canEat)
+        {
+            UIGame.instance.PlantEatButton_SwitchMode(ButtonMode.Eat);
+            UIGame.instance.PlantButton_Enable(true);
+        }
         else
             UIGame.instance.PlantButton_Enable(false);
 
@@ -144,6 +165,40 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
         animatior.SetFloat("MoveX", moveAnimtion.x);
         animatior.SetFloat("MoveY", moveAnimtion.y);
+    }
+    void Respawn()
+    {
+        StartCoroutine(RespwawnCoroutine());
+    }
+    IEnumerator RespwawnCoroutine()
+    {
+        myModel.SetActive(false);
+        activeInput = false;
+        Instantiate(jumpVFXAsset, transform.position, jumpVFXAsset.transform.rotation);
+        GetBody().isKinematic= true;
+
+        inventorySystem.items.Clear();
+        if(handSystem.GetObjectInHand())
+        {
+            if(handSystem.GetObjectInHand().tag == "NPC") 
+            {
+                handSystem.DropObjectInHand();
+            }
+            else
+            {
+                var obj = handSystem.GetObjectInHand();
+                handSystem.DropObjectInHand();
+                Destroy(obj.gameObject);   
+            }
+        }
+
+        yield return new WaitForSeconds(2f);
+
+        this.transform.position = MapSystem.instance.GetRandomExplorationPoint();
+        GetBody().isKinematic = false;
+        activeInput = true;
+        Instantiate(jumpVFXAsset, transform.position, jumpVFXAsset.transform.rotation);
+        myModel.SetActive(true);
     }
 
 
@@ -174,6 +229,8 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
 
         transform.rotation = player_data.rotation.GetQuaternion();
 
+        healthControl.currentHealth = player_data.currentHealth;
+
         inventorySystem.Initialize(this);
 
         inventorySystem.LoadSavedData(player_data.inventoryData);
@@ -185,6 +242,7 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         player_data.position = new nVector3(transform.position);
         player_data.rotation = new nQuaternion(transform.rotation);
         player_data.inventoryData = inventorySystem.GetInventoryData();
+        player_data.currentHealth = healthControl.currentHealth;
 
         return player_data;
     }
@@ -281,9 +339,11 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
         {
             handSystem.ConfirmDress();
         }
-        else if(abilitySystem.canShake)
+        else if(abilitySystem.canShake && !shaking)
         {
             ((TreeSystem)(detector.GetNear("Tree"))).Shake();
+
+            StartCoroutine(ReactivateShake(shakingTime));
         }
         else if (abilitySystem.canPick)
         {
@@ -309,6 +369,18 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     {
         if (abilitySystem.canPlant)
             handSystem.PlantObjectInHand();
+        else if (abilitySystem.canEat)
+        {
+            if((Fruit)handSystem.GetObjectInHand())
+            {
+                int value = ((Fruit)handSystem.GetObjectInHand()).GetMore();
+
+                if(healthControl.currentHealth < healthControl.maxHealth)
+                {
+                    healthControl.currentHealth += value;
+                }
+            }
+        }
     }
     public void DashInput()
     {
@@ -325,17 +397,32 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public void AttackInput()
     {
-        if(abilitySystem.canAttack)
+        if (!attacking)
         {
-            if (((Zombie)(detector.GetNear("Zombie"))))
-                ((Zombie)(detector.GetNear("Zombie"))).GetAttacked(((Sword)handSystem.GetObjectInHand()).damage); 
-        }
-        else if (abilitySystem.canTear)
-        {
-            if (((Tearable)(detector.GetNear("Tree"))))
-                ((Tearable)(detector.GetNear("Tree"))).TearDown();
-            else
-                ((Tearable)(detector.GetNear("Rock"))).TearDown();
+            if (abilitySystem.canAttack)
+            {
+                if (((Zombie)(detector.GetNear("Zombie"))))
+                {
+                    Sword sword = ((Sword)handSystem.GetObjectInHand());
+                    Zombie zombie = (Zombie)(detector.GetNear("Zombie"));
+
+                    zombie.healthControl.GetAttacked(sword.damage,this.transform);
+                    StartCoroutine(ReactivateAttack(sword.attackTime));
+                }
+            }
+            else if (abilitySystem.canTear)
+            {
+                Tearable toTear;
+
+                if (((Tearable)(detector.GetNear("Tree"))))
+                    toTear = ((Tearable)(detector.GetNear("Tree")));
+                else
+                    toTear = ((Tearable)(detector.GetNear("Rock")));
+
+                toTear.TearDown();
+
+                StartCoroutine(ReactivateAttack(toTear.tearDownTime));
+            }
         }
     }
     public void StoreInput()
@@ -348,5 +435,18 @@ public class PlayerSystem : MonoBehaviour, IController, IDetectable, IInputUser,
     }
     public void PressUpInput()
     {
+    }
+
+    IEnumerator ReactivateShake(float time)
+    {
+        shaking = true;
+        yield return new WaitForSecondsRealtime(time);
+        shaking = false;
+    }
+    IEnumerator ReactivateAttack(float time)
+    {
+        attacking = true;
+        yield return new WaitForSecondsRealtime(time);
+        attacking = false;
     }
 }

@@ -16,8 +16,7 @@ public class UnderPopulation : AbstractMode
     {
         base.OnLoad();
 
-
-        if (!data.firstStart)
+        if (data.firstStart == true)
         {
             data.timeSinceStart = 0;
             OnFirstLoad();
@@ -51,9 +50,12 @@ public class UnderPopulation : AbstractMode
         UIGame.instance.ShowFloatingMessage("1", 1f, new Vector3(1, 1, 1), 1f);
 
         GameManager.instance.SpawnEgg();
+        yield return new WaitForSeconds(.5f);
+        GameManager.instance.SpawnAxe();
         data.firstStart = true;
 
         yield return new WaitForSeconds(1f);
+
         UIGame.instance.ShowFloatingMessage("Go !", 1f, new Vector3(1, 1, 1), 1f);
 
         GameManager.instance.LockPlayer(false);

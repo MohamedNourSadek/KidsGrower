@@ -21,7 +21,7 @@ public class ListAttributeUI
         saveName.text = data.saveName;
         age.value.text = data.age.ToString();
 
-        health.value.text = data.GetHealth().ToString();
+        health.value.text = data.GetFitness().ToString();
         fertility.value.text = data.GetFertility().ToString();
         extroversion.value.text = data.GetExtroversion().ToString();
         aggressiveness.value.text = data.GetAggressiveness().ToString();

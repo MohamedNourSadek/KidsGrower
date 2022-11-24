@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1622378823701921159}
   - component: {fileID: 7239052822515860829}
   m_Layer: 7
-  m_Name: Boost - Health
+  m_Name: Boost - Fitness
   m_TagString: Boost
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

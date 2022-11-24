@@ -6,6 +6,7 @@ public class Player_Data : SaveStructure
 {
     public nVector3 position = new nVector3();
     public nQuaternion rotation = new nQuaternion();
+    public int currentHealth = 30;
     public List<InventoryItem_Data> inventoryData = new List<InventoryItem_Data>();
 
     public static Player_Data GameToData(PlayerSystem player)

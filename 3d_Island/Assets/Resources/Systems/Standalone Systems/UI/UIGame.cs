@@ -6,7 +6,7 @@ using TMPro;
 using System;
 using UnityEngine.Events;
 
-public enum ButtonMode { Pick, Drop, Shake, Tear, Store,Attack, Dress, _};
+public enum ButtonMode { Pick, Drop, Shake, Eat, Tear, Store,Attack, Dress, Plant, _};
 
 public class UIGame : MonoBehaviour
 {
@@ -24,6 +24,7 @@ public class UIGame : MonoBehaviour
     [SerializeField] GameObject ThreeDHighlightPrefab;
     [SerializeField] GameObject progressBarPrefab;
     [SerializeField] GameObject npcUiElementPrefab;
+    [SerializeField] GameObject silderElementPrefab;
     [SerializeField] GameObject popUpMessageAsset;
     [SerializeField] GameObject touchControls;
     [SerializeField] GameObject itemsParent;
@@ -49,6 +50,7 @@ public class UIGame : MonoBehaviour
     [SerializeField] Image petButtonImage;
     [SerializeField] Text pickDropButtonImage_Text;
     [SerializeField] Text attackButtonButtonImage_Text;
+    [SerializeField] Text plantButtonButtonImage_Text;
     [SerializeField] Text customizeDebugger;
     [SerializeField] GameObject designMenus;
     [SerializeField] public TextMeshProUGUI countDownText;
@@ -111,6 +113,10 @@ public class UIGame : MonoBehaviour
     public void PickDropButton_SwitchMode(ButtonMode _mode)
     {
         pickDropButtonImage_Text.text = _mode.ToString();
+    }
+    public void PlantEatButton_SwitchMode(ButtonMode _mode)
+    {
+        plantButtonButtonImage_Text.text = _mode.ToString();
     }
     public void AttackTearButton_SwitchMode(ButtonMode _mode)
     {
@@ -186,6 +192,30 @@ public class UIGame : MonoBehaviour
         {
             UIElement_NPC _temp = npcUiContainer[user];
             npcUiContainer.Remove(user);
+            Destroy(_temp.gameObject);
+        }
+    }
+
+
+    Dictionary<GameObject, UiElement_Slider> sliders  = new();
+    public void CreateSlider(GameObject user, Transform parent, float maxValue)
+    {
+        UiElement_Slider sliderUI = Instantiate(silderElementPrefab, parent.position, Quaternion.identity, threeDCanvas.transform).GetComponentInChildren<UiElement_Slider>();
+        sliderUI.SetSliderRange(maxValue);
+
+        sliders.Add(user, sliderUI);
+        StartCoroutine(TranslateUiElement(sliderUI.gameObject, parent));
+    }
+    public void UpdateSlider(GameObject user, float value)
+    {
+        sliders[user].UpdateSliderValue(value);
+    }
+    public void DestroySlider(GameObject user)
+    {
+        if (sliders.ContainsKey(user))
+        {
+            UiElement_Slider _temp = sliders[user];
+            sliders.Remove(user);
             Destroy(_temp.gameObject);
         }
     }
@@ -285,9 +315,9 @@ public class UIGame : MonoBehaviour
     {
         float _time = 0f;
 
-        while (condition.isTrue && _time<=messageTime && parent != null)
+        while (condition.isTrue && _time < messageTime && parent != null)
         {
-            _time += messageTime / repeats;
+            _time += messageTime / (repeats);
             SpawnMessage(message, (parent.position + (1.5f*Vector3.up)));
             yield return new WaitForSecondsRealtime(messageTime / repeats);
         }

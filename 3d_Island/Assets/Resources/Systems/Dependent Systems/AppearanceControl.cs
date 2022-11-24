@@ -44,7 +44,7 @@ public class AppearanceControl
         wholeBody.transform.localScale = initialScale + (ageFactor * (finalScale - initialScale));
 
         //face
-        face.material.color = Color.Lerp(normalColor, healthColor, character.GetHealth());
+        face.material.color = Color.Lerp(normalColor, healthColor, character.GetFitness());
 
         //upper
         upperBody.material.color = Color.Lerp(normalColor, extrovertColor, character.GetExtroversion());

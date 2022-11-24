@@ -5,6 +5,7 @@ using UnityEngine;
 public class Sword : Pickable, ISavable, IStorableObject, IDetectable
 {
     public int damage = 10;
+    public int attackTime = 1;
 
     public void LoadData(SaveStructure saveData)
     {

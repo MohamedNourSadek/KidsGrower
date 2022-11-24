@@ -6,16 +6,19 @@ public class Tearable : MonoBehaviour
 {
     [SerializeField] protected Animator animator;
 
-    protected bool tearingDown;
-    protected int tearDownTime = 1;
+    public int tearDownTime = 1;
     protected int tearingDownCount = 0;
     protected int maxTearDownCount = 3;
 
     //Interface
     public void TearDown()
     {
-        if (tearingDown == false)
-            StartCoroutine(TearingDown());
+        TearEffects();
+        tearingDownCount++;
+        SpawnResource();
+
+        if (tearingDownCount >= maxTearDownCount)
+            Destroy(this.gameObject);
     }
     public virtual void TearEffects()
     {
@@ -30,18 +33,4 @@ public class Tearable : MonoBehaviour
     }
 
     //Algorithm
-    IEnumerator TearingDown()
-    {
-        TearEffects();
-
-        tearingDown = true;
-        tearingDownCount++;
-        yield return new WaitForSecondsRealtime(tearDownTime);
-        tearingDown = false;
-
-        SpawnResource();
-
-        if (tearingDownCount >= maxTearDownCount)
-            Destroy(this.gameObject);
-    }
 }

@@ -17,6 +17,7 @@ public class AbilitySystem
     public bool canDash;
     public bool canDress;
     public bool canAttack;
+    public bool canEat;
 
     DetectorSystem detector;
     HandSystem hand;
@@ -37,6 +38,11 @@ public class AbilitySystem
         canAttack = (detector.GetNear("Zombie") != null) && (hand.GetObjectInHand() != null) && hand.GetObjectInHand().tag == "Sword";
 
         canTear = ((detector.GetNear("Tree") != null) || (detector.GetNear("Rock") != null)) && (hand.GetObjectInHand() != null) && hand.GetObjectInHand().tag == "Axe";
+
+        if(hand.GetObjectInHand() != null)
+            canEat = (hand.GetObjectInHand().gameObject.tag == "Fruit");
+        else 
+            canEat = false;
 
         if (movementSystem != null)
             canJump = movementSystem.IsOnGround();

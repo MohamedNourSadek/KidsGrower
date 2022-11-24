@@ -36,6 +36,9 @@ public class NPC : Pickable, IController, ISavable
     {
         NPCsCount++;
 
+        character.healthControl.Initialize(this.gameObject);
+        character.healthControl.OnDeath += Die;
+
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.stoppingDistance = 0.9f * nearObjectDistance;
         detector.Initialize(nearObjectDistance, aiBehavior.OnDetectableInRange, aiBehavior.OnDetectableExit, aiBehavior.OnDetectableNear, aiBehavior.OnDetectableNearExit);
@@ -55,12 +58,14 @@ public class NPC : Pickable, IController, ISavable
     }
     void OnDestroy()
     {
+        UIGame.instance.DestroySlider(gameObject);
         NPCsCount--;
     }
     void Update()
     {
         handSystem.Update();
         appearanceControl.UpdateAppearance();
+        character.healthControl.Update();
         ApplyCharacterParameters();
         UpdateAnimationParameters();
 

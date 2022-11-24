@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8925898573778177684}
   - component: {fileID: 8353526561563913075}
   - component: {fileID: 9185013001772819241}
+  - component: {fileID: 6797268958573625925}
   m_Layer: 7
   m_Name: Zombie
   m_TagString: Zombie
@@ -99,12 +100,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d05754a92054f3488ad15595beb1e01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthControl:
+    DestroyOnDeath: 1
+    currentHealth: 30
+    maxHealth: 30
   detector: {fileID: 4375018607828562432}
   myAgent: {fileID: 8353526561563913075}
-  initialHealth: 30
-  currentHealth: 30
   dayDamagePerSec: 5
   attackedTime: 1
+  hitAmount: 5
+  attackReach: 1
+  attacking: 0
 --- !u!195 &8353526561563913075
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -138,9 +144,25 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 0.9800086
+  m_Height: 0.8704805
   m_Direction: 1
-  m_Center: {x: 0, y: 0.5423269, z: 0}
+  m_Center: {x: 0, y: 0.92, z: 0}
+--- !u!54 &6797268958573625925
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5615504727134489842}
+  serializedVersion: 2
+  m_Mass: 5
+  m_Drag: 3
+  m_AngularDrag: 5
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 2
 --- !u!1001 &8388253564836153134
 PrefabInstance:
   m_ObjectHideFlags: 0
