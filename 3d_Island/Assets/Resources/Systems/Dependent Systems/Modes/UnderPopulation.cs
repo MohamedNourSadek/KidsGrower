@@ -15,13 +15,6 @@ public class UnderPopulation : AbstractMode
     protected override void OnLoad()
     {
         base.OnLoad();
-
-        if (data.firstStart == true)
-        {
-            data.timeSinceStart = 0;
-            OnFirstLoad();
-        }
-
         ServicesProvider.instance.StartCoroutine(EndConition());
     }
     protected override void OnFirstLoad()
@@ -29,13 +22,11 @@ public class UnderPopulation : AbstractMode
         base.OnFirstLoad();
         ServicesProvider.instance.StartCoroutine(StartLogic());
     }
-
-
     IEnumerator StartLogic()
     {
         UIGame.instance.countDownText.text = "";
 
-        GameManager.instance.LockPlayer(true);
+        GameManager.instance.SetPlaying(false);
 
         yield return new WaitForSeconds(1f);
 
@@ -52,34 +43,32 @@ public class UnderPopulation : AbstractMode
         GameManager.instance.SpawnEgg();
         yield return new WaitForSeconds(.5f);
         GameManager.instance.SpawnAxe();
-        data.firstStart = true;
 
         yield return new WaitForSeconds(1f);
 
         UIGame.instance.ShowFloatingMessage("Go !", 1f, new Vector3(1, 1, 1), 1f);
 
-        GameManager.instance.LockPlayer(false);
+        GameManager.instance.SetPlaying(true);
     }
     IEnumerator EndConition()
     {
-        float time = countdownTime - data.timeSinceStart;
+        float time = 0;
 
         while(true)
         {
             if(NPC.NPCsCount <= 0)
             {
-                UIGame.instance.countDownText.text = "No Children!! \n" + Helpers.GetTimeFormated(time);
+                UIGame.instance.countDownText.text = "No Children!! \n" + Helpers.GetTimeFormated(countdownTime - time);
 
-                time -= Time.fixedDeltaTime;
+                time = (data.timeSinceStart - data.timeLastWasChild);
 
-                if(time <= 0)
+                if(time >= countdownTime)
                 {
                     UIGame.instance.countDownText.text = "";
                     UIGame.instance.CloseAllPanels();
                     GameManager.instance.SetPlaying(false);
                     GameManager.instance.SetBlur(true);
 
-                    
                     UIGame.instance.ShowPopUpMessage(
                         "You've Lost !",
                         "You've Survived for " + Helpers.GetTimeFormated(data.timeSinceStart),
@@ -99,8 +88,7 @@ public class UnderPopulation : AbstractMode
                 else
                     UIGame.instance.countDownText.text = NPC.NPCsCount + " Children ";
 
-
-                time = countdownTime;
+                data.timeLastWasChild = data.timeSinceStart;
             }
 
             yield return new WaitForSeconds(Time.fixedDeltaTime);

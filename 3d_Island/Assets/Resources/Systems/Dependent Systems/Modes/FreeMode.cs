@@ -10,14 +10,12 @@ public class FreeMode : AbstractMode
     protected override void OnLoad()
     {
         base.OnLoad();
-
-        if (data.firstStart == true)
-        {
-            data.timeSinceStart = 0;
-            GameManager.instance.SpawnAxe();
-        }
-
         ServicesProvider.instance.StartCoroutine(SpawnEveryT());
+    }
+    protected override void OnFirstLoad()
+    {
+        base.OnFirstLoad();
+        GameManager.instance.SpawnAxe();
     }
     IEnumerator SpawnEveryT()
     {

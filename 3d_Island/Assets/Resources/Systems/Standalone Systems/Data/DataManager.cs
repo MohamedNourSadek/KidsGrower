@@ -17,7 +17,7 @@ public class DataManager : MonoBehaviour
     //Internal
     static string path;
     WholeData dataCache;
-    public SessionData currentSession;
+    SessionData currentSession;
     modes currentMode;
 
     void Awake()

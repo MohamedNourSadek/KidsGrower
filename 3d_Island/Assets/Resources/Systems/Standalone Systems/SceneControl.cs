@@ -18,8 +18,10 @@ public class SceneControl : MonoBehaviour
     }
     public void LoadScene(int id)
     {
+        NPC.NPCsCount = 0;
+        Zombie.count = 0;
+
         SceneManager.LoadScene(loadingID);
-        
         StartCoroutine(LoadScene_Enum(id));
     }
     IEnumerator LoadScene_Enum(int id)

@@ -142,26 +142,13 @@ public class GameManager : MonoBehaviour
         foreach (Zombie_Data zombie in sessionData.data.zombies)
             zombie.SpawnWithData(regularZombieAsset, true);
 
-        //objects that exist by default
-        if (modeHandler.GetModeData().firstStart == false)
-        {
-            var trees = FindObjectsOfType<TreeSystem>();
-            var rocks = FindObjectsOfType<Rock>();
-
-            foreach (TreeSystem tree in trees)
-                Destroy(tree.gameObject);
-            foreach (Rock rock in rocks)
-                Destroy(rock.gameObject);
-
-            foreach (Tree_Data tree_data in sessionData.data.trees)
-                tree_data.SpawnWithData(treeAsset, true);
-            foreach (Rock_Data rock_data in sessionData.data.rocks)
-                rock_data.SpawnWithData(rockAsset, true);
-        }
-
-        modeHandler.GetModeData().firstStart = false;
+        foreach (Tree_Data tree_data in sessionData.data.trees)
+            tree_data.SpawnWithData(treeAsset, true);
+        foreach (Rock_Data rock_data in sessionData.data.rocks)
+            rock_data.SpawnWithData(rockAsset, true);
 
         sessionData.data.player.SpawnWithData(myPlayer.gameObject, false);
+
         DayNightControl.instance.factor = sessionData.DayNightFactor;
     }
     public void Save()
@@ -200,10 +187,6 @@ public class GameManager : MonoBehaviour
 
 
     //Settings
-    public void LockPlayer(bool state)
-    {
-        myPlayer.LockPlayer(!state);
-    }
     public void SetPlaying(bool state)
     {
         SetBlur(!state);
