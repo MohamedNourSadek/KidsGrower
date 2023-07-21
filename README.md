@@ -13,12 +13,6 @@ A game required by a client on Upwork, where you can grow your kids, collect res
 
 Unity and C# primarly, but also Adobe PS, Blender 3d, Fl studio.
 
-#### Why the project didn't continue?
-
-The client dropped out.
-
-
-
 
 ## Some Screenshots.
 
