@@ -5,6 +5,11 @@ A game required by a client on Upwork, where you can grow your kids, collect res
 
 ## FAQ
 
+#### Vide of the game:
+
+https://youtu.be/0hV2tyvXsDQ
+
+
 #### How may hours the current state of the prototype took?
 
 300 Hours
