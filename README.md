@@ -7,7 +7,7 @@ A game required by a client on Upwork, where you can grow your kids, collect res
 
 #### How may hours the current state of the prototype took?
 
-600 Hours.
+300 Hours
 
 #### Which technologies did you use?
 
