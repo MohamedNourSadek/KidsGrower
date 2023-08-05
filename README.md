@@ -1,29 +1,27 @@
 
-# Islands Prototype Game.
+# Kids Grower Prototype Game.
 
-A game required by a client on Upwork, where you can grow your kids, collect resources and develop your kids.
+A game required by a client on Upwork, where you can grow your kids, which behave based on an AI-Attributes system, you also collect resources, build simple buildings, and develop your kids.
 
-## FAQ
+- Unity and C# primarly, but also Adobe PS, Blender 3d, Fl studio.
+- AI-Attributes system.
+- UI Panels. 
+- City Building and collecting resources.
 
-#### Vide of the game:
 
-https://youtu.be/0hV2tyvXsDQ
-
-
-#### How may hours the current state of the prototype took?
-
-300 Hours
-
-#### Which technologies did you use?
-
-Unity and C# primarly, but also Adobe PS, Blender 3d, Fl studio.
+#### Video of the play test of the game:
+[Youtube Video Demo](https://youtu.be/0hV2tyvXsDQ)
 
 
 ## Some Screenshots.
 
+### Screenshots from the Game:
+| ![ScreenShot1](https://github.com/MohamedNourSadek/IslandsProtoype/blob/main/Screenshots/1.jpg) | ![ScreenShot2](https://github.com/MohamedNourSadek/IslandsProtoype/blob/main/Screenshots/4.jpg) |
+|--|--
+|![ScreenShot2](https://github.com/MohamedNourSadek/IslandsProtoype/blob/main/Screenshots/4.jpg) | ![ScreenShot2](https://github.com/MohamedNourSadek/IslandsProtoype/blob/main/Screenshots/5.jpg) |
 
-![App Screenshot](https://github.com/MohamedNourSadek/IslandsProtoype/blob/main/Screenshots/5.jpg)
-![App Screenshot](https://github.com/MohamedNourSadek/IslandsProtoype/blob/main/Screenshots/3.jpg)
-![App Screenshot](https://github.com/MohamedNourSadek/IslandsProtoype/blob/main/Screenshots/4.jpg)
+![App Screenshot]()
+![App Screenshot]()
+![App Screenshot]()
 
 
