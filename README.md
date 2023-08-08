@@ -20,8 +20,5 @@ A game required by a client on Upwork, where you can grow your kids, which behav
 |--|--
 |![ScreenShot2](https://github.com/MohamedNourSadek/IslandsProtoype/blob/main/Screenshots/4.jpg) | ![ScreenShot2](https://github.com/MohamedNourSadek/IslandsProtoype/blob/main/Screenshots/5.jpg) |
 
-![App Screenshot]()
-![App Screenshot]()
-![App Screenshot]()
 
 
